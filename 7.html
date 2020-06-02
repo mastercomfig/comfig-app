@@ -1,76 +1,13 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <link ref="preload" as="style" href="https://cdn.jsdelivr.net/combine/npm/bootstrap@4/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
-    <link rel="shortcut icon" href="favicon.ico">
-
-    <title>mastercomfig 7</title>
-    <meta property="og:title" content="mastercomfig">
-    <meta property="og:description" content="A modern Team Fortress 2 performance and customization config.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://mastercomfig.com/7">
-  </head>
-  <body class="bg-dark">
-    <header class="jumbotron jumbotron-fluid text-light" style="background: linear-gradient(rgb(0,150,136) 10%, rgba(178,223,219, 0.3)); margin: 0; height: 100vh">
-        <div class="container d-flex align-items-center justify-content-center" style="min-height: 100%">
-            <div class="align-middle text-center">
-                <img class="img-fluid" src="7/mastercomfig_logo_transparent_i.png" style="width: 10rem; height: 10rem"/>
-                <h1 class="display-4">mastercomfig</h1>
-                <p class="lead">A modern Team Fortress 2 performance and customization config.</p>
-                <p><strong>Warning</strong>: mastercomfig 7 is not recommended. It is outdated and unsupported.</p>
-                <a class="btn btn-outline-light btn-lg" id="download">
-                  <span class="fas fa-download" title="download" aria-hidden="true" style="font-size: 1rem"></span> Download
-                </a>
-                <br>
-                <hr style="width: 25%">
-                <a class="text-light" href="https://github.com/mastercomfig/mastercomfig/releases/" id="additional">
-                    Changelog and more downloads
-                </a>
-                <hr>
-                <div id="download-list"></div>
-            </div>
-        </div>
-    </header>
+<head>
+  <meta charset="utf-8">
+  <title>Redirecting</title>
+</head>
+<body>
+    <a href="https://mastercomfig.com/">Click here if you are not redirected</a>
     <script>
-        var download = document.getElementById('download');
-        var version = "7.0.0-a.15";
-        var rootDl = "https://github.com/mastercomfig/mastercomfig/releases/download/v" + version + "/";
-        document.getElementById('additional').href += "tag/v" + version;
-        var downloadList = document.getElementById('download-list');
-        if (window.navigator.platform.indexOf("Win") !== -1) {
-            download.href = rootDl + "mastercomfig-app-web-setup-" + version + ".exe";
-            download.innerHTML += ' for Windows <i class="fab fa-windows"></i>';
-            var offlineBtn = document.createElement("a");
-            offlineBtn.classList.add("btn", "btn-primary", "btn-sm");
-            offlineBtn.innerText = "Download offline installer";
-            offlineBtn.href = rootDl + "mastercomfig-app-setup-" + version + ".exe";
-            downloadList.appendChild(offlineBtn);
-        } else if (window.navigator.platform.indexOf("Linux") !== -1 && window.navigator.userAgent.indexOf("Android") === -1) {
-            download.href = rootDl + "mastercomfig-app-" + version + ".tar.xz";
-            download.innerHTML += ' for Linux <i class="fab fa-linux"></i>';
-            var ubuntu = document.createElement("a");
-            ubuntu.innerText = "Download for Ubuntu/Debian";
-            ubuntu.href = rootDl + "mastercomfig-app_" + version + "_amd64.deb";
-            ubuntu.classList.add("btn", "btn-primary", "btn-sm");
-            downloadList.appendChild(ubuntu);
-            var fedora = document.createElement("a");
-            fedora.innerText = "Download for Fedora";
-            fedora.href = rootDl + "mastercomfig-app-" + version.replace("-", "_") + ".x86_64.rpm";
-            fedora.classList.add("btn", "btn-primary", "btn-sm");
-            downloadList.appendChild(fedora);
-            var arch = document.createElement("a");
-            arch.innerText = "Download for Arch Linux";
-            arch.href = rootDl + "mastercomfig-app-" + version.replace("-", "_") + ".pacman";
-            arch.classList.add("btn", "btn-primary", "btn-sm");
-            downloadList.appendChild(arch);
-        } else {
-            download.classList.remove("btn", "btn-outline-light", "btn-lg");
-            download.innerHTML = "The mastercomfig app is not available for your platform. Please download the VPK from other versions or compile from source."
-        }
+      window.location.replace("https://mastercomfig.com/")
     </script>
-  </body>
+</body>
 </html>
