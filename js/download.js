@@ -62,12 +62,10 @@ function app() {
   var downloading = false;
 
   var featherRefs = 2;
-  var featherPending = true;
 
   function updateFeatherRef() {
-      if (featherPending && --featherRefs <= 0) {
+      if (--featherRefs <= 0) {
           initFeather();
-          featherPending = false;
       }
   }
 
