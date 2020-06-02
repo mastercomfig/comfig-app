@@ -61,6 +61,16 @@ function app() {
 
   var downloading = false;
 
+  var featherRefs = 2;
+  var featherPending = true;
+
+  function updateFeatherRef() {
+      if (featherPending && --featherRefs <= 0) {
+          initFeather();
+          featherPending = false;
+      }
+  }
+
   function downloadClickEvent() {
       download();
       $('#vpk-dl').off();
@@ -151,7 +161,7 @@ function app() {
     }
     presetDownload.setAttribute('href', getPresetUrl());
     $("#preset-dl").html('<span data-feather="download"></span> Download {0} preset VPK'.format(presets.get(id))); // update preset text
-    initFeather();
+    updateFeatherRef();
     // if not loading from storage, set recommended addons
     if (!no_set) {
         // reset all recommendable addons
@@ -174,6 +184,7 @@ function app() {
     let versionName = version.indexOf('v') === 0 ? version.substr(1) : version; // some releases use the v prefix, ignore it
     // update title with version
     $('#title').html('<span data-feather="download"></span> Download mastercomfig ' + versionName);
+    updateFeatherRef();
   }, "json");
 
   $('#presets a').on('click', function(e) {

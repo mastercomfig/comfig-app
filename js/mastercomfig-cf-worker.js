@@ -43,6 +43,7 @@ async function handleRequest(request) {
     headers: {
       'Content-Type': 'application/json;charset=UTF-8',
       'Cache-Control': 'max-age=43200',
+      'Access-Control-Allow-Origin': 'https://mastercomfig.com',
     },
   }
 
