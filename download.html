@@ -6,9 +6,10 @@
     <meta name="theme-color" content="#009688">
 
     <link ref="preload" as="style" href="https://cdn.jsdelivr.net/combine/npm/bootstrap@4/dist/css/bootstrap.min.css">
-    <link ref="preload" as="fetch" href="https://api.github.com/repositories/69422496/releases/latest">
+    <link ref="preload" as="fetch" href="https://api.github.com/repos/mastercomfig/mastercomfig/releases/latest">
     <link rel="preload" as="script" href="js/download.js">
     <link ref="preload" as="style" href="css/main.css">
+    <link ref="preload" as="style" href="css/download.css">
     <link rel="preconnect" href="https://cdn.jsdelivr.net/" crossorigin>
     <link rel="dns-prefetch" href="https://cdn.jsdelivr.net/">
     <link rel="preconnect" href="https://api.github.com/" crossorigin>
@@ -18,6 +19,7 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/combine/npm/bootstrap@4/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/download.css">
     <link rel="shortcut icon" href="favicon.ico">
 
     <title>mastercomfig download</title>
@@ -207,8 +209,8 @@
                 <hr>
                 <h2>3. <span data-feather="archive"></span> Download your files</h2>
                 <p>Just drop them in your <code>tf/custom</code> folder and they'll automatically run.</p>
-                <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest" class="text-light" id="vpk-dl" style="cursor: pointer"><span data-feather="download-cloud"></span>  Download Medium High preset and selected addons VPKs</a></p>
-                <a data-toggle="collapse" href="#collapseManual" role="button" aria-expanded="false" aria-controls="collapseManual">
+                <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest" class="text-light" id="vpk-dl" style="cursor: pointer"><span data-feather="download-cloud"></span>  Download from GitHub</a></p>
+                <a id="collapseManualButton" data-toggle="collapse" href="#collapseManual" role="button" aria-expanded="false" aria-controls="collapseManual" style="display: none">
                     Not working? Download manually
                 </a>
                 <div class="collapse" id="collapseManual">

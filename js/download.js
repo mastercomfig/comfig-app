@@ -184,6 +184,7 @@ function app() {
         setAddon(id, false);
       }
     }
+    $('#collapseManualButton').show();
   }, "json");
 
   $('#presets a').on('click', function(e) {

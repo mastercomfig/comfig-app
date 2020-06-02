@@ -6,34 +6,12 @@ header {
   background-color: #212121
 }
 
-.home-header {
-    background: linear-gradient(rgba(38, 50, 56, 0.7) 10%, rgba(38, 50, 56, 0.7)), url('../img/cp_badlands01.jpg');
-    background-size: cover;
-    background-position: center
-}
-
 .btn, .btn-lg {
     border-radius: 0
 }
 
 a.text-light.focus {
     color: #cbd3da !important;
-}
-
-.img-separator {
-    height: 40vh;
-    margin-bottom: 2rem
-}
-
-.progress {
-    border-radius: 0
-}
-
-.progress-bar {
-    padding-left: 1rem;
-    text-align: left;
-    background-color: #00aa9b;
-    color: #000
 }
 
 section {
@@ -85,49 +63,4 @@ a:hover {
 .btn-primary:focus {
     background-color: #375e5b;
     border-color: #009688
-}
-
-.list-group-item-dark.list-group-item-action.active {
-    color: #fff !important;
-    background-color: #1c1e1f !important;
-    border-color: #59636c
-}
-
-.list-group-item-dark {
-    color: #dddad5;
-    background-color: #282b2d
-}
-
-.list-group-item-dark.list-group-item-action:focus, .list-group-item-dark.list-group-item-action:hover {
-    color: #dddad5;
-    background-color: #2c2f31
-}
-
-input {
-    border-color: #575757;
-    color: #e8e6e3;
-    background-color: #181a1b
-}
-
-.custom-control-label::before {
-    background-color: #181a1b;
-    border-color: #3d454c
-}
-
-.download-preview {
-    width: 100%
-}
-
-.tooltip {
-    opacity: 1 !important
-}
-
-.tooltip-inner {
-    max-width: 35vw
-}
-
-@media only screen and (max-width: 960px) {
-    .tooltip-inner {
-        max-width: 45vw
-    }
 }

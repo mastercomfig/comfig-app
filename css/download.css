@@ -1,0 +1,48 @@
+.list-group-item-dark.list-group-item-action.active {
+    color: #fff !important;
+    background-color: #1c1e1f !important;
+    border-color: #59636c
+}
+
+.list-group-item-dark {
+    color: #dddad5;
+    background-color: #282b2d
+}
+
+.list-group {
+    border-radius: 0
+}
+
+.list-group-item-dark.list-group-item-action:focus, .list-group-item-dark.list-group-item-action:hover {
+    color: #dddad5;
+    background-color: #2c2f31
+}
+
+input {
+    border-color: #575757;
+    color: #e8e6e3;
+    background-color: #181a1b
+}
+
+.custom-control-label::before {
+    background-color: #181a1b;
+    border-color: #3d454c
+}
+
+.download-preview {
+    width: 100%
+}
+
+.tooltip {
+    opacity: 1 !important
+}
+
+.tooltip-inner {
+    max-width: 35vw
+}
+
+@media only screen and (max-width: 960px) {
+    .tooltip-inner {
+        max-width: 45vw
+    }
+}
