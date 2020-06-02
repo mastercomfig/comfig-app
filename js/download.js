@@ -166,25 +166,14 @@ function app() {
   }
 
   // get latest release, and update page
-  $.get("https://api.github.com/repos/mastercomfig/mastercomfig/releases/latest", function(data) {
-    version = data.tag_name;
+  $.get("https://mastercomfig.mcoms.workers.dev/", function(data) {
+    version = data.v;
+    if (!version) {
+        return;
+    }
     let versionName = version.indexOf('v') === 0 ? version.substr(1) : version; // some releases use the v prefix, ignore it
     // update title with version
     $('#title').html('<span data-feather="download"></span> Download mastercomfig ' + versionName);
-    // if we have a stored preset, load it
-    if (storage.getItem('preset')) {
-      setPreset(storage.getItem('preset'), true);
-    } else {
-      setPreset('medium-high');
-    }
-    for (const id of addons) {
-      if (storage.getItem(id)) {
-        setAddon(id, storage.getItem(id))
-      } else {
-        setAddon(id, false);
-      }
-    }
-    $('#collapseManualButton').show();
   }, "json");
 
   $('#presets a').on('click', function(e) {
@@ -201,6 +190,20 @@ function app() {
   $("input[type='checkbox']").change(function() {
     updateAddon(this.id);
   });
+
+  // if we have a stored preset, load it
+  if (storage.getItem('preset')) {
+    setPreset(storage.getItem('preset'), true);
+  } else {
+    setPreset('medium-high');
+  }
+  for (const id of addons) {
+    if (storage.getItem(id)) {
+      setAddon(id, storage.getItem(id))
+    } else {
+      setAddon(id, false);
+    }
+  }
 
   $('[data-toggle="tooltip"]').tooltip();
 }
