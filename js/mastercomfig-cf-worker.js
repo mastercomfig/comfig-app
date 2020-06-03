@@ -16,8 +16,7 @@ async function handleRequest(request) {
 
   // Attempt cached version, else request
   let version = await MASTERCOMFIG.get("mastercomfig-version")
-  if (version == null)
-  {
+  if (version == null) {
     try {
         // Fetch from GitHub
         const response = await fetch("https://api.github.com/repos/mastercomfig/mastercomfig/releases/latest", reqHeaders)
