@@ -152,7 +152,7 @@
                 </div>
                 <div class="col-lg-6 align-middle">
                     <pre><code class="cpp">
-lod=medium_high
+lod=high
 lighting=very_high
 shadows=medium
 ...
@@ -164,15 +164,15 @@ shadows=medium
 // ---------------
 // General/misc HUD settings
 
-//cl_hud_playerclass_use_playermodel 0 // Disable live player model in HUD, also partially fixes animation bug
 //cl_hud_playerclass_use_playermodel 1 // Enable live player model in HUD
+//cl_hud_playerclass_use_playermodel 0 // Disable live player model in HUD
 //cl_hud_minmode 1 // HUD min mode
 ...
-tf_dashboard_slide_time 0.25 // Time in seconds for dashboard transitions
+tf_dashboard_slide_time .1 // Time in seconds for dashboard transitions
 tf_item_inspect_model_auto_spin 1 // Auto spin items in the inspect view
 //tf_item_inspect_model_auto_spin 0 // Do not auto spin items in the inspect view
 tf_item_inspect_model_spin_rate 30 // Rate at which items spin in the inspect view
-tf_quest_map_tuner_wobble_magnitude 0.01 // Enable red tuner at the bottom
+//tf_quest_map_tuner_wobble_magnitude .01 // Enable red tuner at the bottom
 //tf_quest_map_tuner_wobble_magnitude 0 // Disable the red tuner on the contracker
 //tf_build_menu_controller_mode 1 // Use controller style engineer build menu
 //tf_disguise_menu_controller_mode 1 // Controller disguise menu
