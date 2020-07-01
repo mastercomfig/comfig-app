@@ -1,5 +1,5 @@
 header {
-    height: 100vh
+  height: 100vh
 }
 
 .dark-header {
@@ -7,21 +7,21 @@ header {
 }
 
 .btn, .btn-lg {
-    border-radius: 0
+  border-radius: 0
 }
 
 a.text-light.focus {
-    color: #cbd3da !important;
+  color: #cbd3da !important;
 }
 
 section {
-    padding-top: 2rem;
-    padding-bottom: 4rem
+  padding-top: 2rem;
+  padding-bottom: 4rem
 }
 
 footer {
-    color: #f8f9fa;
-    padding-bottom: 2rem
+  color: #f8f9fa;
+  padding-bottom: 2rem
 }
 
 .modal-lg {
@@ -29,38 +29,42 @@ footer {
 }
 
 a {
-    color: #b2dfdb;
-    transition: .25s
+  color: #b2dfdb;
+  transition: .25s
 }
 
 a:hover {
-    color: #00e3ce;
-    text-decoration: none
+  color: #00e3ce;
+  text-decoration: none
 }
 
 .btn-outline-primary {
-    color: #b2dfdb;
-    border-color: #b2dfdb
+  color: #b2dfdb;
+  border-color: #b2dfdb
 }
 
 .btn-outline-primary:hover,
 .btn-outline-primary:not(:disabled):not(.disabled).active,
 .btn-outline-primary:not(:disabled):not(.disabled):active {
-    color: #fff;
-    background-color: #009688;
-    border-color: #009688
+  color: #fff;
+  background-color: #009688;
+  border-color: #009688
 }
 
 .btn-primary,
 .btn-primary:not(:disabled):not(.disabled).active,
 .btn-primary:not(:disabled):not(.disabled):active {
-    background-color: #00645d;
-    border-color: #009688
+  background-color: #00645d;
+  border-color: #009688
 }
 
 .btn-primary:hover,
 .btn-primary.focus,
 .btn-primary:focus {
-    background-color: #375e5b;
-    border-color: #009688
+  background-color: #375e5b;
+  border-color: #009688
+}
+
+.img-logo {
+  height: 10vh
 }
