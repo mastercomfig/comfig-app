@@ -46,3 +46,7 @@ input {
         max-width: 45vw
     }
 }
+
+b {
+  font-weight: 500
+}
