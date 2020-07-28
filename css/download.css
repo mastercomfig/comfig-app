@@ -50,3 +50,7 @@ input {
 b {
   font-weight: 500
 }
+
+#title {
+  font-size: 2.5rem
+}
