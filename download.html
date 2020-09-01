@@ -2,22 +2,25 @@
 <html lang="en-US">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#009688">
 
-    <link ref="preload" as="style" href="https://cdn.jsdelivr.net/combine/npm/bootstrap@4/dist/css/bootstrap.min.css">
-    <link ref="preload" as="fetch" href="https://api.github.com/repos/mastercomfig/mastercomfig/releases/latest">
+    <link ref="preload" as="style" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+    <link ref="preload" as="fetch" href="https://mastercomfig.mcoms.workers.dev/">
     <link rel="preload" as="script" href="js/download.js">
     <link ref="preload" as="style" href="css/main.css">
     <link ref="preload" as="style" href="css/download.css">
+    <link rel="preconnect" href="https://stackpath.bootstrapcdn.com/" crossorigin>
+    <link rel="dns-prefetch" href="https://stackpath.bootstrapcdn.com/">
     <link rel="preconnect" href="https://cdn.jsdelivr.net/" crossorigin>
     <link rel="dns-prefetch" href="https://cdn.jsdelivr.net/">
-    <link rel="preconnect" href="https://api.github.com/" crossorigin>
-    <link rel="dns-prefetch" href="https://api.github.com/">
+    <link rel="preconnect" href="https://mastercomfig.mcoms.workers.dev/" crossorigin>
+    <link rel="dns-prefetch" href="https://mastercomfig.mcoms.workers.dev/">
     <link rel="preconnect" href="https://github.com/" crossorigin>
     <link rel="dns-prefetch" href="https://github.com/">
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/combine/npm/bootstrap@4/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css" integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4/css/font-awesome.min.css">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/download.css">
     <link rel="shortcut icon" href="favicon.ico">
@@ -47,210 +50,218 @@
             </div>
         </div>
     </section>-->
-    <section class="jumbotron jumbotron-fluid text-light dark-header" style="margin-bottom: 1rem;padding-bottom: 0;padding-top: 0">
-        <div class="container d-flex align-items-center" style="min-height: 100%">
+    <nav class="navbar navbar-expand-sm sticky-top navbar-dark bg-teal">
+      <div class="container-fluid">
+        <span class="navbar-brand">mastercomfig <span class="badge bg-dark"></span></span>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="https://github.com/mastercomfig/mastercomfig/releases/latest"><strong>Changelog</strong></a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <section class="container-fluid text-light dark-header" style="margin-bottom: 1rem;padding-bottom: 0;padding-top: 0">
+        <div class="d-flex align-items-center" style="min-height: 100%">
             <div class="align-middle">
-                <div class="bg-dark sticky-top" style="padding: 0.2rem 1rem; margin-bottom: 0.2rem">
-                  <h1 class="display-4" id="title"><span data-feather="download" class="feather-big"></span> Download mastercomfig</h1>
-                  <div class="lead">
-                    <p><a href="https://docs.mastercomfig.com/page/support_me/"><span data-feather="heart"></span> <b>Support me</b></a><span class="d-none d-md-inline">: Learn how you can support more updates to mastercomfig!</span></p>
-                    <p><a href="https://ko-fi.com/mastercoms/shop"><span data-feather="award"></span> <b>Early Access</b></a><span class="d-none d-md-inline">: Get early access to more frequent mastercomfig updates.</span></p>
-                    <p><a href="https://docs.mastercomfig.com/page/setup/install/"><span data-feather="hard-drive"></span> <b>How to install</b></a><span class="d-none d-md-inline">: Instructions on setting up mastercomfig initially and get it working with your custom files.</span></p>
-                    <p><a href="https://docs.mastercomfig.com/page/next_steps/update/"><span data-feather="refresh-cw"></span> <b>How to update</b></a><span class="d-none d-md-inline">: Instructions on updating mastercomfig after you've already installed it.</span></p>
-                    <p><a href="https://github.com/mastercomfig/mastercomfig/releases/latest"><span data-feather="list"></span> <b>Changelog</b></a><span class="d-none d-md-inline">: Read about what's changed in the latest version.</span></p>
+                <hr>
+                <div class="row">
+                  <div class="col-sm-auto">
+                    <h2><span class="fa fa-bars fa-fw" aria-hidden="true"></span> Quality</h2>
+                    <p>Choose your preset</p>
                   </div>
-                </div>
-                <h2>1. <span data-feather="package"></span> Choose your preset</h2>
-                <div class="list-group" id="presets">
-                  <a class="list-group-item list-group-item-action list-group-item-dark" id="ultra" href="#">
-                    <div class="row align-items-center">
-                        <div class="col-md-11">
-                            <h5 class="mb-1">Ultra</h5>
-                            <p class="mb-1">Absolute maximum quality, with even the slightest and most performance-intensive quality improvements included.</p>
-                        </div>
-                        <div class="col-md-1" data-toggle="tooltip" data-html="true" data-boundary="viewport" title="<img src='img/presets/ultra.png' class='download-preview'/>">
-                          <span data-feather="eye"></span>
-                        </div>
-                    </div>
-                  </a>
-                  <a class="list-group-item list-group-item-action list-group-item-dark" id="high" href="#">
-                      <div class="row align-items-center">
-                          <div class="col-md-11">
-                              <h5 class="mb-1">High</h5>
-                              <p class="mb-1">Enables all graphical features without making them extremely high quality.</p>
-                          </div>
-                          <div class="col-md-1" data-toggle="tooltip" data-html="true" data-boundary="viewport" title="<img src='img/presets/high.png' class='download-preview'/>">
-                            <span data-feather="eye"></span>
-                          </div>
+                  <div class="col-sm">
+                    <ul class="nav nav-pills nav-fill" id="presets" role="tablist">
+                      <li class="nav-item">
+                        <a class="nav-link" id="ultra" data-toggle="tab" href="#ultra-tab" role="tab" aria-controls="ultra-tab" aria-selected="true">Ultra</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" id="high" data-toggle="tab" href="#high-tab" role="tab" aria-controls="high-tab" aria-selected="true">High</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" id="medium-high" data-toggle="tab" href="#medium-high-tab" role="tab" aria-controls="medium-high-tab" aria-selected="true">Medium High</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" id="medium" data-toggle="tab" href="#medium-tab" role="tab" aria-controls="medium-tab" aria-selected="true">Medium</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" id="medium-low" data-toggle="tab" href="#medium-low-tab" role="tab" aria-controls="medium-low-tab" aria-selected="true">Medium Low</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" id="low" data-toggle="tab" href="#low-tab" role="tab" aria-controls="low-tab" aria-selected="true">Low</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" id="very-low" data-toggle="tab" href="#very-low-tab" role="tab" aria-controls="very-low-tab" aria-selected="true">Very Low</a>
+                      </li>
+                    </ul>
+                    <div class="tab-content">
+                      <div class="tab-pane" id="ultra-tab" role="tabpanel" aria-labelledby="ultra">
+                        <br><img src='img/presets/ultra.png' class="download-preview img-fluid"/><br><br>
+                        Absolute maximum quality, with even the slightest and most performance-intensive quality improvements included.
                       </div>
-                  </a>
-                  <a class="list-group-item list-group-item-action list-group-item-dark" id="medium-high" href="#">
-                    <div class="row align-items-center">
-                        <div class="col-md-11">
-                            <h5 class="mb-1">Medium High</h5>
-                            <p class="mb-1">Disables unoptimized features and optimizes the game without making the game look bad.</p>
-                        </div>
-                        <div class="col-md-1" data-toggle="tooltip" data-html="true" data-boundary="viewport" title="<img src='img/presets/medium-high.png' class='download-preview'/>">
-                          <span data-feather="eye"></span>
-                        </div>
+                      <div class="tab-pane" id="high-tab" role="tabpanel" aria-labelledby="high">
+                        <br><img src='img/presets/high.png' class="download-preview img-fluid"/><br><br>
+                        Enables all graphical features without making them extremely high quality.
+                      </div>
+                      <div class="tab-pane" id="medium-high-tab" role="tabpanel" aria-labelledby="medium-high">
+                        <br><img src='img/presets/medium-high.png' class="download-preview img-fluid"/><br><br>
+                        Disables unoptimized features and optimizes the game without making the game look bad.
+                      </div>
+                      <div class="tab-pane" id="medium-tab" role="tabpanel" aria-labelledby="medium">
+                        <br><img src='img/presets/medium.png' class="download-preview img-fluid"/><br><br>
+                        The maximum performance you can get while enabling a few effects that may give you a slight edge.
+                      </div>
+                      <div class="tab-pane" id="medium-low-tab" role="tabpanel" aria-labelledby="medium-low">
+                        <br><img src='img/presets/medium-low.png' class="download-preview img-fluid"/><br><br>
+                        The maximum performance you can get without making the game too hard to play because of awful visual quality and glitches.
+                      </div>
+                      <div class="tab-pane" id="low-tab" role="tabpanel" aria-labelledby="low">
+                        <br><img src='img/presets/low.png' class="download-preview img-fluid"/><br><br>
+                        Maximum performance without caring much about visibility or possible visual glitches.
+                      </div>
+                      <div class="tab-pane" id="very-low-tab" role="tabpanel" aria-labelledby="very-low">
+                        <br><img src='img/presets/very-low.png' class="download-preview img-fluid"/><br><br>
+                          Negatively affects playability by <strong>a lot</strong> and disables very essential features like HUD elements in desperation for performance.
+                          <br>Not recommended unless the game has such low performance that it is more of a hinderance than not having HUD elements and good player visibility.
+                          <br><strong>BY DOWNLOADING THIS PRESET YOU UNDERSTAND THAT IT <em>REMOVES HUD ELEMENTS AND REDUCES VISIBILITY</em>. IF YOU DON'T WANT THIS <em>USE LOW</em>, THAT'S THE <em>ONLY</em> DIFFERENCE.</strong>
+                      </div>
                     </div>
-                  </a>
-                  <a class="list-group-item list-group-item-action list-group-item-dark" id="medium" href="#">
-                    <div class="row align-items-center">
-                        <div class="col-md-11">
-                            <h5 class="mb-1">Medium</h5>
-                            <p class="mb-1">The maximum performance you can get while enabling a few effects that may give you a slight edge.</p>
-                        </div>
-                        <div class="col-md-1" data-toggle="tooltip" data-html="true" data-boundary="viewport" title="<img src='img/presets/medium.png' class='download-preview'/>">
-                          <span data-feather="eye"></span>
-                        </div>
-                    </div>
-                  </a>
-                  <a class="list-group-item list-group-item-action list-group-item-dark" id="medium-low" href="#">
-                    <div class="row align-items-center">
-                        <div class="col-md-11">
-                            <h5 class="mb-1">Medium Low</h5>
-                            <p class="mb-1">The maximum performance you can get without making the game too hard to play because of awful visual quality and glitches.</p>
-                        </div>
-                        <div class="col-md-1" data-toggle="tooltip" data-html="true" data-boundary="viewport" title="<img src='img/presets/medium-low.png' class='download-preview'/>">
-                          <span data-feather="eye"></span>
-                        </div>
-                    </div>
-                  </a>
-                  <a class="list-group-item list-group-item-action list-group-item-dark" id="low" href="#">
-                    <div class="row align-items-center">
-                        <div class="col-md-11">
-                            <h5 class="mb-1">Low</h5>
-                            <p class="mb-1">Maximum performance without caring much about visibility or possible visual glitches.</p>
-                        </div>
-                        <div class="col-md-1" data-toggle="tooltip" data-html="true" data-boundary="viewport" title="<img src='img/presets/low.png' class='download-preview'/>">
-                          <span data-feather="eye"></span>
-                        </div>
-                    </div>
-                  </a>
-                  <a class="list-group-item list-group-item-action list-group-item-dark" id="very-low" href="#">
-                    <div class="row align-items-center">
-                        <div class="col-md-11">
-                            <h5 class="mb-1">Very Low</h5>
-                            <p class="mb-1">Negatively affects playability by <strong>a lot</strong> and disables very essential features like HUD elements in desperation for performance.
-                                <br>Not recommended unless the game has such low performance that it is more of a hinderance than not having HUD elements and good player visibility.
-                                <br><strong>BY DOWNLOADING THIS PRESET YOU UNDERSTAND THAT IT <em>REMOVES HUD ELEMENTS AND REDUCES VISIBILITY</em>. IF YOU DON'T WANT THIS <em>USE LOW</em>, THAT'S THE <em>ONLY</em> DIFFERENCE.</strong>
-                            </p>
-                        </div>
-                        <div class="col-md-1" data-toggle="tooltip" data-html="true" data-boundary="viewport" title="<img src='img/presets/very-low.png' class='download-preview'/>">
-                          <span data-feather="eye"></span>
-                        </div>
-                    </div>
-                  </a>
-                </div>
-                <hr>
-                <h2>2. <span data-feather="plus-square"></span> Select any addons</h2>
-                <form>
-                  <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="no-footsteps">
-                    <label class="custom-control-label" for="no-footsteps">
-                      <b>No Footsteps</b> &mdash; Removes footstep sounds
-                    </label>
-                  </div>
-                  <br>
-                  <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="disable-pyroland">
-                    <label class="custom-control-label" for="disable-pyroland">
-                      <b>Disable Pyroland</b> &mdash; Removes Pyroland map textures
-                    </label>
-                  </div>
-                  <br>
-                  <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="no-soundscapes">
-                    <label class="custom-control-label" for="no-soundscapes">
-                      <b>No Soundscapes</b> &mdash; Remove soundscapes (ambient map noise)
-                    </label>
-                  </div>
-                  <br>
-                  <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="no-tutorial">
-                    <label class="custom-control-label" for="no-tutorial">
-                      <b>No Tutorial</b> &mdash; Disables tutorial messages and other popups
-                    </label>
-                  </div>
-                  <br>
-                  <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="null-cancelling-movement">
-                    <label class="custom-control-label" for="null-cancelling-movement">
-                      <b>Null-Cancelling Movement</b> &mdash; Prevents you from pressing two opposing directions, which causes you to stop moving
-                    </label>
-                  </div>
-                  <br>
-                  <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="flat-mouse">
-                    <label class="custom-control-label" for="flat-mouse">
-                      <b>Flat Mouse</b> &mdash; Makes mouse input "flat" with stable input, no acceleration and 1:1 zoom sensitivity.
-                    </label>
-                  </div>
-                  <br>
-                  <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="transparent-viewmodels">
-                    <label class="custom-control-label" for="transparent-viewmodels">
-                      <b>Transparent Viewmodels</b> &mdash; Enables support for transparent viewmodels. Note that this does not enable transparent viewmodels, your HUD must enable them. This only allows transparent viewmodels to work. Transparent viewmodels also require dxlevel 90 or higher.
-                    </label>
-                  </div>
-                  <br>
-                  <br>
-                  <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="lowmem">
-                    <label class="custom-control-label" for="lowmem">
-                      <b>Low Memory</b> &mdash; Optimizations that generally do not affect quality for low memory (RAM) systems (4GB and lower). <strong>WARNING: will REDUCE performance on high memory!!!</strong>
-                    </label>
-                  </div>
-                </form>
-                <hr>
-                <h2>3. <span data-feather="archive"></span> Download your files</h2>
-                <p>Just drop them in your <code>tf/custom</code> folder and they'll automatically run.</p>
-                <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest" class="text-light" id="vpk-dl" style="cursor: pointer"><span data-feather="download-cloud"></span>  Download from GitHub</a></p>
-                <a id="collapseManualButton" data-toggle="collapse" href="#collapseManual" role="button" aria-expanded="false" aria-controls="collapseManual">
-                    Not working? Download manually
-                </a>
-                <div class="collapse" id="collapseManual">
-                    <br>
-                    <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest" class="text-light" id="preset-dl"><span data-feather="download"></span> Download preset VPK</a></p>
-                    <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-no-footsteps-addon.vpk" class="text-light" id="no-footsteps-dl" style="display: none"><span data-feather="download"></span> Download No Footsteps addon VPK</a></p>
-                    <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-disable-pyroland-addon.vpk" class="text-light" id="disable-pyroland-dl" style="display: none"><span data-feather="download"></span> Download Disable Pyroland addon VPK</a></p>
-                    <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-no-soundscapes-addon.vpk" class="text-light" id="no-soundscapes-dl" style="display: none"><span data-feather="download"></span> Download No Soundscapes addon VPK</a></p>
-                    <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-no-tutorial-addon.vpk" class="text-light" id="no-tutorial-dl" style="display: none"><span data-feather="download"></span> Download No Tutorial addon VPK</a></p>
-                    <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-null-cancelling-movement-addon.vpk" class="text-light" id="null-cancelling-movement-dl" style="display: none"><span data-feather="download"></span> Download Null-Cancelling Movement addon VPK</a></p>
-                    <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-flat-mouse-addon.vpk" class="text-light" id="flat-mouse-dl" style="display: none"><span data-feather="download"></span> Download Flat Mouse addon VPK</a></p>
-                    <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-transparent-viewmodels-addon.vpk" class="text-light" id="transparent-viewmodels-dl" style="display: none"><span data-feather="download"></span> Download Transparent Viewmodels addon VPK</a></p>
-                    <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-lowmem-addon.vpk" class="text-light" id="lowmem-dl" style="display: none"><span data-feather="download"></span> Download Low Memory addon VPK</a></p>
-                </div>
-                <h6 style="padding-top: 16px"><b>Additional mastercomfig config files</b></h6>
-                <p>You can put the user template in your <code>tf/cfg</code> folder to help you customize mastercomfig.</p>
-                <p><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/template.zip" class="text-light" id="autoexec-dl"><span data-feather="download"></span> Download user template</a></p>
-                <a data-toggle="collapse" href="#collapseAdvanced" role="button" aria-expanded="false" aria-controls="collapseAdvanced">
-                    Advanced files
-                </a>
-                <div class="collapse" id="collapseAdvanced">
-                  <div class="card card-body bg-dark">
-                    <p>You can use these to help you customize mastercomfig, but they are not required, nor recommended.</p>
-                    <p><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/modules_template.cfg" class="text-light" id="modules-dl"><span data-feather="download"></span> Download modules template</a></p>
-                    <p><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/autoexec_template.cfg" class="text-light" id="autoexec-dl"><span data-feather="download"></span> Download autoexec template</a></p>
-                    <p style="margin-bottom: 0"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig.zip" class="text-light" id="autoexec-dl"><span data-feather="download"></span> Download mastercomfig zip package</a></p>
                   </div>
                 </div>
                 <hr>
-                <h2>4. <span data-feather="plus-circle"></span> Optional next steps</h2>
-                <h6 style="padding-top: 16px"><b>Troubleshooting and feedback</b></h6>
-                <p>Experiencing problems with mastercomfig? Head to the troubleshoot page to get help with common issues. Don't see your issue? Ask our community for help! You can also join to give feedback and suggestions about the config.</p>
-                <a class="btn btn-primary" href="https://docs.mastercomfig.com/page/next_steps/troubleshoot/">Troubleshoot issues</a>
-                <a class="btn btn-secondary" href="https://discord.gg/CuPb2zV">Discord</a>
-                <a class="btn btn-secondary" href="https://steamcommunity.com/groups/comfig">Steam Group</a>
-                <h6 style="padding-top: 16px"><b>See Also</b></h6>
-                <p>There are some other great mods which you may want to use in addition to mastercomfig.</p>
-                <a class="btn btn-primary" href="https://docs.mastercomfig.com/page/customization/see_also/">Check them out!</a>
+                <div class="row">
+                  <div class="col-sm-auto">
+                    <h2><span class="fa fa-plus-square fa-fw"></span> Addons</h2>
+                  </div>
+                  <div class="col-sm">
+                    <form>
+                      <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="no-footsteps">
+                        <label class="custom-control-label" for="no-footsteps">
+                          <strong>No Footsteps</strong> &mdash; Removes footstep sounds
+                        </label>
+                      </div>
+                      <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="disable-pyroland">
+                        <label class="custom-control-label" for="disable-pyroland">
+                          <strong>Disable Pyroland</strong> &mdash; Removes Pyroland map textures
+                        </label>
+                      </div>
+                      <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="no-soundscapes">
+                        <label class="custom-control-label" for="no-soundscapes">
+                          <strong>No Soundscapes</strong> &mdash; Remove soundscapes (ambient map noise)
+                        </label>
+                      </div>
+                      <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="no-tutorial">
+                        <label class="custom-control-label" for="no-tutorial">
+                          <strong>No Tutorial</strong> &mdash; Disables tutorial messages and other popups
+                        </label>
+                      </div>
+                      <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="null-cancelling-movement">
+                        <label class="custom-control-label" for="null-cancelling-movement">
+                          <strong>Null-Cancelling Movement</strong> &mdash; Prevents you from pressing two opposing directions, which causes you to stop moving
+                        </label>
+                      </div>
+                      <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="flat-mouse">
+                        <label class="custom-control-label" for="flat-mouse">
+                          <strong>Flat Mouse</strong> &mdash; Makes mouse input "flat" with stable input, no acceleration and 1:1 zoom sensitivity.
+                        </label>
+                      </div>
+                      <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="transparent-viewmodels">
+                        <label class="custom-control-label" for="transparent-viewmodels">
+                          <strong>Transparent Viewmodels</strong> &mdash; Enables support for transparent viewmodels.
+                        </label>
+                        Note that this does not enable transparent viewmodels, your HUD must enable them. This only allows transparent viewmodels to work. Transparent viewmodels also require dxlevel 90 or higher.
+                      </div>
+                      <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="lowmem">
+                        <label class="custom-control-label" for="lowmem">
+                          <strong>Low Memory</strong> &mdash; Optimizations for low memory (RAM) systems (2GB and lower).
+                        </label>
+                        <strong>WARNING: will REDUCE performance on high memory!!!</strong>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+                <hr>
+                <div class="row">
+                  <div class="col-sm-auto">
+                    <h2><span class="fa fa-archive fa-fw"></span> Download</h2>
+                    <p>Just drop them in your <code>tf/custom</code> folder and they'll automatically run.</p>
+                    <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest" class="text-light" id="vpk-dl" style="cursor: pointer"><span class="fa fa-cloud-download fa-fw"></span>  Download from GitHub</a></p>
+                    <a id="collapseManualButton" data-toggle="collapse" href="#collapseManual" role="button" aria-expanded="false" aria-controls="collapseManual">
+                        Not working? Download manually
+                    </a>
+                    <div class="collapse" id="collapseManual">
+                        <br>
+                        <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest" class="text-light" id="preset-dl"><span class="fa fa-download fa-fw"></span> Download preset VPK</a></p>
+                        <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-no-footsteps-addon.vpk" class="text-light" id="no-footsteps-dl" style="display: none"><span dclass="fa fa-download fa-fw"></span> Download No Footsteps addon VPK</a></p>
+                        <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-disable-pyroland-addon.vpk" class="text-light" id="disable-pyroland-dl" style="display: none"><span class="fa fa-download fa-fw"></span> Download Disable Pyroland addon VPK</a></p>
+                        <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-no-soundscapes-addon.vpk" class="text-light" id="no-soundscapes-dl" style="display: none"><span class="fa fa-download fa-fw"></span> Download No Soundscapes addon VPK</a></p>
+                        <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-no-tutorial-addon.vpk" class="text-light" id="no-tutorial-dl" style="display: none"><span class="fa fa-download fa-fw"></span> Download No Tutorial addon VPK</a></p>
+                        <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-null-cancelling-movement-addon.vpk" class="text-light" id="null-cancelling-movement-dl" style="display: none"><span dclass="fa fa-download fa-fw"></span> Download Null-Cancelling Movement addon VPK</a></p>
+                        <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-flat-mouse-addon.vpk" class="text-light" id="flat-mouse-dl" style="display: none"><span class="fa fa-download fa-fw"></span> Download Flat Mouse addon VPK</a></p>
+                        <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-transparent-viewmodels-addon.vpk" class="text-light" id="transparent-viewmodels-dl" style="display: none"><span class="fa fa-download fa-fw"></span> Download Transparent Viewmodels addon VPK</a></p>
+                        <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-lowmem-addon.vpk" class="text-light" id="lowmem-dl" style="display: none"><span class="fa fa-download fa-fw"></span> Download Low Memory addon VPK</a></p>
+                    </div>
+                    <h6 style="padding-top: 16px"><b>Additional mastercomfig config files</b></h6>
+                    <p>You can put the user template in your <code>tf/cfg</code> folder to help you customize mastercomfig.</p>
+                    <p><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/template.zip" class="text-light" id="autoexec-dl"><span class="fa fa-download fa-fw"></span> Download user template</a></p>
+                    <a data-toggle="collapse" href="#collapseAdvanced" role="button" aria-expanded="false" aria-controls="collapseAdvanced">
+                        Advanced files
+                    </a>
+                    <div class="collapse" id="collapseAdvanced">
+                      <div class="card card-body bg-dark">
+                        <p>You can use these to help you customize mastercomfig, but they are not required, nor recommended.</p>
+                        <p><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/modules_template.cfg" class="text-light" id="modules-dl"><span class="fa fa-download fa-fw"></span> Download modules template</a></p>
+                        <p><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/autoexec_template.cfg" class="text-light" id="autoexec-dl"><span class="fa fa-download fa-fw"></span> Download autoexec template</a></p>
+                        <p style="margin-bottom: 0"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig.zip" class="text-light" id="autoexec-dl"><span class="fa fa-download fa-fw"></span> Download mastercomfig zip package</a></p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm">
+                    <h2>Next steps</h2>
+                      <div class="lead row">
+                        <div class="col-sm-auto">
+                          <p><a href="https://docs.mastercomfig.com/page/setup/install/"><span class="fa fa-desktop fa-fw"></span> <b>How to install</b></a><span class="d-none d-md-inline"></p>
+                          <p><a href="https://docs.mastercomfig.com/page/next_steps/update/"><span class="fa fa-refresh fa-fw"></span> <b>How to update</b></a><span class="d-none d-md-inline"></p>
+                        </div>
+                        <div class="col-sm-auto">
+                          <p><a href="https://docs.mastercomfig.com/page/support_me/"><span class="fa fa-heart fa-fw"></span> <b>Support me</b></a></p>
+                          <p><a href="https://ko-fi.com/mastercoms/shop"><span class="fa fa-bookmark fa-fw"></span> <b>Early Access</b></a></p>
+                        </div>
+                      </div>
+                    <h6 style="padding-top: 16px"><b>Documentation and support</b></h6>
+                    <p>Want to customize and get the most out of mastercomfig? Learn how to use modules and do advanced customization.<p>
+                    <a class="btn btn-primary" href="https://docs.mastercomfig.com/page/customization/modules/">Modules</a>
+                    <a class="btn btn-primary" href="https://docs.mastercomfig.com/page/customization/custom_configs/">Custom configs</a>
+                    <p>Experiencing problems with mastercomfig? Head to the troubleshoot page to get help with common issues. Don't see your issue? Ask our community for help! You can also join to give feedback and suggestions about the config.</p>
+                    <a class="btn btn-primary" href="https://docs.mastercomfig.com/page/next_steps/troubleshoot/">Troubleshoot issues</a>
+                    <a class="btn btn-secondary" href="https://discord.gg/CuPb2zV">Discord</a>
+                    <a class="btn btn-secondary" href="https://steamcommunity.com/groups/comfig">Steam Group</a>
+                    <h6 style="padding-top: 16px"><b>See Also</b></h6>
+                    <p>There are some other great mods and custom configs which you may want to check out in addition to mastercomfig.</p>
+                    <a class="btn btn-primary" href="https://docs.mastercomfig.com/page/customization/see_also/">Extra mods</a>
+                    <a class="btn btn-primary" href="https://docs.mastercomfig.com/page/customization/custom_config_list/">Custom configs</a>
+                  </div>
+                </div>
+
+                <hr>
+
                 <br><br>
             </div>
         </div>
     </section>
-    <footer class="container">
+    <footer class="container-fluid">
         Copyright &copy; 2016-2020 mastercoms
         <br><br>
         Valve, the Valve logo, Steam, the Steam logo, Team Fortress, the Team Fortress logo, Source, the Source logo are trademarks and/or registered trademarks of Valve Corporation in the U.S. and/or other countries.
@@ -258,11 +269,8 @@
         mastercomfig is not sponsored, endorsed, licensed by, or affiliated with Valve Corporation.
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16/dist/umd/popper.min.js"></script>
-    <script async src="https://cdn.jsdelivr.net/combine/npm/bootstrap@4/js/dist/index.min.js,npm/bootstrap@4/js/dist/util.min.js,npm/bootstrap@4/js/dist/tab.min.js,npm/bootstrap@4/js/dist/collapse.min.js,npm/bootstrap@4/js/dist/tooltip.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/feather-icons@4/dist/feather.min.js"></script>
-    <script defer src="js/feather.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js" integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/" crossorigin="anonymous"></script>
     <script defer src="js/download.js"></script>
   </body>
 </html>

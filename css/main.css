@@ -30,7 +30,13 @@ footer {
 
 a {
   color: #b2dfdb;
-  transition: .25s
+  transition: .25s;
+  text-decoration: none
+}
+
+.bi {
+  display: inline-block;
+  vertical-align: text-bottom;
 }
 
 a:hover {

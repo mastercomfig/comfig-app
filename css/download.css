@@ -4,6 +4,15 @@
     border-color: #59636c
 }
 
+.navbar {
+  backdrop-filter: blur(1rem);
+  box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.05), inset 0 -1px 0 rgba(0,0,0,0.15);
+}
+
+.navbar.bg-teal {
+  background-color: rgba(0,150,136,.6)
+}
+
 .list-group-item-dark {
     color: #dddad5;
     background-color: #282b2d
@@ -13,9 +22,17 @@
     border-radius: 0
 }
 
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+  font-weight: 300
+}
+
 .list-group-item-dark.list-group-item-action:focus, .list-group-item-dark.list-group-item-action:hover {
     color: #dddad5;
     background-color: #2c2f31
+}
+
+.nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+  background-color: #009688;
 }
 
 input {
@@ -29,8 +46,14 @@ input {
     border-color: #3d454c
 }
 
+.custom-checkbox {
+  padding-top: .1rem;
+  padding-bottom: .1rem;
+}
+
 .download-preview {
-    width: 100%
+  width: auto;
+  height: 30vh
 }
 
 .tooltip {
@@ -48,7 +71,7 @@ input {
 }
 
 b {
-  font-weight: 500
+  font-weight: 600
 }
 
 #title {

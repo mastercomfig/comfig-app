@@ -1,9 +1,5 @@
 "use strict";
 
-$(function() {
-  app();
-});
-
 function app() {
     // convenience format method for string
     String.prototype.format = function() {
@@ -61,29 +57,21 @@ function app() {
 
   var downloading = false;
 
-  var featherRefs = 2;
-
-  function updateFeatherRef() {
-      if (--featherRefs <= 0) {
-          initFeather();
-      }
-  }
-
   function downloadClickEvent() {
       download();
-      $('#vpk-dl').off();
+      document.getElementById('vpk-dl').onclick = null;
       vpkDownload.style.cursor = "not-allowed";
       downloading = true;
       vpkDownload.classList.add("focus");
-      $('#vpk-dl').html(vpkDownload.innerHTML.replace("Download", "Downloading").replace("VPKs", "VPKs..."));
+      document.getElementById('vpk-dl').innerHTML = vpkDownload.innerHTML.replace("Download", "Downloading").replace("VPKs", "VPKs...");
   }
 
   function bindDownloadClick() {
-      $('#vpk-dl').on('click', downloadClickEvent);
+      document.getElementById('vpk-dl').onclick = downloadClickEvent;
       vpkDownload.style.cursor = "pointer";
       downloading = false;
       vpkDownload.classList.remove("focus");
-      $('#vpk-dl').html(vpkDownload.innerHTML.replace("Downloading", "Download").replace("VPKs...", "VPKs"));
+      document.getElementById('vpk-dl').innerHTML = vpkDownload.innerHTML.replace("Downloading", "Download").replace("VPKs...", "VPKs");
   }
 
   function getDownloadUrl(id, preset) {
@@ -151,15 +139,14 @@ function app() {
 
   function setPreset(id, no_set) {
     storage.setItem('preset', id); // save preset selection
-    $(document.getElementById(id)).tab('show'); // visually select in tabs menu
+    new bootstrap.Tab(document.getElementById(id)).show(); // visually select in tabs menu
     selectedPreset = id; // save download ID
     vpkDownload.removeAttribute('href'); // we don't need the static download anymore
     if (!downloading) {
-        $("#vpk-dl").html('<span data-feather="download-cloud"></span> Download {0} preset and selected addons VPKs'.format(presets.get(id))); // update download text
+        document.getElementById("vpk-dl").innerHTML = '<span class="fa fa-cloud-download fa-fw"></span> Download {0} preset and selected addons VPKs'.format(presets.get(id)); // update download text
     }
     presetDownload.setAttribute('href', getPresetUrl());
-    $("#preset-dl").html('<span data-feather="download"></span> Download {0} preset VPK'.format(presets.get(id))); // update preset text
-    updateFeatherRef();
+    document.getElementById("preset-dl").innerHTML = '<span class="fa fa-download fa-fw"></span> Download {0} preset VPK'.format(presets.get(id)); // update preset text
     // if not loading from storage, set recommended addons
     if (!no_set) {
         // reset all recommendable addons
@@ -174,30 +161,35 @@ function app() {
   }
 
   // get latest release, and update page
-  $.get("https://mastercomfig.mcoms.workers.dev/", function(data) {
+  fetch("https://mastercomfig.mcoms.workers.dev/")
+  .then(resp => resp.json())
+  .then(data => {
     version = data.v;
     if (!version) {
         return;
     }
     let versionName = version.indexOf('v') === 0 ? version.substr(1) : version; // some releases use the v prefix, ignore it
     // update title with version
-    $('#title').html('<span data-feather="download"></span> Download mastercomfig ' + versionName);
-    updateFeatherRef();
-  }, "json");
+    document.getElementById("#version").innerText = versionName;
+  });
 
-  $('#presets a').on('click', function(e) {
-    e.preventDefault();
-    setPreset(this.id);
+  document.querySelectorAll('#presets a').forEach((element) => {
+    element.addEventListener('click', (e) => {
+      e.preventDefault();
+      setPreset(e.currentTarget.id);
+    });
   });
 
   bindDownloadClick();
 
-  $('#preset-dl').on('click', function() {
-      storage.setItem("lastVersion", version);
+  document.getElementById('preset-dl').addEventListener('click', () => {
+    storage.setItem("lastVersion", version);
   });
 
-  $("input[type='checkbox']").change(function() {
-    updateAddon(this.id);
+  document.querySelectorAll("input[type='checkbox']").forEach((element) => {
+    element.addEventListener('input', (e) => {
+      updateAddon(e.currentTarget.id);
+    });
   });
 
   // if we have a stored preset, load it
@@ -213,6 +205,8 @@ function app() {
       setAddon(id, false);
     }
   }
-
-  $('[data-toggle="tooltip"]').tooltip();
 }
+
+(function() {
+  app();
+})();
