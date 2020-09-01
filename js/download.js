@@ -170,7 +170,7 @@ function app() {
     }
     let versionName = version.indexOf('v') === 0 ? version.substr(1) : version; // some releases use the v prefix, ignore it
     // update title with version
-    document.getElementById("#version").innerText = versionName;
+    document.getElementById("version").innerText = versionName;
   });
 
   document.querySelectorAll('#presets a').forEach((element) => {
