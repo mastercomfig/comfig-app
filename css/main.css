@@ -2,6 +2,23 @@ header {
   height: 100vh
 }
 
+* {
+  scrollbar-color: #009688 rgb(64, 63, 63);
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar-track {
+    background: rgb(64, 63, 63);
+}
+
+::-webkit-scrollbar-thumb {
+    background: #009688;
+}
+
+::-webkit-scrollbar {
+    width: 0.5rem;
+}
+
 .dark-header {
   background-color: #212121
 }
