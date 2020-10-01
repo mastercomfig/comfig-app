@@ -93,6 +93,9 @@ function app() {
   // Current mastercomfig version, comes in from API
   var version = null;
 
+  // Current presets modules def
+  var presetModulesDef = {};
+
   // Defined addons (found through parsing HTML)
   var addons = [];
 
@@ -104,6 +107,11 @@ function app() {
   var selectedModules = {};
 
   var storage = localStorage;
+
+  var storedModules = storage.getItem("modules");
+  if (!storedModules) {
+    storedModules = {};
+  }
 
   // Track if multi-download is active
   var downloading = false;
@@ -253,6 +261,34 @@ function app() {
     }
   }
 
+  function getModuleDefault(name) {
+    let userValue = storedModules[name];
+    if (userValue) {
+      selectedModules[name] = defaultValue;
+      return userValue;
+    }
+    let modulePresets = presetModulesDef[name];
+    if (modulePresets) {
+      let presetValue = modulePresets[selectedPreset];
+      if (presetValue) {
+        return presetValue;
+      }
+      return modulePresets.default;
+    }
+    return null;
+  }
+
+  function getDefaultValueFromName(values, name) {
+    let defaultValue = 0;
+    for (let i = 0; i <= 1; i++) {
+      let value = values[i];
+      if (value.value === name) {
+        defaultValue = i;
+      }
+    }
+    return defaultValue;
+  }
+
   // Convenience method for creating form input elements
   function createInputElement(type, clazz) {
     let inputElement = document.createElement("input");
@@ -282,8 +318,7 @@ function app() {
       "bg-dark",
       "text-light"
     );
-    let defaultValue = values[0].value;
-    selectedModules[name] = defaultValue;
+    let defaultValue = getModuleDefault(name);
     // Add the values
     values.forEach((value) => {
       // Create the option element
@@ -317,11 +352,10 @@ function app() {
     switchElement.setAttribute("value", "");
     switchContainer.appendChild(switchElement);
     // Set default value
-    let defaultValue = 0;
+    let defaultValue = getDefaultValueFromName(values, getModuleDefault(name));
     if (defaultValue) {
       switchElement.setAttribute("checked", "true");
     }
-    selectedModules[name] = values[defaultValue].value;
     // Event listener
     switchContainer.addEventListener("input", (e) => {
       let selected = values[e.target.checked ? 1 : 0];
@@ -339,7 +373,7 @@ function app() {
     let [inputOuter, inputContainer] = createInputContainer();
     // Create the range element
     let rangeElement = createInputElement("range", "form-range");
-    let defaultValue = 0;
+    let defaultValue = getDefaultValueFromName(values, getModuleDefault(name));
     rangeElement.setAttribute("value", defaultValue);
     rangeElement.setAttribute("min", 0);
     rangeElement.setAttribute("max", values.length - 1);
@@ -348,7 +382,6 @@ function app() {
     // Set default value
     let defaultSelection = values[defaultValue];
     valueIndicator.innerText = capitalize(defaultSelection);
-    selectedModules[name] = defaultSelection;
     // Event listener
     rangeElement.addEventListener("input", (e) => {
       let selected = values[e.target.valueAsNumber];
