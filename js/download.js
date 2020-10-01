@@ -86,7 +86,6 @@ function app() {
   var presetUrl = downloadUrl + "{0}-preset.vpk";
 
   // Cached elements
-  var vpkDownload = document.getElementById("vpk-dl");
   var presetDownload = document.getElementById("preset-dl");
   var modulesRoot = document.getElementById("modules-root");
 
@@ -117,30 +116,32 @@ function app() {
   var downloading = false;
 
   // Once user clicks to multi-download, we download and swap our behavior to in-progress
-  function downloadClickEvent() {
+  function downloadClickEvent(id, fnGatherUrls) {
     // Do the download once clicked
-    download();
-    document.getElementById("vpk-dl").onclick = null; // Ignore clicks
+    downloadUrls(fnGatherUrls(), id, fnGatherUrls);
+    let element = document.getElementById(id);
+    element.onclick = null; // Ignore clicks
     downloading = true; // Still retain in-progress even after switching preset
     // Indicate not useable/in-progress
-    vpkDownload.style.cursor = "not-allowed";
-    vpkDownload.classList.add("focus");
-    document.getElementById("vpk-dl").innerHTML = vpkDownload.innerHTML
+    element.style.cursor = "not-allowed";
+    element.classList.add("focus");
+    element.innerHTML = element.innerHTML
       .replace("Download", "Downloading")
-      .replace("VPKs", "VPKs...");
+      .replace(" ", "…");
   }
 
   // This is what we do when multi-download is ready (init or after finish)
-  function bindDownloadClick() {
+  function bindDownloadClick(id, fnGatherUrls) {
     // Reregister that we can respond to a click
-    document.getElementById("vpk-dl").onclick = downloadClickEvent;
+    let element = document.getElementById(id);
+    element.onclick = () => downloadClickEvent(id, fnGatherUrls);
     downloading = false; // Unlock updating preset test with new download
     // Restore downloadable style
-    vpkDownload.style.cursor = "pointer";
-    vpkDownload.classList.remove("focus");
-    document.getElementById("vpk-dl").innerHTML = vpkDownload.innerHTML
+    element.style.cursor = "pointer";
+    element.classList.remove("focus");
+    element.innerHTML = element.innerHTML
       .replace("Downloading", "Download")
-      .replace("VPKs...", "VPKs");
+      .replace("…", " ");
   }
 
   // Helper functions to format download URLs
@@ -157,7 +158,7 @@ function app() {
   }
   // End download URL helpers
 
-  function downloadUrls(urls) {
+  function downloadUrls(urls, id, fnGatherUrls) {
     // Take the top URL promise and resolve it.
     urls[0].then((result) => {
       // If not empty, make the browser download it.
@@ -167,16 +168,16 @@ function app() {
       if (urls.length > 1) {
         setTimeout(() => {
           // Queue up the rest of the download promise stack
-          return downloadUrls(urls.slice(1));
+          return downloadUrls(urls.slice(1), id, fnGatherUrls);
         }, 2000);
       } else {
         // We've gotten to the last in the download stack, so we're done
-        bindDownloadClick();
+        bindDownloadClick(id, fnGatherUrls);
       }
     });
   }
 
-  function download() {
+  function getVPKDownloadUrls() {
     // We downloaded this version, so track it!
     storage.setItem("lastVersion", version);
     // First push an empty download because browsers like that for some reason.
@@ -200,7 +201,17 @@ function app() {
       );
     }
     // Now queue up all our download promises to download!
-    return downloadUrls(downloads);
+    return downloads;
+  }
+
+  function getCustomDownloadUrls() {
+    // First push an empty download because browsers like that for some reason.
+    var downloads = [
+      Promise.resolve({
+        url: "",
+      }),
+    ];
+    return downloads;
   }
 
   // update addon state based on checked
@@ -234,11 +245,11 @@ function app() {
     storage.setItem("preset", id); // save preset selection
     new bootstrap.Tab(document.getElementById(id)).show(); // visually select in tabs menu
     selectedPreset = id; // save download ID
-    vpkDownload.removeAttribute("href"); // we don't need the static download anymore
+    document.getElementById("vpk-dl").removeAttribute("href"); // we don't need the static download anymore
     if (!downloading) {
       document.getElementById(
         "vpk-dl"
-      ).innerHTML = '<span class="fa fa-cloud-download fa-fw"></span> Download {0} preset and selected addons VPKs'.format(
+      ).innerHTML = '<span class="fa fa-cloud-download fa-fw"></span> Download {0} preset and selected addons VPKs '.format(
         presets.get(id)
       ); // update download text
     }
@@ -538,7 +549,10 @@ function app() {
   });
 
   // Bind the download button with our multi-downloader
-  bindDownloadClick();
+  bindDownloadClick("vpk-dl", getVPKDownloadUrls);
+
+  // Bind the customizations button with our multi-downloader
+  bindDownloadClick("custom-dl", getCustomDownloadUrls);
 
   // Track the last version we downloaded, so that updates can be managed
   document.getElementById("preset-dl").addEventListener("click", () => {

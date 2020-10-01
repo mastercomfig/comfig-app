@@ -73,25 +73,42 @@ async function updateData() {
         "https://raw.githubusercontent.com/mastercomfig/mastercomfig/develop/data/modules.json",
         reqGHRawHeaders
       ),
+      fetch(
+        "https://raw.githubusercontent.com/mastercomfig/mastercomfig/develop/data/preset_modules.json",
+        reqGHRawHeaders
+      ),
     ]);
     // Get JSON response
     const results = await Promise.all([
       gatherResponse(responses[0]),
       gatherResponse(responses[1]),
+      gatherResponse(responses[2]),
     ]);
     // Get GitHub data
     let data = results[0];
-    // Get tag name for version
-    let tag_name = data.tag_name;
-    if (tag_name) {
-      // Remove the v prefix some releases have
-      version = tag_name.indexOf("v") === 0 ? tag_name.substr(1) : tag_name;
-      // Cache it
-      await MASTERCOMFIG.put("mastercomfig-version", version, cacheOpt);
+    if (data) {
+      // Get tag name for version
+      let tag_name = data.tag_name;
+      if (tag_name) {
+        // Remove the v prefix some releases have
+        version = tag_name.indexOf("v") === 0 ? tag_name.substr(1) : tag_name;
+        // Cache it
+        await MASTERCOMFIG.put("mastercomfig-version", version, cacheOpt);
+      }
     }
+    // Get modules data
     if (results[1]) {
       // Cache it
       await MASTERCOMFIG.put("mastercomfig-modules", results[1], cacheOpt);
+    }
+    // Get preset modules data
+    if (results[2]) {
+      // Cache it
+      await MASTERCOMFIG.put(
+        "mastercomfig-preset-modules",
+        results[2],
+        cacheOpt
+      );
     }
   } catch (error) {
     console.error(error);
@@ -102,15 +119,19 @@ async function handleRequest(request) {
   // Attempt cached
   let v = await MASTERCOMFIG.get("mastercomfig-version");
   let m = await MASTERCOMFIG.get("mastercomfig-modules");
-  if (!v || !m) {
+  let p = await MASTERCOMFIG.get("mastercomfig-preset-modules");
+  if (!v || !m || !p) {
     await updateData();
     v = await MASTERCOMFIG.get("mastercomfig-version");
     m = await MASTERCOMFIG.get("mastercomfig-modules");
+    p = await MASTERCOMFIG.get("mastercomfig-preset-modules");
   }
   m = JSON.parse(m);
+  p = JSON.parse(p);
   let resObj = {
     v,
     m,
+    p,
   };
   const resBody = JSON.stringify(resObj);
   return new Response(resBody, resHeaders);
