@@ -72,7 +72,6 @@
                 <div class="row">
                   <div class="col-sm-auto">
                     <h2><span class="fa fa-cube fa-fw" aria-hidden="true"></span> Quality</h2>
-                    <p>Choose your preset</p>
                   </div>
                   <div class="col-sm">
                     <ul class="nav nav-pills nav-fill" id="presets" role="tablist">
@@ -130,6 +129,12 @@
                           <br><strong>BY DOWNLOADING THIS PRESET YOU UNDERSTAND THAT IT <em>REMOVES HUD ELEMENTS AND REDUCES VISIBILITY</em>. IF YOU DON'T WANT THIS <em>USE LOW</em>, THAT'S THE <em>ONLY</em> DIFFERENCE.</strong>
                       </div>
                     </div>
+                    <a data-toggle="collapse" href="#modules" role="button" aria-expanded="false" aria-controls="modules">
+                      <span class="fa fa-angle-double-down fa-fw"></span> Customize
+                  </a>
+                  <div class="collapse" id="modules">
+                    
+                  </div>
                   </div>
                 </div>
                 <hr>
@@ -194,42 +199,44 @@
                 </div>
                 <hr>
                 <div class="row">
-                  <div class="col-sm-auto">
+                  <div class="col-sm-5" style="border-right: solid #f2f2f2">
                     <h2><span class="fa fa-archive fa-fw"></span> Download</h2>
-                    <p>Just drop them in your <code>tf/custom</code> folder and they'll automatically run.</p>
+                    <h5><b><span class="fa fa-circle-o fa-fw"></span> mastercomfig download</b></h5>
+                    <p>Drop the files in your <code>tf/custom</code> folder and they'll automatically run.</p>
                     <p class="lead"><b><a href="https://github.com/mastercomfig/mastercomfig/releases/latest" id="vpk-dl" class="" style="cursor: pointer"><span class="fa fa-cloud-download fa-fw"></span>  Download from GitHub</a></b></p>
                     <a id="collapseManualButton" data-toggle="collapse" href="#collapseManual" role="button" aria-expanded="false" aria-controls="collapseManual">
                         Not working? Download manually
                     </a>
                     <div class="collapse" id="collapseManual">
-                        <br>
-                        <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest" class="text-light" id="preset-dl"><span class="fa fa-download fa-fw"></span> Download preset VPK</a></p>
-                        <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-no-footsteps-addon.vpk" class="text-light" id="no-footsteps-dl" style="display: none"><span class="fa fa-download fa-fw"></span> Download No Footsteps addon VPK</a></p>
-                        <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-disable-pyroland-addon.vpk" class="text-light" id="disable-pyroland-dl" style="display: none"><span class="fa fa-download fa-fw"></span> Download Disable Pyroland addon VPK</a></p>
-                        <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-no-soundscapes-addon.vpk" class="text-light" id="no-soundscapes-dl" style="display: none"><span class="fa fa-download fa-fw"></span> Download No Soundscapes addon VPK</a></p>
-                        <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-no-tutorial-addon.vpk" class="text-light" id="no-tutorial-dl" style="display: none"><span class="fa fa-download fa-fw"></span> Download No Tutorial addon VPK</a></p>
-                        <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-null-cancelling-movement-addon.vpk" class="text-light" id="null-cancelling-movement-dl" style="display: none"><span class="fa fa-download fa-fw"></span> Download Null-Cancelling Movement addon VPK</a></p>
-                        <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-flat-mouse-addon.vpk" class="text-light" id="flat-mouse-dl" style="display: none"><span class="fa fa-download fa-fw"></span> Download Flat Mouse addon VPK</a></p>
-                        <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-transparent-viewmodels-addon.vpk" class="text-light" id="transparent-viewmodels-dl" style="display: none"><span class="fa fa-download fa-fw"></span> Download Transparent Viewmodels addon VPK</a></p>
-                        <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-lowmem-addon.vpk" class="text-light" id="lowmem-dl" style="display: none"><span class="fa fa-download fa-fw"></span> Download Low Memory addon VPK</a></p>
+                      <br>
+                      <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest" class="text-light" id="preset-dl"><span class="fa fa-download fa-fw"></span> Download preset VPK</a></p>
+                      <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-no-footsteps-addon.vpk" class="text-light" id="no-footsteps-dl" style="display: none"><span class="fa fa-download fa-fw"></span> Download No Footsteps addon VPK</a></p>
+                      <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-disable-pyroland-addon.vpk" class="text-light" id="disable-pyroland-dl" style="display: none"><span class="fa fa-download fa-fw"></span> Download Disable Pyroland addon VPK</a></p>
+                      <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-no-soundscapes-addon.vpk" class="text-light" id="no-soundscapes-dl" style="display: none"><span class="fa fa-download fa-fw"></span> Download No Soundscapes addon VPK</a></p>
+                      <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-no-tutorial-addon.vpk" class="text-light" id="no-tutorial-dl" style="display: none"><span class="fa fa-download fa-fw"></span> Download No Tutorial addon VPK</a></p>
+                      <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-null-cancelling-movement-addon.vpk" class="text-light" id="null-cancelling-movement-dl" style="display: none"><span class="fa fa-download fa-fw"></span> Download Null-Cancelling Movement addon VPK</a></p>
+                      <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-flat-mouse-addon.vpk" class="text-light" id="flat-mouse-dl" style="display: none"><span class="fa fa-download fa-fw"></span> Download Flat Mouse addon VPK</a></p>
+                      <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-transparent-viewmodels-addon.vpk" class="text-light" id="transparent-viewmodels-dl" style="display: none"><span class="fa fa-download fa-fw"></span> Download Transparent Viewmodels addon VPK</a></p>
+                      <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-lowmem-addon.vpk" class="text-light" id="lowmem-dl" style="display: none"><span class="fa fa-download fa-fw"></span> Download Low Memory addon VPK</a></p>
                     </div>
-                    <h6 style="padding-top: 16px"><b>Additional mastercomfig config files</b></h6>
-                    <p>You can put the user template in your <code>tf/cfg</code> folder to help you customize mastercomfig.</p>
-                    <p><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/template.zip" class="text-light" id="autoexec-dl"><span class="fa fa-download fa-fw"></span> Download user template</a></p>
-                    <a data-toggle="collapse" href="#collapseAdvanced" role="button" aria-expanded="false" aria-controls="collapseAdvanced">
-                        Advanced files
+                    <hr>
+                    <h5><b><span class="fa fa-wrench fa-fw"></span> Customization download</b></h5>
+                    <p>Create a <code>user</code> folder in <code>tf/cfg</code> folder and drop the contents of the ZIP file in there to override mastercomfig with your selected customizations!</p>
+                    <noscript>Note: Customizations require JavaScript.</noscript>
+                    <p class="lead"><b><a class="" href="#"><span class="fa fa-download fa-fw"></span> Download customizations</a></b></p>
+                    <hr>
+                    <a id="collapseMiscButton" data-toggle="collapse" href="#collapseMisc" role="button" aria-expanded="false"
+                      aria-controls="collapseMisc" style="color: #a0a0a0">
+                      Misc. downloads
                     </a>
-                    <div class="collapse" id="collapseAdvanced">
-                      <div class="card card-body bg-dark">
-                        <p>You can use these to help you customize mastercomfig,<br>but they are not required, nor recommended.</p>
-                        <p><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/modules_template.cfg" class="text-light" id="modules-dl"><span class="fa fa-download fa-fw"></span> Download modules template</a></p>
-                        <p><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/autoexec_template.cfg" class="text-light" id="autoexec-dl"><span class="fa fa-download fa-fw"></span> Download autoexec template</a></p>
-                        <p style="margin-bottom: 0"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig.zip" class="text-light" id="autoexec-dl"><span class="fa fa-download fa-fw"></span> Download mastercomfig zip package</a></p>
-                      </div>
+                    <div class="collapse" id="collapseMisc">
+                      <p>Looking for something else? You can find it on GitHub <a
+                          href="https://github.com/mastercomfig/mastercomfig/releases/latest" class="text-light"
+                          style="text-decoration: underline dotted;">release assets</a>.</p>
                     </div>
                   </div>
-                  <div class="col-sm">
-                    <h2>Next steps</h2>
+                  <div class="col-sm-7">
+                    <h2><span class="fa fa-arrow-circle-o-right fa-fw"></span> Next steps</h2>
                       <div class="lead row">
                         <div class="col-sm-auto">
                           <p><a href="https://docs.mastercomfig.com/page/setup/install/"><span class="fa fa-desktop fa-fw"></span> <b>How to install</b></a><span class="d-none d-md-inline"></p>
