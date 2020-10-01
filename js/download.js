@@ -9,19 +9,21 @@ function app() {
     });
   };
 
+  function capitalize(str) {
+    return str.charAt(0).toUpperCase() + str.substr(1);
+  }
+
   // convenience proper case for modules
   function properCaseModuleName(name) {
     let split = name.split("_");
     split.forEach((str, index, array) => {
-      array[index] = str.charAt(0).toUpperCase() + str.substr(1);
+      array[index] = capitalize(str);
     });
     return split.join(" ");
   }
 
   // convenience proper case name or display for modules
   function properCaseOrDisplayModuleName(module, name) {
-    console.log(module);
-    console.log(name);
     let displayName = module.hasOwnProperty("display")
       ? module.display
       : properCaseModuleName(name ? name : module.name);
@@ -97,7 +99,9 @@ function app() {
   // Currently selected preset
   var selectedPreset = "medium-high";
   // Currently selected addons
-  var selections = [];
+  var selectedAddons = [];
+  // Current state of module selections
+  var selectedModules = {};
 
   var storage = localStorage;
 
@@ -180,7 +184,7 @@ function app() {
       })
     );
     // Then push all our addon downloads
-    for (const selection of selections) {
+    for (const selection of selectedAddons) {
       downloads.push(
         Promise.resolve({
           url: getAddonUrl(selection),
@@ -204,12 +208,12 @@ function app() {
     checked = storage.getItem(id) === "true";
     if (checked) {
       // If checked, add it in if its not there already
-      if (selections.indexOf(id) === -1) {
-        selections.push(id);
+      if (selectedAddons.indexOf(id) === -1) {
+        selectedAddons.push(id);
       }
     } else {
       // Filter out the addon if it's there
-      selections = selections.filter((selection) => selection !== id);
+      selectedAddons = selectedAddons.filter((selection) => selection !== id);
     }
     // Make sure the UI reflects the selected state
     document.getElementById(id + "-dl").style.display = checked
@@ -257,40 +261,103 @@ function app() {
     return inputElement;
   }
 
+  // Convenience method for creating input containers
+  function createInputContainer() {
+    let row = document.createElement("div");
+    row.classList.add("row");
+    let col = document.createElement("div");
+    col.classList.add("col-sm-3");
+    row.appendChild(col);
+    return [row, col];
+  }
+
   // Create a dropdown select input
-  function handleModuleInputSelect(values) {
+  function handleModuleInputSelect(name, values) {
+    let [inputOuter, inputContainer] = createInputContainer();
     // Create the element
     let selectElement = document.createElement("select");
-    selectElement.classList.add("form-select");
+    selectElement.classList.add(
+      "form-select",
+      "form-select-sm",
+      "bg-dark",
+      "text-light"
+    );
+    let defaultValue = values[0].value;
+    selectedModules[name] = defaultValue;
     // Add the values
     values.forEach((value) => {
       // Create the option element
       let optionElement = document.createElement("option");
       optionElement.setAttribute("value", value.value);
+      if (value.value === defaultValue) {
+        optionElement.setAttribute("selected", "true");
+      }
       // Name the value
       let displayName = properCaseOrDisplayModuleName(value, value.value);
       optionElement.innerText = displayName;
       selectElement.appendChild(optionElement);
     });
-    return selectElement;
+    // Event listener
+    selectElement.addEventListener("input", (e) => {
+      let select = e.target;
+      let value = select.options[select.selectedIndex].value;
+      selectedModules[name] = value;
+    });
+    inputContainer.appendChild(selectElement);
+    return inputOuter;
   }
 
   // Create a switch/toggle input
-  function handleModuleInputSwitch(values) {
+  function handleModuleInputSwitch(name, values) {
+    let [inputOuter, inputContainer] = createInputContainer();
+    // Create the switch element
+    let switchContainer = document.createElement("div");
+    switchContainer.classList.add("form-check", "form-switch");
     let switchElement = createInputElement("checkbox", "form-check-input");
     switchElement.setAttribute("value", "");
-    return switchElement;
+    switchContainer.appendChild(switchElement);
+    // Set default value
+    let defaultValue = 0;
+    if (defaultValue) {
+      switchElement.setAttribute("checked", "true");
+    }
+    selectedModules[name] = values[defaultValue].value;
+    // Event listener
+    switchContainer.addEventListener("input", (e) => {
+      let selected = values[e.target.checked ? 1 : 0];
+      selectedModules[name] = selected.value;
+    });
+    inputContainer.appendChild(switchContainer);
+    return inputOuter;
   }
 
-  // TODO: we can just use select for now, but for ease of use, this should be implemented in the future
-  function handleModuleInputGroup(values) {}
+  // TODO: we can just use select for now, but for usability, this should be implemented in the future
+  function handleModuleInputGroup(name, values) {}
 
   // Creates a range slider
-  function handleModuleInputSlider(values) {
+  function handleModuleInputSlider(name, values) {
+    let [inputOuter, inputContainer] = createInputContainer();
+    // Create the range element
     let rangeElement = createInputElement("range", "form-range");
-    rangeElement.setAttribute("min", 1);
-    rangeElement.setAttribute("max", values.length);
-    return rangeElement;
+    let defaultValue = 0;
+    rangeElement.setAttribute("value", defaultValue);
+    rangeElement.setAttribute("min", 0);
+    rangeElement.setAttribute("max", values.length - 1);
+    // Create the value indicator (shows what value in the range is selected)
+    let valueIndicator = document.createElement("span");
+    // Set default value
+    let defaultSelection = values[defaultValue];
+    valueIndicator.innerText = capitalize(defaultSelection);
+    selectedModules[name] = defaultSelection;
+    // Event listener
+    rangeElement.addEventListener("input", (e) => {
+      let selected = values[e.target.valueAsNumber];
+      selectedModules[name] = selected;
+      valueIndicator.innerText = capitalize(selected);
+    });
+    inputContainer.appendChild(rangeElement);
+    inputContainer.appendChild(valueIndicator);
+    return inputOuter;
   }
 
   // Returns the function to use to create the element
@@ -310,11 +377,11 @@ function app() {
   }
 
   // Uses the factory to create the element
-  function handleModuleInput(type, values) {
+  function handleModuleInput(type, name, values) {
     if (values) {
       let fnModuleInput = moduleInputFactory(type);
       if (fnModuleInput) {
-        return fnModuleInput(values);
+        return fnModuleInput(name, values);
       }
     }
     return null;
@@ -324,17 +391,36 @@ function app() {
   function handleModule(module) {
     // Create element
     let moduleContainer = document.createElement("div");
+    moduleContainer.classList.add("row");
     moduleContainer.id = module.name + "-module-input-cont";
     // Create module title
     let moduleTitle = document.createElement("h6");
+    moduleTitle.classList.add("module-title");
     let displayName = properCaseOrDisplayModuleName(module);
     moduleTitle.innerText = displayName;
     moduleContainer.appendChild(moduleTitle);
+    // Create a link to module documentation
+    let moduleDocsLink = document.createElement("a");
+    moduleDocsLink.setAttribute(
+      "href",
+      "https://docs.mastercomfig.com/page/customization/modules/#" +
+        displayName.split(" ").join("-").toLowerCase()
+    );
+    let modulesDocsIcon = document.createElement("span");
+    modulesDocsIcon.classList.add("fa", "fa-book", "fa-fw");
+    modulesDocsIcon.setAttribute("aria-hidden", "true");
+    moduleDocsLink.appendChild(modulesDocsIcon);
+    moduleDocsLink.innerHTML = " " + moduleDocsLink.innerHTML;
+    moduleTitle.appendChild(moduleDocsLink);
     // Create the module's input control
     let moduleInputType = module.hasOwnProperty("type")
       ? module.type
       : "select";
-    let moduleInput = handleModuleInput(moduleInputType, module.values);
+    let moduleInput = handleModuleInput(
+      moduleInputType,
+      module.name,
+      module.values
+    );
     // If we could create an input control, show it to our parent
     if (moduleInput) {
       moduleContainer.appendChild(moduleInput);
@@ -351,6 +437,7 @@ function app() {
     categoryContainer.id = "module-cont-" + name;
     // Create category title
     let categoryTitle = document.createElement("h4");
+    categoryTitle.classList.add("module-category-title");
     let displayName = properCaseOrDisplayModuleName(category, name);
     categoryTitle.innerText = displayName;
     categoryContainer.appendChild(categoryTitle);

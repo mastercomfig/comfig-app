@@ -1,79 +1,91 @@
 .list-group-item-dark.list-group-item-action.active {
-    color: #fff !important;
-    background-color: #1c1e1f !important;
-    border-color: #59636c
+  color: #fff !important;
+  background-color: #1c1e1f !important;
+  border-color: #59636c;
 }
 
 .navbar {
   backdrop-filter: blur(1rem);
-  box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.05), inset 0 -1px 0 rgba(0,0,0,0.15);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.15);
 }
 
 .navbar.bg-teal {
-  background-color: rgba(0,150,136,.9)
+  background-color: rgba(0, 150, 136, 0.9);
 }
 
 .list-group-item-dark {
-    color: #dddad5;
-    background-color: #282b2d
+  color: #dddad5;
+  background-color: #282b2d;
 }
 
 .list-group {
-    border-radius: 0
+  border-radius: 0;
 }
 
-.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
-  font-weight: 300
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 300;
 }
 
-.list-group-item-dark.list-group-item-action:focus, .list-group-item-dark.list-group-item-action:hover {
-    color: #dddad5;
-    background-color: #2c2f31
+.list-group-item-dark.list-group-item-action:focus,
+.list-group-item-dark.list-group-item-action:hover {
+  color: #dddad5;
+  background-color: #2c2f31;
 }
 
-.nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+.nav-pills .nav-link.active,
+.nav-pills .show > .nav-link {
   background-color: #009688;
 }
 
 input {
-    border-color: #575757;
-    color: #e8e6e3;
-    background-color: #181a1b
+  border-color: #575757;
+  color: #e8e6e3;
+  background-color: #181a1b;
 }
 
 .custom-control-label::before {
-    background-color: #181a1b;
-    border-color: #3d454c
+  background-color: #181a1b;
+  border-color: #3d454c;
 }
 
 .custom-checkbox {
-  padding-top: .1rem;
-  padding-bottom: .1rem;
+  padding-top: 0.1rem;
+  padding-bottom: 0.1rem;
 }
 
 .download-preview {
   width: auto;
-  height: 30vh
+  height: 30vh;
 }
 
-.tooltip {
-    opacity: 1 !important
+.module-title {
+  margin-top: 0.5rem;
 }
 
-.tooltip-inner {
-    max-width: 35vw
+.module-category-title {
+  margin-top: 1rem;
 }
 
-@media only screen and (max-width: 960px) {
-    .tooltip-inner {
-        max-width: 45vw
-    }
+.form-select {
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/></svg>");
 }
 
 b {
-  font-weight: 600
+  font-weight: 600;
 }
 
 #title {
-  font-size: 2.5rem
+  font-size: 2.5rem;
 }
