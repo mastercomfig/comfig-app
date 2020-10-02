@@ -181,10 +181,12 @@ function app() {
       // If not empty, make the browser download it.
       if (result.url !== "") {
         if (result.isObject) {
-          downloads.download({
-            url: result.url,
-            filename: result.filename,
-          });
+          let link = document.createElement("a");
+          link.href = result.url;
+          link.download = result.filename;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChil;
           pendingObjectURLs.push(result.url);
         } else {
           window.location = result.url;
@@ -269,7 +271,6 @@ function app() {
       downloads.push(
         Promise.resolve({
           url: URL.createObjectURL(modulesFile),
-          filename: modulesFile.name,
           isObject: true,
         })
       );
