@@ -13,6 +13,19 @@ function app() {
     return str.charAt(0).toUpperCase() + str.substr(1);
   }
 
+  function loadModules() {
+    let storedModulesStr = storage.getItem("modules");
+    if (storedModulesStr) {
+      storedModules = JSON.parse(storedModulesStr);
+      console.log(storedModules);
+    }
+  }
+
+  function saveModules() {
+    console.log(selectedModules);
+    storage.setItem("modules", JSON.stringify(selectedModules));
+  }
+
   // convenience proper case for modules
   function properCaseModuleName(name) {
     let split = name.split("_");
@@ -109,10 +122,8 @@ function app() {
 
   var storage = localStorage;
 
-  var storedModules = storage.getItem("modules");
-  if (!storedModules) {
-    storedModules = {};
-  }
+  var storedModules = {};
+  loadModules();
 
   // Track if multi-download is active
   var downloading = false;
@@ -226,8 +237,8 @@ function app() {
     if (contents.length < 1) {
       return null;
     }
-    let file = new File(contents, name, {
-      type: "text/plain",
+    let file = new File([contents], name, {
+      type: "application/octet-stream",
     });
     return file;
   }
@@ -237,12 +248,13 @@ function app() {
     for (const moduleName of Object.keys(selectedModules)) {
       contents += `${moduleName}=${selectedModules[moduleName]}\n`;
     }
+    console.log(contents);
     return newFile(contents, "modules.cfg");
   }
 
   function getCustomDownloadUrls() {
     // We downloaded the custom settings, so the user wants it!
-    storage.setItem("modules", selectedModules);
+    saveModules();
     // First push an empty download because browsers like that for some reason.
     var downloads = [
       Promise.resolve({
@@ -290,6 +302,7 @@ function app() {
   }
 
   function setPreset(id, no_set) {
+    selectedPreset = id; // save download ID
     if (!no_set) {
       storage.setItem("preset", id); // save preset selection
 
@@ -299,14 +312,12 @@ function app() {
       // current selections are preserved, so save them off here too,
       // and store them as we normally would during a page load
       if (modulesDef) {
-        storage.setItem("modules", selectedModules);
-        // TODO: is selectedModules safe to copy off to storedModules directly?
-        storedModules = storage.getItem("modules");
+        saveModules();
+        loadModules();
         handleModulesRoot(modulesDef);
       }
     }
     new bootstrap.Tab(document.getElementById(id)).show(); // visually select in tabs menu
-    selectedPreset = id; // save download ID
     document.getElementById("vpk-dl").removeAttribute("href"); // we don't need the static download anymore
     if (!downloading) {
       document.getElementById(
@@ -369,9 +380,9 @@ function app() {
 
   function getDefaultValueFromName(values, name) {
     let defaultValue = 0;
-    for (let i = 0; i <= 1; i++) {
+    for (let i = 0; i < values.length; i++) {
       let value = values[i];
-      if (value.value === name) {
+      if (value === name || value.value === name) {
         defaultValue = i;
       }
     }
