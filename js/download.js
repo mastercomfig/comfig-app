@@ -181,12 +181,7 @@ function app() {
       // If not empty, make the browser download it.
       if (result.url !== "") {
         if (result.isObject) {
-          let link = document.createElement("a");
-          link.href = result.url;
-          link.download = result.filename;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChil;
+          window.location.assign(result.url);
           pendingObjectURLs.push(result.url);
         } else {
           window.location = result.url;
