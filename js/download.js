@@ -17,12 +17,10 @@ function app() {
     let storedModulesStr = storage.getItem("modules");
     if (storedModulesStr) {
       storedModules = JSON.parse(storedModulesStr);
-      console.log(storedModules);
     }
   }
 
   function saveModules() {
-    console.log(selectedModules);
     storage.setItem("modules", JSON.stringify(selectedModules));
   }
 
@@ -248,7 +246,6 @@ function app() {
     for (const moduleName of Object.keys(selectedModules)) {
       contents += `${moduleName}=${selectedModules[moduleName]}\n`;
     }
-    console.log(contents);
     return newFile(contents, "modules.cfg");
   }
 
@@ -609,9 +606,7 @@ function app() {
   }
 
   // get latest release, and update page
-  fetch(
-    "https://cors-anywhere.herokuapp.com/https://mastercomfig.mcoms.workers.dev/"
-  )
+  fetch("https://mastercomfig.mcoms.workers.dev/")
     .then((resp) => resp.json())
     .then((data) => {
       // Get the version
