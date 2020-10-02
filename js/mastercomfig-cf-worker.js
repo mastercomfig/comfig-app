@@ -70,11 +70,11 @@ async function updateData() {
         reqGHAPIHeaders
       ),
       fetch(
-        "https://raw.githubusercontent.com/mastercomfig/mastercomfig/develop/data/modules.json",
+        "https://raw.githubusercontent.com/mastercomfig/mastercomfig/release/data/modules.json",
         reqGHRawHeaders
       ),
       fetch(
-        "https://raw.githubusercontent.com/mastercomfig/mastercomfig/develop/data/preset_modules.json",
+        "https://raw.githubusercontent.com/mastercomfig/mastercomfig/release/data/preset_modules.json",
         reqGHRawHeaders
       ),
     ]);
