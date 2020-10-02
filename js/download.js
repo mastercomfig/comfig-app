@@ -536,6 +536,8 @@ function app() {
       "https://docs.mastercomfig.com/page/customization/modules/#" +
         displayName.split(" ").join("-").toLowerCase()
     );
+    moduleDocsLink.setAttribute("target", "_blank");
+    moduleDocsLink.setAttribute("rel", "noopener noreferrer");
     let modulesDocsIcon = document.createElement("span");
     modulesDocsIcon.classList.add("fa", "fa-book", "fa-fw");
     modulesDocsIcon.setAttribute("aria-hidden", "true");
