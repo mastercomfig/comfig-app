@@ -180,9 +180,14 @@ function app() {
     urls[0].then((result) => {
       // If not empty, make the browser download it.
       if (result.url !== "") {
-        window.location = result.url;
         if (result.isObject) {
+          downloads.download({
+            url: result.url,
+            filename: result.filename,
+          });
           pendingObjectURLs.push(result.url);
+        } else {
+          window.location = result.url;
         }
       }
       if (urls.length > 1) {
@@ -264,6 +269,7 @@ function app() {
       downloads.push(
         Promise.resolve({
           url: URL.createObjectURL(modulesFile),
+          filename: modulesFile.name,
           isObject: true,
         })
       );
