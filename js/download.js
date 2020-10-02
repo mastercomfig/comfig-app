@@ -92,6 +92,8 @@ function app() {
   // Current mastercomfig version, comes in from API
   var version = null;
 
+  // Current modules def
+  var modulesDef = {};
   // Current presets modules def
   var presetModulesDef = {};
 
@@ -118,16 +120,20 @@ function app() {
   // Once user clicks to multi-download, we download and swap our behavior to in-progress
   function downloadClickEvent(id, fnGatherUrls) {
     // Do the download once clicked
-    downloadUrls(fnGatherUrls(), id, fnGatherUrls);
-    let element = document.getElementById(id);
-    element.onclick = null; // Ignore clicks
-    downloading = true; // Still retain in-progress even after switching preset
-    // Indicate not useable/in-progress
-    element.style.cursor = "not-allowed";
-    element.classList.add("focus");
-    element.innerHTML = element.innerHTML
-      .replace("Download", "Downloading")
-      .replace(" ", "…");
+    let urls = fnGatherUrls();
+    // Only download if we have a download
+    if (urls.length > 1) {
+      downloadUrls(urls, id, fnGatherUrls);
+      let element = document.getElementById(id);
+      element.onclick = null; // Ignore clicks
+      downloading = true; // Still retain in-progress even after switching preset
+      // Indicate not useable/in-progress
+      element.style.cursor = "not-allowed";
+      element.classList.add("focus");
+      element.innerHTML = element.innerHTML
+        .replace("Download", "Downloading")
+        .replace(" ", "…");
+    }
   }
 
   // This is what we do when multi-download is ready (init or after finish)
@@ -158,12 +164,17 @@ function app() {
   }
   // End download URL helpers
 
+  let pendingObjectURLs = [];
+
   function downloadUrls(urls, id, fnGatherUrls) {
     // Take the top URL promise and resolve it.
     urls[0].then((result) => {
       // If not empty, make the browser download it.
       if (result.url !== "") {
         window.location = result.url;
+        if (result.isObject) {
+          pendingObjectURLs.push(result.url);
+        }
       }
       if (urls.length > 1) {
         setTimeout(() => {
@@ -173,6 +184,13 @@ function app() {
       } else {
         // We've gotten to the last in the download stack, so we're done
         bindDownloadClick(id, fnGatherUrls);
+        // Once it's long past our time to download, remove the object URLs
+        setTimeout(() => {
+          for (const objectURL of pendingObjectURLs) {
+            URL.revokeObjectURL(objectURL);
+          }
+          pendingObjectURLs = [];
+        }, 120000);
       }
     });
   }
@@ -204,13 +222,43 @@ function app() {
     return downloads;
   }
 
+  function newFile(contents, name) {
+    if (contents.length < 1) {
+      return null;
+    }
+    let file = new File(contents, name, {
+      type: "text/plain",
+    });
+    return file;
+  }
+
+  function newModulesFile() {
+    let contents = "";
+    for (const moduleName of Object.keys(selectedModules)) {
+      contents += `${moduleName}=${selectedModules[moduleName]}\n`;
+    }
+    return newFile(contents, "modules.cfg");
+  }
+
   function getCustomDownloadUrls() {
+    // We downloaded the custom settings, so the user wants it!
+    storage.setItem("modules", selectedModules);
     // First push an empty download because browsers like that for some reason.
     var downloads = [
       Promise.resolve({
         url: "",
       }),
     ];
+    // Create the modules.cfg file
+    let modulesFile = newModulesFile();
+    if (modulesFile) {
+      downloads.push(
+        Promise.resolve({
+          url: URL.createObjectURL(modulesFile),
+          isObject: true,
+        })
+      );
+    }
     return downloads;
   }
 
@@ -242,7 +290,21 @@ function app() {
   }
 
   function setPreset(id, no_set) {
-    storage.setItem("preset", id); // save preset selection
+    if (!no_set) {
+      storage.setItem("preset", id); // save preset selection
+
+      // If we change preset after modules UI is initialized
+      // we have to redraw the modules UI with the new preset's
+      // defaults. however, we need to also make sure that the user's
+      // current selections are preserved, so save them off here too,
+      // and store them as we normally would during a page load
+      if (modulesDef) {
+        storage.setItem("modules", selectedModules);
+        // TODO: is selectedModules safe to copy off to storedModules directly?
+        storedModules = storage.getItem("modules");
+        handleModulesRoot(modulesDef);
+      }
+    }
     new bootstrap.Tab(document.getElementById(id)).show(); // visually select in tabs menu
     selectedPreset = id; // save download ID
     document.getElementById("vpk-dl").removeAttribute("href"); // we don't need the static download anymore
@@ -272,12 +334,7 @@ function app() {
     }
   }
 
-  function getModuleDefault(name) {
-    let userValue = storedModules[name];
-    if (userValue) {
-      selectedModules[name] = defaultValue;
-      return userValue;
-    }
+  function getBuiltinModuleDefault(name) {
     let modulePresets = presetModulesDef[name];
     if (modulePresets) {
       let presetValue = modulePresets[selectedPreset];
@@ -287,6 +344,27 @@ function app() {
       return modulePresets.default;
     }
     return null;
+  }
+
+  function getModuleDefault(name) {
+    // User storage can only contain non-builtin-defaults
+    let userValue = storedModules[name];
+    if (userValue) {
+      selectedModules[name] = userValue;
+      return userValue;
+    }
+    return getBuiltinModuleDefault(name);
+  }
+
+  function setModule(name, value) {
+    let defaultValue = getBuiltinModuleDefault(name);
+    if (defaultValue === value) {
+      if (selectedModules.hasOwnProperty(name)) {
+        delete selectedModules[name];
+      }
+    } else {
+      selectedModules[name] = value;
+    }
   }
 
   function getDefaultValueFromName(values, name) {
@@ -347,7 +425,7 @@ function app() {
     selectElement.addEventListener("input", (e) => {
       let select = e.target;
       let value = select.options[select.selectedIndex].value;
-      selectedModules[name] = value;
+      setModule(name, value);
     });
     inputContainer.appendChild(selectElement);
     return inputOuter;
@@ -370,7 +448,7 @@ function app() {
     // Event listener
     switchContainer.addEventListener("input", (e) => {
       let selected = values[e.target.checked ? 1 : 0];
-      selectedModules[name] = selected.value;
+      setModule(name, selected.value);
     });
     inputContainer.appendChild(switchContainer);
     return inputOuter;
@@ -396,7 +474,7 @@ function app() {
     // Event listener
     rangeElement.addEventListener("input", (e) => {
       let selected = values[e.target.valueAsNumber];
-      selectedModules[name] = selected;
+      setModule(name, selected);
       valueIndicator.innerText = capitalize(selected);
     });
     inputContainer.appendChild(rangeElement);
@@ -536,8 +614,9 @@ function app() {
       document.getElementById("version").innerText = versionName;
 
       // Now get the modules we defined in the response data.
-      modules = data.m;
-      handleModulesRoot(modules);
+      modulesDef = data.m;
+      presetModulesDef = data.p;
+      handleModulesRoot(modulesDef);
     });
 
   // Register event for all presets defined in the HTML.
@@ -571,7 +650,7 @@ function app() {
   if (storage.getItem("preset")) {
     setPreset(storage.getItem("preset"), true);
   } else {
-    setPreset("medium-high");
+    setPreset("medium-high", true);
   }
 
   // For all defined addons, check if we have it stored
