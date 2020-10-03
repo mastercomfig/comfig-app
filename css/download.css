@@ -49,6 +49,11 @@ h6 {
   background-color: #009688;
 }
 
+.form-check-input:checked {
+  background-color: #009688;
+  border-color: #009688;
+}
+
 input {
   border-color: #575757;
   color: #e8e6e3;
@@ -60,14 +65,8 @@ input {
   border-color: #3d454c;
 }
 
-.custom-checkbox {
-  padding-top: 0.1rem;
-  padding-bottom: 0.1rem;
-}
-
 .download-preview {
-  width: auto;
-  height: 30vh;
+  max-height: 35vh;
 }
 
 .module-title {
@@ -88,4 +87,21 @@ b {
 
 #title {
   font-size: 2.5rem;
+}
+
+.form-range::-webkit-slider-thumb {
+  background-color: #009688;
+}
+
+.form-range::-moz-range-thumb {
+  background-color: #009688;
+}
+
+.form-range::-ms-thumb {
+  background-color: #009688;
+}
+
+.form-check-input:focus {
+  border-color: none;
+  box-shadow: none;
 }

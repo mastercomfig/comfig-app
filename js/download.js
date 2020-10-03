@@ -180,9 +180,22 @@ function app() {
     urls[0].then((result) => {
       // If not empty, make the browser download it.
       if (result.url !== "") {
-        window.location = result.url;
         if (result.isObject) {
+          let link = document.createElement("a");
+          link.href = result.url;
+          link.download = result.name;
+          document.body.appendChild(link);
+          link.dispatchEvent(
+            new MouseEvent("click", {
+              bubbles: true,
+              cancelable: true,
+              view: window,
+            })
+          );
+          link.remove();
           pendingObjectURLs.push(result.url);
+        } else {
+          window.location = result.url;
         }
       }
       if (urls.length > 1) {
@@ -264,6 +277,7 @@ function app() {
       downloads.push(
         Promise.resolve({
           url: URL.createObjectURL(modulesFile),
+          name: modulesFile.name,
           isObject: true,
         })
       );
@@ -536,6 +550,8 @@ function app() {
       "https://docs.mastercomfig.com/page/customization/modules/#" +
         displayName.split(" ").join("-").toLowerCase()
     );
+    moduleDocsLink.setAttribute("target", "_blank");
+    moduleDocsLink.setAttribute("rel", "noopener noreferrer");
     let modulesDocsIcon = document.createElement("span");
     modulesDocsIcon.classList.add("fa", "fa-book", "fa-fw");
     modulesDocsIcon.setAttribute("aria-hidden", "true");
