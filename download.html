@@ -19,7 +19,8 @@
     <link rel="preconnect" href="https://github.com/" crossorigin>
     <link rel="dns-prefetch" href="https://github.com/">
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css" integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/css/bootstrap.min.css"
+      integrity="sha384-DhY6onE6f3zzKbjUPRc2hOzGAdEf4/Dz+WJwBvEYL/lkkIsI3ihufq9hk9K4lVoK" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4/css/font-awesome.min.css">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/download.css">
@@ -59,7 +60,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="https://github.com/mastercomfig/mastercomfig/releases/latest"><strong>Changelog</strong></a>
+              <a class="nav-link active" aria-current="page" href="https://github.com/mastercomfig/mastercomfig/releases/latest" target="_blank" rel="noopener noreferrer"><strong>Changelog</strong></a>
             </li>
           </ul>
         </div>
@@ -133,7 +134,7 @@
                       <span class="fa fa-angle-double-down fa-fw"></span> Customize quality
                     </a>
                     <div class="collapse" id="modules">
-                      <p>For more information about modules, <a href="https://docs.mastercomfig.com/page/customization/modules/">see the documentation.</a></p>
+                      <p>For more information about modules, <a href="https://docs.mastercomfig.com/page/customization/modules/" target="_blank" rel="noopener noreferrer">see the documentation.</a></p>
                       <noscript>JavaScript must be enabled for modules customization.</noscript>
                       <div id="modules-root">
                         <span class="fa fa-spinner fa-pulse fa-fw"></span> Loading, please wait...
@@ -148,51 +149,51 @@
                   </div>
                   <div class="col-sm">
                     <form>
-                      <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" id="no-footsteps">
+                      <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="no-footsteps">
                         <label class="custom-control-label" for="no-footsteps">
                           <strong>No Footsteps</strong> &mdash; Removes footstep sounds
                         </label>
                       </div>
-                      <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" id="disable-pyroland">
+                      <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="disable-pyroland">
                         <label class="custom-control-label" for="disable-pyroland">
                           <strong>Disable Pyroland</strong> &mdash; Removes Pyroland map textures
                         </label>
                       </div>
-                      <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" id="no-soundscapes">
+                      <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="no-soundscapes">
                         <label class="custom-control-label" for="no-soundscapes">
                           <strong>No Soundscapes</strong> &mdash; Remove soundscapes (ambient map noise)
                         </label>
                       </div>
-                      <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" id="no-tutorial">
+                      <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="no-tutorial">
                         <label class="custom-control-label" for="no-tutorial">
                           <strong>No Tutorial</strong> &mdash; Disables tutorial messages and other popups
                         </label>
                       </div>
-                      <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" id="null-cancelling-movement">
+                      <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="null-cancelling-movement">
                         <label class="custom-control-label" for="null-cancelling-movement">
                           <strong>Null-Cancelling Movement</strong> &mdash; Prevents you from pressing two opposing directions, which causes you to stop moving
                         </label>
                       </div>
-                      <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" id="flat-mouse">
+                      <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="flat-mouse">
                         <label class="custom-control-label" for="flat-mouse">
                           <strong>Flat Mouse</strong> &mdash; Makes mouse input "flat" with stable input, no acceleration and 1:1 zoom sensitivity.
                         </label>
                       </div>
-                      <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" id="transparent-viewmodels">
+                      <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="transparent-viewmodels">
                         <label class="custom-control-label" for="transparent-viewmodels">
                           <strong>Transparent Viewmodels</strong> &mdash; Enables support for transparent viewmodels.
                         </label>
                         Note that this does not enable transparent viewmodels, your HUD must enable them. This only allows transparent viewmodels to work. Transparent viewmodels also require dxlevel 90 or higher.
                       </div>
-                      <div class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" id="lowmem">
+                      <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="lowmem">
                         <label class="custom-control-label" for="lowmem">
                           <strong>Low Memory</strong> &mdash; Optimizations for low memory (RAM) systems (2GB and lower).
                         </label>
@@ -203,7 +204,7 @@
                 </div>
                 <hr>
                 <div class="row">
-                  <div class="col-sm-6" style="border-right: solid #e4e2de 1px">
+                  <div class="col-sm-6" style="border-right: solid rgba(248,249,250,.25) 1px">
                     <h2><span class="fa fa-archive fa-fw"></span> Download</h2>
                     <p>Drop the files in your <code>tf/custom</code> folder and they'll automatically run.</p>
                     <p class="lead"><b><a href="https://github.com/mastercomfig/mastercomfig/releases/latest" id="vpk-dl" class="" style="cursor: pointer"><span class="fa fa-cloud-download fa-fw"></span>  Download from GitHub</a></b></p>
@@ -256,8 +257,8 @@
                     <a class="btn btn-primary" href="https://docs.mastercomfig.com/page/customization/custom_configs/">Configs</a>
                     <p>Experiencing problems with mastercomfig? Head to the troubleshoot page to get help with common issues. Don't see your issue? Ask our community for help! You can also join to give feedback and suggestions about the config.</p>
                     <a class="btn btn-primary" href="https://docs.mastercomfig.com/page/next_steps/troubleshoot/">Troubleshoot issues</a>
-                    <a class="btn btn-secondary" href="https://discord.gg/CuPb2zV">Discord</a>
-                    <a class="btn btn-secondary" href="https://steamcommunity.com/groups/comfig">Steam Group</a>
+                    <a class="btn btn-secondary" href="https://discord.gg/CuPb2zV" target="_blank" rel="noopener noreferrer">Discord</a>
+                    <a class="btn btn-secondary" href="https://steamcommunity.com/groups/comfig" target="_blank" rel="noopener noreferrer">Steam Group</a>
                     <h6 style="padding-top: 16px"><b>See Also</b></h6>
                     <p>There are some other great mods and custom configs which you may want to check out in addition to mastercomfig.</p>
                     <a class="btn btn-primary" href="https://docs.mastercomfig.com/page/customization/see_also/">Extra mods</a>
@@ -279,8 +280,8 @@
         mastercomfig is not sponsored, endorsed, licensed by, or affiliated with Valve Corporation.
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js" integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/js/bootstrap.bundle.min.js"
+      integrity="sha384-BOsAfwzjNJHrJ8cZidOg56tcQWfp6y72vEJ8xQ9w6Quywb24iOsW913URv1IS4GD" crossorigin="anonymous"></script>
     <script defer src="js/download.js"></script>
   </body>
 </html>

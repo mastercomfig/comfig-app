@@ -622,7 +622,9 @@ function app() {
   }
 
   // get latest release, and update page
-  fetch("https://mastercomfig.mcoms.workers.dev/")
+  fetch(
+    "https://cors-anywhere.herokuapp.com/https://mastercomfig.mcoms.workers.dev/"
+  )
     .then((resp) => resp.json())
     .then((data) => {
       // Get the version
