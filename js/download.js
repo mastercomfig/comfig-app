@@ -684,6 +684,8 @@ function app() {
     return pos;
   }
 
+  var bSetModuleNavActive = true;
+
   // Handles each module category
   function handleCategory(name, category) {
     // Create category element
@@ -709,11 +711,15 @@ function app() {
     categoryNavItem.classList.add("nav-item");
     let categoryNavLink = document.createElement("a");
     categoryNavLink.classList.add("nav-link");
+    if (bSetModuleNavActive) {
+      categoryNavLink.classList.add("active");
+      bSetModuleNavActive = false;
+    }
     categoryNavLink.innerText = displayName;
     categoryNavLink.href = `#${id}`;
     categoryNavLink.addEventListener("click", (e) => {
       let top = getRelativePos(categoryContainer).top;
-      document.getElementById("modules-root").scrollTop = top;
+      document.getElementById("modules-controls").scrollTop = top;
       e.preventDefault();
     }, {
       passive: false
@@ -732,15 +738,13 @@ function app() {
       return;
     }
 
-    // Remove loading
-    modulesRoot.innerText = "";
-
     // Create row for columns
     let modulesRow = document.createElement("div");
     modulesRow.classList.add("row");
 
     // Create column for all the customization controls
     let customizationsCol = document.createElement("div");
+    customizationsCol.id = "modules-controls";
     customizationsCol.classList.add("col-8");
     modulesRow.appendChild(customizationsCol);
 
@@ -749,7 +753,8 @@ function app() {
     sidebarCol.classList.add("col-4", "d-none");
     sidebarCol.id = "modules-sidebar";
     let sidebarNav = document.createElement("ul");
-    sidebarNav.classList.add("nav", "flex-column", "fixed-inner");
+    sidebarNav.classList.add("nav", "flex-column", "nav-pills", "fixed-inner");
+    sidebarNav.id = "modules-nav";
     sidebarCol.appendChild(sidebarNav);
     modulesRow.appendChild(sidebarCol);
 
@@ -763,12 +768,23 @@ function app() {
         sidebarNav.appendChild(moduleCategoryNavLink);
       }
     });
+
+    // Add a bit of padding to our overflowed root
+    let paddingDiv = document.createElement("div");
+    paddingDiv.style.height = "48.75vh";
+    customizationsCol.appendChild(paddingDiv);
+
+    // Remove loading
+    modulesRoot.innerText = "";
+
     // Add the columns to root container.
     modulesRoot.appendChild(modulesRow);
-    // Add a bit of padding to our overflowed root
-    for (let i = 0; i < 4; i++) {
-      modulesRoot.appendChild(document.createElement("br"));
-    }
+
+    // Init scrollspy
+    new bootstrap.ScrollSpy(customizationsCol, {
+      target: "#modules-nav"
+    });
+
     // Update after travesing all modules
     updateCustomizationDownload();
   }

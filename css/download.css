@@ -113,10 +113,13 @@ b {
   transform: rotate(0.5deg);
 }
 
-#modules-root {
-  max-height: 65vh;
-  overflow-y: auto;
+#modules-controls {
+  height: 65vh;
+  overflow-y: scroll;
   overflow-x: hidden;
+  position: relative;
+  box-shadow: inset 0 0 5px #000000;
+  padding: 20px;
 }
 
 .fixed-inner {
@@ -135,4 +138,9 @@ a.disabled {
 .fa-angle-double-down {
   transition: 0.2s;
   transition-timing-function: ease-in-out;
+}
+
+#modules-sidebar {
+  background: #fff1;
+  padding-top: 0.2rem;
 }
