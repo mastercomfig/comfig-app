@@ -105,3 +105,34 @@ b {
   border-color: none;
   box-shadow: none;
 }
+
+.img-thumbnail {
+  background: url("/img/stain.jpg");
+  background-size: cover;
+  padding: 0.5rem;
+  transform: rotate(0.5deg);
+}
+
+#modules-root {
+  max-height: 65vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.fixed-inner {
+  position: absolute;
+}
+
+a.disabled {
+  opacity: 0.65;
+  color: #f8f9fa !important;
+}
+
+#modules-toggler.active span {
+  transform: rotate(180deg);
+}
+
+.fa-angle-double-down {
+  transition: 0.2s;
+  transition-timing-function: ease-in-out;
+}
