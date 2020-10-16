@@ -285,6 +285,20 @@ function app() {
     return downloads;
   }
 
+  function updateCustomizationDownload() {
+    let element = document.getElementById("custom-dl");
+    let bHasSelection = Object.keys(selectedModules).length > 0;
+    if (bHasSelection) {
+      element.classList.remove("disabled", "text-light");
+      element.style.cursor = "pointer";
+      element.innerHTML = element.innerHTML.replace("No customizations to download", "Download customizations");
+    } else {
+      element.classList.add("disabled", "text-light");
+      element.style.cursor = "not-allowed";
+      element.innerHTML = element.innerHTML.replace("Download customizations", "No customizations to download");
+    }
+  }
+
   // update addon state based on checked
   function updateAddon(id) {
     setAddon(id, document.getElementById(id).checked);
@@ -333,16 +347,12 @@ function app() {
     if (!downloading) {
       document.getElementById(
         "vpk-dl"
-      ).innerHTML = '<span class="fa fa-cloud-download fa-fw"></span> Download {0} preset and selected addons VPKs '.format(
-        presets.get(id)
-      ); // update download text
+      ).innerHTML = `<span class="fa fa-cloud-download fa-fw"></span> Download ${presets.get(id)} preset and selected addons VPKs ` // update download text
     }
     presetDownload.setAttribute("href", getPresetUrl());
     document.getElementById(
       "preset-dl"
-    ).innerHTML = '<span class="fa fa-download fa-fw"></span> Download {0} preset VPK'.format(
-      presets.get(id)
-    ); // update preset text
+    ).innerHTML = `<span class="fa fa-download fa-fw"></span> Download ${presets.get(id)} preset VPK` // update preset text
     // if not loading from storage, set recommended addons
     if (!no_set) {
       // reset all recommendable addons
@@ -387,6 +397,7 @@ function app() {
     } else {
       selectedModules[name] = value;
     }
+    updateCustomizationDownload();
   }
 
   function getDefaultValueFromName(values, name) {
@@ -413,7 +424,7 @@ function app() {
     let row = document.createElement("div");
     row.classList.add("row");
     let col = document.createElement("div");
-    col.classList.add("col-sm-3");
+    col.classList.add("col-sm-5");
     row.appendChild(col);
     return [row, col];
   }
@@ -576,11 +587,26 @@ function app() {
     }
   }
 
+  // Function to accurately calculate scroll position because scrollTop is busted...
+  function getRelativePos(elm){
+    var pPos = elm.parentNode.getBoundingClientRect(), // parent pos
+        cPos = elm.getBoundingClientRect(), // target pos
+        pos = {};
+
+    pos.top    = cPos.top    - pPos.top + elm.parentNode.scrollTop,
+    pos.right  = cPos.right  - pPos.right,
+    pos.bottom = cPos.bottom - pPos.bottom,
+    pos.left   = cPos.left   - pPos.left;
+
+    return pos;
+  }
+
   // Handles each module category
   function handleCategory(name, category) {
     // Create category element
     let categoryContainer = document.createElement("div");
-    categoryContainer.id = "module-cont-" + name;
+    let id = "module-cont-" + name;
+    categoryContainer.id = id;
     // Create category title
     let categoryTitle = document.createElement("h4");
     categoryTitle.classList.add("module-category-title");
@@ -596,11 +622,25 @@ function app() {
         categoryContainer.appendChild(moduleElement);
       }
     });
+    let categoryNavItem = document.createElement("li");
+    categoryNavItem.classList.add("nav-item");
+    let categoryNavLink = document.createElement("a");
+    categoryNavLink.classList.add("nav-link");
+    categoryNavLink.innerText = displayName;
+    categoryNavLink.href = `#${id}`;
+    categoryNavLink.addEventListener("click", (e) => {
+      let top = getRelativePos(categoryContainer).top;
+      document.getElementById("modules-root").scrollTop = top;
+      e.preventDefault();
+    }, {
+      passive: false
+    })
+    categoryNavItem.appendChild(categoryNavLink);
     // If we have a module in this category, show the whole category
     if (bHasModule) {
-      return categoryContainer;
+      return [categoryContainer, categoryNavItem];
     } else {
-      return null;
+      return [null, null];
     }
   }
 
@@ -612,17 +652,46 @@ function app() {
     // Remove loading
     modulesRoot.innerText = "";
 
-    // For each module category, create its element and add it to the main modules container.
+    // Create row for columns
+    let modulesRow = document.createElement("div");
+    modulesRow.classList.add("row");
+
+    // Create column for all the customization controls
+    let customizationsCol = document.createElement("div");
+    customizationsCol.classList.add("col-8");
+    modulesRow.appendChild(customizationsCol);
+
+    // Create column for the sidebar
+    let sidebarCol = document.createElement("div");
+    sidebarCol.classList.add("col-4", "d-none");
+    sidebarCol.id = "modules-sidebar";
+    let sidebarNav = document.createElement("ul");
+    sidebarNav.classList.add("nav", "flex-column", "fixed-inner");
+    sidebarCol.appendChild(sidebarNav);
+    modulesRow.appendChild(sidebarCol);
+
+    // For each module category, create its element and add it to the columns.
     Object.keys(modules).forEach((module) => {
-      let moduleCategoryElement = handleCategory(module, modules[module]);
+      let [moduleCategoryElement, moduleCategoryNavLink] = handleCategory(module, modules[module]);
       if (moduleCategoryElement) {
-        modulesRoot.appendChild(moduleCategoryElement);
+        customizationsCol.appendChild(moduleCategoryElement);
+      }
+      if (moduleCategoryNavLink) {
+        sidebarNav.appendChild(moduleCategoryNavLink);
       }
     });
+    // Add the columns to root container.
+    modulesRoot.appendChild(modulesRow);
+    // Add a bit of padding to our overflowed root
+    for (let i = 0; i < 4; i++) {
+      modulesRoot.appendChild(document.createElement("br"));
+    }
+    // Update after travesing all modules
+    updateCustomizationDownload();
   }
 
   // get latest release, and update page
-  fetch("https://mastercomfig.mcoms.workers.dev/")
+  fetch("https://cors-anywhere.herokuapp.com/https://mastercomfig.mcoms.workers.dev/")
     .then((resp) => resp.json())
     .then((data) => {
       // Get the version
@@ -655,6 +724,9 @@ function app() {
   // Bind the customizations button with our multi-downloader
   bindDownloadClick("custom-dl", getCustomDownloadUrls);
 
+  // After binding, we need to update the text
+  updateCustomizationDownload();
+
   // Track the last version we downloaded, so that updates can be managed
   document.getElementById("preset-dl").addEventListener("click", () => {
     storage.setItem("lastVersion", version);
@@ -683,6 +755,13 @@ function app() {
       setAddon(id, false);
     }
   }
+
+  document.getElementById("modules-toggler").addEventListener("click", (e) => {
+    e.currentTarget.classList.toggle("active");
+    setTimeout(() => {
+      document.getElementById("modules-sidebar").classList.toggle("d-none");
+    }, 100);
+  })
 }
 
 (function () {
