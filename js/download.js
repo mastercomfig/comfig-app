@@ -42,15 +42,15 @@ function app() {
   }
 
   // Map preset IDs to display names for download
-  var presets = new Map([
-    ["ultra", "Ultra"],
-    ["high", "High"],
-    ["medium-high", "Medium High"],
-    ["medium", "Medium"],
-    ["medium-low", "Medium Low"],
-    ["low", "Low"],
-    ["very-low", "Very Low"],
-  ]);
+  var presets = {
+    ultra: "Ultra",
+    high: "High",
+    "medium-high": "Medium High",
+    medium: "Medium",
+    "medium-low": "Medium Low",
+    low: "Low",
+    "very-low": "Very Low",
+  }
 
   // The only addons we can override when preset switches
   const recommendableAddons = [
@@ -386,12 +386,12 @@ function app() {
     if (!downloading) {
       document.getElementById(
         "vpk-dl"
-      ).innerHTML = `<span class="fa fa-cloud-download fa-fw"></span> Download ${presets.get(id)} preset and selected addons VPKs ` // update download text
+      ).innerHTML = `<span class="fa fa-cloud-download fa-fw"></span> Download ${presets[id]} preset and selected addons VPKs ` // update download text
     }
     presetDownload.setAttribute("href", getPresetUrl());
     document.getElementById(
       "preset-dl"
-    ).innerHTML = `<span class="fa fa-download fa-fw"></span> Download ${presets.get(id)} preset VPK` // update preset text
+    ).innerHTML = `<span class="fa fa-download fa-fw"></span> Download ${presets[id]} preset VPK` // update preset text
     // if not loading from storage, set recommended addons
     if (!no_set) {
       // reset all recommendable addons
@@ -403,6 +403,50 @@ function app() {
         setAddon(addon, true);
       });
     }
+  }
+
+  let keyBindMap = {
+    PAUSE: "NUMLOCK",
+    INSERT: "INS",
+    DELETE: "DEL",
+    PAGEUP: "PGUP",
+    PAGEDOWN: "PGDN",
+    " ": "SPACE",
+  };
+
+  let keypadBindMap = {"+": "KP_PLUS",
+    "/": "KP_SLASH",
+    "*": "KP_MULTIPLY",
+    "-": "KP_MINUS",
+    "+": "KP_PLUS",
+    "CLEAR": "KP_5",
+    "ENTER": "KP_ENTER",
+    ".": "KP_DEL"
+  };
+
+  function bindingToBind(binding) {
+    if (keyBindMap.hasOwnProperty(binding)) {
+      return keyBindMap[binding];
+    }
+    if (binding.startsWith("ARROW")) {
+      return binding.substring(5) + "ARROW";
+    }
+    return binding;
+  }
+
+  function keyEventToKeyBind(e) {
+    let binding = e.key.toUpperCase();
+    // Shift, alt, ctrl on the right side
+    if (e.key.location === KeyboardEvent.DOM_KEY_LOCATION_RIGHT) {
+      return "R" + binding;
+    }
+    if (e.key.location === KeyboardEvent.DOM_KEY_LOCATION_NUMPAD) {
+      if (keypadBindMap.hasOwnProperty(binding)) {
+      return keypadBindMap[binding];
+    }
+      return "KP_" + bindingToBind(binding);
+    }
+    return bindingToBind(binding);
   }
 
   function getBuiltinModuleDefault(name) {
