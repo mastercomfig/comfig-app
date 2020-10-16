@@ -128,7 +128,7 @@ a.disabled {
   color: #f8f9fa !important;
 }
 
-#modules-toggler.active span {
+.toggler.active span {
   transform: rotate(180deg);
 }
 

@@ -72,7 +72,7 @@
                 <hr>
                 <div class="row">
                   <div class="col-sm-auto">
-                    <h2><span class="fa fa-cube fa-fw" aria-hidden="true"></span> Quality</h2>
+                    <h2><span class="fa fa-cube fa-fw" aria-hidden="true"></span> Config </h2>
                   </div>
                   <div class="col-sm">
                     <ul class="nav nav-pills" id="presets" role="tablist">
@@ -130,14 +130,33 @@
                         <br><strong>BY DOWNLOADING THIS PRESET YOU UNDERSTAND THAT IT <em>REMOVES HUD ELEMENTS AND REDUCES VISIBILITY</em>. IF YOU DON'T WANT THIS <em>USE LOW</em>, THAT'S THE <em>ONLY</em> DIFFERENCE.</strong>
                       </div>
                     </div>
-                    <a class="lead" id="modules-toggler" data-toggle="collapse" href="#modules" role="button" aria-expanded="false" aria-controls="modules">
+                    <a class="lead toggler" data-toggle="collapse" href="#modules" role="button" aria-expanded="false" aria-controls="modules">
                       <span class="fa fa-angle-double-down fa-fw"></span> <strong></strong>Customize quality</strong>
                     </a>
                     <div class="collapse" id="modules">
+                      <br>
                       <div style="background: rgba(255,255,255,0.1); padding: 0.5rem; border: 1px solid #f2f2f2"><h5 style="max-width: 500px">Customize your modules here, and then download with the <strong>Download customizations</strong> button in the download section below!</h5></div>
                       <p>For more information about modules, <a href="https://docs.mastercomfig.com/page/customization/modules/" target="_blank" rel="noopener noreferrer">see the documentation.</a></p>
                       <noscript>JavaScript must be enabled for modules customization.</noscript>
                       <div id="modules-root">
+                        <span class="fa fa-spinner fa-pulse fa-fw"></span> Loading, please wait...
+                      </div>
+                    </div>
+                    <br>
+                    <a class="lead toggler" data-toggle="collapse" href="#autoexec" role="button" aria-expanded="false"
+                      aria-controls="autoexec">
+                      <span class="fa fa-angle-double-down fa-fw"></span> <strong></strong>Customize config</strong>
+                    </a>
+                    <div class="collapse" id="autoexec">
+                      <br>
+                      <div style="background: rgba(255,255,255,0.1); padding: 0.5rem; border: 1px solid #f2f2f2">
+                        <h5 style="max-width: 500px">Customize your config here, and then download with the <strong>Download
+                            customizations</strong> button in the download section below!</h5>
+                      </div>
+                      <p>For more information about configs, <a href="https://docs.mastercomfig.com/page/customization/custom_configs/"
+                          target="_blank" rel="noopener noreferrer">see the documentation.</a></p>
+                      <noscript>JavaScript must be enabled for config customization.</noscript>
+                      <div id="autoexec-root">
                         <span class="fa fa-spinner fa-pulse fa-fw"></span> Loading, please wait...
                       </div>
                     </div>

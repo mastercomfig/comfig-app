@@ -117,6 +117,10 @@ function app() {
   var selectedAddons = [];
   // Current state of module selections
   var selectedModules = {};
+  // Current state of binds
+  var selectedBinds = {};
+  // Current state of overrides
+  var selectedOverrides = {};
 
   var storage = localStorage;
 
@@ -259,7 +263,40 @@ function app() {
     for (const moduleName of Object.keys(selectedModules)) {
       contents += `${moduleName}=${selectedModules[moduleName]}\n`;
     }
-    return newFile(contents, "modules.cfg");
+    if (contents.length > 0) {
+      return newFile(contents, "modules.cfg");
+    }
+    return null;
+  }
+
+  function newAutoexecFile() {
+    let contents = "";
+    for (const key of Object.keys(selectedBinds)) {
+      let binding = selectedBinds[key];
+      let bindingStr;
+      // Should we quote arg, or raw arg?
+      if (typeof binding === "string" && bindingStr.indexOf(" ") !== -1) {
+        bindingStr = `"${binding}"`;
+      } else {
+        bindingStr = ` ${binding}`;
+      }
+      contents += `bind ${key}${bindingStr}\n`;
+    }
+    for (const cvar of Object.keys(selectedOverrides)) {
+      contents += `${cvar} ${selectedOverrides[cvar]}\n`;
+    }
+    if (contents.length > 0) {
+      return newFile(contents, "autoexec.cfg");
+    }
+    return null;
+  }
+
+  function getObjectFilePromise(file) {
+    return Promise.resolve({
+          url: URL.createObjectURL(file),
+          name: file.name,
+          isObject: true,
+        });
   }
 
   function getCustomDownloadUrls() {
@@ -275,11 +312,13 @@ function app() {
     let modulesFile = newModulesFile();
     if (modulesFile) {
       downloads.push(
-        Promise.resolve({
-          url: URL.createObjectURL(modulesFile),
-          name: modulesFile.name,
-          isObject: true,
-        })
+        getObjectFilePromise(modulesFile)
+      );
+    }
+    let autoexecFile = newAutoexecFile();
+    if (autoexecFile) {
+      downloads.push(
+        getObjectFilePromise(autoexecFile)
       );
     }
     return downloads;
@@ -691,7 +730,7 @@ function app() {
   }
 
   // get latest release, and update page
-  fetch("https://mastercomfig.mcoms.workers.dev/")
+  fetch("https://cors-anywhere.herokuapp.com/https://mastercomfig.mcoms.workers.dev/")
     .then((resp) => resp.json())
     .then((data) => {
       // Get the version
