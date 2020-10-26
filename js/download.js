@@ -745,7 +745,7 @@ function app() {
     // Create column for all the customization controls
     let customizationsCol = document.createElement("div");
     customizationsCol.id = "modules-controls";
-    customizationsCol.classList.add("col-8");
+    customizationsCol.classList.add("col-8", "inset-box");
     modulesRow.appendChild(customizationsCol);
 
     // Create column for the sidebar
@@ -861,6 +861,24 @@ function app() {
       document.getElementById("modules-sidebar").classList.toggle("d-none");
     }, 100);
   })
+
+  let Keyboard = window.SimpleKeyboard.default;
+
+  let myKeyboard = new Keyboard({
+    onChange: input => onChange(input),
+    onKeyPress: button => onKeyPress(button)
+  });
+
+
+  function onChange(input) {
+    document.querySelector(".input").value = input;
+    console.log("Input changed", input);
+  }
+
+
+  function onKeyPress(button) {
+    console.log("Button pressed", button);
+  }
 }
 
 (function () {

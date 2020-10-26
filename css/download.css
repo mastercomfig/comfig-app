@@ -118,6 +118,9 @@ b {
   overflow-y: scroll;
   overflow-x: hidden;
   position: relative;
+}
+
+.inset-box {
   box-shadow: inset 0 0 5px #000000;
   padding: 20px;
 }

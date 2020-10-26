@@ -21,6 +21,7 @@
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/css/bootstrap.min.css"
       integrity="sha384-DhY6onE6f3zzKbjUPRc2hOzGAdEf4/Dz+WJwBvEYL/lkkIsI3ihufq9hk9K4lVoK" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/css/index.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4/css/font-awesome.min.css">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/download.css">
@@ -150,8 +151,8 @@
                         <span class="fa fa-spinner fa-pulse fa-fw"></span> Loading, please wait...
                       </div>
                     </div>
-                    <br>
-                    <!--<a class="lead toggler btn btn-primary" data-toggle="collapse" href="#autoexec" role="button" aria-expanded="false"
+                    <br><br>
+                    <a class="lead toggler btn btn-primary" data-toggle="collapse" href="#autoexec" role="button" aria-expanded="false"
                       aria-controls="autoexec">
                       <span class="fa fa-angle-double-down fa-fw"></span> <strong></strong>Customize config</strong>
                     </a>
@@ -164,10 +165,26 @@
                       <p>For more information about configs, <a href="https://docs.mastercomfig.com/page/customization/custom_configs/"
                           target="_blank" rel="noopener noreferrer">see the documentation.</a></p>
                       <noscript>JavaScript must be enabled for config customization.</noscript>
-                      <div id="autoexec-root">
+                      <div id="autoexec-root" class="inset-box">
                         <span class="fa fa-spinner fa-pulse fa-fw"></span> Loading, please wait...
                       </div>
-                    </div>-->
+                    </div>
+                    <br><br>
+                    <a class="lead toggler btn btn-primary" data-toggle="collapse" href="#bindings" role="button" aria-expanded="false"
+                      aria-controls="bindings">
+                      <span class="fa fa-angle-double-down fa-fw"></span> <strong></strong>Customize bindings</strong>
+                    </a>
+                    <div class="collapse" id="bindings">
+                      <br>
+                      <div style="background: rgba(255,255,255,0.1); padding: 0.5rem; border: 1px solid #f2f2f2">
+                        <h5 style="max-width: 500px">Customize your input bindings here, and then download with the <strong>Download
+                            customizations</strong> button in the download section below!</h5>
+                      </div>
+                      <noscript>JavaScript must be enabled for config customization.</noscript>
+                      <div id="binds-root" class="inset-box text-dark">
+                        <div class="simple-keyboard"></div>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <hr>
@@ -310,6 +327,7 @@
 
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/js/bootstrap.bundle.min.js"
       integrity="sha384-BOsAfwzjNJHrJ8cZidOg56tcQWfp6y72vEJ8xQ9w6Quywb24iOsW913URv1IS4GD" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/index.min.js"></script>
     <script defer src="js/download.js"></script>
   </body>
 </html>
