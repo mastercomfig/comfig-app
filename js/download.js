@@ -494,6 +494,12 @@ function app() {
     return defaultValue;
   }
 
+  function resetModules() {
+      selectedModules = { };
+      saveModules();
+      handleModulesRoot(selectedModules);
+  }
+
   // Convenience method for creating form input elements
   function createInputElement(type, clazz) {
     let inputElement = document.createElement("input");
@@ -768,6 +774,11 @@ function app() {
         sidebarNav.appendChild(moduleCategoryNavLink);
       }
     });
+    
+    let resetButton = document.createElement('button');
+    resetButton.value = "Reset";
+    resetButton.addEventListener("click", resetModules);
+    customizationsCol.appendChild(resetButton);
 
     // Add a bit of padding to our overflowed root
     let paddingDiv = document.createElement("div");
