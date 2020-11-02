@@ -704,9 +704,14 @@ function app() {
 
   // Convenience method for creating reset buttons
   function createResetButton(contents, click) {
-    let resetButton = document.createElement('button');
+    let resetButton = document.createElement("button");
+    let trashIcon = document.createElement("i");
+    trashIcon.classList.add("fa");
+    trashIcon.classList.add("fa-trash");
+    trashIcon.style.cssText = "margin-right: .3rem;";
+    resetButton.appendChild(trashIcon);
+    resetButton.appendChild(document.createTextNode(contents));
     resetButton.classList.add("btn");
-    resetButton.textContent = contents;
     resetButton.addEventListener("click", click);
     return resetButton;
   }
@@ -737,6 +742,7 @@ function app() {
     resetButton.classList.add("btn-secondary");
     resetButton.style.cssText = "margin-top: .5rem;"
     categoryContainer.appendChild(resetButton);
+    categoryContainer.appendChild(document.createElement("hr"));
     let categoryNavItem = document.createElement("li");
     categoryNavItem.classList.add("nav-item");
     let categoryNavLink = document.createElement("a");
@@ -800,7 +806,6 @@ function app() {
     });
 
     // Add global reset button
-    customizationsCol.appendChild(document.createElement("hr"));
     let resetButton = createResetButton("Reset All to Default", resetAllModules);
     resetButton.classList.add("btn-primary");
     customizationsCol.appendChild(resetButton);
