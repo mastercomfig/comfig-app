@@ -494,7 +494,15 @@ function app() {
     return defaultValue;
   }
 
-  function resetModules() {
+  function resetCategory(category) {
+      Object.keys(modulesDef[category].modules).forEach((setting) => {
+          delete selectedModules[setting];
+      });
+      saveModules();
+      handleModulesRoot(modulesDef);
+  }
+
+  function resetAllModules() {
       selectedModules = { };
       saveModules();
       handleModulesRoot(modulesDef);
@@ -713,6 +721,13 @@ function app() {
         categoryContainer.appendChild(moduleElement);
       }
     });
+    // Add category reset button
+    let resetButton = document.createElement('button');
+    resetButton.classList.add("btn");
+    resetButton.classList.add("btn-secondary");
+    resetButton.textContent = "Reset " + displayName + " to Default";
+    resetButton.addEventListener("click", (e) => resetCategory(name));
+    categoryContainer.appendChild(resetButton);
     let categoryNavItem = document.createElement("li");
     categoryNavItem.classList.add("nav-item");
     let categoryNavLink = document.createElement("a");
@@ -774,10 +789,13 @@ function app() {
         sidebarNav.appendChild(moduleCategoryNavLink);
       }
     });
-    
+
+    // Add global reset button
     let resetButton = document.createElement('button');
-    resetButton.value = "Reset";
-    resetButton.addEventListener("click", resetModules);
+    resetButton.classList.add("btn");
+    resetButton.classList.add("btn-primary");
+    resetButton.textContent = "Reset All to Default";
+    resetButton.addEventListener("click", resetAllModules);
     customizationsCol.appendChild(resetButton);
 
     // Add a bit of padding to our overflowed root
