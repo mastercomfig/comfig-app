@@ -499,12 +499,14 @@ function app() {
           delete selectedModules[setting];
       });
       saveModules();
+      loadModules();
       handleModulesRoot(modulesDef);
   }
 
   function resetAllModules() {
       selectedModules = { };
       saveModules();
+      loadModules();
       handleModulesRoot(modulesDef);
   }
 
@@ -700,6 +702,15 @@ function app() {
 
   var bSetModuleNavActive = true;
 
+  // Convenience method for creating reset buttons
+  function createResetButton(contents, click) {
+    let resetButton = document.createElement('button');
+    resetButton.classList.add("btn");
+    resetButton.textContent = contents;
+    resetButton.addEventListener("click", click);
+    return resetButton;
+  }
+
   // Handles each module category
   function handleCategory(name, category) {
     // Create category element
@@ -722,11 +733,9 @@ function app() {
       }
     });
     // Add category reset button
-    let resetButton = document.createElement('button');
-    resetButton.classList.add("btn");
+    let resetButton = createResetButton("Reset " + displayName + " to Default", (e) => resetCategory(name));
     resetButton.classList.add("btn-secondary");
-    resetButton.textContent = "Reset " + displayName + " to Default";
-    resetButton.addEventListener("click", (e) => resetCategory(name));
+    resetButton.style.cssText = "margin-top: .5rem;"
     categoryContainer.appendChild(resetButton);
     let categoryNavItem = document.createElement("li");
     categoryNavItem.classList.add("nav-item");
@@ -791,11 +800,9 @@ function app() {
     });
 
     // Add global reset button
-    let resetButton = document.createElement('button');
-    resetButton.classList.add("btn");
+    customizationsCol.appendChild(document.createElement("hr"));
+    let resetButton = createResetButton("Reset All to Default", resetAllModules);
     resetButton.classList.add("btn-primary");
-    resetButton.textContent = "Reset All to Default";
-    resetButton.addEventListener("click", resetAllModules);
     customizationsCol.appendChild(resetButton);
 
     // Add a bit of padding to our overflowed root
