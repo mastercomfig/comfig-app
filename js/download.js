@@ -497,7 +497,7 @@ function app() {
   function resetModules() {
       selectedModules = { };
       saveModules();
-      handleModulesRoot(selectedModules);
+      handleModulesRoot(modulesDef);
   }
 
   // Convenience method for creating form input elements
