@@ -2,14 +2,14 @@ name: Repo
 
 on:
   push:
-    branches: [master]
+    branches: [main]
 
 jobs:
   merge:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Merge master -> develop
+      - name: Merge main -> develop
         uses: everlytic/branch-merge@master
         with:
           target_branch: develop
