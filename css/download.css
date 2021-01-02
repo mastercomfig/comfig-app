@@ -135,7 +135,11 @@ a.disabled {
 }
 
 .download-link {
-  color: #00ffe7
+  color: #00ffe7;
+}
+
+.download-link:hover {
+  color: #8afff4;
 }
 
 .toggler.active span {
