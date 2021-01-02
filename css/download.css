@@ -134,6 +134,10 @@ a.disabled {
   color: #f8f9fa !important;
 }
 
+.download-link {
+  color: #00ffe7
+}
+
 .toggler.active span {
   transform: rotate(180deg);
 }
