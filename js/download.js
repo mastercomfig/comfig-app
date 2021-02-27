@@ -862,12 +862,12 @@ function app() {
     }, 100);
   })
 
-  let Keyboard = window.SimpleKeyboard.default;
+  /*let Keyboard = window.SimpleKeyboard.default;
 
   let myKeyboard = new Keyboard({
     onChange: input => onChange(input),
     onKeyPress: button => onKeyPress(button)
-  });
+  });*/
 
 
   function onChange(input) {
