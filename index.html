@@ -17,7 +17,7 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/combine/npm/zurb-twentytwenty@0.1.1/css/twentytwenty.min.css,npm/highlight.js@9/styles/atom-one-dark.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/combine/npm/zurb-twentytwenty@0.1.1/css/twentytwenty.min.css,npm/highlight.js@10.6/styles/atom-one-dark.min.css">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/index.css">
     <link rel="shortcut icon" href="favicon.ico">
@@ -122,7 +122,7 @@
                         <img class="lazy" data-src="img/koth_sawmill_quality.jpg" alt="koth_sawmill ultra">
                     </div>
                     <br>
-                    <button type="button" class="btn btn-secondary btn-sm d-none d-md-block" data-toggle="modal" data-target="#compareModal">
+                    <button type="button" class="btn btn-secondary btn-sm d-none d-md-block" data-bs-toggle="modal" data-bs-target="#compareModal">
                       View larger
                     </button>
                     <br>
@@ -213,13 +213,12 @@ tf_item_inspect_model_spin_rate 30 // Rate at which items spin in the inspect vi
         mastercomfig is not sponsored, endorsed, licensed by, or affiliated with Valve Corporation.
     </footer>
 
-    <div class="modal fade" id="compareModal" tabindex="-1" role="dialog" aria-hidden="true">
-      <div class="modal-dialog modal-lg" role="document">
+    <div class="modal fade" id="compareModal" tabindex="-1" role="dialog" aria-labelledby="compareModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
         <div class="modal-content bg-dark">
           <div class="modal-header">
-            <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close"
-              <span aria-hidden="true">&times;</span>
-            </button>
+            <h5 class="modal-title" id="compareModalLabel">Comparison</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
             <div id="quality-compare-large" class="twentytwenty-container">
@@ -232,9 +231,9 @@ tf_item_inspect_model_spin_rate 30 // Rate at which items spin in the inspect vi
     </div>
 
     <script src="https://cdn.jsdelivr.net/combine/npm/jquery@3.5/dist/jquery.min.js,npm/jquery-visible@1,npm/zurb-twentytwenty@0/js/jquery.event.move.min.js,npm/zurb-twentytwenty@0.1.1/js/jquery.twentytwenty.min.js"></script>
-    <script async src="https://cdn.jsdelivr.net/combine/npm/bootstrap@4/js/dist/index.min.js,npm/bootstrap@4/js/dist/util.min.js,npm/bootstrap@4/js/dist/modal.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js" integrity="sha256-1zu+3BnLYV9LdiY85uXMzii3bdrkelyp37e0ZyTAQh0=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/languages/cpp.min.js" integrity="sha256-SKE+HaFesRrRL7n/cuFba0AhsMUqwA9vzo6mh6lRR6I=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.6.0/highlight.min.js" integrity="sha512-zol3kFQ5tnYhL7PzGt0LnllHHVWRGt2bTCIywDiScVvLIlaDOVJ6sPdJTVi0m3rA660RT+yZxkkRzMbb1L8Zkw==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.6.0/languages/cpp.min.js" integrity="sha512-u39RFB1w5xl14G3Z2hWfNMmw8oUtaTnRjp/ZDigBoWtuMHRcq30JUw1rfiIYgGVKltGPHIuiVW1A9lo2cy0h3w==" crossorigin="anonymous"></script>
     <script defer src="js/index.js"></script>
     <script src="js/lazy.js"></script>
   </body>
