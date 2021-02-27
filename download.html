@@ -43,7 +43,7 @@
     <nav class="navbar navbar-expand-sm sticky-top navbar-dark bg-teal">
       <div class="container">
         <span class="navbar-brand">mastercomfig <span class="badge bg-dark" id="version"></span></span>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
@@ -72,29 +72,29 @@
                   </div>
                   <div class="col-sm">
                     <ul class="nav nav-pills" id="presets" role="tablist">
-                      <li class="nav-item">
-                        <a class="nav-link" id="ultra" data-toggle="tab" href="#ultra-tab" role="tab" aria-controls="ultra-tab" aria-selected="true">Ultra</a>
+                      <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="ultra" data-bs-toggle="tab" data-bs-target="#ultra-tab" type="button" role="tab" aria-controls="ultra-tab" aria-selected="false">Ultra</a>
                       </li>
-                      <li class="nav-item">
-                        <a class="nav-link" id="high" data-toggle="tab" href="#high-tab" role="tab" aria-controls="high-tab" aria-selected="true">High</a>
+                      <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="high" data-bs-toggle="tab" data-bs-target="#high-tab" type="button" role="tab" aria-controls="high-tab" aria-selected="false">High</a>
                       </li>
-                      <li class="nav-item">
-                        <a class="nav-link" id="medium-high" data-toggle="tab" href="#medium-high-tab" role="tab" aria-controls="medium-high-tab" aria-selected="true">Medium High</a>
+                      <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="medium-high" data-bs-toggle="tab" data-bs-target="#medium-high-tab" type="button" role="tab" aria-controls="medium-high-tab" aria-selected="false">Medium High</a>
                       </li>
-                      <li class="nav-item">
-                        <a class="nav-link" id="medium" data-toggle="tab" href="#medium-tab" role="tab" aria-controls="medium-tab" aria-selected="true">Medium</a>
+                      <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="medium" data-bs-toggle="tab" data-bs-target="#medium-tab" type="button" role="tab" aria-controls="medium-tab" aria-selected="false">Medium</a>
                       </li>
-                      <li class="nav-item">
-                        <a class="nav-link" id="medium-low" data-toggle="tab" href="#medium-low-tab" role="tab" aria-controls="medium-low-tab" aria-selected="true">Medium Low</a>
+                      <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="medium-low" data-bs-toggle="tab" data-bs-target="#medium-low-tab" type="button" role="tab" aria-controls="medium-low-tab" aria-selected="false">Medium Low</a>
                       </li>
-                      <li class="nav-item">
-                        <a class="nav-link" id="low" data-toggle="tab" href="#low-tab" role="tab" aria-controls="low-tab" aria-selected="true">Low</a>
+                      <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="low" data-bs-toggle="tab" data-bs-target="#low-tab" type="button" role="tab" aria-controls="low-tab" aria-selected="false">Low</a>
                       </li>
-                      <li class="nav-item">
-                        <a class="nav-link" id="very-low" data-toggle="tab" href="#very-low-tab" role="tab" aria-controls="very-low-tab" aria-selected="true">Very Low</a>
+                      <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="very-low" data-bs-toggle="tab" data-bs-target="#very-low-tab" type="button" role="tab" aria-controls="very-low-tab" aria-selected="false">Very Low</a>
                       </li>
                     </ul>
-                    <div class="tab-content">
+                    <div class="tab-content" id="presetsContent">
                       <div class="tab-pane" id="ultra-tab" role="tabpanel" aria-labelledby="ultra">
                         <br><img src='img/presets/ultra.png' class="download-preview img-fluid img-thumbnail my-auto d-block"/><br>
                         <h4>Absolute maximum quality, with even the slightest and most performance-intensive quality improvements included.</h4>
@@ -133,7 +133,7 @@
                         <br><br>
                       </div>
                     </div>
-                    <a class="lead toggler btn btn-primary" id="modules-toggler" data-toggle="collapse" href="#modules" role="button" aria-expanded="false" aria-controls="modules">
+                    <a class="lead toggler btn btn-primary" id="modules-toggler" data-bs-toggle="collapse" href="#modules" role="button" aria-expanded="false" aria-controls="modules">
                       <span class="fa fa-angle-double-down fa-fw"></span> <strong></strong>Customize quality</strong>
                     </a>
                     <div class="collapse" id="modules">
@@ -147,7 +147,7 @@
                       </div>
                     </div>
                     <!--<br><br>
-                    <a class="lead toggler btn btn-primary" data-toggle="collapse" href="#autoexec" role="button" aria-expanded="false"
+                    <a class="lead toggler btn btn-primary" data-bs-toggle="collapse" href="#autoexec" role="button" aria-expanded="false"
                       aria-controls="autoexec">
                       <span class="fa fa-angle-double-down fa-fw"></span> <strong></strong>Customize config</strong>
                     </a>
@@ -165,7 +165,7 @@
                       </div>
                     </div>
                     <br><br>
-                    <a class="lead toggler btn btn-primary" data-toggle="collapse" href="#bindings" role="button" aria-expanded="false"
+                    <a class="lead toggler btn btn-primary" data-bs-toggle="collapse" href="#bindings" role="button" aria-expanded="false"
                       aria-controls="bindings">
                       <span class="fa fa-angle-double-down fa-fw"></span> <strong></strong>Customize bindings</strong>
                     </a>
@@ -248,7 +248,7 @@
                     <h2><span class="fa fa-archive fa-fw"></span> Download mastercomfig</h2>
                     <p>Drop the files in your <code>tf/custom</code> folder and they'll automatically run.</p>
                     <p class="lead"><b><a href="https://github.com/mastercomfig/mastercomfig/releases/latest" id="vpk-dl" class="download-link" style="cursor: pointer"><span class="fa fa-cloud-download fa-fw"></span>  Download from GitHub</a></b></p>
-                    <a id="collapseManualButton" data-toggle="collapse" href="#collapseManual" role="button" aria-expanded="false" aria-controls="collapseManual">
+                    <a id="collapseManualButton" data-bs-toggle="collapse" href="#collapseManual" role="button" aria-expanded="false" aria-controls="collapseManual">
                         Not working? Download manually
                     </a>
                     <div class="collapse" id="collapseManual">
@@ -269,7 +269,7 @@
                     <noscript>Note: Customizations require JavaScript.</noscript>
                     <p class="lead"><b><a class="download-link" id="custom-dl"><span class="fa fa-download fa-fw"></span> Download customizations </a></b></p>
                     <hr>
-                    <a id="collapseMiscButton" data-toggle="collapse" href="#collapseMisc" role="button" aria-expanded="false"
+                    <a id="collapseMiscButton" data-bs-toggle="collapse" href="#collapseMisc" role="button" aria-expanded="false"
                       aria-controls="collapseMisc" style="color: #a0a0a0">
                       Misc. downloads
                     </a>
