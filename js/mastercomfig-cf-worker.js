@@ -126,21 +126,25 @@ async function updateData(requests) {
 
 async function handleRequest(request) {
   // Attempt cached
-  let v = await MASTERCOMFIG.get("mastercomfig-version")
-  let m = await MASTERCOMFIG.get("mastercomfig-modules")
-  let p = await MASTERCOMFIG.get("mastercomfig-preset-modules")
-  updated = await updateData([v ? null : rv, m ? null : rm, p ? null : rp])
-  if (updated[0]) {
-    v = updated[0]
+  let resBody = await MASTERCOMFIG.get("mastercomfig-api-response")
+  if (!resBody) {
+    let v = await MASTERCOMFIG.get("mastercomfig-version")
+    let m = await MASTERCOMFIG.get("mastercomfig-modules")
+    let p = await MASTERCOMFIG.get("mastercomfig-preset-modules")
+    updated = await updateData([v ? null : rv, m ? null : rm, p ? null : rp])
+    if (updated[0]) {
+      v = updated[0]
+    }
+    if (updated[1]) {
+      m = updated[1]
+    }
+    if (updated[2]) {
+      p = updated[2]
+    }
+    resBody = "{\"v\":\"" + v + "\"," +
+                    "\"m\":" + m + "," +
+                    "\"p\":" + p + "}";
+    storeData("mastercomfig-api-response", resBody);
   }
-  if (updated[1]) {
-    m = updated[1]
-  }
-  if (updated[2]) {
-    p = updated[2]
-  }
-  const resBody = "{\"v\":\"" + v + "\"," +
-                  "\"m\":" + m + "," +
-                  "\"p\":" + p + "}";
   return new Response(resBody, resHeaders)
 }
