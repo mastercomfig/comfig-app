@@ -75,17 +75,25 @@ async function storeData(key, value) {
   return MASTERCOMFIG.put(key, value, cacheOpt)
 }
 
+async function noop() {
+    return null
+}
+
 async function updateData(requests) {
   let data = []
   try {
     // Fetch
     let pr = []
+    let hasValidRequest = false
     requests.forEach((r) => {
-      if (r) {
-        pr.push(fetch(r[0], r[1]))
-      }
-    });
-    if (pr.length < 1) {
+        if (r) {
+            hasValidRequest = true
+            pr.push(fetch(r[0], r[1]))
+        } else {
+            pr.push(noop())
+        }
+    })
+    if (!hasValidRequest) {
       return data
     }
     data.fill(null, pr.length)
@@ -93,14 +101,21 @@ async function updateData(requests) {
     // Parse response
     let pg = []
     responses.forEach((r) => {
-      pg.push(gatherResponse(r))
+        if (r) {
+            pg.push(gatherResponse(r))
+        } else {
+            pg.push(noop())
+        }
     })
     // Store and return results
     const results = await Promise.all(pg)
     results.forEach((r, i) => {
-      let value = requests[i][3] ? requests[i][3](r) : r;
-      data[i] = value
-      storeData(requests[i][2], value)
+        if (!r) {
+            return
+        }
+        let value = requests[i][3] ? requests[i][3](r) : r;
+        data[i] = value
+        storeData(requests[i][2], value)
     })
   } catch (error) {
     console.error(error)
@@ -126,6 +141,6 @@ async function handleRequest(request) {
   }
   const resBody = "{\"v\":\"" + v + "\"," +
                   "\"m\":" + m + "," +
-                  "\"p\":" + p;
+                  "\"p\":" + p + "}";
   return new Response(resBody, resHeaders)
 }
