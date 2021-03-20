@@ -785,6 +785,7 @@ function app() {
       sidebarCol.classList.toggle("d-none");
       handleModulesRoot(modules);
     });
+    sidebarCol.append(resetButton);
 
     // Add a bit of padding to our overflowed root
     let paddingDiv = document.createElement("div");
