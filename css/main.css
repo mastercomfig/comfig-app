@@ -20,6 +20,11 @@ header {
   width: 0.5rem;
 }
 
+::selection {
+  background: rgba(27, 233, 243, 0.5);
+  color: #f2f2f2;
+}
+
 .dark-header {
   background-color: #212121;
 }
