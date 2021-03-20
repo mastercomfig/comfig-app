@@ -23,6 +23,12 @@ function app() {
   function saveModules() {
     storage.setItem("modules", JSON.stringify(selectedModules));
   }
+  
+  function resetModules() {
+    storage.removeItem("modules");
+    selectedModules = {};
+    storedModules = {};
+  }
 
   // convenience proper case for modules
   function properCaseModuleName(name) {
@@ -750,7 +756,7 @@ function app() {
 
     // Create column for the sidebar
     let sidebarCol = document.createElement("div");
-    sidebarCol.classList.add("col-4", "d-none");
+    sidebarCol.classList.add("col-4", "d-none", "position-relative");
     sidebarCol.id = "modules-sidebar";
     let sidebarNav = document.createElement("ul");
     sidebarNav.classList.add("nav", "flex-column", "nav-pills", "fixed-inner");
@@ -767,6 +773,17 @@ function app() {
       if (moduleCategoryNavLink) {
         sidebarNav.appendChild(moduleCategoryNavLink);
       }
+    });
+    
+    let resetButton = document.createElement("button");
+    resetButton.innerText = "Reset all customizations";
+    resetButton.classList.add("position-absolute", "bottom-0", "btn", "btn-secondary");
+    resetButton.paddingBottom.marginBottom = "0.5rem";
+    resetButton.addEventListener("click", (e) => {
+      e.preventDefault();
+      resetModules();
+      sidebarCol.classList.toggle("d-none");
+      handleModulesRoot(modules);
     });
 
     // Add a bit of padding to our overflowed root
