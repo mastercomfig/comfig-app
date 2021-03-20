@@ -783,7 +783,7 @@ function app() {
       e.preventDefault();
       resetModules();
       handleModulesRoot(modules);
-      sidebarCol.classList.toggle("d-none");
+      document.getElementById("modules-sidebar").classList.toggle("d-none");
     });
     sidebarCol.append(resetButton);
 
