@@ -782,8 +782,8 @@ function app() {
     resetButton.addEventListener("click", (e) => {
       e.preventDefault();
       resetModules();
-      sidebarCol.classList.toggle("d-none");
       handleModulesRoot(modules);
+      sidebarCol.classList.toggle("d-none");
     });
     sidebarCol.append(resetButton);
 
