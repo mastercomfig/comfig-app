@@ -778,7 +778,7 @@ function app() {
     let resetButton = document.createElement("button");
     resetButton.innerText = "Reset all customizations";
     resetButton.classList.add("position-absolute", "bottom-0", "btn", "btn-secondary");
-    resetButton.paddingBottom.marginBottom = "0.5rem";
+    resetButton.style.marginBottom = "0.5rem";
     resetButton.addEventListener("click", (e) => {
       e.preventDefault();
       resetModules();
