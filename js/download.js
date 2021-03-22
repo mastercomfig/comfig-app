@@ -592,7 +592,11 @@ function app() {
     let valueIndicator = document.createElement("span");
     // Set default value
     let defaultSelection = values[defaultValue];
-    valueIndicator.innerText = capitalize(defaultSelection);
+    if (typeof defaultSelection === "object") {
+      valueIndicator.innerText = defaultSelection.display;
+    } else {
+      valueIndicator.innerText = capitalize(defaultSelection);
+    }
     // Event listener
     rangeElement.addEventListener("input", (e) => {
       let selected = values[e.target.valueAsNumber];
