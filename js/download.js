@@ -593,15 +593,21 @@ function app() {
     // Set default value
     let defaultSelection = values[defaultValue];
     if (typeof defaultSelection === "object") {
-      valueIndicator.innerText = defaultSelection.display;
+      valueIndicator.innerText = properCaseOrDisplayModuleName(defaultSelection, defaultSelection.value);;
     } else {
       valueIndicator.innerText = capitalize(defaultSelection);
     }
     // Event listener
     rangeElement.addEventListener("input", (e) => {
       let selected = values[e.target.valueAsNumber];
-      setModule(name, selected);
-      valueIndicator.innerText = capitalize(selected);
+      if (typeof defaultSelection === "object") {
+        setModule(name, selected.value);
+        valueIndicator.innerText = properCaseOrDisplayModuleName(selected, selected.value);;
+      } else {
+        setModule(name, selected);
+        valueIndicator.innerText = capitalize(selected);
+      }
+      valueIndicator.innerText = capitalize();
     });
     inputContainer.appendChild(rangeElement);
     inputContainer.appendChild(valueIndicator);
