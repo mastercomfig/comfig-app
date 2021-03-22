@@ -607,7 +607,6 @@ function app() {
         setModule(name, selected);
         valueIndicator.innerText = capitalize(selected);
       }
-      valueIndicator.innerText = capitalize();
     });
     inputContainer.appendChild(rangeElement);
     inputContainer.appendChild(valueIndicator);
