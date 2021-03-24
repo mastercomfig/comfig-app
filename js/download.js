@@ -382,9 +382,13 @@ function app() {
       // current selections are preserved, so save them off here too,
       // and store them as we normally would during a page load
       if (modulesDef) {
+        let sidebarVisible = !document.getElementById("modules-sidebar").classList.contains("d-none");
         saveModules();
         loadModules();
         handleModulesRoot(modulesDef);
+        if (sidebarVisible) {
+          document.getElementById("modules-sidebar").classList.toggle("d-none");
+        }
       }
     }
     new bootstrap.Tab(document.getElementById(id)).show(); // visually select in tabs menu
