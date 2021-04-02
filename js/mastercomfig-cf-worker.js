@@ -66,9 +66,13 @@ const rm = ["https://raw.githubusercontent.com/mastercomfig/mastercomfig/release
 const rp = ["https://raw.githubusercontent.com/mastercomfig/mastercomfig/release/data/preset_modules.json", reqGHRawHeaders, "mastercomfig-preset-modules", stringify]
 
 addEventListener('scheduled', event => {
-  event.waitUntil(
-    updateData([rv, rm, rp])
-  )
+  event.waitUntil(() => {
+    let updated = updateData([rv, rm, rp])
+    let resBody = "{\"v\":\"" + updated[0] + "\"," +
+                    "\"m\":" + updated[1] + "," +
+                    "\"p\":" + updated[2] + "}";
+    storeData("mastercomfig-api-response", resBody);
+  })
 })
 
 async function storeData(key, value) {
@@ -131,7 +135,7 @@ async function handleRequest(request) {
     let v = await MASTERCOMFIG.get("mastercomfig-version")
     let m = await MASTERCOMFIG.get("mastercomfig-modules")
     let p = await MASTERCOMFIG.get("mastercomfig-preset-modules")
-    updated = await updateData([v ? null : rv, m ? null : rm, p ? null : rp])
+    let updated = await updateData([v ? null : rv, m ? null : rm, p ? null : rp])
     if (updated[0]) {
       v = updated[0]
     }
