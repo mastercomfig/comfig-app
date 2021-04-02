@@ -65,14 +65,16 @@ const rv = ["https://api.github.com/repos/mastercomfig/mastercomfig/releases/lat
 const rm = ["https://raw.githubusercontent.com/mastercomfig/mastercomfig/release/data/modules.json", reqGHRawHeaders, "mastercomfig-modules", stringify]
 const rp = ["https://raw.githubusercontent.com/mastercomfig/mastercomfig/release/data/preset_modules.json", reqGHRawHeaders, "mastercomfig-preset-modules", stringify]
 
-addEventListener('scheduled', event => {
-  event.waitUntil(() => {
-    let updated = updateData([rv, rm, rp])
+async function forceUpdate() {
+    let updated = await updateData([rv, rm, rp])
     let resBody = "{\"v\":\"" + updated[0] + "\"," +
                     "\"m\":" + updated[1] + "," +
                     "\"p\":" + updated[2] + "}";
-    storeData("mastercomfig-api-response", resBody);
-  })
+    await storeData("mastercomfig-api-response", resBody);
+}
+
+addEventListener('scheduled', event => {
+  event.waitUntil(forceUpdate())
 })
 
 async function storeData(key, value) {
@@ -148,7 +150,7 @@ async function handleRequest(request) {
     resBody = "{\"v\":\"" + v + "\"," +
                     "\"m\":" + m + "," +
                     "\"p\":" + p + "}";
-    storeData("mastercomfig-api-response", resBody);
+    await storeData("mastercomfig-api-response", resBody);
   }
   return new Response(resBody, resHeaders)
 }
