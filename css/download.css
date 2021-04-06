@@ -67,6 +67,7 @@ input {
 
 .download-preview {
   max-height: 35vh;
+  width: auto;
 }
 
 .module-title {
@@ -179,4 +180,9 @@ a.disabled {
 #modules-sidebar {
   background: #fff1;
   padding-top: 0.2rem;
+}
+
+.addons-list {
+  max-height: 20vh;
+  overflow-y: auto;
 }
