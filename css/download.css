@@ -67,6 +67,7 @@ input {
 
 .download-preview {
   max-height: 35vh;
+  width: auto;
 }
 
 .module-title {
