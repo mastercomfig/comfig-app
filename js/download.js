@@ -387,7 +387,10 @@ function app() {
         loadModules();
         handleModulesRoot(modulesDef);
         if (sidebarVisible) {
-          document.getElementById("modules-sidebar").classList.toggle("d-none");
+          let sidebar = document.getElementById("modules-sidebar");
+          if (sidebar) {
+            sidebar.classList.toggle("d-none");
+          }
         }
       }
     }
@@ -820,8 +823,19 @@ function app() {
     updateCustomizationDownload();
   }
 
+  const isLocalHost = window.location.hostname === 'localhost' ||
+  // [::1] is the IPv6 localhost address.
+  window.location.hostname === '[::1]' ||
+  // 127.0.0.1/8 is considered localhost for IPv4.
+  window.location.hostname.match(
+      /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/
+  );
+
   // get latest release, and update page
-  fetch("https://mastercomfig.mcoms.workers.dev/")
+  fetch(
+    "https://mastercomfig.mcoms.workers.dev/",
+    isLocalHost ? { mode: "no-cors" } : null
+  )
     .then((resp) => resp.json())
     .then((data) => {
       // Get the version
@@ -838,7 +852,7 @@ function app() {
       modulesDef = data.m;
       presetModulesDef = data.p;
       handleModulesRoot(modulesDef);
-    });
+    }).catch((err) => console.error("Failed to get download data: ", err));
 
   // Register event for all presets defined in the HTML.
   document.querySelectorAll("#presets a").forEach((element) => {
@@ -889,7 +903,10 @@ function app() {
   document.getElementById("modules-toggler").addEventListener("click", (e) => {
     e.currentTarget.classList.toggle("active");
     setTimeout(() => {
-      document.getElementById("modules-sidebar").classList.toggle("d-none");
+      let sidebar = document.getElementById("modules-sidebar");
+      if (sidebar) {
+        sidebar.classList.toggle("d-none");
+      }
     }, 100);
   })
 

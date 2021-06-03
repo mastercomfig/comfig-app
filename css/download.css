@@ -11,7 +11,7 @@
 }
 
 .navbar.bg-teal {
-  background-color: rgba(0, 150, 136, 0.9);
+  background-color: rgba(0, 150, 136, 0.6);
 }
 
 .list-group-item-dark {
@@ -47,6 +47,10 @@ h6 {
 .nav-pills .nav-link.active,
 .nav-pills .show > .nav-link {
   background-color: #009688;
+}
+
+.nav-pills .nav-link {
+  border-radius: 0
 }
 
 .form-check-input:checked {
