@@ -485,22 +485,14 @@ function app() {
   };
 
   let keypadBindMap = {
-    "/": "KP_SLASH",
-    "*": "KP_MULTIPLY",
-    "-": "KP_MINUS",
-    "+": "KP_PLUS",
-    "CLEAR": "KP_5",
-    "ENTER": "KP_ENTER",
-    ".": "KP_DEL"
-  };
-
-  let simpleKeypadMap = {
-    "DIVIDE": "/",
-    "MULTIPLY": "*",
-    "SUBTRACT": "-",
-    "ADD": "+",
-    "5": "CLEAR",
-    "DECIMAL": ".",
+    "/": "SLASH",
+    "*": "MULTIPLY",
+    "-": "MINUS",
+    "+": "PLUS",
+    "5": "5",
+    "CLEAR": "5",
+    "ENTER": "ENTER",
+    ".": "DEL",
     "0": "INS",
     "7": "HOME",
     "8": "ARROWUP",
@@ -510,6 +502,15 @@ function app() {
     "1": "END",
     "2": "ARROWDOWN",
     "3": "PAGEDOWN"
+  };
+
+  let simpleKeypadMap = {
+    "DIVIDE": "/",
+    "MULTIPLY": "*",
+    "SUBTRACT": "-",
+    "ADD": "+",
+    "5": "CLEAR",
+    "DECIMAL": "."
   };
 
   function bindingToBind(binding) {
@@ -525,12 +526,13 @@ function app() {
   function keyEventToKeyBind(e) {
     let binding = e.key.toUpperCase();
     // Shift, alt, ctrl on the right side
-    if (e.key.location === KeyboardEvent.DOM_KEY_LOCATION_RIGHT) {
+    if (e.location === KeyboardEvent.DOM_KEY_LOCATION_RIGHT) {
       return "R" + binding;
     }
-    if (e.key.location === KeyboardEvent.DOM_KEY_LOCATION_NUMPAD) {
+    console.log(e.location);
+    if (e.location === KeyboardEvent.DOM_KEY_LOCATION_NUMPAD) {
       if (keypadBindMap.hasOwnProperty(binding)) {
-        return keypadBindMap[binding];
+        binding = keypadBindMap[binding];
       }
       return "KP_" + bindingToBind(binding);
     }
@@ -549,7 +551,7 @@ function app() {
         binding = simpleKeypadMap[binding];
       }
       if (keypadBindMap.hasOwnProperty(binding)) {
-        return keypadBindMap[binding];
+        binding = keypadBindMap[binding];
       }
       return "KP_" + bindingToBind(binding);
     }
@@ -1043,6 +1045,7 @@ function app() {
   let commonKeyboardOptions = {
     onKeyPress: button => onKeyPress(button),
     theme: "hg-theme-default simple-keyboard custom-kb-theme",
+    physicalKeyboardHighlight: true,
     syncInstanceInputs: true,
     mergeDisplay: true,
   };
@@ -1061,8 +1064,8 @@ function app() {
         "` 1 2 3 4 5 6 7 8 9 0 - = {backspace}",
         "{tab} q w e r t y u i o p [ ] \\",
         "{capslock} a s d f g h j k l ; ' {enter}",
-        "{shift} z x c v b n m , . / {rshift}",
-        "{ctrl} {alt} {space} {ralt} {rctrl}"
+        "{shiftleft} z x c v b n m , . / {shiftright}",
+        "{controlleft} {altleft} {space} {altright} {controlright}"
       ]
     },
     display: {
@@ -1071,14 +1074,14 @@ function app() {
       "{backspace}": "backspace ⌫",
       "{enter}": "enter ↵",
       "{capslock}": "caps lock ⇪",
-      "{shift}": "shift ⇧",
-      "{rshift}": "shift ⇧",
-      "{ctrl}": "ctrl",
-      "{rctrl}": "ctrl",
-      "{alt}": "alt",
-      "{ralt}": "alt",
-      "{lwin}": "⊞",
-      "{rwin}": "⊞"
+      "{shiftleft}": "shift ⇧",
+      "{shiftright}": "shift ⇧",
+      "{controlleft}": "ctrl",
+      "{controlright}": "ctrl",
+      "{altleft}": "alt",
+      "{altright}": "alt",
+      "{metaleft}": "⊞",
+      "{metaright}": "⊞"
     }
   });
 
@@ -1086,17 +1089,10 @@ function app() {
     ...commonKeyboardOptions,
     layout: {
       default: [
-        "{scrolllock} {numlock}",
-        "{ins} {home} {pgup}",
-        "{del} {end} {pgdn}"
+      "{scrolllock} {pause}",
+      "{insert} {home} {pageup}",
+      "{delete} {end} {pagedown}"
       ]
-    },
-    display: {
-      "{numlock}": "pause",
-      "{ins}": "ins",
-      "{del}": "del",
-      "{pgup}": "up",
-      "{pgdn}": "down"
     }
   });
   
@@ -1130,6 +1126,25 @@ function app() {
   function onKeyPress(button) {
     getEl("keyboardInput").value = simpleKeyboardKeyToKeyBind(button);
     console.log("Button pressed", simpleKeyboardKeyToKeyBind(button));
+  }
+
+  var blockKeyboard = false;
+
+  document.addEventListener("keydown", event => {
+    // Disabling keyboard input, as some keys (like F5) make the browser lose focus.
+    // If you're like to re-enable it, comment the next line and uncomment the following ones
+    getEl("keyboardInput").value = keyEventToKeyBind(event);
+    console.log("Key pressed", keyEventToKeyBind(event));
+    if (blockKeyboard) {
+      event.preventDefault();
+    }
+  });
+
+  var tabEls = document.querySelectorAll('#customizations a[data-bs-toggle="tab"]')
+  for (const tabEl of tabEls) {
+    tabEl.addEventListener('shown.bs.tab', event => {
+      blockKeyboard = event.target.id === "bindings";
+    });
   }
 }
 
