@@ -10,7 +10,7 @@
     inset 0 -1px 0 rgba(0, 0, 0, 0.15);
 }
 
-.navbar.bg-teal {
+.bg-teal {
   background-color: rgba(0, 150, 136, 0.6);
 }
 
@@ -21,6 +21,29 @@
 
 .list-group {
   border-radius: 0;
+}
+
+.customization-info {
+  background: rgba(255,255,255,0.1);
+  padding: 0.5rem;
+  border: 1px solid #f2f2f2;
+}
+
+.customization-info > h5 {
+  max-width: 500px;
+}
+
+.nav.bg-teal .nav-link:hover:not(.active) {
+  color: #fff;
+  background: #05746c;
+}
+
+.dropdown-toggle::after {
+  display: none;
+}
+
+.dropdown-toggle.ready::after {
+  display: inline-block;
 }
 
 .h1,
@@ -50,7 +73,12 @@ h6 {
 }
 
 .nav-pills .nav-link {
-  border-radius: 0
+  border-radius: 0;
+  
+}
+
+.nav-pills.bg-teal .nav-link {
+  border-right: #05746c 2px solid;
 }
 
 .form-check-input:checked {
@@ -187,6 +215,191 @@ a.disabled {
 }
 
 .addons-list {
-  max-height: 20vh;
-  overflow-y: auto;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.addons-list-community > .row {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  padding-bottom: 1rem;
+  min-height: 30vh;
+}
+
+.addons-list-community > .row > .col-4 {
+  flex: 0 0 auto;
+}
+
+.card {
+  border-radius: 0
+}
+
+.addon-card {
+  border: rgba(0, 0, 0, 0.6) 1px solid;
+}
+
+.addon-card.active {
+  border: #009688 1px solid;
+}
+
+a.text-light.addon-card:focus {
+  color: #f8f9fa !important;
+}
+
+a.text-light.addon-card:hover {
+  color: #cbd3da !important;
+}
+
+#blockMisc {
+  margin-bottom: 2rem;
+}
+
+.keyboardContainer {
+  display: flex;
+  background-color: rgba(0, 0, 0, 0.6);
+  justify-content: center;
+  width: 1024px;
+  margin: 0 auto;
+  border-radius: 5px;
+}
+
+.simple-keyboard.hg-theme-default {
+  display: inline-block;
+}
+
+.simple-keyboard-main.simple-keyboard {
+  width: 640px;
+  min-width: 640px;
+  background: none;
+}
+
+.simple-keyboard-main.simple-keyboard .hg-row:first-child {
+  margin-bottom: 10px;
+}
+
+.simple-keyboard-arrows.simple-keyboard {
+  align-self: flex-end;
+  background: none;
+}
+
+.simple-keyboard .hg-button.selectedButton {
+  background: rgba(5, 25, 70, 0.53);
+  color: white;
+}
+
+.simple-keyboard .hg-button.emptySpace {
+  pointer-events: none;
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+
+.simple-keyboard-arrows .hg-row {
+  justify-content: center;
+}
+
+.simple-keyboard-arrows .hg-button {
+  width: 50px;
+  flex-grow: 0;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+}
+
+.controlArrows {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-flow: column;
+}
+
+.simple-keyboard-control.simple-keyboard {
+  background: none;
+}
+
+.simple-keyboard-control.simple-keyboard .hg-row:first-child {
+  margin-bottom: 10px;
+}
+
+.simple-keyboard-control .hg-button {
+  width: 50px;
+  flex-grow: 0;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+}
+
+.numPad {
+  display: flex;
+  align-items: flex-end;
+}
+
+.simple-keyboard-numpad.simple-keyboard {
+  background: none;
+}
+
+.simple-keyboard-numpad.simple-keyboard {
+  width: 160px;
+}
+
+.simple-keyboard-numpad.simple-keyboard .hg-button {
+  width: 50px;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+}
+
+.simple-keyboard-numpadEnd.simple-keyboard {
+  width: 50px;
+  background: none;
+  margin: 0;
+  padding: 5px 5px 5px 0;
+}
+
+.simple-keyboard-numpadEnd.simple-keyboard .hg-button {
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+
+.simple-keyboard-numpadEnd .hg-button.hg-standardBtn.hg-button-plus {
+  height: 85px;
+}
+
+.simple-keyboard-numpadEnd.simple-keyboard .hg-button.hg-button-enter {
+  height: 85px;
+}
+
+.simple-keyboard.hg-theme-default .hg-button.hg-selectedButton {
+  background: rgba(5, 25, 70, 0.53);
+  color: white;
+}
+
+.hg-button.hg-functionBtn.hg-button-space {
+  width: 350px;
+}
+
+.simple-keyboard.custom-kb-theme {
+  background-color: rgba(0, 0, 0, 0.8);
+  border-radius: 0;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+.simple-keyboard.custom-kb-theme .hg-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+}
+
+.simple-keyboard.custom-kb-theme .hg-button:active {
+  background: #009688;
+  color: white;
+}
+
+#root .simple-keyboard.custom-kb-theme + .simple-keyboard-preview {
+  background: #009688;
 }

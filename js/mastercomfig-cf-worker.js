@@ -46,6 +46,10 @@ const cacheOpt = {
     expirationTtl: 86400
 }
 
+function stringify(data) {
+  return JSON.stringify(data)
+}
+
 function getVersion(data) {
   // Get tag name for version
   let tag_name = data.tag_name
@@ -57,24 +61,37 @@ function getVersion(data) {
   return version
 }
 
-function stringify(data) {
-  return JSON.stringify(data)
+function getVersions(data) {
+  let limit = Math.min(5, data.length)
+  let versions = []
+  for (let i = 0; i < limit; i++) {
+    versions.push(getVersion(data[i]))
+  }
+  return stringify(versions)
 }
 
-const rv = ["https://api.github.com/repos/mastercomfig/mastercomfig/releases/latest", reqGHAPIHeaders, "mastercomfig-version", getVersion]
+function getVersionedKey(key, version) {
+  if (!version) {
+    version = "1"
+  }
+  return key + "-" + version
+}
+
+const rv = ["https://api.github.com/repos/mastercomfig/mastercomfig/releases/latest", reqGHAPIHeaders, getVersionedKey("mastercomfig-version", 1), getVersion]
+const rv2 = ["https://api.github.com/repos/mastercomfig/mastercomfig/releases", reqGHAPIHeaders, getVersionedKey("mastercomfig-version", 2), getVersions]
 const rm = ["https://raw.githubusercontent.com/mastercomfig/mastercomfig/release/data/modules.json", reqGHRawHeaders, "mastercomfig-modules", stringify]
 const rp = ["https://raw.githubusercontent.com/mastercomfig/mastercomfig/release/data/preset_modules.json", reqGHRawHeaders, "mastercomfig-preset-modules", stringify]
 
-async function forceUpdate() {
-    let updated = await updateData([rv, rm, rp])
-    let resBody = "{\"v\":\"" + updated[0] + "\"," +
+async function forceUpdate(version) {
+    let updated = await updateData([version === "2" ? rv2 : rv, rm, rp])
+    let resBody = (version === "2" ? "{\"v\":" + updated[0] + "," : "{\"v\":\"" + updated[0] + "\","  ) +
                     "\"m\":" + updated[1] + "," +
-                    "\"p\":" + updated[2] + "}";
-    await storeData("mastercomfig-api-response", resBody);
+                    "\"p\":" + updated[2] + "}"
+    await storeData(getVersionedKey("mastercomfig-api-response", version), resBody)
 }
 
 addEventListener('scheduled', event => {
-  event.waitUntil(forceUpdate())
+  event.waitUntil(forceUpdate("1"))
 })
 
 async function storeData(key, value) {
@@ -119,7 +136,7 @@ async function updateData(requests) {
         if (!r) {
             return
         }
-        let value = requests[i][3] ? requests[i][3](r) : r;
+        let value = requests[i][3] ? requests[i][3](r) : r
         data[i] = value
         storeData(requests[i][2], value)
     })
@@ -130,14 +147,21 @@ async function updateData(requests) {
   }
 }
 
+const webhookPathname = "/" + GH_WEBHOOK_ID
+
 async function handleRequest(request) {
+  const url = new URL(request.url)
+  let version = url.searchParams.get("v")
+  if (url.pathname === webhookPathname) {
+    await forceUpdate(version)
+  }
   // Attempt cached
-  let resBody = await MASTERCOMFIG.get("mastercomfig-api-response")
+  let resBody = await MASTERCOMFIG.get(getVersionedKey("mastercomfig-api-response", version))
   if (!resBody) {
-    let v = await MASTERCOMFIG.get("mastercomfig-version")
+    let v = await MASTERCOMFIG.get(getVersionedKey("mastercomfig-version", version))
     let m = await MASTERCOMFIG.get("mastercomfig-modules")
     let p = await MASTERCOMFIG.get("mastercomfig-preset-modules")
-    let updated = await updateData([v ? null : rv, m ? null : rm, p ? null : rp])
+    let updated = await updateData([v ? null : (version === "2" ? rv2 : rv), m ? null : rm, p ? null : rp])
     if (updated[0]) {
       v = updated[0]
     }
@@ -147,10 +171,16 @@ async function handleRequest(request) {
     if (updated[2]) {
       p = updated[2]
     }
-    resBody = "{\"v\":\"" + v + "\"," +
+    if (version === "2") {
+      resBody = "{\"v\":" + v + "," +
                     "\"m\":" + m + "," +
-                    "\"p\":" + p + "}";
-    await storeData("mastercomfig-api-response", resBody);
+                    "\"p\":" + p + "}"
+    } else {
+      resBody = "{\"v\":\"" + v + "\"," +
+                    "\"m\":" + m + "," +
+                    "\"p\":" + p + "}"
+    }
+    await storeData(getVersionedKey("mastercomfig-api-response", version), resBody)
   }
   return new Response(resBody, resHeaders)
 }
