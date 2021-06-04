@@ -455,12 +455,12 @@ function app() {
     if (!downloading) {
       getEl(
         "vpk-dl"
-      ).innerHTML = `<span class="fa fa-cloud-download fa-fw"></span> Download ${presets[id]} preset and selected addons VPKs ` // update download text
+      ).innerHTML = `<span class="fa fa-cloud-download fa-fw"></span> Download ${presets[id]} preset and selected addons` // update download text
     }
     getEl("preset-dl").setAttribute("href", getPresetUrl());
     getEl(
       "preset-dl"
-    ).innerHTML = `<span class="fa fa-download fa-fw"></span> Download ${presets[id]} preset VPK` // update preset text
+    ).innerHTML = `<span class="fa fa-download fa-fw"></span> Download ${presets[id]} preset` // update preset text
     // if not loading from storage, set recommended addons
     if (!no_set) {
       // reset all recommendable addons
