@@ -13,6 +13,10 @@ function app() {
     return str.charAt(0).toUpperCase() + str.substr(1);
   }
 
+  function getEl(element) {
+    return document.getElementById(element);
+  }
+
   function loadModules() {
     let storedModulesStr = storage.getItem("modules");
     if (storedModulesStr) {
@@ -94,20 +98,42 @@ function app() {
   ]);
   // End preset -> recommended addon mapping
 
-  // Where all downloads come from
-  var downloadUrl =
-    "https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-";
+  // Base release URL
+  var releasesUrl = "https://github.com/mastercomfig/mastercomfig/releases";
+  // Release homepage
+  var releaseUrl = {
+    "latest": releasesUrl + "/latest",
+    "default": releasesUrl + "/{0}",
+  };
+  var assetsUrl = {
+    "dev": "https://nightly.link/mastercomfig/mastercomfig/workflows/main/develop/mastercomfig.zip",
+    "latest": releasesUrl + "/latest",
+    "default": releaseUrl.default,
+  }
+  // Where latest downloads come from
+  var downloadUrl = releaseUrl.default + "/download/mastercomfig-";
+  // Where a specific release's downloads come from
+  var releaseDownloadUrl = releasesUrl + "/download/{0}/mastercomfig-";
+  // Where dev downloads come from
+  var devDownloadUrl = "https://nightly.link/mastercomfig/mastercomfig/workflows/main/develop/mastercomfig-";
   // Addon extension format string to download
-  var addonUrl = downloadUrl + "{0}-addon.vpk";
+  var addonUrl = {
+    "latest": downloadUrl + "{1}-addon.vpk",
+    "dev": devDownloadUrl + "{1}-addon.vpk",
+    "default": releaseDownloadUrl + "{1}-addon.vpk",
+  };
   // Preset extension format string to download
-  var presetUrl = downloadUrl + "{0}-preset.vpk";
-
-  // Cached elements
-  var presetDownload = document.getElementById("preset-dl");
-  var modulesRoot = document.getElementById("modules-root");
+  var presetUrl = {
+    "latest": downloadUrl + "{1}-preset.vpk",
+    "dev": devDownloadUrl + "{1}-preset.vpk",
+    "default": releaseDownloadUrl + "{1}-preset.vpk",
+  };  
 
   // Current mastercomfig version, comes in from API
   var version = null;
+  var latestVersion = null;
+
+  var userVersion = "latest";
 
   // Current modules def
   var modulesDef = {};
@@ -143,7 +169,7 @@ function app() {
     // Only download if we have a download
     if (urls.length > 1) {
       downloadUrls(urls, id, fnGatherUrls);
-      let element = document.getElementById(id);
+      let element = getEl(id);
       element.onclick = null; // Ignore clicks
       downloading = true; // Still retain in-progress even after switching preset
       // Indicate not useable/in-progress
@@ -158,7 +184,7 @@ function app() {
   // This is what we do when multi-download is ready (init or after finish)
   function bindDownloadClick(id, fnGatherUrls) {
     // Reregister that we can respond to a click
-    let element = document.getElementById(id);
+    let element = getEl(id);
     element.onclick = () => downloadClickEvent(id, fnGatherUrls);
     downloading = false; // Unlock updating preset test with new download
     // Restore downloadable style
@@ -171,7 +197,14 @@ function app() {
 
   // Helper functions to format download URLs
   function getDownloadUrl(id, preset) {
-    return (preset ? presetUrl : addonUrl).format(id);
+    let urlOptions = preset ? presetUrl : addonUrl;
+    let url;
+    if (urlOptions.hasOwnProperty(userVersion)) {
+      url = urlOptions[userVersion];
+    } else {
+      url = urlOptions.default;
+    }
+    return url.format(userVersion, id);
   }
 
   function getAddonUrl(id) {
@@ -331,7 +364,7 @@ function app() {
   }
 
   function updateCustomizationDownload() {
-    let element = document.getElementById("custom-dl");
+    let element = getEl("custom-dl");
     let bHasSelection = Object.keys(selectedModules).length > 0;
     if (bHasSelection) {
       element.classList.remove("disabled", "text-light");
@@ -346,7 +379,7 @@ function app() {
 
   // update addon state based on checked
   function updateAddon(id) {
-    setAddon(id, document.getElementById(id).checked);
+    setAddon(id, !getEl(id).classList.contains("active"));
   }
 
   // set addon enabled/disabled
@@ -365,10 +398,40 @@ function app() {
       selectedAddons = selectedAddons.filter((selection) => selection !== id);
     }
     // Make sure the UI reflects the selected state
-    document.getElementById(id + "-dl").style.display = checked
+    getEl(id + "-dl").style.display = checked
       ? "initial"
       : "none";
-    document.getElementById(id).checked = checked;
+    getEl(id).classList.toggle("active", checked);
+  }
+
+  function setUserVersion(userVer) {
+    if (userVer === "Dev build") {
+      userVer = "dev";
+    }
+    userVersion = userVer;
+    if (userVer === "latest") {
+      userVer = latestVersion;
+    }
+    version = userVer;
+    getEl("preset-dl").href = getPresetUrl();
+    for (const id of addons) {
+      getEl(id + "-dl").href = getAddonUrl(id);
+    }
+    getEl("version").innerText = userVer;
+    let url;
+    if (releaseUrl.hasOwnProperty(userVersion)) {
+      url = releaseUrl[userVersion];
+    } else {
+      url = releaseUrl.default.format(userVersion);
+    }
+    getEl("changelog-link").href = url;
+    let assetUrl;
+    if (assetsUrl.hasOwnProperty(userVersion)) {
+      assetUrl = assetsUrl[userVersion];
+    } else {
+      assetUrl = assetsUrl.default.format(userVersion);
+    }
+    getEl("assets-link").href = assetUrl;
   }
 
   function setPreset(id, no_set) {
@@ -382,27 +445,20 @@ function app() {
       // current selections are preserved, so save them off here too,
       // and store them as we normally would during a page load
       if (modulesDef) {
-        let sidebarVisible = !document.getElementById("modules-sidebar").classList.contains("d-none");
         saveModules();
         loadModules();
         handleModulesRoot(modulesDef);
-        if (sidebarVisible) {
-          let sidebar = document.getElementById("modules-sidebar");
-          if (sidebar) {
-            sidebar.classList.toggle("d-none");
-          }
-        }
       }
     }
-    new bootstrap.Tab(document.getElementById(id)).show(); // visually select in tabs menu
-    document.getElementById("vpk-dl").removeAttribute("href"); // we don't need the static download anymore
+    new bootstrap.Tab(getEl(id)).show(); // visually select in tabs menu
+    getEl("vpk-dl").removeAttribute("href"); // we don't need the static download anymore
     if (!downloading) {
-      document.getElementById(
+      getEl(
         "vpk-dl"
       ).innerHTML = `<span class="fa fa-cloud-download fa-fw"></span> Download ${presets[id]} preset and selected addons VPKs ` // update download text
     }
-    presetDownload.setAttribute("href", getPresetUrl());
-    document.getElementById(
+    getEl("preset-dl").setAttribute("href", getPresetUrl());
+    getEl(
       "preset-dl"
     ).innerHTML = `<span class="fa fa-download fa-fw"></span> Download ${presets[id]} preset VPK` // update preset text
     // if not loading from storage, set recommended addons
@@ -425,9 +481,10 @@ function app() {
     PAGEUP: "PGUP",
     PAGEDOWN: "PGDN",
     " ": "SPACE",
+    ";": 'SEMICOLON'
   };
 
-  let keypadBindMap = {"+": "KP_PLUS",
+  let keypadBindMap = {
     "/": "KP_SLASH",
     "*": "KP_MULTIPLY",
     "-": "KP_MINUS",
@@ -435,6 +492,24 @@ function app() {
     "CLEAR": "KP_5",
     "ENTER": "KP_ENTER",
     ".": "KP_DEL"
+  };
+
+  let simpleKeypadMap = {
+    "DIVIDE": "/",
+    "MULTIPLY": "*",
+    "SUBTRACT": "-",
+    "ADD": "+",
+    "5": "CLEAR",
+    "DECIMAL": ".",
+    "0": "INS",
+    "7": "HOME",
+    "8": "ARROWUP",
+    "9": "PAGEUP",
+    "4": "ARROWLEFT",
+    "6": "ARROWRIGHT",
+    "1": "END",
+    "2": "ARROWDOWN",
+    "3": "PAGEDOWN"
   };
 
   function bindingToBind(binding) {
@@ -455,8 +530,27 @@ function app() {
     }
     if (e.key.location === KeyboardEvent.DOM_KEY_LOCATION_NUMPAD) {
       if (keypadBindMap.hasOwnProperty(binding)) {
-      return keypadBindMap[binding];
+        return keypadBindMap[binding];
+      }
+      return "KP_" + bindingToBind(binding);
     }
+    return bindingToBind(binding);
+  }
+
+  function simpleKeyboardKeyToKeyBind(key) {
+    let binding = key.toUpperCase();
+    if (binding.startsWith("{")) {
+      binding = binding.substr(1, binding.length - 2);
+    }
+    let numpadKeyword = "NUMPAD";
+    if (binding.startsWith(numpadKeyword)) {
+      binding = binding.substr(numpadKeyword.length, binding.length - 1);
+      if (simpleKeypadMap.hasOwnProperty(binding)) {
+        binding = simpleKeypadMap[binding];
+      }
+      if (keypadBindMap.hasOwnProperty(binding)) {
+        return keypadBindMap[binding];
+      }
       return "KP_" + bindingToBind(binding);
     }
     return bindingToBind(binding);
@@ -741,7 +835,7 @@ function app() {
     categoryNavLink.href = `#${id}`;
     categoryNavLink.addEventListener("click", (e) => {
       let top = getRelativePos(categoryContainer).top;
-      document.getElementById("modules-controls").scrollTop = top;
+      getEl("modules-controls").scrollTop = top;
       e.preventDefault();
     }, {
       passive: false
@@ -756,7 +850,7 @@ function app() {
   }
 
   function handleModulesRoot(modules) {
-    if (!modulesRoot) {
+    if (!getEl("modules-root")) {
       return;
     }
 
@@ -772,7 +866,7 @@ function app() {
 
     // Create column for the sidebar
     let sidebarCol = document.createElement("div");
-    sidebarCol.classList.add("col-4", "d-none", "position-relative");
+    sidebarCol.classList.add("col-4", "position-relative");
     sidebarCol.id = "modules-sidebar";
     let sidebarNav = document.createElement("ul");
     sidebarNav.classList.add("nav", "flex-column", "nav-pills", "fixed-inner");
@@ -799,7 +893,6 @@ function app() {
       e.preventDefault();
       resetModules();
       handleModulesRoot(modules);
-      document.getElementById("modules-sidebar").classList.toggle("d-none");
     });
     sidebarCol.append(resetButton);
 
@@ -809,10 +902,10 @@ function app() {
     customizationsCol.appendChild(paddingDiv);
 
     // Remove loading
-    modulesRoot.innerText = "";
+    getEl("modules-root").innerText = "";
 
     // Add the columns to root container.
-    modulesRoot.appendChild(modulesRow);
+    getEl("modules-root").appendChild(modulesRow);
 
     // Init scrollspy
     new bootstrap.ScrollSpy(customizationsCol, {
@@ -821,6 +914,56 @@ function app() {
 
     // Update after travesing all modules
     updateCustomizationDownload();
+  }
+
+  function addVersion(ver, dropdown, badge) {
+    let versionListItem = document.createElement("li");
+    let dropdownItem = document.createElement("a");
+    dropdownItem.classList.add("dropdown-item");
+    dropdownItem.href = "#";
+    dropdownItem.addEventListener("click", (event) => {
+      setUserVersion(ver);
+      event.preventDefault();
+    });
+    dropdownItem.innerText = ver === "latest" ? latestVersion : ver;
+    if (badge) {
+      dropdownItem.innerText += " ";
+      let itemBadge = document.createElement("span");
+      itemBadge.innerText = badge[0];
+      itemBadge.classList.add("badge", badge[1]);
+      dropdownItem.append(itemBadge);
+    }
+    versionListItem.append(dropdownItem);
+    dropdown.append(versionListItem);
+  }
+
+  function handleVersions(versions) {
+    if (!versions) {
+      return;
+    }
+    // set latest version
+    latestVersion = versions.shift();
+    setUserVersion("latest");
+
+    releaseUrl.dev = "https://github.com/mastercomfig/mastercomfig/compare/{0}...develop".format(latestVersion);
+
+    let versionDropdown = getEl("versionDropdownMenu");
+
+    addVersion("latest", versionDropdown, ["latest", "bg-teal"]);
+
+    for (const thisVersion of versions) {
+      addVersion(thisVersion, versionDropdown);
+    }
+
+    let dividerListItem = document.createElement("li");
+    let dropdownDivider = document.createElement("hr");
+    dropdownDivider.classList.add("dropdown-divider");
+    dividerListItem.append(dropdownDivider);
+    versionDropdown.append(dividerListItem);
+
+    addVersion("Dev build", versionDropdown, ["alpha", "bg-danger"]);
+
+    getEl("versionDropdown").classList.add("ready");
   }
 
   const isLocalHost = window.location.hostname === 'localhost' ||
@@ -833,26 +976,18 @@ function app() {
 
   // get latest release, and update page
   fetch(
-    "https://mastercomfig.mcoms.workers.dev/",
-    isLocalHost ? { mode: "no-cors" } : null
+    (isLocalHost ? "https://cors-anywhere.herokuapp.com/": "") + "https://mastercomfig.mcoms.workers.dev/?v=2"
   )
     .then((resp) => resp.json())
     .then((data) => {
       // Get the version
-      version = data.v;
-      if (!version) {
-        return;
-      }
-      let versionName =
-        version.indexOf("v") === 0 ? version.substr(1) : version; // some releases use the v prefix, ignore it
-      // update title with version
-      document.getElementById("version").innerText = versionName;
+      handleVersions(data.v);
 
-      // Now get the modules we defined in the response data.
+      // Now get the modules
       modulesDef = data.m;
       presetModulesDef = data.p;
       handleModulesRoot(modulesDef);
-    }).catch((err) => console.error("Failed to get download data: ", err));
+    }).catch((err) => console.error("Failed to get download data:", err));
 
   // Register event for all presets defined in the HTML.
   document.querySelectorAll("#presets a").forEach((element) => {
@@ -872,15 +1007,16 @@ function app() {
   updateCustomizationDownload();
 
   // Track the last version we downloaded, so that updates can be managed
-  document.getElementById("preset-dl").addEventListener("click", () => {
+  getEl("preset-dl").addEventListener("click", () => {
     storage.setItem("lastVersion", version);
   });
 
   // Now, register events for all addons defined in the HTML.
-  document.querySelectorAll("input[type='checkbox']").forEach((element) => {
+  document.querySelectorAll(".addon-card").forEach((element) => {
     addons.push(element.id);
-    element.addEventListener("input", (e) => {
+    element.addEventListener("click", (e) => {
       updateAddon(e.currentTarget.id);
+      e.preventDefault();
     });
   });
 
@@ -900,32 +1036,100 @@ function app() {
     }
   }
 
-  document.getElementById("modules-toggler").addEventListener("click", (e) => {
+  getEl("customize-toggler").addEventListener("click", (e) => {
     e.currentTarget.classList.toggle("active");
-    setTimeout(() => {
-      let sidebar = document.getElementById("modules-sidebar");
-      if (sidebar) {
-        sidebar.classList.toggle("d-none");
-      }
-    }, 100);
   })
 
-  /*let Keyboard = window.SimpleKeyboard.default;
+  let commonKeyboardOptions = {
+    onKeyPress: button => onKeyPress(button),
+    theme: "hg-theme-default simple-keyboard custom-kb-theme",
+    syncInstanceInputs: true,
+    mergeDisplay: true,
+  };
 
-  let myKeyboard = new Keyboard({
-    onChange: input => onChange(input),
-    onKeyPress: button => onKeyPress(button)
-  });*/
+  const Keyboard = window.SimpleKeyboard.default;
 
+  let keyboard = new Keyboard(".simple-keyboard-main", {
+    ...commonKeyboardOptions,
+    /**
+     * Layout by:
+     * Sterling Butters (https://github.com/SterlingButters)
+     */
+    layout: {
+      default: [
+        "{escape} {f1} {f2} {f3} {f4} {f5} {f6} {f7} {f8} {f9} {f10} {f11} {f12}",
+        "` 1 2 3 4 5 6 7 8 9 0 - = {backspace}",
+        "{tab} q w e r t y u i o p [ ] \\",
+        "{capslock} a s d f g h j k l ; ' {enter}",
+        "{shift} z x c v b n m , . / {rshift}",
+        "{ctrl} {alt} {space} {ralt} {rctrl}"
+      ]
+    },
+    display: {
+      "{escape}": "esc",
+      "{tab}": "tab ⇥",
+      "{backspace}": "backspace ⌫",
+      "{enter}": "enter ↵",
+      "{capslock}": "caps lock ⇪",
+      "{shift}": "shift ⇧",
+      "{rshift}": "shift ⇧",
+      "{ctrl}": "ctrl",
+      "{rctrl}": "ctrl",
+      "{alt}": "alt",
+      "{ralt}": "alt",
+      "{lwin}": "⊞",
+      "{rwin}": "⊞"
+    }
+  });
 
-  function onChange(input) {
-    document.querySelector(".input").value = input;
-    console.log("Input changed", input);
-  }
-
-
+  let keyboardControlPad = new Keyboard(".simple-keyboard-control", {
+    ...commonKeyboardOptions,
+    layout: {
+      default: [
+        "{scrolllock} {numlock}",
+        "{ins} {home} {pgup}",
+        "{del} {end} {pgdn}"
+      ]
+    },
+    display: {
+      "{numlock}": "pause",
+      "{ins}": "ins",
+      "{del}": "del",
+      "{pgup}": "up",
+      "{pgdn}": "down"
+    }
+  });
+  
+  let keyboardArrows = new Keyboard(".simple-keyboard-arrows", {
+    ...commonKeyboardOptions,
+    layout: {
+      default: ["{arrowup}", "{arrowleft} {arrowdown} {arrowright}"]
+    }
+  });
+  
+  let keyboardNumPad = new Keyboard(".simple-keyboard-numpad", {
+    ...commonKeyboardOptions,
+    layout: {
+      default: [
+        "{numpaddivide} {numpadmultiply}",
+        "{numpad7} {numpad8} {numpad9}",
+        "{numpad4} {numpad5} {numpad6}",
+        "{numpad1} {numpad2} {numpad3}",
+        "{numpad0} {numpaddecimal}"
+      ]
+    }
+  });
+  
+  let keyboardNumPadEnd = new Keyboard(".simple-keyboard-numpadEnd", {
+    ...commonKeyboardOptions,
+    layout: {
+      default: ["{numpadsubtract}", "{numpadadd}", "{numpadenter}"]
+    }
+  });
+  
   function onKeyPress(button) {
-    console.log("Button pressed", button);
+    getEl("keyboardInput").value = simpleKeyboardKeyToKeyBind(button);
+    console.log("Button pressed", simpleKeyboardKeyToKeyBind(button));
   }
 }
 

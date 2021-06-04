@@ -34,8 +34,8 @@ header {
   border-radius: 0;
 }
 
-a.text-light.focus {
-  color: #cbd3da !important;
+a.text-light.active:focus, a.text-light.active:hover {
+  color: #f8f9fa !important;
 }
 
 section {
