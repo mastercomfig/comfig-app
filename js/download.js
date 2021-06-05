@@ -154,7 +154,10 @@ function app() {
   // Current state of overrides
   var selectedOverrides = {};
 
-  var storage = localStorage;
+  const storage = localStorage;
+
+  // Data cache
+  let cachedData = null;
 
   var storedModules = {};
   loadModules();
@@ -939,10 +942,22 @@ function app() {
     dropdown.append(versionListItem);
   }
 
+  function addDropdownDivider(dropdown) {
+    let dividerListItem = document.createElement("li");
+    let dropdownDivider = document.createElement("hr");
+    dropdownDivider.classList.add("dropdown-divider");
+    dividerListItem.append(dropdownDivider);
+    dropdown.append(dividerListItem);
+  }
+
   function handleVersions(versions) {
     if (!versions) {
       return;
     }
+
+    let lastVersion = storage.getItem("lastVersion");
+    let foundVersion = false;
+
     // set latest version
     latestVersion = versions.shift();
     setUserVersion("latest");
@@ -951,17 +966,38 @@ function app() {
 
     let versionDropdown = getEl("versionDropdownMenu");
 
-    addVersion("latest", versionDropdown, ["latest", "bg-teal"]);
-
-    for (const thisVersion of versions) {
-      addVersion(thisVersion, versionDropdown);
+    let latestBadge;
+    if (latestVersion === lastVersion)
+    {
+      latestBadge = ["up to date", "bg-teal"];
+      foundVersion = true;
+    } else {
+      latestBadge = ["latest", "bg-teal"];
     }
 
-    let dividerListItem = document.createElement("li");
-    let dropdownDivider = document.createElement("hr");
-    dropdownDivider.classList.add("dropdown-divider");
-    dividerListItem.append(dropdownDivider);
-    versionDropdown.append(dividerListItem);
+    getEl("up-to-date-mark").classList.toggle("d-none", !foundVersion);
+
+    addVersion("latest", versionDropdown, latestBadge);
+
+    let lastDownloadedBadge = ["last downloaded", "bg-secondary"];
+
+    for (const thisVersion of versions) {
+      let badge;
+      if (!foundVersion && thisVersion === lastVersion) {
+        badge = lastDownloadedBadge;
+        foundVersion = true;
+      } else {
+        badge = null;
+      }
+      addVersion(thisVersion, versionDropdown, badge);
+    }
+
+    if (lastVersion && !foundVersion) {
+      addDropdownDivider(versionDropdown);
+      addVersion(lastVersion, versionDropdown, lastDownloadedBadge);
+    }
+
+    addDropdownDivider(versionDropdown);
 
     addVersion("Dev build", versionDropdown, ["alpha", "bg-danger"]);
 
@@ -982,6 +1018,7 @@ function app() {
   )
     .then((resp) => resp.json())
     .then((data) => {
+      cachedData = data;
       // Get the version
       handleVersions(data.v);
 
@@ -1007,11 +1044,6 @@ function app() {
 
   // After binding, we need to update the text
   updateCustomizationDownload();
-
-  // Track the last version we downloaded, so that updates can be managed
-  getEl("preset-dl").addEventListener("click", () => {
-    storage.setItem("lastVersion", version);
-  });
 
   // Now, register events for all addons defined in the HTML.
   document.querySelectorAll(".addon-card").forEach((element) => {
