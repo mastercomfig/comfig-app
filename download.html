@@ -15,7 +15,7 @@
     <link rel="preconnect" href="https://mastercomfig.mcoms.workers.dev/" crossorigin>
     <link rel="dns-prefetch" href="https://mastercomfig.mcoms.workers.dev/">
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" integrity="sha256-hHKA3d/HttC8OW3Sl093W8DoZudhHJDj++kZYo6MLzA=" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/css/index.min.css">
     <link rel="stylesheet" href="css/main.css">
@@ -199,7 +199,37 @@
                     </div>
                     <div class="tab-pane fade" id="bindings-tab" role="tabpanel" aria-labelledby="bindings">
                       <div id="binds-root" class="inset-box">
-                        <input type="text" class="form-control" id="keyboardInput" placeholder="&lt;Unbound&gt;">
+                        <div class="row row-cols-2" id="binds-list">
+                          <div class="col">Move Forward</div>
+                          <div class="col">
+                            <input type="text" class="form-control" placeholder="&lt;Unbound&gt;">
+                          </div>
+
+                          <div class="col">Move Back</div>
+                          <div class="col">
+                            <input type="text" class="form-control" placeholder="&lt;Unbound&gt;">
+                          </div>
+
+                          <div class="col">Move Left</div>
+                          <div class="col">
+                            <input type="text" class="form-control" placeholder="&lt;Unbound&gt;">
+                          </div>
+
+                          <div class="col">Move Right</div>
+                          <div class="col">
+                            <input type="text" class="form-control" placeholder="&lt;Unbound&gt;">
+                          </div>
+
+                          <div class="col">Primary Attack</div>
+                          <div class="col">
+                            <input type="text" class="form-control" placeholder="&lt;Unbound&gt;">
+                          </div>
+
+                          <div class="col">Secondary Attack</div>
+                          <div class="col">
+                            <input type="text" class="form-control" placeholder="&lt;Unbound&gt;">
+                          </div>
+                        </div>
                         <br>
                         <div class="keyboardContainer">
                           <div class="simple-keyboard-main"></div>
@@ -393,7 +423,7 @@
         mastercomfig is not sponsored, endorsed, licensed by, or affiliated with Valve Corporation.
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha256-edRDsV9ULIqKzKjpN/KjyQ7Lp4vUn9usbJuHjH8Sk+k=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/index.min.js"></script>
     <script defer src="js/download.js"></script>
   </body>

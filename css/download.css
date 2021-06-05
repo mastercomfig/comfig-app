@@ -255,6 +255,11 @@ a.text-light.addon-card:hover {
   margin-bottom: 2rem;
 }
 
+#binds-list {
+  max-height: 30vh;
+  overflow-y: auto;
+}
+
 .keyboardContainer {
   display: flex;
   background-color: rgba(0, 0, 0, 0.6);

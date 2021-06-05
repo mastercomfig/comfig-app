@@ -532,7 +532,6 @@ function app() {
     if (e.location === KeyboardEvent.DOM_KEY_LOCATION_RIGHT) {
       return "R" + binding;
     }
-    console.log(e.location);
     if (e.location === KeyboardEvent.DOM_KEY_LOCATION_NUMPAD) {
       if (keypadBindMap.hasOwnProperty(binding)) {
         binding = keypadBindMap[binding];
@@ -1156,6 +1155,9 @@ function app() {
   });
   
   function onKeyPress(button) {
+    if (!getEl("keyboardInput")) {
+      return;
+    }
     getEl("keyboardInput").value = simpleKeyboardKeyToKeyBind(button);
     console.log("Button pressed", simpleKeyboardKeyToKeyBind(button));
   }
@@ -1165,17 +1167,37 @@ function app() {
   document.addEventListener("keydown", event => {
     // Disabling keyboard input, as some keys (like F5) make the browser lose focus.
     // If you're like to re-enable it, comment the next line and uncomment the following ones
-    getEl("keyboardInput").value = keyEventToKeyBind(event);
-    console.log("Key pressed", keyEventToKeyBind(event));
-    if (blockKeyboard) {
+    if (blockKeyboard && getEl("keyboardInput")) {
+      getEl("keyboardInput").value = keyEventToKeyBind(event);
       event.preventDefault();
     }
   });
 
+  // Capture keyboard input when bindings are shown
   var tabEls = document.querySelectorAll('#customizations a[data-bs-toggle="tab"]')
   for (const tabEl of tabEls) {
-    tabEl.addEventListener('shown.bs.tab', event => {
+    tabEl.addEventListener("shown.bs.tab", event => {
       blockKeyboard = event.target.id === "bindings";
+    });
+  }
+
+  function finishBindInput(event) {
+    event.currentTarget.removeAttribute("id");
+    event.currentTarget.setAttribute("value", "");
+    event.currentTarget.setAttribute("placeholder", "<Unbound>");
+  }
+
+  var bindingFields = document.querySelectorAll("#binds-list .form-control")
+  for (const bindField of bindingFields) {
+    bindField.addEventListener("focus", event => {
+      event.currentTarget.id = "keyboardInput";
+      event.currentTarget.setAttribute("value", "");
+      event.currentTarget.setAttribute("placeholder", "<Press key to bind>");
+    });
+    bindField.addEventListener("blur", finishBindInput);
+    bindField.addEventListener("input", event => {
+      finishBindInput(event);
+      event.preventDefault();
     });
   }
 }
