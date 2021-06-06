@@ -65,7 +65,12 @@ function getVersions(data) {
   let limit = Math.min(5, data.length)
   let versions = []
   for (let i = 0; i < limit; i++) {
-    versions.push(getVersion(data[i]))
+    let version = data[i];
+    if (version.prerelease || version.draft) {
+      limit = Math.min(limit + 1, data.length)
+    } else {
+      versions.push(getVersion(version))
+    }
   }
   return stringify(versions)
 }
