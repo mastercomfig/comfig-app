@@ -106,7 +106,6 @@ function app() {
     "default": releasesUrl + "/{0}",
   };
   var assetsUrl = {
-    "dev": "https://nightly.link/mastercomfig/mastercomfig/workflows/main/develop/mastercomfig.zip",
     "latest": releasesUrl + "/latest",
     "default": releaseUrl.default,
   }
@@ -114,18 +113,14 @@ function app() {
   var downloadUrl = releaseUrl.default + "/download/mastercomfig-";
   // Where a specific release's downloads come from
   var releaseDownloadUrl = releasesUrl + "/download/{0}/mastercomfig-";
-  // Where dev downloads come from
-  var devDownloadUrl = "https://nightly.link/mastercomfig/mastercomfig/workflows/main/develop/mastercomfig-";
   // Addon extension format string to download
   var addonUrl = {
     "latest": downloadUrl + "{1}-addon.vpk",
-    "dev": devDownloadUrl + "{1}-addon.vpk",
     "default": releaseDownloadUrl + "{1}-addon.vpk",
   };
   // Preset extension format string to download
   var presetUrl = {
     "latest": downloadUrl + "{1}-preset.vpk",
-    "dev": devDownloadUrl + "{1}-preset.vpk",
     "default": releaseDownloadUrl + "{1}-preset.vpk",
   };  
 
