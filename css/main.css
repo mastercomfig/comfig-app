@@ -1,19 +1,47 @@
+:root {
+  --bs-blue: #0d6efd;
+  --bs-indigo: #6610f2;
+  --bs-purple: #6f42c1;
+  --bs-pink: #d63384;
+  --bs-red: #dc3545;
+  --bs-orange: #fd7e14;
+  --bs-yellow: #ffc107;
+  --bs-green: #198754;
+  --bs-teal: #009688;
+  --bs-cyan: #0dcaf0;
+  --bs-white: #fff;
+  --bs-gray: #6c757d;
+  --bs-gray-dark: #343a40;
+  --bs-primary: #009688;
+  --bs-primary-rgb: 0, 150, 136;
+  --bs-secondary: #6c757d;
+  --bs-success: #198754;
+  --bs-info: #0dcaf0;
+  --bs-warning: #ffc107;
+  --bs-danger: #dc3545;
+  --bs-light: #f8f9fa;
+  --bs-dark: #212529;
+  --bs-font-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --bs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --bs-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
+}
+
 header {
   height: 100vh;
 }
 
 * {
-  scrollbar-color: #009688 rgb(64, 63, 63);
+  scrollbar-color: var(--bs-primary) var(--bs-dark);
   scrollbar-width: thin;
   scroll-behavior: smooth;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgb(64, 63, 63);
+  background: var(--bs-dark);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #009688;
+  background: var(--bs-primary);
 }
 
 ::-webkit-scrollbar {
@@ -21,12 +49,8 @@ header {
 }
 
 ::selection {
-  background: rgba(27, 233, 243, 0.5);
-  color: #f2f2f2;
-}
-
-.dark-header {
-  background-color: #212121;
+  background: rgba(var(--bs-primary-rgb), 0.5);
+  color: var(--bs-light);
 }
 
 .btn,
@@ -35,7 +59,7 @@ header {
 }
 
 a.text-light.active:focus, a.text-light.active:hover {
-  color: #f8f9fa !important;
+  color: var(--bs-light) !important;
 }
 
 section {
@@ -44,7 +68,7 @@ section {
 }
 
 footer {
-  color: #f8f9fa;
+  color: var(--bs-light);
   padding-bottom: 2rem;
 }
 
@@ -80,23 +104,23 @@ a:hover, .nav-link:hover {
 .btn-outline-primary:hover,
 .btn-outline-primary:not(:disabled):not(.disabled).active,
 .btn-outline-primary:not(:disabled):not(.disabled):active {
-  color: #fff;
-  background-color: #009688;
-  border-color: #009688;
+  color: var(--bs-light);
+  background-color: var(--bs-primary);
+  border-color: var(--bs-primary);
 }
 
 .btn-primary,
 .btn-primary:not(:disabled):not(.disabled).active,
 .btn-primary:not(:disabled):not(.disabled):active {
   background-color: #00645d;
-  border-color: #009688;
+  border-color: var(--bs-primary);
 }
 
 .btn-primary:hover,
 .btn-primary.focus,
 .btn-primary:focus {
   background-color: #375e5b;
-  border-color: #009688;
+  border-color: var(--bs-primary);
 }
 
 .img-logo {

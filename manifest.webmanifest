@@ -1,0 +1,25 @@
+{
+    "short_name": "mastercomfig",
+    "name": "mastercomfig",
+    "lang": "en-US",
+    "dir": "ltr",
+    "orientation": "any",
+    "icons": [
+      {
+        "src": "/img/mastercomfig_logo_192x.png",
+        "type": "image/png",
+        "sizes": "192x192"
+      },
+      {
+        "src": "/img/mastercomfig_logo_512x.png",
+        "type": "image/png",
+        "sizes": "512x512"
+      }
+    ],
+    "start_url": "/app?source=pwa",
+    "background_color": "#212121",
+    "display": "standalone",
+    "scope": "/",
+    "theme_color": "#009688",
+    "description": "Manage your mastercomfig installation"
+  }
