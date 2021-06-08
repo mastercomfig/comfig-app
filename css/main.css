@@ -82,6 +82,10 @@ a, .nav-link {
   text-decoration: none;
 }
 
+.home-header a {
+  color: #009688
+}
+
 .bi {
   display: inline-block;
   vertical-align: text-bottom;
@@ -120,5 +124,5 @@ a:hover, .nav-link:hover {
 }
 
 .img-logo {
-  height: 10vh;
+  height: 10rem;
 }
