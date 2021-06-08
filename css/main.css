@@ -27,7 +27,7 @@
 }
 
 header {
-  height: 100vh;
+  min-height: 100vh;
 }
 
 * {
@@ -51,6 +51,10 @@ header {
 ::selection {
   background: rgba(var(--bs-primary-rgb), 0.5);
   color: var(--bs-light);
+}
+
+.dark-header {
+  background-color: #212121;
 }
 
 .btn,
