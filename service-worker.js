@@ -13,22 +13,53 @@ Copyright 2015, 2019, 2020, 2021 Google LLC. All Rights Reserved.
 
 // Incrementing OFFLINE_VERSION will kick off the install event and force
 // previously cached resources to be updated from the network.
-// This variable is intentionally declared and unused.
-// Add a comment for your linter if you want:
-// eslint-disable-next-line no-unused-vars
 const OFFLINE_VERSION = 1;
-const CACHE_NAME = "offline";
-// Customize this with a different URL if needed.
-const OFFLINE_URL = "app.html";
+const CACHE_NAME = "offline-v" + OFFLINE_VERSION;
+
+const isLocalHost = window.location.hostname === 'localhost' ||
+  // [::1] is the IPv6 localhost address.
+  window.location.hostname === '[::1]' ||
+  // 127.0.0.1/8 is considered localhost for IPv4.
+  window.location.hostname.match(
+      /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/
+  );
+
+const OFFLINE_FILES = [
+  isLocalHost ? "/app.html" : "/app",
+  "/css/main.css",
+  "/css/app.css",
+  "/favicon.ico",
+  "/js/app.js",
+  "/img/mastercomfig_logo_192x.png",
+  "/img/mastercomfig_logo_512x.png",
+  "/img/mastercomfig_logo_transparent_i.svg",
+  "/img/presets/ultra.png",
+  "/img/presets/high.png",
+  "/img/presets/medium-high.png",
+  "/img/presets/medium.png",
+  "/img/presets/medium-low.png",
+  "/img/presets/low.png",
+  "/img/presets/very-low.png",
+  "https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css",
+  "https://cdn.jsdelivr.net/npm/font-awesome@4/css/font-awesome.min.css",
+  "https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/css/index.min.css",
+  "https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js",
+  "https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/index.min.js"
+]
 
 self.addEventListener("install", (event) => {
+  console.log('[Service Worker] Install');
   event.waitUntil(
     (async () => {
       const cache = await caches.open(CACHE_NAME);
       // Setting {cache: 'reload'} in the new request will ensure that the
       // response isn't fulfilled from the HTTP cache; i.e., it will be from
       // the network.
-      await cache.add(new Request(OFFLINE_URL, { cache: "reload" }));
+      console.log('[Service Worker] Caching all: app shell and content');
+      for (const url of OFFLINE_FILES) {
+        console.log(`[Service Worker] Caching: ${url}`);
+        await cache.add(new Request(url, { cache: "reload" }));
+      }
     })()
   );
   // Force the waiting service worker to become the active service worker.
@@ -50,36 +81,45 @@ self.addEventListener("activate", (event) => {
   self.clients.claim();
 });
 
+self.addEventListener("activate", (e) => {
+  e.waitUntil(caches.keys().then((keyList) => {
+    Promise.all(keyList.map((key) => {
+      if (key === CACHE_NAME) { return; }
+      caches.delete(key);
+    }))
+  }));
+});
+
 self.addEventListener("fetch", (event) => {
-  // We only want to call event.respondWith() if this is a navigation request
-  // for an HTML page.
-  if (event.request.mode === "navigate") {
-    event.respondWith(
-      (async () => {
-        try {
-          // First, try to use the navigation preload response if it's supported.
-          const preloadResponse = await event.preloadResponse;
-          if (preloadResponse) {
-            return preloadResponse;
-          }
-
-          // Always try the network first.
-          const networkResponse = await fetch(event.request);
-          return networkResponse;
-        } catch (error) {
-          // catch is only triggered if an exception is thrown, which is likely
-          // due to a network error.
-          // If fetch() returns a valid HTTP response with a response code in
-          // the 4xx or 5xx range, the catch() will NOT be called.
-          console.log("Fetch failed; returning offline page instead.", error);
-
-          const cache = await caches.open(CACHE_NAME);
-          const cachedResponse = await cache.match(OFFLINE_URL);
-          return cachedResponse;
+  event.respondWith(
+    (async () => {
+      try {
+        // First, try to use the navigation preload response if it's supported.
+        const preloadResponse = await event.preloadResponse;
+        if (preloadResponse) {
+          return preloadResponse;
         }
-      })()
-    );
-  }
+
+        // Always try the network first.
+        const networkResponse = await fetch(event.request);
+        const cache = await caches.open(CACHE_NAME);
+        console.log(`[Service Worker] Caching new resource: ${event.request.url}`);
+        cache.put(event.request, networkResponse.clone());
+        return networkResponse;
+      } catch (error) {
+        // catch is only triggered if an exception is thrown, which is likely
+        // due to a network error.
+        // If fetch() returns a valid HTTP response with a response code in
+        // the 4xx or 5xx range, the catch() will NOT be called.
+        console.log("Fetch failed; returning offline page instead.", error);
+
+        const cache = await caches.open(CACHE_NAME);
+        const cachedResponse = await cache.match(event.request);
+        console.log(`[Service Worker] Fetching resource: ${event.request.url}`);
+        return cachedResponse;
+      }
+    })()
+  );
 
   // If our if() condition is false, then this fetch handler won't intercept the
   // request. If there are any other fetch handlers registered, they will get a

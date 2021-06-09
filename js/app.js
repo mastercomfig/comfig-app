@@ -161,12 +161,12 @@ function app() {
   var downloading = false;
 
   // Once user clicks to multi-download, we download and swap our behavior to in-progress
-  function downloadClickEvent(id, fnGatherUrls) {
+  async function downloadClickEvent(id, fnGatherUrls) {
     // Do the download once clicked
     let urls = fnGatherUrls();
     // Only download if we have a download
     if (urls.length > 1) {
-      downloadUrls(urls, id, fnGatherUrls);
+      await downloadUrls(urls, id, fnGatherUrls);
       let element = getEl(id);
       element.onclick = null; // Ignore clicks
       downloading = true; // Still retain in-progress even after switching preset
@@ -183,7 +183,7 @@ function app() {
   function bindDownloadClick(id, fnGatherUrls) {
     // Reregister that we can respond to a click
     let element = getEl(id);
-    element.onclick = () => downloadClickEvent(id, fnGatherUrls);
+    element.onclick = async () => await downloadClickEvent(id, fnGatherUrls);
     downloading = false; // Unlock updating preset test with new download
     // Restore downloadable style
     element.style.cursor = "pointer";
@@ -216,7 +216,7 @@ function app() {
 
   let pendingObjectURLs = [];
 
-  function downloadUrls(urls, id, fnGatherUrls) {
+  async function downloadUrls(urls, id, fnGatherUrls) {
     // Take the top URL promise and resolve it.
     urls[0].then((result) => {
       // If not empty, make the browser download it.
