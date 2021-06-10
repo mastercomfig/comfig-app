@@ -763,6 +763,7 @@ function app() {
         displayName.split(" ").join("-").toLowerCase()
     );
     moduleDocsLink.setAttribute("target", "_blank");
+    moduleDocsLink.setAttribute("rel", "noopener");
     let modulesDocsIcon = document.createElement("span");
     modulesDocsIcon.classList.add("fa", "fa-book", "fa-fw");
     modulesDocsIcon.setAttribute("aria-hidden", "true");
