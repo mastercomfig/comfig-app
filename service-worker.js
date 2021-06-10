@@ -17,6 +17,7 @@ const OFFLINE_VERSION = 2;
 const CACHE_NAME = "offline-v" + OFFLINE_VERSION;
 
 const OFFLINE_FILES = [
+  "/manifest.webmanifest",
   "/app",
   "/css/main.css",
   "/css/app.css",
@@ -33,6 +34,8 @@ const OFFLINE_FILES = [
   "/img/presets/low.png",
   "/img/presets/very-low.png",
   "https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css",
+  "https://cdn.jsdelivr.net/npm/font-awesome@4/fonts/fontawesome-webfont.woff?v=4.7.0",
+  "https://cdn.jsdelivr.net/npm/font-awesome@4/fonts/fontawesome-webfont.ttf?v=4.7.0",
   "https://cdn.jsdelivr.net/npm/font-awesome@4/css/font-awesome.min.css",
   "https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/css/index.min.css",
   "https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js",
@@ -105,7 +108,7 @@ self.addEventListener("fetch", (event) => {
         // due to a network error.
         // If fetch() returns a valid HTTP response with a response code in
         // the 4xx or 5xx range, the catch() will NOT be called.
-        console.log("Fetch failed; returning offline page instead.", error);
+        console.log("Fetch failed; returning offline file instead.", error);
 
         const cache = await caches.open(CACHE_NAME);
         const cachedResponse = await cache.match(event.request);
