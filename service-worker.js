@@ -13,14 +13,14 @@ Copyright 2015, 2019, 2020, 2021 Google LLC. All Rights Reserved.
 
 // Incrementing OFFLINE_VERSION will kick off the install event and force
 // previously cached resources to be updated from the network.
-const OFFLINE_VERSION = 1;
+const OFFLINE_VERSION = 2;
 const CACHE_NAME = "offline-v" + OFFLINE_VERSION;
 
 const OFFLINE_FILES = [
   "/app",
   "/css/main.css",
   "/css/app.css",
-  "/favicon.ico",
+  "/favicon.png",
   "/js/app.js",
   "/img/mastercomfig_logo_192x.png",
   "/img/mastercomfig_logo_512x.png",
@@ -36,6 +36,7 @@ const OFFLINE_FILES = [
   "https://cdn.jsdelivr.net/npm/font-awesome@4/css/font-awesome.min.css",
   "https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/css/index.min.css",
   "https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js",
+  "https://cdn.jsdelivr.net/npm/idb-keyval@5/dist/iife/index-min.js",
   "https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/index.min.js",
 ];
 
