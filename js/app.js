@@ -172,7 +172,7 @@ async function app() {
   // Once user clicks to multi-download, we download and swap our behavior to in-progress
   async function downloadClickEvent(id, fnGatherUrls) {
     // Do the download once clicked
-    let urls = fnGatherUrls();
+    let urls = await fnGatherUrls();
     // Only download if we have a download
     if (urls.length > 1) {
       await downloadUrls(urls, id, fnGatherUrls);
@@ -1058,7 +1058,9 @@ async function app() {
   });
 
   // Bind the download button with our multi-downloader
-  bindDownloadClick("vpk-dl", getVPKDownloadUrls);
+  bindDownloadClick("vpk-dl", async () => {
+    return getVPKDownloadUrls();
+  });
 
   // Bind the customizations button with our multi-downloader
   bindDownloadClick("custom-dl", async () => {
