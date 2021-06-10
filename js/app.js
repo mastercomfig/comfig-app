@@ -783,9 +783,11 @@ async function app() {
     return getBuiltinModuleDefault(name);
   }
 
+  // Set modules
   function setModule(name, value) {
     let defaultValue = getBuiltinModuleDefault(name);
-    if (defaultValue === value) {
+    // HACK: just set every user selected module
+    if (selectedPreset !== "none" && defaultValue === value) {
       if (selectedModules.hasOwnProperty(name)) {
         delete selectedModules[name];
       }
