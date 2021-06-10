@@ -8,12 +8,26 @@
       {
         "src": "/img/mastercomfig_logo_192x.png",
         "type": "image/png",
-        "sizes": "192x192"
+        "sizes": "192x192",
+        "purpose": "any"
       },
       {
         "src": "/img/mastercomfig_logo_512x.png",
         "type": "image/png",
-        "sizes": "512x512"
+        "sizes": "512x512",
+        "purpose": "any"
+      },
+      {
+        "src": "/img/maskable_icon_192x.png",
+        "type": "image/png",
+        "sizes": "192x192",
+        "purpose": "maskable"
+      },
+      {
+        "src": "/img/maskable_icon_512x.png",
+        "type": "image/png",
+        "sizes": "512x512",
+        "purpose": "maskable"
       }
     ],
     "start_url": "/app?source=pwa",

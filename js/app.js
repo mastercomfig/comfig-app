@@ -1,6 +1,6 @@
 "use strict";
 
-function app() {
+async function app() {
   // convenience format method for string
   String.prototype.format = function () {
     const args = arguments;
@@ -17,15 +17,24 @@ function app() {
     return document.getElementById(element);
   }
 
-  function loadModules() {
+  async function loadModules() {
     let storedModulesStr = storage.getItem("modules");
     if (storedModulesStr) {
+      // Handle legacy storage
       storedModules = JSON.parse(storedModulesStr);
+      idbKeyval.set("modules", storedModules).then(() => {
+        storage.clear("modules");
+      })
+    } else {
+      let storedModulesDB = await idbKeyval.get("modules");
+      if (storedModulesDB) {
+        storedModules = storedModulesDB;
+      }
     }
   }
 
-  function saveModules() {
-    storage.setItem("modules", JSON.stringify(selectedModules));
+  async function saveModules() {
+    await idbKeyval.set("modules", selectedModules);
   }
   
   function resetModules() {
@@ -155,7 +164,7 @@ function app() {
   let cachedData = null;
 
   var storedModules = {};
-  loadModules();
+  await loadModules();
 
   // Track if multi-download is active
   var downloading = false;
@@ -339,9 +348,9 @@ function app() {
         });
   }
 
-  function getCustomDownloadUrls() {
+  async function getCustomDownloadUrls() {
     // We downloaded the custom settings, so the user wants it!
-    saveModules();
+    await saveModules();
     // First push an empty download because browsers like that for some reason.
     var downloads = [
       Promise.resolve({
@@ -435,7 +444,7 @@ function app() {
     getEl("assets-link").href = assetUrl;
   }
 
-  function setPreset(id, no_set) {
+  async function setPreset(id, no_set) {
     selectedPreset = id; // save download ID
     if (!no_set) {
       storage.setItem("preset", id); // save preset selection
@@ -446,8 +455,8 @@ function app() {
       // current selections are preserved, so save them off here too,
       // and store them as we normally would during a page load
       if (modulesDef) {
-        saveModules();
-        loadModules();
+        await saveModules();
+        await loadModules();
         handleModulesRoot(modulesDef);
       }
     }
@@ -1027,10 +1036,13 @@ function app() {
     .then((resp) => resp.json())
     .then((data) => {
       handleApiResponse(data);
-      storage.setItem("cachedData", JSON.stringify(cachedData));
-    }).catch((err) => {
-      let data = storage.getItem("cachedData");
+      // Clear out HTML5 local storage
+      storage.clear("cachedData");
+      idbKeyval.set("cachedData", cachedData);
+    }).catch(async (err) => {
+      let data = await idbKeyval.get("cachedData");
       if (data) {
+        console.error("Get data failed, falling back to cache:", err)
         handleApiResponse(data);
       } else {
         console.error("Failed to get download data:", err)
@@ -1039,9 +1051,9 @@ function app() {
 
   // Register event for all presets defined in the HTML.
   document.querySelectorAll("#presets a").forEach((element) => {
-    element.addEventListener("click", (e) => {
+    element.addEventListener("click", async (e) => {
       e.preventDefault();
-      setPreset(e.currentTarget.id);
+      await setPreset(e.currentTarget.id);
     });
   });
 
@@ -1049,7 +1061,9 @@ function app() {
   bindDownloadClick("vpk-dl", getVPKDownloadUrls);
 
   // Bind the customizations button with our multi-downloader
-  bindDownloadClick("custom-dl", getCustomDownloadUrls);
+  bindDownloadClick("custom-dl", async () => {
+    return await getCustomDownloadUrls();
+  });
 
   // After binding, we need to update the text
   updateCustomizationDownload();
@@ -1065,9 +1079,9 @@ function app() {
 
   // If we have a stored preset, select it
   if (storage.getItem("preset")) {
-    setPreset(storage.getItem("preset"), true);
+    await setPreset(storage.getItem("preset"), true);
   } else {
-    setPreset("medium-high", true);
+    await setPreset("medium-high", true);
   }
 
   // For all defined addons, check if we have it stored
