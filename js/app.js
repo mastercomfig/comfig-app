@@ -762,6 +762,9 @@ async function app() {
   }
 
   function getBuiltinModuleDefault(name) {
+    if (selectedPreset !== "none") {
+      return "";
+    }
     let modulePresets = presetModulesDef[name];
     if (modulePresets) {
       let presetValue = modulePresets[selectedPreset];
@@ -786,8 +789,7 @@ async function app() {
   // Set modules
   function setModule(name, value) {
     let defaultValue = getBuiltinModuleDefault(name);
-    // HACK: just set every user selected module
-    if (selectedPreset !== "none" && defaultValue === value) {
+    if (defaultValue === value) {
       if (selectedModules.hasOwnProperty(name)) {
         delete selectedModules[name];
       }
@@ -979,10 +981,23 @@ async function app() {
     let moduleInputType = module.hasOwnProperty("type")
       ? module.type
       : "select";
+
+    // HACK: handle None preset
+    var nonePresetModules = ["sourcetv", "packet_rate", "snapshot_buffer", "packet_size", "bandwidth", "download", "fpscap", "opengl", "match_hud", "hud_panels", "dynamic_background", "killstreaks", "hud_achievement", "console", "voice_chat", "mod_support", "party_mode", "logo", "move_bind", "sillygibs", "motion_blur"];
+    let moduleValues;
+    if (moduleInputType !== "slider" && moduleInputType !== "switch" && !nonePresetModules.includes(module.name)) {
+      moduleValues = [{
+        value: "",
+        display: "None"
+      }].concat(module.values)
+    } else {
+      moduleValues = module.values;
+    }
+
     let moduleInput = handleModuleInput(
       moduleInputType,
       module.name,
-      module.values
+      moduleValues
     );
     // If we could create an input control, show it to our parent
     if (moduleInput) {
