@@ -215,9 +215,13 @@ async function handleRequest(request) {
       let slashPos = versionString.indexOf("/")
       if (slashPos !== -1) {
         versionString = versionString.substring(0, slashPos)
-        let v = await MASTERCOMFIG.get(getVersionedKey("mastercomfig-version", 2))
-        let versions = JSON.parse(v)
-        validDownload = versions.includes(versionString);
+        if (versionString === "dev") {
+          validDownload = true;
+        } else {
+          let v = await MASTERCOMFIG.get(getVersionedKey("mastercomfig-version", 2))
+          let versions = JSON.parse(v)
+          validDownload = versions.includes(versionString);
+        }
       }
     }
     if (validDownload) {
