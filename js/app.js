@@ -261,6 +261,9 @@ function app() {
   function getVPKDownloadUrls() {
     // We downloaded this version, so track it!
     storage.setItem("lastVersion", version);
+    if (cachedData) {
+      handleVersions(cachedData.v);
+    }
     // First push an empty download because browsers like that for some reason.
     var downloads = [
       Promise.resolve({
@@ -1005,21 +1008,33 @@ function app() {
       /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/
   );
 
+  function handleApiResponse(data) {
+    cachedData = data;
+    // Get the version
+    handleVersions(data.v);
+
+    // Now get the modules
+    modulesDef = data.m;
+    presetModulesDef = data.p;
+    handleModulesRoot(modulesDef);
+  }
+
   // get latest release, and update page
   fetch(
     (isLocalHost ? "https://cors-anywhere.herokuapp.com/": "") + "https://mastercomfig.mcoms.workers.dev/?v=2"
   )
     .then((resp) => resp.json())
     .then((data) => {
-      cachedData = data;
-      // Get the version
-      handleVersions(data.v);
-
-      // Now get the modules
-      modulesDef = data.m;
-      presetModulesDef = data.p;
-      handleModulesRoot(modulesDef);
-    }).catch((err) => console.error("Failed to get download data:", err));
+      handleApiResponse(data);
+      storage.setItem("cachedData", JSON.stringify(cachedData));
+    }).catch((err) => {
+      let data = storage.getItem("cachedData");
+      if (data) {
+        handleApiResponse(data);
+      } else {
+        console.error("Failed to get download data:", err)
+      }
+    });
 
   // Register event for all presets defined in the HTML.
   document.querySelectorAll("#presets a").forEach((element) => {

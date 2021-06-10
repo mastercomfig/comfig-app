@@ -16,16 +16,8 @@ Copyright 2015, 2019, 2020, 2021 Google LLC. All Rights Reserved.
 const OFFLINE_VERSION = 1;
 const CACHE_NAME = "offline-v" + OFFLINE_VERSION;
 
-const isLocalHost = window.location.hostname === 'localhost' ||
-  // [::1] is the IPv6 localhost address.
-  window.location.hostname === '[::1]' ||
-  // 127.0.0.1/8 is considered localhost for IPv4.
-  window.location.hostname.match(
-      /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/
-  );
-
 const OFFLINE_FILES = [
-  isLocalHost ? "/app.html" : "/app",
+  "/app",
   "/css/main.css",
   "/css/app.css",
   "/favicon.ico",
@@ -44,8 +36,8 @@ const OFFLINE_FILES = [
   "https://cdn.jsdelivr.net/npm/font-awesome@4/css/font-awesome.min.css",
   "https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/css/index.min.css",
   "https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js",
-  "https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/index.min.js"
-]
+  "https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/index.min.js",
+];
 
 self.addEventListener("install", (event) => {
   console.log('[Service Worker] Install');
