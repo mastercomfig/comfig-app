@@ -1288,6 +1288,9 @@ async function app() {
 
   window.addEventListener("online", handleConnectivityChange);
   window.addEventListener("offline", handleConnectivityChange);
+  if (!navigator.onLine) {
+    handleConnectivityChange();
+  }
 }
 
 (function () {
