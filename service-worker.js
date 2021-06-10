@@ -18,7 +18,7 @@ const CACHE_NAME = "offline-v" + OFFLINE_VERSION;
 
 const OFFLINE_FILES = [
   "/manifest.webmanifest",
-  "/app",
+  "/app.html",
   "/css/main.css",
   "/css/app.css",
   "/favicon.png",
@@ -89,19 +89,16 @@ self.addEventListener("fetch", (event) => {
   event.respondWith(
     (async () => {
       try {
-        // First, try to use the navigation preload response if it's supported.
-        const preloadResponse = await event.preloadResponse;
-        if (preloadResponse) {
-          return preloadResponse;
+        if (event.request.mode === "navigate") {
+          // First, try to use the navigation preload response if it's supported.
+          const preloadResponse = await event.preloadResponse;
+          if (preloadResponse) {
+            return preloadResponse;
+          }
         }
 
         // Always try the network first.
         const networkResponse = await fetch(event.request);
-        if (event.request.method === "GET") {
-          const cache = await caches.open(CACHE_NAME);
-          console.log(`[Service Worker] Caching new resource: ${event.request.url}`);
-          cache.put(event.request, networkResponse.clone());
-        }
         return networkResponse;
       } catch (error) {
         // catch is only triggered if an exception is thrown, which is likely

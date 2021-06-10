@@ -62,6 +62,7 @@ async function app() {
 
   // Map preset IDs to display names for download
   var presets = {
+    none: "None",
     ultra: "Ultra",
     high: "High",
     "medium-high": "Medium High",
@@ -93,6 +94,7 @@ async function app() {
     recommendedAddons.set(id, addons);
   }
 
+  setRecommendedAddons("none", []);
   setRecommendedAddons("ultra", []);
   setRecommendedAddons("high", []);
   setRecommendedAddons("medium-high", []);
@@ -119,18 +121,22 @@ async function app() {
     "default": releaseUrl.default,
   }
   // Where latest downloads come from
-  var downloadUrl = releaseUrl.default + "/download/mastercomfig-";
+  var downloadUrl = releaseUrl.default + "/download/";
   // Where a specific release's downloads come from
-  var releaseDownloadUrl = releasesUrl + "/download/{0}/mastercomfig-";
+  var releaseDownloadUrl = releasesUrl + "/download/{0}/";
+  // Prefix for mastercomfig files
+  var mastercomfigFileUrl = "mastercomfig-";
   // Addon extension format string to download
+  var addonFileUrl = mastercomfigFileUrl + "{1}-addon.vpk"
   var addonUrl = {
-    "latest": downloadUrl + "{1}-addon.vpk",
-    "default": releaseDownloadUrl + "{1}-addon.vpk",
+    "latest": downloadUrl + addonFileUrl,
+    "default": releaseDownloadUrl + addonFileUrl,
   };
   // Preset extension format string to download
+  var presetFileUrl = mastercomfigFileUrl + "{1}-preset.vpk";
   var presetUrl = {
-    "latest": downloadUrl + "{1}-preset.vpk",
-    "default": releaseDownloadUrl + "{1}-preset.vpk",
+    "latest": downloadUrl + presetFileUrl,
+    "default": releaseDownloadUrl + presetFileUrl,
   };  
 
   // Current mastercomfig version, comes in from API
@@ -189,17 +195,21 @@ async function app() {
     if (downloading) {
       return;
     }
-    // Do the download once clicked
-    let urls = await fnGatherUrls();
-    // Only download if we have a download
-    if (urls.length > 1) {
-      await downloadUrls(urls, id, fnGatherUrls);
-      let element = getEl(id);
+    // Mark we have started a download
+    let element = getEl(id);
       element.onclick = null; // Ignore clicks
       disableDownload(element);
       element.innerHTML = element.innerHTML
         .replace("Download", "Downloading")
         .replace(" ", "…");
+    // Do the download once clicked
+    let urls = await fnGatherUrls();
+    // Only download if we have a download
+    if (urls.length > 1) {
+      await downloadUrls(urls, id, fnGatherUrls);
+    } else {
+      // We've gotten to the last in the download stack, so we're done
+      bindDownloadClick(id, fnGatherUrls);
     }
   }
 
@@ -236,7 +246,11 @@ async function app() {
     } else {
       url = urlOptions.default;
     }
-    return url.format(userVersion, id);
+    url = url.format(userVersion, id);
+    if (customDirectory) {
+      url = url.replace("https://github.com/mastercomfig/mastercomfig/releases", (isLocalHost ? "https://cors-anywhere.herokuapp.com/" : "") + "https://mastercomfig.mcoms.workers.dev/download")
+    }
+    return url;
   }
 
   function getAddonUrl(id) {
@@ -292,58 +306,207 @@ async function app() {
     });
   }
 
-  function getVPKDownloadUrls() {
-    // We downloaded this version, so track it!
-    storage.setItem("lastVersion", version);
-    if (cachedData) {
-      handleVersions(cachedData.v);
+  async function verifyPermission(fileHandle, readWrite) {
+    const options = {};
+    if (readWrite) {
+      options.mode = 'readwrite';
     }
+    // Check if permission was already granted. If so, return true.
+    if ((await fileHandle.queryPermission(options)) === 'granted') {
+      return true;
+    }
+    // Request permission. If the user grants permission, return true.
+    if ((await fileHandle.requestPermission(options)) === 'granted') {
+      return true;
+    }
+    // The user didn't grant permission, so return false.
+    return false;
+  }
+
+  let gameDirectory = null;
+  let customDirectory = null;
+  let userDirectory = null;
+
+  async function clearDirectoryInstructions() {
+    let instructionEls = document.querySelectorAll(".instructions-text");
+    for (const instructionEl of instructionEls) {
+      instructionEl.classList.add("d-none");
+    }
+  }
+
+  async function promptDirectory() {
+    if (!window.showDirectoryPicker) {
+      return;
+    }
+    try {
+      let directoryHandle = await window.showDirectoryPicker({
+        id: "tf2",
+        startIn: "desktop"
+      });
+      await idbKeyval.set("directory", directoryHandle);
+      await updateDirectory();
+    } catch (error) {
+      console.log("Directory prompt failed", error)
+    }
+  }
+
+  async function updateDirectory() {
+    if (!window.showDirectoryPicker) {
+      return;
+    }
+    try {
+      let directoryHandle = await idbKeyval.get("directory");
+      if (!directoryHandle) {
+        return;
+      }
+      clearDirectoryInstructions();
+      gameDirectory = directoryHandle;
+      getEl("game-folder-text").innerText = `${gameDirectory.name} folder chosen, click to change`;
+    } catch (error) {
+      console.log("Get directory failed", error);
+    }
+  }
+
+  async function accessDirectory() {
+    if (!window.showDirectoryPicker) {
+      return;
+    }
+    if (!gameDirectory) {
+      return;
+    }
+    try {
+      if (!(await verifyPermission(gameDirectory, true))) {
+        console.log("Directory permission refused");
+        return;
+      }
+      const tfDirectory = await gameDirectory.getDirectoryHandle("tf", {
+        create: true,
+      });
+      customDirectory = await tfDirectory.getDirectoryHandle("custom", {
+        create: true,
+      });
+      const cfgDirectory = await tfDirectory.getDirectoryHandle("cfg", {
+        create: true,
+      });
+      userDirectory = await cfgDirectory.getDirectoryHandle("user", {
+        create: true,
+      });
+    } catch (error) {
+      console.log("Get directory failed", error);
+    }
+  }
+
+  async function safeUnlink(name, directory) {
+    try {
+      await directory.removeEntry(name);
+    } catch (error) {
+      console.log(`Failed deleting ${name}`, error);
+    }
+  }
+
+  async function getWritable(name, directory, skipDelete) {
+    if (!directory) {
+      return;
+    }
+    if (!skipDelete) {
+      await safeUnlink(name, directory);
+    }
+    const file = await directory.getFileHandle(name, { create: true });
+    const writable = await file.createWritable();
+    return writable;
+  }
+
+  async function newFile(contents, name, directory) {
+    if (contents.length < 1) {
+      return null;
+    }
+    if (directory) {
+      const writable = await getWritable(name, directory);
+      await writable.write(contents);
+      await writable.close();
+      return null;
+    } else {
+      const file = new File([contents], name, {
+        type: "application/octet-stream",
+      });
+      return file;
+    }
+  }
+
+  async function writeRemoteFile(url, directory) {
+    if (!directory) {
+      return;
+    }
+    let name = url.split('/').pop();
+    const writable = await getWritable(name, directory, true);
+    let response = await fetch(url);
+    await response.body.pipeTo(writable);
+  }
+
+  async function getVPKDownloadUrls() {
+    // We need permissions for the directory
+    await accessDirectory();
     // First push an empty download because browsers like that for some reason.
     var downloads = [
       Promise.resolve({
         url: "",
       }),
     ];
-    // Then push our preset download
-    downloads.push(
-      Promise.resolve({
-        url: getPresetUrl(),
-      })
-    );
-    // Then push all our addon downloads
-    for (const selection of selectedAddons) {
+    let presetUrl = getPresetUrl();
+    console.log(presetUrl);
+    if (customDirectory) {
+      // Clear out all existing files
+      let presetKeys = Object.keys(presets);
+      for (const preset of presetKeys) {
+        await safeUnlink(presetFileUrl.format(null, preset), customDirectory);
+      }
+      for (const addon of addons) {
+        await safeUnlink(addonFileUrl.format(null, addon), customDirectory);
+      }
+      // Write preset file
+      writeRemoteFile(presetUrl, customDirectory);
+    } else {
+      // Then push our preset download
       downloads.push(
         Promise.resolve({
-          url: getAddonUrl(selection),
+          url: presetUrl,
         })
       );
+    }
+    // Then push all our addon downloads
+    for (const selection of selectedAddons) {
+      let addonUrl = getAddonUrl(selection);
+      if (customDirectory) {
+        writeRemoteFile(addonUrl, customDirectory);
+      } else {
+        downloads.push(
+          Promise.resolve({
+            url: addonUrl,
+          })
+        );
+      }
+    }
+    // We downloaded this version, so track it!
+    storage.setItem("lastVersion", version);
+    if (cachedData) {
+      handleVersions(cachedData.v);
     }
     // Now queue up all our download promises to download!
     return downloads;
   }
 
-  function newFile(contents, name) {
-    if (contents.length < 1) {
-      return null;
-    }
-    let file = new File([contents], name, {
-      type: "application/octet-stream",
-    });
-    return file;
-  }
-
-  function newModulesFile() {
+  async function newModulesFile() {
     let contents = "";
     for (const moduleName of Object.keys(selectedModules)) {
       contents += `${moduleName}=${selectedModules[moduleName]}\n`;
     }
     if (contents.length > 0) {
-      return newFile(contents, "modules.cfg");
+      return await newFile(contents, "modules.cfg", userDirectory);
     }
     return null;
   }
 
-  function newAutoexecFile() {
+  async function newAutoexecFile() {
     let contents = "";
     for (const key of Object.keys(selectedBinds)) {
       let binding = selectedBinds[key];
@@ -360,7 +523,7 @@ async function app() {
       contents += `${cvar} ${selectedOverrides[cvar]}\n`;
     }
     if (contents.length > 0) {
-      return newFile(contents, "autoexec.cfg");
+      return await newFile(contents, "autoexec.cfg", userDirectory);
     }
     return null;
   }
@@ -376,6 +539,8 @@ async function app() {
   async function getCustomDownloadUrls() {
     // We downloaded the custom settings, so the user wants it!
     await saveModules();
+    // We need permissions for the directory
+    await accessDirectory();
     // First push an empty download because browsers like that for some reason.
     var downloads = [
       Promise.resolve({
@@ -383,13 +548,13 @@ async function app() {
       }),
     ];
     // Create the modules.cfg file
-    let modulesFile = newModulesFile();
+    let modulesFile = await newModulesFile();
     if (modulesFile) {
       downloads.push(
         getObjectFilePromise(modulesFile)
       );
     }
-    let autoexecFile = newAutoexecFile();
+    let autoexecFile = await newAutoexecFile();
     if (autoexecFile) {
       downloads.push(
         getObjectFilePromise(autoexecFile)
@@ -986,6 +1151,8 @@ async function app() {
       return;
     }
 
+    versions = JSON.parse(JSON.stringify(versions));
+
     let lastVersion = storage.getItem("lastVersion");
     let foundVersion = false;
 
@@ -996,6 +1163,8 @@ async function app() {
     releaseUrl.dev = "https://github.com/mastercomfig/mastercomfig/compare/{0}...develop".format(latestVersion);
 
     let versionDropdown = getEl("versionDropdownMenu");
+
+    versionDropdown.innerHTML = "";
 
     let latestBadge;
     if (latestVersion === lastVersion)
@@ -1056,7 +1225,7 @@ async function app() {
 
   // get latest release, and update page
   fetch(
-    (isLocalHost ? "https://cors-anywhere.herokuapp.com/": "") + "https://mastercomfig.mcoms.workers.dev/?v=2"
+    (isLocalHost ? "https://cors-anywhere.herokuapp.com/" : "") + "https://mastercomfig.mcoms.workers.dev/?v=2"
   )
     .then((resp) => resp.json())
     .then((data) => {
@@ -1084,7 +1253,7 @@ async function app() {
 
   // Bind the download button with our multi-downloader
   bindDownloadClick("vpk-dl", async () => {
-    return getVPKDownloadUrls();
+    return await getVPKDownloadUrls();
   });
 
   // Bind the customizations button with our multi-downloader
@@ -1290,6 +1459,14 @@ async function app() {
   window.addEventListener("offline", handleConnectivityChange);
   if (!navigator.onLine) {
     handleConnectivityChange();
+  }
+
+  if (window.showDirectoryPicker) {
+    getEl("game-folder-container").classList.remove("d-none");
+    getEl("game-folder-group").addEventListener("click", async () => {
+      await promptDirectory();
+    });
+    await updateDirectory();
   }
 }
 
