@@ -49,7 +49,6 @@ self.addEventListener("install", (event) => {
       // the network.
       console.log('[Service Worker] Caching all: app shell and content');
       for (const url of OFFLINE_FILES) {
-        console.log(`[Service Worker] Caching: ${url}`);
         await cache.add(new Request(url, { cache: "reload" }));
       }
     })()
@@ -94,9 +93,11 @@ self.addEventListener("fetch", (event) => {
 
         // Always try the network first.
         const networkResponse = await fetch(event.request);
-        const cache = await caches.open(CACHE_NAME);
-        console.log(`[Service Worker] Caching new resource: ${event.request.url}`);
-        cache.put(event.request, networkResponse.clone());
+        if (event.request.method === "GET") {
+          const cache = await caches.open(CACHE_NAME);
+          console.log(`[Service Worker] Caching new resource: ${event.request.url}`);
+          cache.put(event.request, networkResponse.clone());
+        }
         return networkResponse;
       } catch (error) {
         // catch is only triggered if an exception is thrown, which is likely
