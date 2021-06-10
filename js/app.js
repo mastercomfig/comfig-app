@@ -169,8 +169,26 @@ async function app() {
   // Track if multi-download is active
   var downloading = false;
 
+  function disableDownload(element) {
+    downloading = true; // Still retain in-progress even after switching preset
+    // Indicate not useable/in-progress
+    element.style.cursor = "not-allowed";
+    element.classList.add("focus");
+  }
+
+  function enableDownload(element) {
+    downloading = false; // Unlock updating preset test with new download
+    // Restore downloadable style
+    element.style.cursor = "pointer";
+    element.classList.remove("focus");
+  }
+
   // Once user clicks to multi-download, we download and swap our behavior to in-progress
   async function downloadClickEvent(id, fnGatherUrls) {
+    // Make sure we block clicks, since onclick state is not managed in offline mode
+    if (downloading) {
+      return;
+    }
     // Do the download once clicked
     let urls = await fnGatherUrls();
     // Only download if we have a download
@@ -178,13 +196,23 @@ async function app() {
       await downloadUrls(urls, id, fnGatherUrls);
       let element = getEl(id);
       element.onclick = null; // Ignore clicks
-      downloading = true; // Still retain in-progress even after switching preset
-      // Indicate not useable/in-progress
-      element.style.cursor = "not-allowed";
-      element.classList.add("focus");
+      disableDownload(element);
       element.innerHTML = element.innerHTML
         .replace("Download", "Downloading")
         .replace(" ", "…");
+    }
+  }
+
+  function handleConnectivityChange(event) {
+    let element = getEl("vpk-dl");
+    // HACK: we are currently using a hack, by using the "downloading" variable
+    // to block downloads and track blocked download state.
+    if (navigator.onLine) {
+      enableDownload(element);
+      element.innerHTML = element.innerHTML.replace(" (you are offline)", "");
+    } else {
+      disableDownload(element);
+      element.innerHTML += " (you are offline)";
     }
   }
 
@@ -193,10 +221,7 @@ async function app() {
     // Reregister that we can respond to a click
     let element = getEl(id);
     element.onclick = async () => await downloadClickEvent(id, fnGatherUrls);
-    downloading = false; // Unlock updating preset test with new download
-    // Restore downloadable style
-    element.style.cursor = "pointer";
-    element.classList.remove("focus");
+    enableDownload(element);
     element.innerHTML = element.innerHTML
       .replace("Downloading", "Download")
       .replace("…", " ");
@@ -1260,6 +1285,9 @@ async function app() {
       navigator.serviceWorker.register("service-worker.js");
     }
   });
+
+  window.addEventListener("online", handleConnectivityChange);
+  window.addEventListener("offline", handleConnectivityChange);
 }
 
 (function () {
