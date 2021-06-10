@@ -104,6 +104,9 @@
                   <li class="nav-item" role="presentation">
                     <a class="nav-link" id="very-low" data-bs-toggle="tab" data-bs-target="#very-low-tab" type="button" role="tab" aria-controls="very-low-tab" aria-selected="false">Very Low</a>
                   </li>
+                  <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="none" data-bs-toggle="tab" data-bs-target="#none-tab" type="button" role="tab" aria-controls="none-tab" aria-selected="false">None</a>
+                  </li>
                 </ul>
                 <div class="tab-content" id="presetsContent">
                   <div class="tab-pane" id="ultra-tab" role="tabpanel" aria-labelledby="ultra">
@@ -142,6 +145,11 @@
                     Not recommended unless the game has such low performance that it is more of a hinderance than not having HUD elements and good player visibility.
                     <br><strong>BY DOWNLOADING THIS PRESET YOU UNDERSTAND THAT IT <em>REMOVES HUD ELEMENTS AND REDUCES VISIBILITY</em>. IF YOU DON'T WANT THIS <em>USE LOW</em>, THAT'S THE <em>ONLY</em> DIFFERENCE.</strong>
                     <br><br>
+                  </div>
+                  <div class="tab-pane" id="none-tab" role="tabpanel" aria-labelledby="none">
+                    <br>
+                    <h4>Special preset which skips setting quality options.</h4>
+                    <br>
                   </div>
                 </div>
                 <a class="lead toggler btn btn-primary" id="customize-toggler" data-bs-toggle="collapse" href="#customize" role="button" aria-expanded="false" aria-controls="customize">
@@ -325,9 +333,17 @@
                   <div class="col-sm-12">
                     <h2 class="fw-normal"><span class="fa fa-download fa-fw"></span> Download your files</h2>
                     <br>
+                    <div class="mb-3 d-none" id="game-folder-container">
+                      <label for="game-folder-group" class="form-label">Choose your Team Fortress 2 installation folder</label>
+                      <div class="row" role="group" id="game-folder-group">
+                        <button type="button" class="btn btn-outline-primary col-auto" id="game-folder-btn">Choose Folder</button>
+                        <span class="bg-teal col d-flex align-items-center" id="game-folder-text">No folder chosen</span>
+                      </div>
+                      <hr>
+                    </div>
                     <p class="lead"><b><a href="https://github.com/mastercomfig/mastercomfig/releases/latest" id="vpk-dl" class="download-link" style="cursor: pointer"><span class="fa fa-cloud-download fa-fw"></span>  Download from GitHub</a></b></p>
-                    <p>Drop the files in your <code>tf/custom</code> folder and they'll automatically run.</p>
-                    <a id="collapseManualButton" data-bs-toggle="collapse" href="#collapseManual" role="button" aria-expanded="false" aria-controls="collapseManual">
+                    <p class="instructions-text">Drop the files in your <code>tf/custom</code> folder and they'll automatically run.</p>
+                    <a class="instructions-text" id="collapseManualButton" data-bs-toggle="collapse" href="#collapseManual" role="button" aria-expanded="false" aria-controls="collapseManual">
                         Not working? Download manually
                     </a>
                     <div class="collapse" id="collapseManual">
@@ -344,7 +360,7 @@
                     </div>
                     <hr>
                     <p class="lead"><b><a class="download-link" id="custom-dl"><span class="fa fa-download fa-fw"></span> Download customizations </a></b></p>
-                    <p>Create a <code>user</code> folder in your <code>tf/cfg</code> folder and drop the files in there to override mastercomfig with your selected customizations!</p>
+                    <p class="instructions-text">Create a <code>user</code> folder in your <code>tf/cfg</code> folder and drop the files in there to override mastercomfig with your selected customizations!</p>
                     <noscript>Note: Customizations require JavaScript.</noscript>
                     <hr>
                     <div id="blockMisc">

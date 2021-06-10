@@ -33,6 +33,13 @@ const reqGHRawHeaders = {
   }
 }
 
+const reqGHReleaseHeaders = {
+  headers : {
+    'Accept': 'application/octet-stream',
+    ...reqHeaders.headers
+  }
+}
+
 // Return JSON with 24 hour cache
 const resHeaders = {
   headers: {
@@ -69,10 +76,13 @@ function getVersions(data) {
     if (version.prerelease || version.draft) {
       limit = Math.min(limit + 1, data.length)
     } else {
-      versions.push(getVersion(version))
+      let parsedVersion = getVersion(version)
+      if (parsedVersion) {
+        versions.push(parsedVersion)
+      }
     }
   }
-  return stringify(versions)
+  return versions.length < 1 ? null : stringify(versions)
 }
 
 function getVersionedKey(key, version) {
@@ -137,14 +147,19 @@ async function updateData(requests) {
     })
     // Store and return results
     const results = await Promise.all(pg)
-    results.forEach((r, i) => {
-        if (!r) {
-            return
-        }
-        let value = requests[i][3] ? requests[i][3](r) : r
-        data[i] = value
-        storeData(requests[i][2], value)
-    })
+    for (let i = 0; i < results.length; i++) {
+      let r = results[i];
+      let value = null;
+      if (r) {
+        value = requests[i][3] ? requests[i][3](r) : r
+      }
+      if (value) {
+        await storeData(requests[i][2], value)
+      } else {
+        value = await MASTERCOMFIG.get(requests[i][2])
+      }
+      data[i] = value
+    }
   } catch (error) {
     console.error(error)
   } finally {
@@ -159,6 +174,11 @@ async function handleRequest(request) {
   let version = url.searchParams.get("v")
   if (url.pathname === webhookPathname) {
     await forceUpdate(version)
+  }
+  if (url.pathname.startsWith("download")) {
+    downloadUrl = url.pathname.substring("download".length)
+    let response = await fetch("https://github.com/mastercomfig/mastercomfig/releases" + downloadUrl)
+    return new Response(response.body, resHeaders)
   }
   // Attempt cached
   let resBody = await MASTERCOMFIG.get(getVersionedKey("mastercomfig-api-response", version))
