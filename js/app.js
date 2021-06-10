@@ -209,10 +209,10 @@ async function app() {
     // to block downloads and track blocked download state.
     if (navigator.onLine) {
       enableDownload(element);
-      element.innerHTML = element.innerHTML.replace(" (you are offline)", "");
+      element.innerHTML = element.innerHTML.replace("(you are offline)", "");
     } else {
       disableDownload(element);
-      element.innerHTML += " (you are offline)";
+      element.innerHTML += "(you are offline)";
     }
   }
 
