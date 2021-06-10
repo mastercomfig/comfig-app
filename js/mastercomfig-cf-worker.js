@@ -40,13 +40,26 @@ const reqGHReleaseHeaders = {
   }
 }
 
+const resCommonHeaders = {
+  headers: {
+    'Cache-Control': 'max-age=86400',
+    'Access-Control-Allow-Origin': 'https://mastercomfig.com'
+  }
+}
+
 // Return JSON with 24 hour cache
 const resHeaders = {
   headers: {
     'Content-Type': 'application/json;charset=UTF-8',
-    'Cache-Control': 'max-age=86400',
-    'Access-Control-Allow-Origin': 'https://mastercomfig.com'
+    ...resCommonHeaders.headers
   },
+}
+
+const resAssetHeaders = {
+  headers: {
+    'Content-Type': 'application/octet-stream',
+    ...resCommonHeaders.headers
+  }
 }
 
 const cacheOpt = {
@@ -169,16 +182,53 @@ async function updateData(requests) {
 
 const webhookPathname = "/" + GH_WEBHOOK_ID
 
+let validNames = [
+  "mastercomfig-ultra-preset.vpk",
+  "mastercomfig-high-preset.vpk",
+  "mastercomfig-medium-high-preset.vpk",
+  "mastercomfig-medium-preset.vpk",
+  "mastercomfig-medium-low-preset.vpk",
+  "mastercomfig-low-preset.vpk",
+  "mastercomfig-very-low-preset.vpk",
+  "mastercomfig-none-preset.vpk",
+  "mastercomfig-null-cancelling-movement-addon.vpk",
+  "mastercomfig-flat-mouse-addon.vpk",
+  "mastercomfig-no-tutorial-addon.vpk",
+  "mastercomfig-disable-pyroland-addon.vpk",
+  "mastercomfig-no-footsteps-addon.vpk",
+  "mastercomfig-no-soundscapes-addon.vpk",
+  "mastercomfig-transparent-viewmodels-addon.vpk",
+  "mastercomfig-lowmem-addon.vpk",
+]
+
 async function handleRequest(request) {
   const url = new URL(request.url)
   let version = url.searchParams.get("v")
   if (url.pathname === webhookPathname) {
     await forceUpdate(version)
   }
-  if (url.pathname.startsWith("download")) {
-    downloadUrl = url.pathname.substring("download".length)
-    let response = await fetch("https://github.com/mastercomfig/mastercomfig/releases" + downloadUrl)
-    return new Response(response.body, resHeaders)
+  if (url.pathname.startsWith("/download")) {
+    downloadUrl = url.pathname.substring("/download".length);
+    let validDownload = downloadUrl.startsWith("/latest/download")
+    if (!validDownload && downloadUrl.startsWith("/download/")) {
+      let versionString = downloadUrl.substring("/download/".length)
+      let slashPos = versionString.indexOf("/")
+      if (slashPos !== -1) {
+        versionString = versionString.substring(0, slashPos)
+        let v = await MASTERCOMFIG.get(getVersionedKey("mastercomfig-version", 2))
+        let versions = JSON.parse(v)
+        validDownload = versions.includes(versionString);
+      }
+    }
+    if (validDownload) {
+      if (!url.pathname.includes("..")) {
+        let name = downloadUrl.split('/').pop()
+        if (validNames.includes(name)) {
+          let response = await fetch("https://github.com/mastercomfig/mastercomfig/releases" + downloadUrl, reqGHReleaseHeaders)
+          return new Response(response.body, resAssetHeaders)
+        }
+      }
+    }
   }
   // Attempt cached
   let resBody = await MASTERCOMFIG.get(getVersionedKey("mastercomfig-api-response", version))

@@ -458,10 +458,14 @@ async function app() {
       // Clear out all existing files
       let presetKeys = Object.keys(presets);
       for (const preset of presetKeys) {
-        await safeUnlink(presetFileUrl.format(null, preset), customDirectory);
+        let presetFile = presetFileUrl.format(null, preset);
+        await safeUnlink(presetFile, customDirectory);
+        await safeUnlink(presetFile + ".sound.cache", customDirectory);
       }
       for (const addon of addons) {
-        await safeUnlink(addonFileUrl.format(null, addon), customDirectory);
+        let addonFile = addonFileUrl.format(null, addon);
+        await safeUnlink(addonFile, customDirectory);
+        await safeUnlink(addonFile + ".sound.cache", customDirectory);
       }
       // Write preset file
       writeRemoteFile(presetUrl, customDirectory);
