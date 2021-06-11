@@ -65,6 +65,9 @@
             <li class="nav-item">
               <a id="install-link" class="nav-link d-none" aria-current="page" href="#"><strong>Install app</strong></a>
             </li>
+            <li class="nav-item">
+              <a id="subscribe-link" class="nav-link d-none" aria-current="page" href="#"><strong>Subscribe to notifications</strong></a>
+            </li>
           </ul>
         </div>
       </div>
@@ -335,10 +338,12 @@
                     <br>
                     <div class="mb-3 d-none" id="game-folder-container">
                       <div class="instructions-text alert alert-warning" role="alert">
-                        <span class="lead fw-normal">Installation folders in privileged folders like <strong>Program Files</strong> (which is the default Steam library folder) are not supported.</span><br>
+                        <span class="lead fw-bold">Heads Up!</span>
+                        Installation folders in privileged folders like <strong>Program Files</strong> (which is the default Steam library folder) and <strong>AppData</strong> are not supported.<br><br>
                         Please <a href="https://support.steampowered.com/kb_article.php?ref=7418-YUBN-8129" target="_blank" rel="noopener">move to a new Steam folder</a>.<br>
-                        This has the added benefit of improved security and easier use, as Team Fortress 2 will not be within an administrative folder.<br>
-                        If you do not wish to do this, you can ignore folder selection and download the files manually.
+                        This has the added benefit of improved security and easier use, as Team Fortress 2 will not be within an administrative folder.<br><br>
+                        Alternatively, you may create a new empty folder for mastercomfig to install the files into and then copy this folder into your TF2 folder.<br>
+                        If you do not wish to do either, you can ignore folder selection and download the files manually.
                       </div>
                       <label for="game-folder-group" class="form-label">Choose your Team Fortress 2 installation folder</label>
                       <div class="row" role="group" id="game-folder-group">
@@ -431,6 +436,26 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha256-edRDsV9ULIqKzKjpN/KjyQ7Lp4vUn9usbJuHjH8Sk+k=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/index.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/idb-keyval@5/dist/iife/index-min.js"></script>
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-app.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-messaging.js"></script>
+
+    <script>
+      // Your web app's Firebase configuration
+      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+      var firebaseConfig = {
+        apiKey: "AIzaSyBKDPeOgq97k5whdxL_Z94ak9jSfdjXU4E",
+        authDomain: "mastercomfig-app.firebaseapp.com",
+        projectId: "mastercomfig-app",
+        storageBucket: "mastercomfig-app.appspot.com",
+        messagingSenderId: "1055009628964",
+        appId: "1:1055009628964:web:6ad7954859d843050d49b1",
+        measurementId: "G-S0F8JT6ZQE"
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+    </script>
     <script defer src="js/app.js"></script>
   </body>
 </html>
