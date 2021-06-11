@@ -85,7 +85,7 @@
                 <br>
                 <h2 class="fw-normal"><span class="fa fa-cube fa-fw" aria-hidden="true"></span> Choose a preset</h2>
                 <br>
-                <ul class="nav nav-pills bg-teal" id="presets" role="tablist">
+                <ul class="nav nav-pills bg-teal-nav" id="presets" role="tablist">
                   <li class="nav-item" role="presentation">
                     <a class="nav-link" id="ultra" data-bs-toggle="tab" data-bs-target="#ultra-tab" type="button" role="tab" aria-controls="ultra-tab" aria-selected="false">Ultra</a>
                   </li>
@@ -338,12 +338,12 @@
                     <br>
                     <div class="mb-3 d-none" id="game-folder-container">
                       <div class="instructions-text alert alert-warning" role="alert">
-                        <span class="lead fw-bold">Heads Up!</span>
-                        Installation folders in privileged folders like <strong>Program Files</strong> (which is the default Steam library folder) and <strong>AppData</strong> are not supported.<br><br>
-                        Please <a href="https://support.steampowered.com/kb_article.php?ref=7418-YUBN-8129" target="_blank" rel="noopener">move to a new Steam folder</a>.<br>
+                        <span class="lead">Heads Up!</span><br>
+                        Installations in privileged folders like <strong>Program Files</strong> (which is the default Steam library folder) and <strong>AppData</strong> are not supported.<br><br>
+                        Please <a href="https://support.steampowered.com/kb_article.php?ref=7418-YUBN-8129" target="_blank" rel="noopener">move Steam</a> to a new folder, or use a separate drive for Team Fortress 2.<br>
                         This has the added benefit of improved security and easier use, as Team Fortress 2 will not be within an administrative folder.<br><br>
-                        Alternatively, you may create a new empty folder for mastercomfig to install the files into and then copy this folder into your TF2 folder.<br>
-                        If you do not wish to do either, you can ignore folder selection and download the files manually.
+                        Alternatively, you may create a new empty folder for mastercomfig to install the files into and then copy this folder into your TF2 folder.<br><br>
+                        <strong class="fw-bolder">If you do not wish to do either, you can ignore folder selection and download the files manually.</strong>
                       </div>
                       <label for="game-folder-group" class="form-label">Choose your Team Fortress 2 installation folder</label>
                       <div class="row" role="group" id="game-folder-group">
