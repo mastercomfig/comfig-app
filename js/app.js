@@ -154,7 +154,7 @@ async function app() {
   var addons = [];
 
   // Currently selected preset
-  var selectedPreset = "medium-high";
+  var selectedPreset = null;
   // Currently selected addons
   var selectedAddons = [];
   // Current state of module selections
@@ -1303,6 +1303,7 @@ async function app() {
 
   // If we have a stored preset, select it
   if (storage.getItem("preset")) {
+    console.log(storage.getItem("preset"))
     await setPreset(storage.getItem("preset"), true);
   } else {
     await setPreset("medium-high", true);
