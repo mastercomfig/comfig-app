@@ -502,7 +502,11 @@ async function app() {
   async function newModulesFile() {
     let contents = "";
     for (const moduleName of Object.keys(selectedModules)) {
-      contents += `${moduleName}=${selectedModules[moduleName]}\n`;
+      if (selectedModules[moduleName]) {
+        contents += `${moduleName}=${selectedModules[moduleName]}\n`;
+      } else {
+        contents += `alias ${moduleName}\n`;
+      }
     }
     if (contents.length > 0) {
       return await newFile(contents, "modules.cfg", userDirectory);
