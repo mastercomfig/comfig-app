@@ -145,8 +145,6 @@ async function app() {
 
   var userVersion = "latest";
 
-  // Current modules def
-  var modulesDef = {};
   // Current presets modules def
   var presetModulesDef = {};
 
@@ -656,10 +654,10 @@ async function app() {
       // defaults. however, we need to also make sure that the user's
       // current selections are preserved, so save them off here too,
       // and store them as we normally would during a page load
-      if (modulesDef) {
+      if (cachedData) {
         await saveModules();
         await loadModules();
-        handleModulesRoot(modulesDef);
+        handleModulesRoot(cachedData.m);
       }
     }
     new bootstrap.Tab(getEl(id)).show(); // visually select in tabs menu
@@ -1243,12 +1241,18 @@ async function app() {
   function handleApiResponse(data) {
     cachedData = data;
     // Get the version
-    handleVersions(data.v);
+    handleVersions(cachedData.v);
 
     // Now get the modules
-    modulesDef = data.m;
-    presetModulesDef = data.p;
-    handleModulesRoot(modulesDef);
+    presetModulesDef = cachedData.p;
+    handleModulesRoot(cachedData.m);
+  }
+
+  // If we have a stored preset, select it
+  if (storage.getItem("preset")) {
+    await setPreset(storage.getItem("preset"), true);
+  } else {
+    await setPreset("medium-high", true);
   }
 
   // get latest release, and update page
@@ -1300,13 +1304,6 @@ async function app() {
       e.preventDefault();
     });
   });
-
-  // If we have a stored preset, select it
-  if (storage.getItem("preset")) {
-    await setPreset(storage.getItem("preset"), true);
-  } else {
-    await setPreset("medium-high", true);
-  }
 
   // For all defined addons, check if we have it stored
   for (const id of addons) {
@@ -1477,9 +1474,55 @@ async function app() {
     });
   });
 
+  const messaging = firebase.messaging();
+
+  messaging.onMessage((payload) => {
+    console.log('Message received. ', payload);
+  });
+
+  async function getToken(serviceWorkerRegistration) {
+    return messaging.getToken({
+      vapidKey: "BPfZekvCE2KeCCGFTvCtu2J1kW8cXiYS3LxrNK4pAewiw4sYWip92u9LPl4Mlo4dBXogHKEvURve3DUlA_eh1U4",
+      serviceWorkerRegistration
+  }).then((token) => {
+      console.log(token);
+    });
+  }
+
+  function handleNotifications(registration) {
+    // Doesn't support
+    if (!("Notification" in window)) {
+      return;
+    }
+    // Already subscribed
+    if (Notification.permission === "granted") {
+      getToken(registration);
+      return;
+    }
+    // Already denied
+    if (Notification.permission === "denied") {
+      return;
+    }
+    getEl("subscribe-link").addEventListener("click", () => {
+      Notification.requestPermission().then((permission) => {
+        if (permission === 'granted') {
+          getToken(registration);
+        }
+        if (permission !== 'default') {
+          getEl("subscribe-link").classList.add("d-none");
+        }
+      });
+    })
+    //getEl("subscribe-link").classList.remove("d-none");
+  }
+
   window.addEventListener("load", () => {
     if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("service-worker.js");
+      navigator.serviceWorker
+        .register("service-worker.js")
+        .then((registration) => {
+          handleNotifications(registration)
+        });
     }
   });
 
