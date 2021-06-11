@@ -643,6 +643,9 @@ async function app() {
   }
 
   async function setPreset(id, no_set) {
+    if (selectedPreset === id) {
+      return;
+    }
     selectedPreset = id; // save download ID
     if (!no_set) {
       storage.setItem("preset", id); // save preset selection
