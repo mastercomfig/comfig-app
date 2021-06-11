@@ -502,8 +502,9 @@ async function app() {
   async function newModulesFile() {
     let contents = "";
     for (const moduleName of Object.keys(selectedModules)) {
-      if (selectedModules[moduleName]) {
-        contents += `${moduleName}=${selectedModules[moduleName]}\n`;
+      let moduleValue = selectedModules[moduleName];
+      if (moduleValue) {
+        contents += `${moduleName}=${moduleValue}\n`;
       } else {
         contents += `alias ${moduleName}\n`;
       }
@@ -772,7 +773,7 @@ async function app() {
     let modulePresets = presetModulesDef[name];
     if (modulePresets) {
       let presetValue = modulePresets[selectedPreset];
-      if (presetValue) {
+      if (presetValue === "" || presetValue) {
         return presetValue;
       }
       return modulePresets.default;
@@ -946,10 +947,17 @@ async function app() {
   // Uses the factory to create the element
   function handleModuleInput(type, name, values) {
     if (values) {
-      let defaultValue = getModuleDefault(name);
+      let defaultValue = getBuiltinModuleDefault(name);
       let newValues;
-      if (defaultValue.value === "") {
-        newValues = [defaultValue].concat(values)
+      if (defaultValue === "") {
+        let emptyValue = typeof values[0] === "object" ? {
+          value: "",
+          display: "None"
+        } : "none";
+        // Preventing side effects to module values
+        newValues = [emptyValue].concat(values)
+        emptyValue = newValues.shift();
+        newValues.push(emptyValue);
       } else {
         newValues = values;
       }
