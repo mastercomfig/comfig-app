@@ -33,9 +33,13 @@
   max-width: 500px;
 }
 
-.nav.bg-teal .nav-link:hover:not(.active) {
+.nav.bg-teal-nav .nav-link:hover:not(.active) {
   color: #fff;
   background: #05746c;
+}
+
+.nav.bg-teal-nav .nav-link {
+  background-color: rgba(0, 150, 136, 0.6);
 }
 
 .dropdown-toggle::after {
