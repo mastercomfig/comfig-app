@@ -18,18 +18,9 @@ async function app() {
   }
 
   async function loadModules() {
-    let storedModulesStr = storage.getItem("modules");
-    if (storedModulesStr) {
-      // Handle legacy storage
-      storedModules = JSON.parse(storedModulesStr);
-      idbKeyval.set("modules", storedModules).then(() => {
-        storage.clear("modules");
-      })
-    } else {
-      let storedModulesDB = await idbKeyval.get("modules");
-      if (storedModulesDB) {
-        storedModules = storedModulesDB;
-      }
+    let storedModulesDB = await idbKeyval.get("modules");
+    if (storedModulesDB) {
+      storedModules = storedModulesDB;
     }
   }
 
@@ -37,8 +28,8 @@ async function app() {
     await idbKeyval.set("modules", selectedModules);
   }
   
-  function resetModules() {
-    storage.removeItem("modules");
+  async function resetModules() {
+    await idbKeyval.del("modules");
     selectedModules = {};
     storedModules = {};
   }
@@ -177,14 +168,14 @@ async function app() {
     downloading = true; // Still retain in-progress even after switching preset
     // Indicate not useable/in-progress
     element.style.cursor = "not-allowed";
-    element.classList.add("focus");
+    element.classList.add("disabled", "text-light");
   }
 
   function enableDownload(element) {
     downloading = false; // Unlock updating preset test with new download
     // Restore downloadable style
     element.style.cursor = "pointer";
-    element.classList.remove("focus");
+    element.classList.remove("disabled", "text-light");
   }
 
   // Once user clicks to multi-download, we download and swap our behavior to in-progress
@@ -271,7 +262,7 @@ async function app() {
           let link = document.createElement("a");
           link.href = result.url;
           link.download = result.name;
-          document.body.appendChild(link);
+          document.body.append(link);
           link.dispatchEvent(
             new MouseEvent("click", {
               bubbles: true,
@@ -450,8 +441,7 @@ async function app() {
         url: "",
       }),
     ];
-    let presetUrl = getPresetUrl();
-    console.log(presetUrl);
+    let presetUrl = getPresetUrl();    
     if (customDirectory) {
       // Clear out all existing files
       let presetKeys = Object.keys(presets);
@@ -489,9 +479,9 @@ async function app() {
       }
     }
     // We downloaded this version, so track it!
-    storage.setItem("lastVersion", version);
+    await idbKeyval.set("lastVersion", version);
     if (cachedData) {
-      handleVersions(cachedData.v);
+      await handleVersions(cachedData.v);
     }
     // Now queue up all our download promises to download!
     return downloads;
@@ -585,16 +575,16 @@ async function app() {
   }
 
   // update addon state based on checked
-  function updateAddon(id) {
-    setAddon(id, !getEl(id).classList.contains("active"));
+  async function updateAddon(el) {
+    await setAddon(el.id, !el.classList.contains("active"));
   }
 
   // set addon enabled/disabled
-  function setAddon(id, checked) {
-    // Update our storage with the value
-    storage.setItem(id, checked);
-    // Use the storage state
-    checked = storage.getItem(id) === "true";
+  async function setAddon(id, checked, fromDB) {
+    // Update our DB with the value
+    if (!fromDB) {
+      await idbKeyval.set(id, checked);
+    }
     if (checked) {
       // If checked, add it in if its not there already
       if (selectedAddons.indexOf(id) === -1) {
@@ -641,13 +631,13 @@ async function app() {
     getEl("assets-link").href = assetUrl;
   }
 
-  async function setPreset(id, no_set) {
+  async function setPreset(id, fromDB) {
     if (selectedPreset === id) {
       return;
     }
     selectedPreset = id; // save download ID
-    if (!no_set) {
-      storage.setItem("preset", id); // save preset selection
+    if (!fromDB) {
+      await idbKeyval.set("preset", id);
 
       // If we change preset after modules UI is initialized
       // we have to redraw the modules UI with the new preset's
@@ -660,26 +650,26 @@ async function app() {
         handleModulesRoot(cachedData.m);
       }
     }
-    new bootstrap.Tab(getEl(id)).show(); // visually select in tabs menu
+    new bootstrap.Tab(getEl(selectedPreset)).show(); // visually select in tabs menu
     getEl("vpk-dl").removeAttribute("href"); // we don't need the static download anymore
     if (!downloading) {
       getEl(
         "vpk-dl"
-      ).innerHTML = `<span class="fa fa-cloud-download fa-fw"></span> Download ${presets[id]} preset and selected addons` // update download text
+      ).innerHTML = `<span class="fa fa-cloud-download fa-fw"></span> Download ${presets[selectedPreset]} preset and selected addons `; // update download text
     }
     getEl("preset-dl").setAttribute("href", getPresetUrl());
     getEl(
       "preset-dl"
-    ).innerHTML = `<span class="fa fa-download fa-fw"></span> Download ${presets[id]} preset` // update preset text
-    // if not loading from storage, set recommended addons
-    if (!no_set) {
+    ).innerHTML = `<span class="fa fa-download fa-fw"></span> Download ${presets[selectedPreset]} preset `; // update preset text
+    // if not loading from DB, set recommended addons
+    if (!fromDB) {
       // reset all recommendable addons
-      recommendableAddons.forEach(function (addon) {
-        setAddon(addon, false);
+      recommendableAddons.forEach(async (addon) => {
+        await setAddon(addon, false);
       });
       // set recommended addons
-      recommendedAddons.get(id).forEach(function (addon) {
-        setAddon(addon, true);
+      recommendedAddons.get(selectedPreset).forEach(async (addon) => {
+        await setAddon(addon, true);
       });
     }
   }
@@ -780,7 +770,7 @@ async function app() {
   }
 
   function getModuleDefault(name) {
-    // User storage can only contain non-builtin-defaults
+    // DB can only contain non-builtin-defaults
     let userValue = storedModules[name];
     if (userValue) {
       selectedModules[name] = userValue;
@@ -827,7 +817,7 @@ async function app() {
     row.classList.add("row");
     let col = document.createElement("div");
     col.classList.add("col-sm-5");
-    row.appendChild(col);
+    row.append(col);
     return [row, col];
   }
 
@@ -854,7 +844,7 @@ async function app() {
       // Name the value
       let displayName = properCaseOrDisplayModuleName(value, value.value);
       optionElement.innerText = displayName;
-      selectElement.appendChild(optionElement);
+      selectElement.append(optionElement);
     });
     // Event listener
     selectElement.addEventListener("input", (e) => {
@@ -862,7 +852,7 @@ async function app() {
       let value = select.options[select.selectedIndex].value;
       setModule(name, value);
     });
-    inputContainer.appendChild(selectElement);
+    inputContainer.append(selectElement);
     return inputOuter;
   }
 
@@ -874,7 +864,7 @@ async function app() {
     switchContainer.classList.add("form-check", "form-switch");
     let switchElement = createInputElement("checkbox", "form-check-input");
     switchElement.setAttribute("value", "");
-    switchContainer.appendChild(switchElement);
+    switchContainer.append(switchElement);
     // Set default value
     let defaultValue = getDefaultValueFromName(values, getModuleDefault(name));
     if (defaultValue) {
@@ -885,7 +875,7 @@ async function app() {
       let selected = values[e.target.checked ? 1 : 0];
       setModule(name, selected.value);
     });
-    inputContainer.appendChild(switchContainer);
+    inputContainer.append(switchContainer);
     return inputOuter;
   }
 
@@ -921,8 +911,8 @@ async function app() {
         valueIndicator.innerText = capitalize(selected);
       }
     });
-    inputContainer.appendChild(rangeElement);
-    inputContainer.appendChild(valueIndicator);
+    inputContainer.append(rangeElement);
+    inputContainer.append(valueIndicator);
     return inputOuter;
   }
 
@@ -978,7 +968,7 @@ async function app() {
     moduleTitle.classList.add("module-title");
     let displayName = properCaseOrDisplayModuleName(module);
     moduleTitle.innerText = displayName;
-    moduleContainer.appendChild(moduleTitle);
+    moduleContainer.append(moduleTitle);
     // Create a link to module documentation
     let moduleDocsLink = document.createElement("a");
     moduleDocsLink.setAttribute(
@@ -991,9 +981,9 @@ async function app() {
     let modulesDocsIcon = document.createElement("span");
     modulesDocsIcon.classList.add("fa", "fa-book", "fa-fw");
     modulesDocsIcon.setAttribute("aria-hidden", "true");
-    moduleDocsLink.appendChild(modulesDocsIcon);
+    moduleDocsLink.append(modulesDocsIcon);
     moduleDocsLink.innerHTML = " " + moduleDocsLink.innerHTML;
-    moduleTitle.appendChild(moduleDocsLink);
+    moduleTitle.append(moduleDocsLink);
     // Create the module's input control
     let moduleInputType = module.hasOwnProperty("type")
       ? module.type
@@ -1006,7 +996,7 @@ async function app() {
     );
     // If we could create an input control, show it to our parent
     if (moduleInput) {
-      moduleContainer.appendChild(moduleInput);
+      moduleContainer.append(moduleInput);
       return moduleContainer;
     } else {
       return null;
@@ -1040,14 +1030,14 @@ async function app() {
     categoryTitle.classList.add("module-category-title");
     let displayName = properCaseOrDisplayModuleName(category, name);
     categoryTitle.innerText = displayName;
-    categoryContainer.appendChild(categoryTitle);
+    categoryContainer.append(categoryTitle);
     // Traverse modules to add
     let bHasModule = false;
     category.modules.forEach((module) => {
       let moduleElement = handleModule(module);
       if (moduleElement) {
         bHasModule = true;
-        categoryContainer.appendChild(moduleElement);
+        categoryContainer.append(moduleElement);
       }
     });
     let categoryNavItem = document.createElement("li");
@@ -1061,13 +1051,13 @@ async function app() {
     categoryNavLink.innerText = displayName;
     categoryNavLink.href = `#${id}`;
     categoryNavLink.addEventListener("click", (e) => {
+      e.preventDefault();
       let top = getRelativePos(categoryContainer).top;
       getEl("modules-controls").scrollTop = top;
-      e.preventDefault();
     }, {
       passive: false
     })
-    categoryNavItem.appendChild(categoryNavLink);
+    categoryNavItem.append(categoryNavLink);
     // If we have a module in this category, show the whole category
     if (bHasModule) {
       return [categoryContainer, categoryNavItem];
@@ -1089,7 +1079,7 @@ async function app() {
     let customizationsCol = document.createElement("div");
     customizationsCol.id = "modules-controls";
     customizationsCol.classList.add("col-8", "inset-box");
-    modulesRow.appendChild(customizationsCol);
+    modulesRow.append(customizationsCol);
 
     // Create column for the sidebar
     let sidebarCol = document.createElement("div");
@@ -1098,17 +1088,17 @@ async function app() {
     let sidebarNav = document.createElement("ul");
     sidebarNav.classList.add("nav", "flex-column", "nav-pills", "fixed-inner");
     sidebarNav.id = "modules-nav";
-    sidebarCol.appendChild(sidebarNav);
-    modulesRow.appendChild(sidebarCol);
+    sidebarCol.append(sidebarNav);
+    modulesRow.append(sidebarCol);
 
     // For each module category, create its element and add it to the columns.
     Object.keys(modules).forEach((module) => {
       let [moduleCategoryElement, moduleCategoryNavLink] = handleCategory(module, modules[module]);
       if (moduleCategoryElement) {
-        customizationsCol.appendChild(moduleCategoryElement);
+        customizationsCol.append(moduleCategoryElement);
       }
       if (moduleCategoryNavLink) {
-        sidebarNav.appendChild(moduleCategoryNavLink);
+        sidebarNav.append(moduleCategoryNavLink);
       }
     });
     
@@ -1116,9 +1106,9 @@ async function app() {
     resetButton.innerText = "Reset all customizations";
     resetButton.classList.add("position-absolute", "bottom-0", "btn", "btn-secondary");
     resetButton.style.marginBottom = "0.5rem";
-    resetButton.addEventListener("click", (e) => {
+    resetButton.addEventListener("click", async (e) => {
       e.preventDefault();
-      resetModules();
+      await resetModules();
       handleModulesRoot(modules);
     });
     sidebarCol.append(resetButton);
@@ -1126,13 +1116,13 @@ async function app() {
     // Add a bit of padding to our overflowed root
     let paddingDiv = document.createElement("div");
     paddingDiv.style.height = "48.75vh";
-    customizationsCol.appendChild(paddingDiv);
+    customizationsCol.append(paddingDiv);
 
     // Remove loading
     getEl("modules-root").innerText = "";
 
     // Add the columns to root container.
-    getEl("modules-root").appendChild(modulesRow);
+    getEl("modules-root").append(modulesRow);
 
     // Init scrollspy
     new bootstrap.ScrollSpy(customizationsCol, {
@@ -1149,8 +1139,8 @@ async function app() {
     dropdownItem.classList.add("dropdown-item");
     dropdownItem.href = "#";
     dropdownItem.addEventListener("click", (event) => {
-      setUserVersion(ver);
       event.preventDefault();
+      setUserVersion(ver);
     });
     dropdownItem.innerText = ver === "latest" ? latestVersion : ver;
     if (badge) {
@@ -1172,14 +1162,14 @@ async function app() {
     dropdown.append(dividerListItem);
   }
 
-  function handleVersions(versions) {
+  async function handleVersions(versions) {
     if (!versions) {
       return;
     }
 
     versions = JSON.parse(JSON.stringify(versions));
 
-    let lastVersion = storage.getItem("lastVersion");
+    let lastVersion = await idbKeyval.get("lastVersion");
     let foundVersion = false;
 
     // set latest version
@@ -1238,10 +1228,10 @@ async function app() {
       /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/
   );
 
-  function handleApiResponse(data) {
+  async function handleApiResponse(data) {
     cachedData = data;
     // Get the version
-    handleVersions(cachedData.v);
+    await handleVersions(cachedData.v);
 
     // Now get the modules
     presetModulesDef = cachedData.p;
@@ -1249,37 +1239,26 @@ async function app() {
   }
 
   // If we have a stored preset, select it
-  if (storage.getItem("preset")) {
-    await setPreset(storage.getItem("preset"), true);
+  if (await idbKeyval.get("preset")) {
+    await setPreset(await idbKeyval.get("preset"), true);
   } else {
     await setPreset("medium-high", true);
   }
-
-  // get latest release, and update page
-  fetch(
-    (isLocalHost ? "https://cors-anywhere.herokuapp.com/" : "") + "https://mastercomfig.mcoms.workers.dev/?v=2"
-  )
-    .then((resp) => resp.json())
-    .then((data) => {
-      handleApiResponse(data);
-      // Clear out HTML5 local storage
-      storage.clear("cachedData");
-      idbKeyval.set("cachedData", cachedData);
-    }).catch(async (err) => {
-      let data = await idbKeyval.get("cachedData");
-      if (data) {
-        console.error("Get data failed, falling back to cache:", err)
-        handleApiResponse(data);
-      } else {
-        console.error("Failed to get download data:", err)
-      }
-    });
 
   // Register event for all presets defined in the HTML.
   document.querySelectorAll("#presets a").forEach((element) => {
     element.addEventListener("click", async (e) => {
       e.preventDefault();
       await setPreset(e.currentTarget.id);
+    });
+  });
+
+  // Now, register events for all addons defined in the HTML.
+  document.querySelectorAll(".addon-card").forEach((element) => {
+    addons.push(element.id);
+    element.addEventListener("click", async (e) => {
+      e.preventDefault();
+      await updateAddon(e.currentTarget);
     });
   });
 
@@ -1296,27 +1275,42 @@ async function app() {
   // After binding, we need to update the text
   updateCustomizationDownload();
 
-  // Now, register events for all addons defined in the HTML.
-  document.querySelectorAll(".addon-card").forEach((element) => {
-    addons.push(element.id);
-    element.addEventListener("click", (e) => {
-      updateAddon(e.currentTarget.id);
-      e.preventDefault();
-    });
-  });
-
   // For all defined addons, check if we have it stored
   for (const id of addons) {
-    if (storage.getItem(id)) {
-      setAddon(id, storage.getItem(id));
-    } else {
-      setAddon(id, false);
+    if (await idbKeyval.get(id)) {
+      await setAddon(id, await idbKeyval.get(id), true);
     }
   }
+
+  // get latest release, and update page
+  fetch(
+    (isLocalHost ? "https://cors-anywhere.herokuapp.com/" : "") + "https://mastercomfig.mcoms.workers.dev/?v=2"
+  )
+    .then((resp) => resp.json())
+    .then(async (data) => {
+      await handleApiResponse(data);
+      await idbKeyval.set("cachedData", cachedData);
+    }).catch(async (err) => {
+      let data = await idbKeyval.get("cachedData");
+      if (data) {
+        console.error("Get data failed, falling back to cache:", err)
+        await handleApiResponse(data);
+      } else {
+        console.error("Failed to get download data:", err)
+      }
+    });
 
   getEl("customize-toggler").addEventListener("click", (e) => {
     e.currentTarget.classList.toggle("active");
   })
+
+  function onKeyPress(button) {
+    if (!getEl("keyboardInput")) {
+      return;
+    }
+    getEl("keyboardInput").value = simpleKeyboardKeyToKeyBind(button);
+    console.log("Button pressed", simpleKeyboardKeyToKeyBind(button));
+  }
 
   let commonKeyboardOptions = {
     onKeyPress: button => onKeyPress(button),
@@ -1327,94 +1321,94 @@ async function app() {
   };
 
   const Keyboard = window.SimpleKeyboard.default;
+  var blockKeyboard = false;
+  var inittedKeyboard = false;
 
-  let keyboard = new Keyboard(".simple-keyboard-main", {
-    ...commonKeyboardOptions,
-    /**
-     * Layout by:
-     * Sterling Butters (https://github.com/SterlingButters)
-     */
-    layout: {
-      default: [
-        "{escape} {f1} {f2} {f3} {f4} {f5} {f6} {f7} {f8} {f9} {f10} {f11} {f12}",
-        "` 1 2 3 4 5 6 7 8 9 0 - = {backspace}",
-        "{tab} q w e r t y u i o p [ ] \\",
-        "{capslock} a s d f g h j k l ; ' {enter}",
-        "{shiftleft} z x c v b n m , . / {shiftright}",
-        "{controlleft} {altleft} {space} {altright} {controlright}"
-      ]
-    },
-    display: {
-      "{escape}": "esc",
-      "{tab}": "tab ⇥",
-      "{backspace}": "backspace ⌫",
-      "{enter}": "enter ↵",
-      "{capslock}": "caps lock ⇪",
-      "{shiftleft}": "shift ⇧",
-      "{shiftright}": "shift ⇧",
-      "{controlleft}": "ctrl",
-      "{controlright}": "ctrl",
-      "{altleft}": "alt",
-      "{altright}": "alt",
-      "{metaleft}": "⊞",
-      "{metaright}": "⊞"
-    }
-  });
-
-  let keyboardControlPad = new Keyboard(".simple-keyboard-control", {
-    ...commonKeyboardOptions,
-    layout: {
-      default: [
-      "{scrolllock} {pause}",
-      "{insert} {home} {pageup}",
-      "{delete} {end} {pagedown}"
-      ]
-    }
-  });
-  
-  let keyboardArrows = new Keyboard(".simple-keyboard-arrows", {
-    ...commonKeyboardOptions,
-    layout: {
-      default: ["{arrowup}", "{arrowleft} {arrowdown} {arrowright}"]
-    }
-  });
-  
-  let keyboardNumPad = new Keyboard(".simple-keyboard-numpad", {
-    ...commonKeyboardOptions,
-    layout: {
-      default: [
-        "{numpaddivide} {numpadmultiply}",
-        "{numpad7} {numpad8} {numpad9}",
-        "{numpad4} {numpad5} {numpad6}",
-        "{numpad1} {numpad2} {numpad3}",
-        "{numpad0} {numpaddecimal}"
-      ]
-    }
-  });
-  
-  let keyboardNumPadEnd = new Keyboard(".simple-keyboard-numpadEnd", {
-    ...commonKeyboardOptions,
-    layout: {
-      default: ["{numpadsubtract}", "{numpadadd}", "{numpadenter}"]
-    }
-  });
-  
-  function onKeyPress(button) {
-    if (!getEl("keyboardInput")) {
+  function initKeyboard() {
+    if (inittedKeyboard) {
       return;
     }
-    getEl("keyboardInput").value = simpleKeyboardKeyToKeyBind(button);
-    console.log("Button pressed", simpleKeyboardKeyToKeyBind(button));
-  }
 
-  var blockKeyboard = false;
+    inittedKeyboard = true;
+
+    let keyboard = new Keyboard(".simple-keyboard-main", {
+      ...commonKeyboardOptions,
+      /**
+       * Layout by:
+       * Sterling Butters (https://github.com/SterlingButters)
+       */
+      layout: {
+        default: [
+          "{escape} {f1} {f2} {f3} {f4} {f5} {f6} {f7} {f8} {f9} {f10} {f11} {f12}",
+          "` 1 2 3 4 5 6 7 8 9 0 - = {backspace}",
+          "{tab} q w e r t y u i o p [ ] \\",
+          "{capslock} a s d f g h j k l ; ' {enter}",
+          "{shiftleft} z x c v b n m , . / {shiftright}",
+          "{controlleft} {altleft} {space} {altright} {controlright}"
+        ]
+      },
+      display: {
+        "{escape}": "esc",
+        "{tab}": "tab ⇥",
+        "{backspace}": "backspace ⌫",
+        "{enter}": "enter ↵",
+        "{capslock}": "caps lock ⇪",
+        "{shiftleft}": "shift ⇧",
+        "{shiftright}": "shift ⇧",
+        "{controlleft}": "ctrl",
+        "{controlright}": "ctrl",
+        "{altleft}": "alt",
+        "{altright}": "alt",
+        "{metaleft}": "⊞",
+        "{metaright}": "⊞"
+      }
+    });
+  
+    let keyboardControlPad = new Keyboard(".simple-keyboard-control", {
+      ...commonKeyboardOptions,
+      layout: {
+        default: [
+        "{scrolllock} {pause}",
+        "{insert} {home} {pageup}",
+        "{delete} {end} {pagedown}"
+        ]
+      }
+    });
+    
+    let keyboardArrows = new Keyboard(".simple-keyboard-arrows", {
+      ...commonKeyboardOptions,
+      layout: {
+        default: ["{arrowup}", "{arrowleft} {arrowdown} {arrowright}"]
+      }
+    });
+    
+    let keyboardNumPad = new Keyboard(".simple-keyboard-numpad", {
+      ...commonKeyboardOptions,
+      layout: {
+        default: [
+          "{numpaddivide} {numpadmultiply}",
+          "{numpad7} {numpad8} {numpad9}",
+          "{numpad4} {numpad5} {numpad6}",
+          "{numpad1} {numpad2} {numpad3}",
+          "{numpad0} {numpaddecimal}"
+        ]
+      }
+    });
+    
+    let keyboardNumPadEnd = new Keyboard(".simple-keyboard-numpadEnd", {
+      ...commonKeyboardOptions,
+      layout: {
+        default: ["{numpadsubtract}", "{numpadadd}", "{numpadenter}"]
+      }
+    });
+  }
 
   document.addEventListener("keydown", event => {
     // Disabling keyboard input, as some keys (like F5) make the browser lose focus.
     // If you're like to re-enable it, comment the next line and uncomment the following ones
     if (blockKeyboard && getEl("keyboardInput")) {
-      getEl("keyboardInput").value = keyEventToKeyBind(event);
       event.preventDefault();
+      getEl("keyboardInput").value = keyEventToKeyBind(event);
     }
   });
 
@@ -1423,6 +1417,9 @@ async function app() {
   for (const tabEl of tabEls) {
     tabEl.addEventListener("shown.bs.tab", event => {
       blockKeyboard = event.target.id === "bindings";
+      if (blockKeyboard) {
+        initKeyboard();
+      }
     });
   }
 
@@ -1441,8 +1438,8 @@ async function app() {
     });
     bindField.addEventListener("blur", finishBindInput);
     bindField.addEventListener("input", event => {
-      finishBindInput(event);
       event.preventDefault();
+      finishBindInput(event);
     });
   }
 
@@ -1474,14 +1471,20 @@ async function app() {
     });
   });
 
-  const messaging = firebase.messaging();
+  var firebaseMessaging;
 
-  messaging.onMessage((payload) => {
-    console.log('Message received. ', payload);
-  });
+  function messaging() {
+    if (!firebaseMessaging) {
+      firebaseMessaging = firebase.messaging()
+    }
+    return firebaseMessaging;
+  }
 
   async function getToken(serviceWorkerRegistration) {
-    return messaging.getToken({
+    messaging().onMessage((payload) => {
+      console.log('Message received. ', payload);
+    });
+    return messaging().getToken({
       vapidKey: "BPfZekvCE2KeCCGFTvCtu2J1kW8cXiYS3LxrNK4pAewiw4sYWip92u9LPl4Mlo4dBXogHKEvURve3DUlA_eh1U4",
       serviceWorkerRegistration
   }).then((token) => {
@@ -1534,6 +1537,12 @@ async function app() {
 
   if (window.showDirectoryPicker) {
     getEl("game-folder-container").classList.remove("d-none");
+    if (!(await idbKeyval.get("hide-game-folder-warning"))) {
+      getEl("game-folder-warning").classList.remove("d-none");
+    }
+    getEl("game-folder-warning-btn").addEventListener("click", async (e) => {
+      await idbKeyval.set("hide-game-folder-warning", true);
+    });
     getEl("game-folder-group").addEventListener("click", async () => {
       await promptDirectory();
     });
