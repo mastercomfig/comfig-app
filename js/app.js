@@ -27,7 +27,7 @@ async function app() {
   async function saveModules() {
     await idbKeyval.set("modules", selectedModules);
   }
-  
+
   async function resetModules() {
     await idbKeyval.del("modules");
     selectedModules = {};
@@ -61,7 +61,7 @@ async function app() {
     "medium-low": "Medium Low",
     low: "Low",
     "very-low": "Very Low",
-  }
+  };
 
   // The only addons we can override when preset switches
   const recommendableAddons = [
@@ -104,13 +104,13 @@ async function app() {
   var releasesUrl = "https://github.com/mastercomfig/mastercomfig/releases";
   // Release homepage
   var releaseUrl = {
-    "latest": releasesUrl + "/latest",
-    "default": releasesUrl + "/{0}",
+    latest: releasesUrl + "/latest",
+    default: releasesUrl + "/{0}",
   };
   var assetsUrl = {
-    "latest": releasesUrl + "/latest",
-    "default": releaseUrl.default,
-  }
+    latest: releasesUrl + "/latest",
+    default: releaseUrl.default,
+  };
   // Where latest downloads come from
   var downloadUrl = releaseUrl.default + "/download/";
   // Where a specific release's downloads come from
@@ -118,17 +118,17 @@ async function app() {
   // Prefix for mastercomfig files
   var mastercomfigFileUrl = "mastercomfig-";
   // Addon extension format string to download
-  var addonFileUrl = mastercomfigFileUrl + "{1}-addon.vpk"
+  var addonFileUrl = mastercomfigFileUrl + "{1}-addon.vpk";
   var addonUrl = {
-    "latest": downloadUrl + addonFileUrl,
-    "default": releaseDownloadUrl + addonFileUrl,
+    latest: downloadUrl + addonFileUrl,
+    default: releaseDownloadUrl + addonFileUrl,
   };
   // Preset extension format string to download
   var presetFileUrl = mastercomfigFileUrl + "{1}-preset.vpk";
   var presetUrl = {
-    "latest": downloadUrl + presetFileUrl,
-    "default": releaseDownloadUrl + presetFileUrl,
-  };  
+    latest: downloadUrl + presetFileUrl,
+    default: releaseDownloadUrl + presetFileUrl,
+  };
 
   // Current mastercomfig version, comes in from API
   var version = null;
@@ -186,11 +186,11 @@ async function app() {
     }
     // Mark we have started a download
     let element = getEl(id);
-      element.onclick = null; // Ignore clicks
-      disableDownload(element);
-      element.innerHTML = element.innerHTML
-        .replace("Download", "Downloading")
-        .replace(" ", "…");
+    element.onclick = null; // Ignore clicks
+    disableDownload(element);
+    element.innerHTML = element.innerHTML
+      .replace("Download", "Downloading")
+      .replace(" ", "…");
     // Do the download once clicked
     let urls = await fnGatherUrls();
     // Only download if we have a download
@@ -237,7 +237,11 @@ async function app() {
     }
     url = url.format(userVersion, id);
     if (customDirectory) {
-      url = url.replace("https://github.com/mastercomfig/mastercomfig/releases", (isLocalHost ? "https://cors-anywhere.herokuapp.com/" : "") + "https://mastercomfig.mcoms.workers.dev/download")
+      url = url.replace(
+        "https://github.com/mastercomfig/mastercomfig/releases",
+        (isLocalHost ? "https://cors-anywhere.herokuapp.com/" : "") +
+          "https://mastercomfig.mcoms.workers.dev/download"
+      );
     }
     return url;
   }
@@ -298,14 +302,14 @@ async function app() {
   async function verifyPermission(fileHandle, readWrite) {
     const options = {};
     if (readWrite) {
-      options.mode = 'readwrite';
+      options.mode = "readwrite";
     }
     // Check if permission was already granted. If so, return true.
-    if ((await fileHandle.queryPermission(options)) === 'granted') {
+    if ((await fileHandle.queryPermission(options)) === "granted") {
       return true;
     }
     // Request permission. If the user grants permission, return true.
-    if ((await fileHandle.requestPermission(options)) === 'granted') {
+    if ((await fileHandle.requestPermission(options)) === "granted") {
       return true;
     }
     // The user didn't grant permission, so return false.
@@ -315,6 +319,7 @@ async function app() {
   let gameDirectory = null;
   let customDirectory = null;
   let userDirectory = null;
+  let appDirectory = null;
 
   async function clearDirectoryInstructions() {
     let instructionEls = document.querySelectorAll(".instructions-text");
@@ -330,12 +335,12 @@ async function app() {
     try {
       let directoryHandle = await window.showDirectoryPicker({
         id: "tf2",
-        startIn: "desktop"
+        startIn: "desktop",
       });
       await idbKeyval.set("directory", directoryHandle);
       await updateDirectory();
     } catch (error) {
-      console.log("Directory prompt failed", error)
+      console.log("Directory prompt failed", error);
     }
   }
 
@@ -350,7 +355,9 @@ async function app() {
       }
       clearDirectoryInstructions();
       gameDirectory = directoryHandle;
-      getEl("game-folder-text").innerText = `${gameDirectory.name} folder chosen, click to change`;
+      getEl(
+        "game-folder-text"
+      ).innerText = `${gameDirectory.name} folder chosen, click to change`;
     } catch (error) {
       console.log("Get directory failed", error);
     }
@@ -378,6 +385,9 @@ async function app() {
         create: true,
       });
       userDirectory = await cfgDirectory.getDirectoryHandle("user", {
+        create: true,
+      });
+      appDirectory = await cfgDirectory.getDirectoryHandle("app", {
         create: true,
       });
     } catch (error) {
@@ -426,7 +436,7 @@ async function app() {
     if (!directory) {
       return;
     }
-    let name = url.split('/').pop();
+    let name = url.split("/").pop();
     const writable = await getWritable(name, directory, true);
     let response = await fetch(url);
     await response.body.pipeTo(writable);
@@ -441,7 +451,7 @@ async function app() {
         url: "",
       }),
     ];
-    let presetUrl = getPresetUrl();    
+    let presetUrl = getPresetUrl();
     if (customDirectory) {
       // Clear out all existing files
       let presetKeys = Object.keys(presets);
@@ -503,13 +513,26 @@ async function app() {
     return null;
   }
 
+  function updateBinds() {
+    const bindFields = document.querySelectorAll(".binding-field");
+    selectedBinds = {};
+    for (const bindField of bindFields) {
+      let keyInput = bindField.childNodes[0].firstChild.value;
+      let actionSelect = bindField.childNodes[1].firstChild.value;
+      if (keyInput && actionSelect) {
+        selectedBinds[keyInput] = actionMappings[actionSelect];
+      }
+    }
+  }
+
   async function newAutoexecFile() {
     let contents = "";
+    updateBinds();
     for (const key of Object.keys(selectedBinds)) {
       let binding = selectedBinds[key];
       let bindingStr;
       // Should we quote arg, or raw arg?
-      if (typeof binding === "string" && bindingStr.indexOf(" ") !== -1) {
+      if (typeof binding === "string" && binding.indexOf(" ") !== -1) {
         bindingStr = `"${binding}"`;
       } else {
         bindingStr = ` ${binding}`;
@@ -520,17 +543,17 @@ async function app() {
       contents += `${cvar} ${selectedOverrides[cvar]}\n`;
     }
     if (contents.length > 0) {
-      return await newFile(contents, "autoexec.cfg", userDirectory);
+      return await newFile(contents, "autoexec.cfg", appDirectory);
     }
     return null;
   }
 
   function getObjectFilePromise(file) {
     return Promise.resolve({
-          url: URL.createObjectURL(file),
-          name: file.name,
-          isObject: true,
-        });
+      url: URL.createObjectURL(file),
+      name: file.name,
+      isObject: true,
+    });
   }
 
   async function getCustomDownloadUrls() {
@@ -547,15 +570,11 @@ async function app() {
     // Create the modules.cfg file
     let modulesFile = await newModulesFile();
     if (modulesFile) {
-      downloads.push(
-        getObjectFilePromise(modulesFile)
-      );
+      downloads.push(getObjectFilePromise(modulesFile));
     }
     let autoexecFile = await newAutoexecFile();
     if (autoexecFile) {
-      downloads.push(
-        getObjectFilePromise(autoexecFile)
-      );
+      downloads.push(getObjectFilePromise(autoexecFile));
     }
     return downloads;
   }
@@ -566,11 +585,17 @@ async function app() {
     if (bHasSelection) {
       element.classList.remove("disabled", "text-light");
       element.style.cursor = "pointer";
-      element.innerHTML = element.innerHTML.replace("No customizations to download", "Download customizations");
+      element.innerHTML = element.innerHTML.replace(
+        "No customizations to download",
+        "Download customizations"
+      );
     } else {
       element.classList.add("disabled", "text-light");
       element.style.cursor = "not-allowed";
-      element.innerHTML = element.innerHTML.replace("Download customizations", "No customizations to download");
+      element.innerHTML = element.innerHTML.replace(
+        "Download customizations",
+        "No customizations to download"
+      );
     }
   }
 
@@ -595,9 +620,7 @@ async function app() {
       selectedAddons = selectedAddons.filter((selection) => selection !== id);
     }
     // Make sure the UI reflects the selected state
-    getEl(id + "-dl").style.display = checked
-      ? "initial"
-      : "none";
+    getEl(id + "-dl").style.display = checked ? "initial" : "none";
     getEl(id).classList.toggle("active", checked);
   }
 
@@ -657,7 +680,7 @@ async function app() {
         "vpk-dl"
       ).innerHTML = `<span class="fa fa-cloud-download fa-fw"></span> Download ${presets[selectedPreset]} preset and selected addons `; // update download text
     }
-    getEl("preset-dl").setAttribute("href", getPresetUrl());
+    getEl("preset-dl").href = getPresetUrl();
     getEl(
       "preset-dl"
     ).innerHTML = `<span class="fa fa-download fa-fw"></span> Download ${presets[selectedPreset]} preset `; // update preset text
@@ -681,7 +704,7 @@ async function app() {
     PAGEUP: "PGUP",
     PAGEDOWN: "PGDN",
     " ": "SPACE",
-    ";": 'SEMICOLON'
+    ";": "SEMICOLON",
   };
 
   let keypadBindMap = {
@@ -689,28 +712,28 @@ async function app() {
     "*": "MULTIPLY",
     "-": "MINUS",
     "+": "PLUS",
-    "5": "5",
-    "CLEAR": "5",
-    "ENTER": "ENTER",
+    5: "5",
+    CLEAR: "5",
+    ENTER: "ENTER",
     ".": "DEL",
-    "0": "INS",
-    "7": "HOME",
-    "8": "ARROWUP",
-    "9": "PAGEUP",
-    "4": "ARROWLEFT",
-    "6": "ARROWRIGHT",
-    "1": "END",
-    "2": "ARROWDOWN",
-    "3": "PAGEDOWN"
+    0: "INS",
+    7: "HOME",
+    8: "ARROWUP",
+    9: "PAGEUP",
+    4: "ARROWLEFT",
+    6: "ARROWRIGHT",
+    1: "END",
+    2: "ARROWDOWN",
+    3: "PAGEDOWN",
   };
 
   let simpleKeypadMap = {
-    "DIVIDE": "/",
-    "MULTIPLY": "*",
-    "SUBTRACT": "-",
-    "ADD": "+",
-    "5": "CLEAR",
-    "DECIMAL": "."
+    DIVIDE: "/",
+    MULTIPLY: "*",
+    SUBTRACT: "-",
+    ADD: "+",
+    5: "CLEAR",
+    DECIMAL: ".",
   };
 
   function bindingToBind(binding) {
@@ -807,7 +830,7 @@ async function app() {
   function createInputElement(type, clazz) {
     let inputElement = document.createElement("input");
     inputElement.classList.add(clazz);
-    inputElement.setAttribute("type", type);
+    inputElement.type = type;
     return inputElement;
   }
 
@@ -837,9 +860,9 @@ async function app() {
     values.forEach((value) => {
       // Create the option element
       let optionElement = document.createElement("option");
-      optionElement.setAttribute("value", value.value);
+      optionElement.value = value.value;
       if (value.value === defaultValue) {
-        optionElement.setAttribute("selected", "true");
+        optionElement.selected = true;
       }
       // Name the value
       let displayName = properCaseOrDisplayModuleName(value, value.value);
@@ -863,12 +886,12 @@ async function app() {
     let switchContainer = document.createElement("div");
     switchContainer.classList.add("form-check", "form-switch");
     let switchElement = createInputElement("checkbox", "form-check-input");
-    switchElement.setAttribute("value", "");
+    switchElement.value = "";
     switchContainer.append(switchElement);
     // Set default value
     let defaultValue = getDefaultValueFromName(values, getModuleDefault(name));
     if (defaultValue) {
-      switchElement.setAttribute("checked", "true");
+      switchElement.checked = true;
     }
     // Event listener
     switchContainer.addEventListener("input", (e) => {
@@ -888,15 +911,18 @@ async function app() {
     // Create the range element
     let rangeElement = createInputElement("range", "form-range");
     let defaultValue = getDefaultValueFromName(values, getModuleDefault(name));
-    rangeElement.setAttribute("value", defaultValue);
-    rangeElement.setAttribute("min", 0);
-    rangeElement.setAttribute("max", values.length - 1);
+    rangeElement.value = defaultValue;
+    rangeElement.min = 0;
+    rangeElement.max = values.length - 1;
     // Create the value indicator (shows what value in the range is selected)
     let valueIndicator = document.createElement("span");
     // Set default value
     let defaultSelection = values[defaultValue];
     if (typeof defaultSelection === "object") {
-      valueIndicator.innerText = properCaseOrDisplayModuleName(defaultSelection, defaultSelection.value);;
+      valueIndicator.innerText = properCaseOrDisplayModuleName(
+        defaultSelection,
+        defaultSelection.value
+      );
     } else {
       valueIndicator.innerText = capitalize(defaultSelection);
     }
@@ -905,7 +931,10 @@ async function app() {
       let selected = values[e.target.valueAsNumber];
       if (typeof defaultSelection === "object") {
         setModule(name, selected.value);
-        valueIndicator.innerText = properCaseOrDisplayModuleName(selected, selected.value);;
+        valueIndicator.innerText = properCaseOrDisplayModuleName(
+          selected,
+          selected.value
+        );
       } else {
         setModule(name, selected);
         valueIndicator.innerText = capitalize(selected);
@@ -938,12 +967,15 @@ async function app() {
       let defaultValue = getBuiltinModuleDefault(name);
       let newValues;
       if (defaultValue === "") {
-        let emptyValue = typeof values[0] === "object" ? {
-          value: "",
-          display: "None"
-        } : "none";
+        let emptyValue =
+          typeof values[0] === "object"
+            ? {
+                value: "",
+                display: "None",
+              }
+            : "none";
         // Preventing side effects to module values
-        newValues = [emptyValue].concat(values)
+        newValues = [emptyValue].concat(values);
         emptyValue = newValues.shift();
         newValues.push(emptyValue);
       } else {
@@ -971,16 +1003,14 @@ async function app() {
     moduleContainer.append(moduleTitle);
     // Create a link to module documentation
     let moduleDocsLink = document.createElement("a");
-    moduleDocsLink.setAttribute(
-      "href",
+    moduleDocsLink.href =
       "https://docs.mastercomfig.com/page/customization/modules/#" +
-        displayName.split(" ").join("-").toLowerCase()
-    );
-    moduleDocsLink.setAttribute("target", "_blank");
-    moduleDocsLink.setAttribute("rel", "noopener");
+      displayName.split(" ").join("-").toLowerCase();
+    moduleDocsLink.target = "_blank";
+    moduleDocsLink.rel = "noopener";
     let modulesDocsIcon = document.createElement("span");
     modulesDocsIcon.classList.add("fa", "fa-book", "fa-fw");
-    modulesDocsIcon.setAttribute("aria-hidden", "true");
+    modulesDocsIcon.ariaHidden = true;
     moduleDocsLink.append(modulesDocsIcon);
     moduleDocsLink.innerHTML = " " + moduleDocsLink.innerHTML;
     moduleTitle.append(moduleDocsLink);
@@ -1004,15 +1034,15 @@ async function app() {
   }
 
   // Function to accurately calculate scroll position because scrollTop is busted...
-  function getRelativePos(elm){
+  function getRelativePos(elm) {
     var pPos = elm.parentNode.getBoundingClientRect(), // parent pos
-        cPos = elm.getBoundingClientRect(), // target pos
-        pos = {};
+      cPos = elm.getBoundingClientRect(), // target pos
+      pos = {};
 
-    pos.top    = cPos.top    - pPos.top + elm.parentNode.scrollTop,
-    pos.right  = cPos.right  - pPos.right,
-    pos.bottom = cPos.bottom - pPos.bottom,
-    pos.left   = cPos.left   - pPos.left;
+    (pos.top = cPos.top - pPos.top + elm.parentNode.scrollTop),
+      (pos.right = cPos.right - pPos.right),
+      (pos.bottom = cPos.bottom - pPos.bottom),
+      (pos.left = cPos.left - pPos.left);
 
     return pos;
   }
@@ -1050,13 +1080,17 @@ async function app() {
     }
     categoryNavLink.innerText = displayName;
     categoryNavLink.href = `#${id}`;
-    categoryNavLink.addEventListener("click", (e) => {
-      e.preventDefault();
-      let top = getRelativePos(categoryContainer).top;
-      getEl("modules-controls").scrollTop = top;
-    }, {
-      passive: false
-    })
+    categoryNavLink.addEventListener(
+      "click",
+      (e) => {
+        e.preventDefault();
+        let top = getRelativePos(categoryContainer).top;
+        getEl("modules-controls").scrollTop = top;
+      },
+      {
+        passive: false,
+      }
+    );
     categoryNavItem.append(categoryNavLink);
     // If we have a module in this category, show the whole category
     if (bHasModule) {
@@ -1093,7 +1127,10 @@ async function app() {
 
     // For each module category, create its element and add it to the columns.
     Object.keys(modules).forEach((module) => {
-      let [moduleCategoryElement, moduleCategoryNavLink] = handleCategory(module, modules[module]);
+      let [moduleCategoryElement, moduleCategoryNavLink] = handleCategory(
+        module,
+        modules[module]
+      );
       if (moduleCategoryElement) {
         customizationsCol.append(moduleCategoryElement);
       }
@@ -1101,10 +1138,15 @@ async function app() {
         sidebarNav.append(moduleCategoryNavLink);
       }
     });
-    
+
     let resetButton = document.createElement("button");
     resetButton.innerText = "Reset all customizations";
-    resetButton.classList.add("position-absolute", "bottom-0", "btn", "btn-secondary");
+    resetButton.classList.add(
+      "position-absolute",
+      "bottom-0",
+      "btn",
+      "btn-secondary"
+    );
     resetButton.style.marginBottom = "0.5rem";
     resetButton.addEventListener("click", async (e) => {
       e.preventDefault();
@@ -1126,7 +1168,7 @@ async function app() {
 
     // Init scrollspy
     new bootstrap.ScrollSpy(customizationsCol, {
-      target: "#modules-nav"
+      target: "#modules-nav",
     });
 
     // Update after travesing all modules
@@ -1176,15 +1218,17 @@ async function app() {
     latestVersion = versions.shift();
     setUserVersion("latest");
 
-    releaseUrl.dev = "https://github.com/mastercomfig/mastercomfig/compare/{0}...develop".format(latestVersion);
+    releaseUrl.dev =
+      "https://github.com/mastercomfig/mastercomfig/compare/{0}...develop".format(
+        latestVersion
+      );
 
     let versionDropdown = getEl("versionDropdownMenu");
 
     versionDropdown.innerHTML = "";
 
     let latestBadge;
-    if (latestVersion === lastVersion)
-    {
+    if (latestVersion === lastVersion) {
       latestBadge = ["up to date", "bg-teal"];
       foundVersion = true;
     } else {
@@ -1220,13 +1264,14 @@ async function app() {
     getEl("versionDropdown").classList.add("ready");
   }
 
-  const isLocalHost = window.location.hostname === 'localhost' ||
-  // [::1] is the IPv6 localhost address.
-  window.location.hostname === '[::1]' ||
-  // 127.0.0.1/8 is considered localhost for IPv4.
-  window.location.hostname.match(
+  const isLocalHost =
+    window.location.hostname === "localhost" ||
+    // [::1] is the IPv6 localhost address.
+    window.location.hostname === "[::1]" ||
+    // 127.0.0.1/8 is considered localhost for IPv4.
+    window.location.hostname.match(
       /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/
-  );
+    );
 
   async function handleApiResponse(data) {
     cachedData = data;
@@ -1284,36 +1329,40 @@ async function app() {
 
   // get latest release, and update page
   fetch(
-    (isLocalHost ? "https://cors-anywhere.herokuapp.com/" : "") + "https://mastercomfig.mcoms.workers.dev/?v=2"
+    (isLocalHost ? "https://cors-anywhere.herokuapp.com/" : "") +
+      "https://mastercomfig.mcoms.workers.dev/?v=2"
   )
     .then((resp) => resp.json())
     .then(async (data) => {
       await handleApiResponse(data);
       await idbKeyval.set("cachedData", cachedData);
-    }).catch(async (err) => {
+    })
+    .catch(async (err) => {
       let data = await idbKeyval.get("cachedData");
       if (data) {
-        console.error("Get data failed, falling back to cache:", err)
+        console.error("Get data failed, falling back to cache:", err);
         await handleApiResponse(data);
       } else {
-        console.error("Failed to get download data:", err)
+        console.error("Failed to get download data:", err);
       }
     });
 
   getEl("customize-toggler").addEventListener("click", (e) => {
     e.currentTarget.classList.toggle("active");
-  })
+  });
+
+  let lastBindInput = null;
 
   function onKeyPress(button) {
-    if (!getEl("keyboardInput")) {
+    if (!lastBindInput) {
       return;
     }
-    getEl("keyboardInput").value = simpleKeyboardKeyToKeyBind(button);
-    console.log("Button pressed", simpleKeyboardKeyToKeyBind(button));
+    lastBindInput.value = simpleKeyboardKeyToKeyBind(button);
+    finishBindInput(lastBindInput, true);
   }
 
   let commonKeyboardOptions = {
-    onKeyPress: button => onKeyPress(button),
+    onKeyPress: (button) => onKeyPress(button),
     theme: "hg-theme-default simple-keyboard custom-kb-theme",
     physicalKeyboardHighlight: true,
     syncInstanceInputs: true,
@@ -1344,8 +1393,8 @@ async function app() {
           "{tab} q w e r t y u i o p [ ] \\",
           "{capslock} a s d f g h j k l ; ' {enter}",
           "{shiftleft} z x c v b n m , . / {shiftright}",
-          "{controlleft} {altleft} {space} {altright} {controlright}"
-        ]
+          "{controlleft} {altleft} {space} {altright} {controlright}",
+        ],
       },
       display: {
         "{escape}": "esc",
@@ -1360,28 +1409,28 @@ async function app() {
         "{altleft}": "alt",
         "{altright}": "alt",
         "{metaleft}": "⊞",
-        "{metaright}": "⊞"
-      }
+        "{metaright}": "⊞",
+      },
     });
-  
+
     let keyboardControlPad = new Keyboard(".simple-keyboard-control", {
       ...commonKeyboardOptions,
       layout: {
         default: [
-        "{scrolllock} {pause}",
-        "{insert} {home} {pageup}",
-        "{delete} {end} {pagedown}"
-        ]
-      }
+          "{scrolllock} {pause}",
+          "{insert} {home} {pageup}",
+          "{delete} {end} {pagedown}",
+        ],
+      },
     });
-    
+
     let keyboardArrows = new Keyboard(".simple-keyboard-arrows", {
       ...commonKeyboardOptions,
       layout: {
-        default: ["{arrowup}", "{arrowleft} {arrowdown} {arrowright}"]
-      }
+        default: ["{arrowup}", "{arrowleft} {arrowdown} {arrowright}"],
+      },
     });
-    
+
     let keyboardNumPad = new Keyboard(".simple-keyboard-numpad", {
       ...commonKeyboardOptions,
       layout: {
@@ -1390,62 +1439,208 @@ async function app() {
           "{numpad7} {numpad8} {numpad9}",
           "{numpad4} {numpad5} {numpad6}",
           "{numpad1} {numpad2} {numpad3}",
-          "{numpad0} {numpaddecimal}"
-        ]
-      }
+          "{numpad0} {numpaddecimal}",
+        ],
+      },
     });
-    
+
     let keyboardNumPadEnd = new Keyboard(".simple-keyboard-numpadEnd", {
       ...commonKeyboardOptions,
       layout: {
-        default: ["{numpadsubtract}", "{numpadadd}", "{numpadenter}"]
-      }
+        default: ["{numpadsubtract}", "{numpadadd}", "{numpadenter}"],
+      },
     });
   }
 
-  document.addEventListener("keydown", event => {
-    // Disabling keyboard input, as some keys (like F5) make the browser lose focus.
-    // If you're like to re-enable it, comment the next line and uncomment the following ones
-    if (blockKeyboard && getEl("keyboardInput")) {
+  document.addEventListener("keydown", (event) => {
+    if (blockKeyboard && lastBindInput) {
       event.preventDefault();
-      getEl("keyboardInput").value = keyEventToKeyBind(event);
+      lastBindInput.value = keyEventToKeyBind(event);
+      finishBindInput(lastBindInput, true);
     }
   });
 
+  let capturedMouseDown = null;
+
+  document.addEventListener("mousedown", (event) => {
+    if (blockKeyboard && lastBindInput) {
+      event.preventDefault();
+      let button = event.button;
+      if (button === 1) {
+        button = 2;
+      } else if (button === 2) {
+        button = 1;
+      }
+      capturedMouseDown = `MOUSE${button + 1}`;
+    }
+  })
+
+  document.oncontextmenu = (e) => {
+    e.preventDefault();
+    return !blockKeyboard;
+  }
+
+  document.addEventListener("mouseup", (event) => {
+    if (blockKeyboard && lastBindInput && capturedMouseDown) {
+      event.preventDefault();
+      lastBindInput.value = capturedMouseDown;
+      capturedMouseDown = null;
+      finishBindInput(lastBindInput, true);
+    }
+  })
+
+  document.addEventListener("wheel", (event) => {
+    if (blockKeyboard && lastBindInput) {
+      event.preventDefault();
+      lastBindInput.value = event.wheelDelta > 0 ? "MWHEELUP" : "MWHEELDOWN";
+      finishBindInput(lastBindInput, true);
+      return false;
+    }
+  }, {
+    passive: false
+  });
+
   // Capture keyboard input when bindings are shown
-  var tabEls = document.querySelectorAll('#customizations a[data-bs-toggle="tab"]')
+  var tabEls = document.querySelectorAll(
+    '#customizations a[data-bs-toggle="tab"]'
+  );
   for (const tabEl of tabEls) {
-    tabEl.addEventListener("shown.bs.tab", event => {
-      blockKeyboard = event.target.id === "bindings";
-      if (blockKeyboard) {
+    tabEl.addEventListener("shown.bs.tab", (event) => {
+      if (event.target.id === "bindings") {
         initKeyboard();
+      } else {
+        blockKeyboard = false;
       }
     });
   }
 
-  function finishBindInput(event) {
-    event.currentTarget.removeAttribute("id");
-    event.currentTarget.setAttribute("value", "");
-    event.currentTarget.setAttribute("placeholder", "<Unbound>");
+  function finishBindInput(element, removeInput) {
+    if (!lastBindInput) {
+      return;
+    }
+    blockKeyboard = false;
+    history.back();
+    element.placeholder = "<Unbound>";
+    element.classList.add("disabled");
+    if (removeInput) {
+      lastBindInput = null;
+      // input -> col -> row: if this row is the last in the list.
+      if (!element.parentNode.parentNode.nextSibling) {
+        // display remove button
+        element.parentNode.parentNode.childNodes[2].firstChild.classList.remove("d-none");
+        createBindingField();
+      }
+      element.blur();
+    }
   }
 
-  var bindingFields = document.querySelectorAll("#binds-list .form-control")
-  for (const bindField of bindingFields) {
-    bindField.addEventListener("focus", event => {
-      event.currentTarget.id = "keyboardInput";
-      event.currentTarget.setAttribute("value", "");
-      event.currentTarget.setAttribute("placeholder", "<Press key to bind>");
+  function bindBindingField(bindField) {
+    bindField.addEventListener("focus", (event) => {
+      blockKeyboard = true;
+      lastBindInput = event.currentTarget;
+      event.currentTarget.classList.remove("disabled");
+      event.currentTarget.value = "";
+      history.pushState(null, document.title, location.href);
+      event.currentTarget.placeholder = "<Press key or mouse button to bind>";
     });
-    bindField.addEventListener("blur", finishBindInput);
-    bindField.addEventListener("input", event => {
-      event.preventDefault();
-      finishBindInput(event);
+    bindField.addEventListener("input", (event) => {
+      finishBindInput(event.currentTarget, true);
+    });
+    bindField.addEventListener("blur", (event) => {
+      finishBindInput(event.currentTarget);
     });
   }
+
+  let actionMappings = {
+    "Move Forward": "+forward",
+    "Move Back": "+back",
+    "Move Left": "+moveleft",
+    "Move Right": "+moveright",
+    "Jump": "+jump",
+    "Duck": "+duck",
+    "Show scoreboard": "+showscores",
+    "Drop": "dropitem",
+    "Call MEDIC!": "+helpme",
+    "Push to Talk": "+voicerecord",
+    "Primary attack": "+attack",
+    "Secondary attack": "+attack2",
+    "Special attack": "+attack3",
+    "Reload weapon": "+reload",
+    "Previous weapon": "invprev",
+    "Next weapon": "invnext",
+    "Last weapon used": "lastinv",
+    "Weapon slot 1": "slot1",
+    "Weapon slot 2": "slot2",
+    "Weapon slot 3": "slot3",
+    "Weapon slot 4": "slot4",
+    "Weapon slot 5": "slot5",
+    "Weapon slot 6": "slot6",
+    "Weapon slot 7": "slot7",
+    "Weapon slot 8": "slot8",
+    "Weapon slot 9": "slot9",
+    "Weapon slot 10": "slot10",
+    "Toggle console": "toggleconsole",
+    "Spy: Last Disguise": "lastdisguise",
+  };
+
+  const actionNames = Object.keys(actionMappings);
+
+  const bindsList = getEl("binds-list")
+
+  function createBindingField(notLast) {
+    let keyInput = document.createElement("input");
+    keyInput.type = "text";
+    keyInput.classList.add("form-control", "form-control-sm", "disabled", "text-light", "bg-dark");
+    keyInput.placeholder = "<Unbound>";
+    bindBindingField(keyInput);
+    let inputCol = document.createElement("div");
+    inputCol.classList.add("col");
+    inputCol.append(keyInput);
+    let selectElement = document.createElement("select");
+    selectElement.classList.add(
+      "form-select",
+      "form-select-sm",
+      "bg-dark",
+      "text-light"
+    );
+    // Create the option element for each available action
+    for (const actionName of actionNames) {
+      let optionElement = document.createElement("option");
+      optionElement.value = actionName;
+      optionElement.innerText = actionName;
+      selectElement.append(optionElement);
+    }
+    let actionCol = inputCol.cloneNode();
+    actionCol.append(selectElement);
+    let row = document.createElement("div");
+    row.classList.add("row", "binding-field");
+    
+    let removeBtn = document.createElement("a");
+    removeBtn.href = "#";
+    removeBtn.onclick = (e) => {
+      e.preventDefault();
+      row.remove();
+    }
+    removeBtn.classList.add("fa", "fa-close", "fa-fw");
+    if (!notLast) {
+      removeBtn.classList.add("d-none");
+    }
+    let removeCol = document.createElement("div");
+    removeCol.classList.add("col-1");
+    removeCol.append(removeBtn);
+    row.append(inputCol, actionCol, removeCol);
+    bindsList.append(row);
+  }
+
+  idbKeyval.get("keybinds").then((keybinds) => {
+    if (!keybinds) {
+      createBindingField();
+    }
+  })
 
   let deferredPrompt;
 
-  window.addEventListener('beforeinstallprompt', (e) => {
+  window.addEventListener("beforeinstallprompt", (e) => {
     // Prevent Chrome 67 and earlier from automatically showing the prompt
     e.preventDefault();
     // Stash the event so it can be triggered later.
@@ -1453,43 +1648,70 @@ async function app() {
     // Update UI to notify the user they can add to home screen
     let addBtn = getEl("install-link");
     addBtn.classList.remove("d-none");
-  
-    addBtn.addEventListener('click', (e) => {
+
+    addBtn.addEventListener("click", (e) => {
       // hide our user interface that shows our A2HS button
       addBtn.classList.add("d-none");
       // Show the prompt
       deferredPrompt.prompt();
       // Wait for the user to respond to the prompt
       deferredPrompt.userChoice.then((choiceResult) => {
-          if (choiceResult.outcome === 'accepted') {
-            console.log('User accepted the A2HS prompt');
-          } else {
-            console.log('User dismissed the A2HS prompt');
-          }
-          deferredPrompt = null;
-        });
+        if (choiceResult.outcome === "accepted") {
+          console.log("User accepted the A2HS prompt");
+        } else {
+          console.log("User dismissed the A2HS prompt");
+        }
+        deferredPrompt = null;
+      });
     });
   });
+
+  var ghProvider;
+  var ghToken;
+  var ghUser;
+
+  async function loginWithGitHub() {
+    if (!ghProvider) {
+      ghProvider = new firebase.auth.GithubAuthProvider();
+    }
+    return firebase
+      .auth()
+      .signInWithPopup(ghProvider)
+      .then((result) => {
+        let credential = result.credential;
+        ghToken = credential.accessToken;
+        ghUser = result.user;
+      })
+      .catch((error) => {
+        // Handle Errors here.
+        let errorCode = error.code;
+        let errorMessage = error.message;
+        console.error("Login failed: ", errorCode, errorMessage);
+      });
+  }
 
   var firebaseMessaging;
 
   function messaging() {
     if (!firebaseMessaging) {
-      firebaseMessaging = firebase.messaging()
+      firebaseMessaging = firebase.messaging();
     }
     return firebaseMessaging;
   }
 
   async function getToken(serviceWorkerRegistration) {
     messaging().onMessage((payload) => {
-      console.log('Message received. ', payload);
+      console.log("Message received. ", payload);
     });
-    return messaging().getToken({
-      vapidKey: "BPfZekvCE2KeCCGFTvCtu2J1kW8cXiYS3LxrNK4pAewiw4sYWip92u9LPl4Mlo4dBXogHKEvURve3DUlA_eh1U4",
-      serviceWorkerRegistration
-  }).then((token) => {
-      console.log(token);
-    });
+    return messaging()
+      .getToken({
+        vapidKey:
+          "BPfZekvCE2KeCCGFTvCtu2J1kW8cXiYS3LxrNK4pAewiw4sYWip92u9LPl4Mlo4dBXogHKEvURve3DUlA_eh1U4",
+        serviceWorkerRegistration,
+      })
+      .then((token) => {
+        console.log(token);
+      });
   }
 
   function handleNotifications(registration) {
@@ -1508,14 +1730,14 @@ async function app() {
     }
     getEl("subscribe-link").addEventListener("click", () => {
       Notification.requestPermission().then((permission) => {
-        if (permission === 'granted') {
+        if (permission === "granted") {
           getToken(registration);
         }
-        if (permission !== 'default') {
+        if (permission !== "default") {
           getEl("subscribe-link").classList.add("d-none");
         }
       });
-    })
+    });
     //getEl("subscribe-link").classList.remove("d-none");
   }
 
@@ -1524,7 +1746,7 @@ async function app() {
       navigator.serviceWorker
         .register("service-worker.js")
         .then((registration) => {
-          handleNotifications(registration)
+          handleNotifications(registration);
         });
     }
   });
