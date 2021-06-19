@@ -65,6 +65,15 @@ h6 {
   font-weight: 300;
 }
 
+.binds-list {
+  width: 100%
+}
+
+.form-control.disabled {
+  background-color: #e9ecef;
+  opacity: 1;
+}
+
 .list-group-item-dark.list-group-item-action:focus,
 .list-group-item-dark.list-group-item-action:hover {
   color: #dddad5;

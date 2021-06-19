@@ -193,36 +193,7 @@
                     </div>
                     <div class="tab-pane fade" id="bindings-tab" role="tabpanel" aria-labelledby="bindings">
                       <div id="binds-root" class="inset-box">
-                        <div class="row row-cols-2" id="binds-list">
-                          <div class="col">Move Forward</div>
-                          <div class="col">
-                            <input type="text" class="form-control" placeholder="&lt;Unbound&gt;">
-                          </div>
-
-                          <div class="col">Move Back</div>
-                          <div class="col">
-                            <input type="text" class="form-control" placeholder="&lt;Unbound&gt;">
-                          </div>
-
-                          <div class="col">Move Left</div>
-                          <div class="col">
-                            <input type="text" class="form-control" placeholder="&lt;Unbound&gt;">
-                          </div>
-
-                          <div class="col">Move Right</div>
-                          <div class="col">
-                            <input type="text" class="form-control" placeholder="&lt;Unbound&gt;">
-                          </div>
-
-                          <div class="col">Primary Attack</div>
-                          <div class="col">
-                            <input type="text" class="form-control" placeholder="&lt;Unbound&gt;">
-                          </div>
-
-                          <div class="col">Secondary Attack</div>
-                          <div class="col">
-                            <input type="text" class="form-control" placeholder="&lt;Unbound&gt;">
-                          </div>
+                        <div id="binds-list" class="container">
                         </div>
                         <br>
                         <div class="keyboardContainer">
@@ -327,9 +298,11 @@
                     </div>
                   </div>
                 </div>
-                <!--<h4>Community Addons</h4>
-                <p><a href="/account">Submit</a> your own community addon!</p>-->
-                <div class="addons-list addons-list-community">
+                <div class="d-none">
+                  <h4>Community Addons</h4>
+                  <p><a id="submit-link">Submit</a> your own community addon!</p>
+                  <div class="addons-list addons-list-community">
+                  </div>
                 </div>
                 <hr>
                 <div class="row">
@@ -439,6 +412,7 @@
     <!-- The core Firebase JS SDK is always required and must be listed first -->
     <script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-app.js"></script>
 
+    <script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.7/firebase-messaging.js"></script>
 
     <script>
