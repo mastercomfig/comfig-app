@@ -1636,7 +1636,36 @@ async function app() {
     if (!keybinds) {
       createBindingField();
     }
-  })
+  });
+
+  const weapons = {
+    // Which is better?
+    // Option 1
+    "scattergun": {
+      "name": "Scattergun",
+      "weapons": ["Scattergun", "Force-A-Nature", "Back Scatter"],
+      "class": "Scout",
+      "slot": 0
+    },
+    // Option 2
+    "scout": [
+      {
+        "scattergun": "Scattergun"
+      }
+    ],
+    "soda_popper": "Soda Popper",
+    "bat": "Bat",
+    "bat_fish": "Holy Mackeral",
+    "bat_giftwrap": "Wrap Assassin",
+    "bat_wood": "Sandman",
+    "bonesaw": "Bonesaw",
+    "bottle": "Bottle",
+    "breakable_sign": "Neon Annihilator",
+    "buff_item": "Soldier Banner",
+    "builder": "PDA",
+    "cleaver": "Flying Guillotine",
+    "club": "Kukri",
+  }
 
   let deferredPrompt;
 
