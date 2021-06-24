@@ -1,6 +1,7 @@
 {
     "short_name": "mastercomfig",
     "name": "mastercomfig",
+    "categories": ["games", "utilities", "personalization"],
     "lang": "en-US",
     "dir": "ltr",
     "orientation": "any",
