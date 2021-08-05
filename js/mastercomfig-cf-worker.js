@@ -209,25 +209,25 @@ async function handleRequest(request) {
   }
   if (url.pathname.startsWith("/download")) {
     downloadUrl = url.pathname.substring("/download".length);
-    let validDownload = downloadUrl.startsWith("/latest/download")
+    let isDevDownload = downloadUrl.startsWith("/dev/download")
+    let validDownload = isDevDownload || downloadUrl.startsWith("/latest/download")
     if (!validDownload && downloadUrl.startsWith("/download/")) {
       let versionString = downloadUrl.substring("/download/".length)
       let slashPos = versionString.indexOf("/")
       if (slashPos !== -1) {
         versionString = versionString.substring(0, slashPos)
-        if (versionString === "dev") {
-          validDownload = true;
-        } else {
-          let v = await MASTERCOMFIG.get(getVersionedKey("mastercomfig-version", 2))
-          let versions = JSON.parse(v)
-          validDownload = versions.includes(versionString);
-        }
+        let v = await MASTERCOMFIG.get(getVersionedKey("mastercomfig-version", 2))
+        let versions = JSON.parse(v)
+        validDownload = versions.includes(versionString);
       }
     }
     if (validDownload) {
       if (!url.pathname.includes("..")) {
         let name = downloadUrl.split('/').pop()
         if (validNames.includes(name)) {
+          if (isDevDownload) {
+            downloadUrl = "/download/dev" + downloadUrl.substring("/dev/download".length)
+          }
           let response = await fetch("https://github.com/mastercomfig/mastercomfig/releases" + downloadUrl, reqGHReleaseHeaders)
           return new Response(response.body, resAssetHeaders)
         }
