@@ -85,7 +85,7 @@ function getVersions(data) {
   let limit = Math.min(5, data.length)
   let versions = []
   for (let i = 0; i < limit; i++) {
-    let version = data[i];
+    let version = data[i]
     if (version.prerelease || version.draft) {
       limit = Math.min(limit + 1, data.length)
     } else {
@@ -161,8 +161,8 @@ async function updateData(requests) {
     // Store and return results
     const results = await Promise.all(pg)
     for (let i = 0; i < results.length; i++) {
-      let r = results[i];
-      let value = null;
+      let r = results[i]
+      let value = null
       if (r) {
         value = requests[i][3] ? requests[i][3](r) : r
       }
@@ -208,8 +208,8 @@ async function handleRequest(request) {
     await forceUpdate(version)
   }
   if (url.pathname.startsWith("/download")) {
-    downloadUrl = url.pathname.substring("/download".length);
-    let isDevDownload = downloadUrl.startsWith("/dev/download")
+    downloadUrl = url.pathname.substring("/download".length)
+    let isDevDownload = downloadUrl.startsWith("/download/dev")
     let validDownload = isDevDownload || downloadUrl.startsWith("/latest/download")
     if (!validDownload && downloadUrl.startsWith("/download/")) {
       let versionString = downloadUrl.substring("/download/".length)
@@ -218,16 +218,13 @@ async function handleRequest(request) {
         versionString = versionString.substring(0, slashPos)
         let v = await MASTERCOMFIG.get(getVersionedKey("mastercomfig-version", 2))
         let versions = JSON.parse(v)
-        validDownload = versions.includes(versionString);
+        validDownload = versions.includes(versionString)
       }
     }
     if (validDownload) {
       if (!url.pathname.includes("..")) {
         let name = downloadUrl.split('/').pop()
         if (validNames.includes(name)) {
-          if (isDevDownload) {
-            downloadUrl = "/download/dev" + downloadUrl.substring("/dev/download".length)
-          }
           let response = await fetch("https://github.com/mastercomfig/mastercomfig/releases" + downloadUrl, reqGHReleaseHeaders)
           return new Response(response.body, resAssetHeaders)
         }
