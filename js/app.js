@@ -349,7 +349,7 @@ async function app() {
       await idbKeyval.set("directory", directoryHandle);
       await updateDirectory();
     } catch (error) {
-      console.log("Directory prompt failed", error);
+      console.error("Directory prompt failed", error);
     }
   }
 
@@ -368,7 +368,7 @@ async function app() {
         "game-folder-text"
       ).innerText = `${gameDirectory.name} folder chosen, click to change`;
     } catch (error) {
-      console.log("Get directory failed", error);
+      console.error("Get directory failed", error);
     }
   }
 
@@ -400,7 +400,7 @@ async function app() {
         create: true,
       });
     } catch (error) {
-      console.log("Get directory failed", error);
+      console.error("Get directory failed", error);
     }
   }
 
@@ -408,7 +408,9 @@ async function app() {
     try {
       await directory.removeEntry(name);
     } catch (error) {
-      console.log(`Failed deleting ${name}`, error);
+      if (!str(error).includes("could not be found")) {
+        console.error(`Failed deleting ${name}`, error); 
+      }
     }
   }
 
@@ -1213,6 +1215,8 @@ async function app() {
     dropdown.append(dividerListItem);
   }
 
+  let setLatestVersion = true;
+
   async function handleVersions(versions) {
     if (!versions) {
       return;
@@ -1224,8 +1228,10 @@ async function app() {
     let foundVersion = false;
 
     // set latest version
-    latestVersion = versions.shift();
-    setUserVersion("latest");
+    if (setLatestVersion) {
+      latestVersion = versions.shift();
+      setUserVersion("latest");
+    }
 
     releaseUrl.dev =
       "https://github.com/mastercomfig/mastercomfig/compare/{0}...develop".format(
