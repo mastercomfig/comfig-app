@@ -9,6 +9,15 @@ async function app() {
     });
   };
 
+  // find RegEx
+  Array.prototype.query = function(match) {
+    let  reg = new RegExp(match);
+
+    return this.filter(function(item){
+        return typeof item == 'string' && item.match(reg);
+    });
+}
+
   function capitalize(str) {
     return str.charAt(0).toUpperCase() + str.substr(1);
   }
@@ -1665,32 +1674,70 @@ async function app() {
   });
 
   const weapons = {
-    // Which is better?
-    // Option 1
-    "scattergun": {
-      "name": "Scattergun",
-      "weapons": ["Scattergun", "Force-A-Nature", "Back Scatter"],
-      "class": "Scout",
-      "slot": 0
-    },
-    // Option 2
     "scout": [
       {
-        "scattergun": "Scattergun"
+        "scattergun": ["Scattergun", "Force-A-Nature", "Back Scatter"],
+        "soda_popper": ["Soda Popper"],
+        "handgun_scout_primary": ["Shortstop"],
+        "pep_brawler_blaster": ["Baby Face's Blaster"]
+      },
+      {
+        "pistol_scout": ["Pistol", ],
+        "handgun_scout_secondary": ["Winger", "Pretty Boy's Pocket Pistol"]
       }
-    ],
-    "soda_popper": "Soda Popper",
-    "bat": "Bat",
-    "bat_fish": "Holy Mackeral",
-    "bat_giftwrap": "Wrap Assassin",
-    "bat_wood": "Sandman",
-    "bonesaw": "Bonesaw",
-    "bottle": "Bottle",
-    "breakable_sign": "Neon Annihilator",
-    "buff_item": "Soldier Banner",
-    "builder": "PDA",
-    "cleaver": "Flying Guillotine",
-    "club": "Kukri",
+    ]
+  }
+
+  let resourceCache = {};
+
+  function getGameResourceFile(game, path) {
+    if (resourceCache[game]?.[path]) {
+      return resourceCache[game][path]
+    }
+    // TODO: get GitHub repo file content
+    let file = null;
+    let content = file.content;
+    resourceCache[game][path] = parse(content);
+    return content;
+  }
+
+  function getGameResourceDir(game, path, recursive) {
+    // TODO: get GitHub repo contents
+    let folder = [];
+    let result = [];
+    for (const file of folder) {
+      if (file.type === "file") {
+        result.push(file.path)
+      } else if (file.type === "symlink") {
+        result.push(file.target);
+      } else if (recursive && file.type === "dir") {
+        result.concat(getGameResourceDir(game, path + file, true));
+      }
+    }
+    return result;
+  }
+
+  function getGameResource(game, path, file, regex) {
+    if (regex) {
+      let folder = getGameResourceDir(game, path);
+      let files = folder.query(file);
+      let res = [];
+      for (const file of files) {
+        res.push(getGameResourceFile(file));
+      }
+      return res;
+    } else {
+      return getGameResourceFile(game, path + file);
+    }
+  }
+
+  function initWeapons() {
+    const tfWeapons = getGameResource("TF2", "tf/scripts/", "tf_weapon_.*\.txt", true);
+    const langRes = getGameResource("TF2", "tf/resource/", "tf_english.txt").lang.tokens;
+    for (const weapon of tfWeapons) {
+      const data = weapon.WeaponData;
+      const type = data.WeaponType;
+    }
   }
 
   let deferredPrompt;
