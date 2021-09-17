@@ -9,6 +9,15 @@ async function app() {
     });
   };
 
+  // find RegEx
+  Array.prototype.query = function(match) {
+    let  reg = new RegExp(match);
+
+    return this.filter(function(item){
+        return typeof item == 'string' && item.match(reg);
+    });
+}
+
   function capitalize(str) {
     return str.charAt(0).toUpperCase() + str.substr(1);
   }
@@ -340,7 +349,7 @@ async function app() {
       await idbKeyval.set("directory", directoryHandle);
       await updateDirectory();
     } catch (error) {
-      console.log("Directory prompt failed", error);
+      console.error("Directory prompt failed", error);
     }
   }
 
@@ -359,7 +368,7 @@ async function app() {
         "game-folder-text"
       ).innerText = `${gameDirectory.name} folder chosen, click to change`;
     } catch (error) {
-      console.log("Get directory failed", error);
+      console.error("Get directory failed", error);
     }
   }
 
@@ -391,7 +400,7 @@ async function app() {
         create: true,
       });
     } catch (error) {
-      console.log("Get directory failed", error);
+      console.error("Get directory failed", error);
     }
   }
 
@@ -399,7 +408,9 @@ async function app() {
     try {
       await directory.removeEntry(name);
     } catch (error) {
-      console.log(`Failed deleting ${name}`, error);
+      if (!str(error).includes("could not be found")) {
+        console.error(`Failed deleting ${name}`, error); 
+      }
     }
   }
 
@@ -1204,6 +1215,8 @@ async function app() {
     dropdown.append(dividerListItem);
   }
 
+  let setLatestVersion = true;
+
   async function handleVersions(versions) {
     if (!versions) {
       return;
@@ -1215,8 +1228,10 @@ async function app() {
     let foundVersion = false;
 
     // set latest version
-    latestVersion = versions.shift();
-    setUserVersion("latest");
+    if (setLatestVersion) {
+      latestVersion = versions.shift();
+      setUserVersion("latest");
+    }
 
     releaseUrl.dev =
       "https://github.com/mastercomfig/mastercomfig/compare/{0}...develop".format(
@@ -1581,6 +1596,32 @@ async function app() {
     "Weapon slot 10": "slot10",
     "Toggle console": "toggleconsole",
     "Spy: Last Disguise": "lastdisguise",
+    "Spy: Toggle Disguise Team": "disguiseteam",
+    "Chat message": "say",
+    "Team message": "say_team",
+    "Party message": "say_party",
+    "Voice Menu 1": "voice_menu_1",
+    "Voice Menu 2": "voice_menu_2",
+    "Voice Menu 3": "voice_menu_3",
+    "Change class": "changeclass",
+    "Change team": "changeteam",
+    "Open loadout": "open_charinfo_direct",
+    "Open Backpack": "open_charinfo_backpack",
+    "Open Contracts Drawer": "show_quest_log",
+    "Loadout A": "load_itempreset 0",
+    "Loadout B": "load_itempreset 1",
+    "Loadout C": "load_itempreset 2",
+    "Loadout D": "load_itempreset 3",
+    "Action Slot": "+use_action_slot_item",
+    "Taunts": "+taunt",
+    "Weapon Taunt": "cmd taunt",
+    "Stop Taunt": "cmd stop_taunt",
+    "Open Map information": "showmapinfo",
+    "Inspect": "+inspect",
+    "Toggle Ready": "player_ready_toggle",
+    "Spray": "impulse 201",
+    "View/Accept alert": "cl_trigger_first_notification",
+    "Remove/Decline alert": "cl_decline_first_notification"
   };
 
   const actionNames = Object.keys(actionMappings);
@@ -1636,7 +1677,74 @@ async function app() {
     if (!keybinds) {
       createBindingField();
     }
-  })
+  });
+
+  const weapons = {
+    "scout": [
+      {
+        "scattergun": ["Scattergun", "Force-A-Nature", "Back Scatter"],
+        "soda_popper": ["Soda Popper"],
+        "handgun_scout_primary": ["Shortstop"],
+        "pep_brawler_blaster": ["Baby Face's Blaster"]
+      },
+      {
+        "pistol_scout": ["Pistol", ],
+        "handgun_scout_secondary": ["Winger", "Pretty Boy's Pocket Pistol"]
+      }
+    ]
+  }
+
+  let resourceCache = {};
+
+  function getGameResourceFile(game, path) {
+    if (resourceCache[game]?.[path]) {
+      return resourceCache[game][path]
+    }
+    // TODO: get GitHub repo file content
+    let file = null;
+    let content = file.content;
+    resourceCache[game][path] = parse(content);
+    return content;
+  }
+
+  function getGameResourceDir(game, path, recursive) {
+    // TODO: get GitHub repo contents
+    let folder = [];
+    let result = [];
+    for (const file of folder) {
+      if (file.type === "file") {
+        result.push(file.path)
+      } else if (file.type === "symlink") {
+        result.push(file.target);
+      } else if (recursive && file.type === "dir") {
+        result.concat(getGameResourceDir(game, path + file, true));
+      }
+    }
+    return result;
+  }
+
+  function getGameResource(game, path, file, regex) {
+    if (regex) {
+      let folder = getGameResourceDir(game, path);
+      let files = folder.query(file);
+      let res = [];
+      for (const file of files) {
+        res.push(getGameResourceFile(file));
+      }
+      return res;
+    } else {
+      return getGameResourceFile(game, path + file);
+    }
+  }
+
+  function initWeapons() {
+    const tfWeapons = getGameResource("TF2", "tf/scripts/", "tf_weapon_.*\.txt", true);
+    const langRes = getGameResource("TF2", "tf/resource/", "tf_english.txt").lang.tokens;
+    for (const weapon of tfWeapons) {
+      const data = weapon.WeaponData;
+      const type = data.WeaponType;
+    }
+  }
 
   let deferredPrompt;
 
