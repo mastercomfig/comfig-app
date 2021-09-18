@@ -256,6 +256,7 @@ async function app() {
   }
 
   function getAddonUrl(id, notDirect) {
+    // TODO: check for 9.6.0 and above
     if (id === "null-canceling-movement" && userVersion !== "latest") {
       id = "null-cancelling-movement";
     }
@@ -506,7 +507,7 @@ async function app() {
         await safeUnlink(addonFile + ".sound.cache", customDirectory);
       }
       // Write preset file
-      await writeRemoteFile(presetUrl, customDirectory);
+      writeRemoteFile(presetUrl, customDirectory);
     } else {
       // Then push our preset download
       downloads.push(
@@ -519,7 +520,7 @@ async function app() {
     for (const selection of selectedAddons) {
       let addonUrl = getAddonUrl(selection);
       if (customDirectory) {
-        await writeRemoteFile(addonUrl, customDirectory);
+        writeRemoteFile(addonUrl, customDirectory);
       } else {
         downloads.push(
           Promise.resolve({
@@ -1256,9 +1257,10 @@ async function app() {
     let lastVersion = await idbKeyval.get("lastVersion");
     let foundVersion = false;
 
+    latestVersion = versions.shift();
+
     // set latest version
     if (setLatestVersion) {
-      latestVersion = versions.shift();
       setUserVersion("latest");
       setLatestVersion = false;
     }
