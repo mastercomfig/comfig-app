@@ -367,6 +367,7 @@ async function app() {
     }
   }
 
+  // TODO: use this in more places, when things error out
   async function clearDirectory() {
     if (!window.showDirectoryPicker) {
       return;
