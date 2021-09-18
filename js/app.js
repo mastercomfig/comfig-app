@@ -408,7 +408,7 @@ async function app() {
     try {
       await directory.removeEntry(name);
     } catch (error) {
-      if (!str(error).includes("could not be found")) {
+      if (!error.toString().includes("could not be found")) {
         console.error(`Failed deleting ${name}`, error); 
       }
     }
