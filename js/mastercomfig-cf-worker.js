@@ -182,7 +182,7 @@ async function updateData(requests) {
 
 const webhookPathname = "/" + GH_WEBHOOK_ID
 
-let validNames = [
+const validNames = new Set([
   "mastercomfig-ultra-preset.vpk",
   "mastercomfig-high-preset.vpk",
   "mastercomfig-medium-high-preset.vpk",
@@ -193,6 +193,7 @@ let validNames = [
   "mastercomfig-none-preset.vpk",
   "mastercomfig-null-cancelling-movement-addon.vpk",
   "mastercomfig-null-canceling-movement-addon.vpk",
+  "mastercomfig-opengl-addon.vpk",
   "mastercomfig-flat-mouse-addon.vpk",
   "mastercomfig-no-tutorial-addon.vpk",
   "mastercomfig-disable-pyroland-addon.vpk",
@@ -200,7 +201,10 @@ let validNames = [
   "mastercomfig-no-soundscapes-addon.vpk",
   "mastercomfig-transparent-viewmodels-addon.vpk",
   "mastercomfig-lowmem-addon.vpk",
-]
+]);
+
+const downloadLength = "/download".length;
+const downloadSlashLength = downloadLength + 1;
 
 async function handleRequest(request) {
   const url = new URL(request.url)
@@ -209,11 +213,11 @@ async function handleRequest(request) {
     await forceUpdate(version)
   }
   if (url.pathname.startsWith("/download")) {
-    downloadUrl = url.pathname.substring("/download".length)
-    let isDevDownload = downloadUrl.startsWith("/download/dev")
-    let validDownload = isDevDownload || downloadUrl.startsWith("/latest/download")
+    downloadUrl = url.pathname.substring(downloadLength)
+    let isDevDownload = downloadUrl.startsWith("/download/dev/")
+    let validDownload = isDevDownload || downloadUrl.startsWith("/latest/download/")
     if (!validDownload && downloadUrl.startsWith("/download/")) {
-      let versionString = downloadUrl.substring("/download/".length)
+      let versionString = downloadUrl.substring(downloadSlashLength)
       let slashPos = versionString.indexOf("/")
       if (slashPos !== -1) {
         versionString = versionString.substring(0, slashPos)
@@ -225,7 +229,7 @@ async function handleRequest(request) {
     if (validDownload) {
       if (!url.pathname.includes("..")) {
         let name = downloadUrl.split('/').pop()
-        if (validNames.includes(name)) {
+        if (validNames.has(name)) {
           let response = await fetch("https://github.com/mastercomfig/mastercomfig/releases" + downloadUrl, reqGHReleaseHeaders)
           return new Response(response.body, resAssetHeaders)
         }
