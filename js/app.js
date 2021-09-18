@@ -507,7 +507,7 @@ async function app() {
         await safeUnlink(addonFile + ".sound.cache", customDirectory);
       }
       // Write preset file
-      writeRemoteFile(presetUrl, customDirectory);
+      await writeRemoteFile(presetUrl, customDirectory);
     } else {
       // Then push our preset download
       downloads.push(
@@ -520,7 +520,7 @@ async function app() {
     for (const selection of selectedAddons) {
       let addonUrl = getAddonUrl(selection);
       if (customDirectory) {
-        writeRemoteFile(addonUrl, customDirectory);
+        await writeRemoteFile(addonUrl, customDirectory);
       } else {
         downloads.push(
           Promise.resolve({
