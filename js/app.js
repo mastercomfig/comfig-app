@@ -480,6 +480,7 @@ async function app() {
     let name = url.split("/").pop();
     const writable = await getWritable(name, directory, true);
     let response = await fetch(url);
+    // TODO: this doesn't like concurrency
     await response.body.pipeTo(writable);
   }
 
