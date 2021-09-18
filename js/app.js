@@ -236,7 +236,7 @@ async function app() {
   }
 
   // Helper functions to format download URLs
-  function getDownloadUrl(id, preset) {
+  function getDownloadUrl(id, preset, notDirect) {
     let urlOptions = preset ? presetUrl : addonUrl;
     let url;
     if (urlOptions.hasOwnProperty(userVersion)) {
@@ -245,7 +245,7 @@ async function app() {
       url = urlOptions.default;
     }
     url = url.format(userVersion, id);
-    if (customDirectory) {
+    if (customDirectory && !notDirect) {
       url = url.replace(
         "https://github.com/mastercomfig/mastercomfig/releases",
         (isLocalHost ? "https://cors-anywhere.herokuapp.com/" : "") +
@@ -255,12 +255,12 @@ async function app() {
     return url;
   }
 
-  function getAddonUrl(id) {
-    return getDownloadUrl(id, false);
+  function getAddonUrl(id, notDirect) {
+    return getDownloadUrl(id, false, notDirect);
   }
 
-  function getPresetUrl() {
-    return getDownloadUrl(selectedPreset, true);
+  function getPresetUrl(notDirect) {
+    return getDownloadUrl(selectedPreset, true, notDirect);
   }
   // End download URL helpers
 
@@ -369,6 +369,9 @@ async function app() {
     }
     await idbKeyval.del("directory");
     gameDirectory = null;
+    customDirectory = null;
+    userDirectory = null;
+    appDirectory = null;
     getEl(
         "game-folder-text"
     ).innerText = "No folder chosen";
@@ -667,9 +670,9 @@ async function app() {
       userVer = latestVersion;
     }
     version = userVer;
-    getEl("preset-dl").href = getPresetUrl();
+    getEl("preset-dl").href = getPresetUrl(true);
     for (const id of addons) {
-      getEl(id + "-dl").href = getAddonUrl(id);
+      getEl(id + "-dl").href = getAddonUrl(id, true);
     }
     getEl("version").innerText = userVer;
     let url;
@@ -714,7 +717,7 @@ async function app() {
         "vpk-dl"
       ).innerHTML = `<span class="fa fa-cloud-download fa-fw"></span> Download ${presets[selectedPreset]} preset and selected addons `; // update download text
     }
-    getEl("preset-dl").href = getPresetUrl();
+    getEl("preset-dl").href = getPresetUrl(true);
     getEl(
       "preset-dl"
     ).innerHTML = `<span class="fa fa-download fa-fw"></span> Download ${presets[selectedPreset]} preset `; // update preset text
