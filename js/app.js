@@ -1254,6 +1254,7 @@ async function app() {
     if (setLatestVersion) {
       latestVersion = versions.shift();
       setUserVersion("latest");
+      setLatestVersion = false;
     }
 
     releaseUrl.dev =
