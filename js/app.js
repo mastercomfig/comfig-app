@@ -256,9 +256,13 @@ async function app() {
   }
 
   function getAddonUrl(id, notDirect) {
-    // TODO: check for 9.6.0 and above
-    if (id === "null-canceling-movement" && userVersion !== "latest") {
-      id = "null-cancelling-movement";
+    if (id === "null-canceling-movement") {
+      if (userVersion !== "latest") {
+        let versionSplit = userVersion.split(".");
+        if (versionSplit[0] < 9 || (versionSplit[0] === 9 && versionSplit[1] < 6)) {
+          id = "null-cancelling-movement";
+        }
+      }
     }
     return getDownloadUrl(id, false, notDirect);
   }
@@ -695,6 +699,8 @@ async function app() {
       assetUrl = assetsUrl.default.format(userVersion);
     }
     getEl("assets-link").href = assetUrl;
+
+    // TODO: replace modules def with raw github user content for that version tag
   }
 
   async function setPreset(id, fromDB) {
