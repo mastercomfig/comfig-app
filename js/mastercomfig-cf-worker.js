@@ -191,6 +191,7 @@ let validNames = [
   "mastercomfig-low-preset.vpk",
   "mastercomfig-very-low-preset.vpk",
   "mastercomfig-none-preset.vpk",
+  "mastercomfig-null-cancelling-movement-addon.vpk",
   "mastercomfig-null-canceling-movement-addon.vpk",
   "mastercomfig-flat-mouse-addon.vpk",
   "mastercomfig-no-tutorial-addon.vpk",
