@@ -256,6 +256,9 @@ async function app() {
   }
 
   function getAddonUrl(id, notDirect) {
+    if (id === "null-canceling-movement" && userVersion !== "latest") {
+      id = "null-cancelling-movement";
+    }
     return getDownloadUrl(id, false, notDirect);
   }
 
