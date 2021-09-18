@@ -337,6 +337,16 @@ async function app() {
     }
   }
 
+  async function restoreDirectoryInstructions() {
+    let instructionEls = document.querySelectorAll(".instructions-text");
+    for (const instructionEl of instructionEls) {
+      instructionEl.classList.remove("d-none");
+    }
+    if ((await idbKeyval.get("hide-game-folder-warning"))) {
+      getEl("game-folder-warning").classList.add("d-none");
+    }
+  }
+
   async function promptDirectory() {
     if (!window.showDirectoryPicker) {
       return;
@@ -351,6 +361,18 @@ async function app() {
     } catch (error) {
       console.error("Directory prompt failed", error);
     }
+  }
+
+  async function clearDirectory() {
+    if (!window.showDirectoryPicker) {
+      return;
+    }
+    await idbKeyval.del("directory");
+    gameDirectory = null;
+    getEl(
+        "game-folder-text"
+    ).innerText = "No folder chosen";
+    restoreDirectoryInstructions();
   }
 
   async function updateDirectory() {
@@ -401,6 +423,7 @@ async function app() {
       });
     } catch (error) {
       console.error("Get directory failed", error);
+      clearDirectory();
     }
   }
 
@@ -1870,11 +1893,15 @@ async function app() {
     if (!(await idbKeyval.get("hide-game-folder-warning"))) {
       getEl("game-folder-warning").classList.remove("d-none");
     }
-    getEl("game-folder-warning-btn").addEventListener("click", async (e) => {
+    getEl("game-folder-warning-btn").addEventListener("click", async () => {
       await idbKeyval.set("hide-game-folder-warning", true);
     });
     getEl("game-folder-group").addEventListener("click", async () => {
       await promptDirectory();
+    });
+    getEl("game-folder-clear").addEventListener("click", async (e) => {
+      e.stopPropagation();
+      await clearDirectory();
     });
     await updateDirectory();
   }
