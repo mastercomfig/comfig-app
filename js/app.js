@@ -74,10 +74,13 @@ async function app() {
 
   // The only addons we can override when preset switches
   const recommendableAddons = [
-    "no-footsteps",
-    "disable-pyroland",
-    "no-soundscapes",
+    "null-canceling-movement",
+    "flat-mouse",
     "no-tutorial",
+    "disable-pyroland",
+    "no-footsteps",
+    "no-soundscapes",
+    "no-explosion-smoke",
   ];
 
   // Set what addons we recommend for each preset
@@ -94,19 +97,14 @@ async function app() {
     recommendedAddons.set(id, addons);
   }
 
-  setRecommendedAddons("none", []);
-  setRecommendedAddons("ultra", []);
-  setRecommendedAddons("high", []);
-  setRecommendedAddons("medium-high", []);
-  setRecommendedAddons("medium", []);
-  setRecommendedAddons("medium-low", []);
-  setRecommendedAddons("low", ["disable-pyroland", "no-soundscapes"]);
-  setRecommendedAddons("very-low", [
-    "no-footsteps",
-    "disable-pyroland",
-    "no-soundscapes",
-    "no-tutorial",
-  ]);
+  setRecommendedAddons("none", ["null-canceling-movement", "flat-mouse"]);
+  setRecommendedAddons("ultra", ["null-canceling-movement", "flat-mouse"]);
+  setRecommendedAddons("high", ["null-canceling-movement", "flat-mouse"]);
+  setRecommendedAddons("medium-high", ["null-canceling-movement", "flat-mouse"]);
+  setRecommendedAddons("medium", ["null-canceling-movement", "flat-mouse"]);
+  setRecommendedAddons("medium-low", ["null-canceling-movement", "flat-mouse"]);
+  setRecommendedAddons("low", ["null-canceling-movement", "flat-mouse", "no-tutorial", "disable-pyroland", "no-soundscapes"]);
+  setRecommendedAddons("very-low", ["null-canceling-movement", "flat-mouse", "no-tutorial", "disable-pyroland", "no-footsteps", "no-soundscapes", "no-explosion-smoke"]);
   // End preset -> recommended addon mapping
 
   // Base release URL
