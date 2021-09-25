@@ -191,7 +191,6 @@ const validNames = new Set([
   "mastercomfig-low-preset.vpk",
   "mastercomfig-very-low-preset.vpk",
   "mastercomfig-none-preset.vpk",
-  "mastercomfig-null-cancelling-movement-addon.vpk",
   "mastercomfig-null-canceling-movement-addon.vpk",
   "mastercomfig-opengl-addon.vpk",
   "mastercomfig-flat-mouse-addon.vpk",
@@ -201,6 +200,7 @@ const validNames = new Set([
   "mastercomfig-no-soundscapes-addon.vpk",
   "mastercomfig-transparent-viewmodels-addon.vpk",
   "mastercomfig-lowmem-addon.vpk",
+  "mastercomfig-no-explosion-smoke-addon.vpk",
 ]);
 
 const downloadLength = "/download".length;
