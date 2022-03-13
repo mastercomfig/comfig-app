@@ -151,7 +151,7 @@
                   </div>
                   <div class="tab-pane" id="none-tab" role="tabpanel" aria-labelledby="none">
                     <br>
-                    <h4>Special preset which skips setting quality and sound options.</h4>
+                    <h4>Special preset which skips setting quality options.</h4>
                     <br>
                   </div>
                 </div>
@@ -284,9 +284,9 @@
                         </div>
                         <div class="card-footer">
                           <small>
-                            This does not enable Transparent Viewmodels, your HUD must enable them.
-                            This only allows Transparent Viewmodels to work. Transparent Viewmodels also require
-                            DXLevel 90 or higher.
+                            This does not enable transparent viewmodels, your HUD must enable them.
+                            This only allows transparent viewmodels to work. Transparent viewmodels also require
+                            dxlevel 90 or higher, and disable Anti-Aliasing.
                           </small>
                         </div>
                       </a>
@@ -304,14 +304,6 @@
                         </div>
                       </a>
                     </div>
-                    <div class="col">
-                      <a class="card addon-card bg-dark text-light h-100" href="#" id="no-explosion-smoke">
-                        <div class="card-body">
-                          <h5 class="card-title">No Explosion Smoke</h5>
-                          <p class="card-text">Replaces explosions with the small electro-particle seen when a sapper is destroyed</p>
-                        </div>
-                      </a>
-                    </div>
                   </div>
                 </div>
                 <div class="d-none">
@@ -325,21 +317,30 @@
                   <div class="col-sm-12">
                     <h2 class="fw-normal"><span class="fa fa-download fa-fw"></span> Download your files</h2>
                     <br>
-                    <div class="mb-3 d-none" id="game-folder-container">
-                      <div class="instructions-text alert alert-warning alert-dismissible fade show d-none" role="alert" id="game-folder-warning">
-                        <span class="lead">Heads Up!</span><br>
-                        Installations in system folders like <strong>Program Files</strong> (which is the default Steam library folder) are not supported.<br><br>
-                        Please <a href="https://support.steampowered.com/kb_article.php?ref=7418-YUBN-8129" target="_blank" rel="noopener">move Steam</a> to a new folder, or use a separate library folder for Team Fortress 2.<br>
-                        You may also create a new empty folder for mastercomfig to install the files into and then copy this folder into your TF2 folder.<br><br>
-                        <strong class="fw-bolder">If you do not wish to do either, download the files without choosing a folder.</strong>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" id="game-folder-warning-btn"></button>
+                    <div class="mb-3 d-none" id="game-folder-wrapper">
+                      <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="direct-install">
+                        <label class="custom-control-label" for="direct-install">
+                          <strong>Use Direct Install</strong> &mdash; Installs mastercomfig and all customizations directly to your game install.
+                        </label>
                       </div>
-                      <label for="game-folder-group" class="form-label">Choose your Team Fortress 2 installation folder</label>
-                      <div class="row" role="group" id="game-folder-group">
-                        <button type="button" class="btn btn-outline-primary col-auto" id="game-folder-btn">Choose Folder</button>
-                        <span class="bg-teal col d-flex align-items-center" id="game-folder-text">No folder chosen</span>
-                        <div class="col-auto btn btn-outline-primary d-flex align-items-center" id="game-folder-clear">
-                          <span class="fa fa-times fa-fw"></span>
+                      <div class="d-none" id="game-folder-container">
+                        <br>
+                        <div class="instructions-text alert alert-warning alert-dismissible fade show d-none" role="alert" id="game-folder-warning">
+                          <span class="lead">Heads Up!</span><br>
+                          Installations in system folders like <strong>Program Files</strong> (which is the default Steam library folder) are not supported by the browser for security reasons.<br><br>
+                          Please <a href="https://help.steampowered.com/en/faqs/view/4BD4-4528-6B2E-8327#exist" target="_blank" rel="noopener">move Steam</a> to a new folder, or <a href="https://help.steampowered.com/en/faqs/view/4BD4-4528-6B2E-8327#default" target="_blank" rel="noopener"></a>use a separate library folder</a> for Team Fortress 2.<br>
+                          You may also create a new empty folder for mastercomfig to install the files into and then copy this folder into your TF2 folder.<br><br>
+                          <strong class="fw-bolder">If you do not wish to do either, download the files without choosing a folder (don't use Direct Install).</strong>
+                          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" id="game-folder-warning-btn"></button>
+                        </div>
+                        <label for="game-folder-group" class="form-label">Choose your Team Fortress 2 installation folder</label>
+                        <div class="row" role="group" id="game-folder-group">
+                          <button type="button" class="btn btn-outline-primary col-auto" id="game-folder-btn">Choose Folder</button>
+                          <span class="bg-teal col d-flex align-items-center" id="game-folder-text">No folder chosen, Direct Install not enabled</span>
+                          <div class="col-auto btn btn-outline-primary d-flex align-items-center" id="game-folder-clear">
+                            <span class="fa fa-times fa-fw"></span>
+                          </div>
                         </div>
                       </div>
                       <hr>
@@ -361,7 +362,6 @@
                       <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-no-soundscapes-addon.vpk" class="text-light" id="no-soundscapes-dl" style="display: none"><span class="fa fa-download fa-fw"></span> Download No Soundscapes addon</a></p>
                       <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-transparent-viewmodels-addon.vpk" class="text-light" id="transparent-viewmodels-dl" style="display: none"><span class="fa fa-download fa-fw"></span> Download Transparent Viewmodels addon</a></p>
                       <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-lowmem-addon.vpk" class="text-light" id="lowmem-dl" style="display: none"><span class="fa fa-download fa-fw"></span> Download Low Memory addon</a></p>
-                      <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-no-explosion-smoke-addon.vpk" class="text-light" id="no-explosion-smoke-dl" style="display: none"><span class="fa fa-download fa-fw"></span> Download No Explosion Smoke addon</a></p>
                     </div>
                     <hr>
                     <p class="lead"><b><a class="download-link" id="custom-dl"><span class="fa fa-download fa-fw"></span> Download customizations </a></b></p>

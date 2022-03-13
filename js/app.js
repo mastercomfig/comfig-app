@@ -338,6 +338,29 @@ async function app() {
   let userDirectory = null;
   let appDirectory = null;
 
+  async function updateDirectInstall() {
+    const directInstall = await idbKeyval.get("enable-direct-install");
+    if (!directInstall) {
+      getEl("game-folder-container").classList.add("d-none");
+      return;
+    }
+    getEl("game-folder-container").classList.remove("d-none");
+    if (!(await idbKeyval.get("hide-game-folder-warning"))) {
+      getEl("game-folder-warning").classList.remove("d-none");
+    }
+    getEl("game-folder-warning-btn").addEventListener("click", async () => {
+      await idbKeyval.set("hide-game-folder-warning", true);
+    });
+    getEl("game-folder-group").addEventListener("click", async () => {
+      await promptDirectory();
+    });
+    getEl("game-folder-clear").addEventListener("click", async (e) => {
+      e.stopPropagation();
+      await clearDirectory();
+    });
+    await updateDirectory();
+  }
+
   async function clearDirectoryInstructions() {
     let instructionEls = document.querySelectorAll(".instructions-text");
     for (const instructionEl of instructionEls) {
@@ -355,6 +378,21 @@ async function app() {
     }
   }
 
+  let bannedDirectories = ["tf", "custom", "cfg", "user", "app"];
+  let silentBannedDirectories = [""];
+
+  function checkDirectory(directoryHandle) {
+    console.log();
+    const name = directoryHandle.name;
+    let fail = bannedDirectories.includes(name);
+    if (fail) {
+      alert(`${name} is not a valid folder. To install to your game, please select the top-level "Team Fortress 2" folder.`)
+    } else {
+      fail = silentBannedDirectories.includes(name);
+    }
+    return !fail;
+  }
+
   async function promptDirectory() {
     if (!window.showDirectoryPicker) {
       return;
@@ -364,6 +402,12 @@ async function app() {
         id: "tf2",
         startIn: "desktop",
       });
+      if (!directoryHandle) {
+        return;
+      }
+      if (!checkDirectory(directoryHandle)) {
+        return;
+      }
       await idbKeyval.set("directory", directoryHandle);
       await updateDirectory();
     } catch (error) {
@@ -383,7 +427,7 @@ async function app() {
     appDirectory = null;
     getEl(
         "game-folder-text"
-    ).innerText = "No folder chosen";
+    ).innerText = "No folder chosen, Direct Install not enabled";
     restoreDirectoryInstructions();
   }
 
@@ -394,6 +438,10 @@ async function app() {
     try {
       let directoryHandle = await idbKeyval.get("directory");
       if (!directoryHandle) {
+        return;
+      }
+      if (!checkDirectory(directoryHandle)) {
+        clearDirectory();
         return;
       }
       clearDirectoryInstructions();
@@ -1906,21 +1954,14 @@ async function app() {
   }
 
   if (window.showDirectoryPicker) {
-    getEl("game-folder-container").classList.remove("d-none");
-    if (!(await idbKeyval.get("hide-game-folder-warning"))) {
-      getEl("game-folder-warning").classList.remove("d-none");
-    }
-    getEl("game-folder-warning-btn").addEventListener("click", async () => {
-      await idbKeyval.set("hide-game-folder-warning", true);
+    getEl("game-folder-wrapper").classList.remove("d-none");
+    let directInstallCheckbox = getEl("direct-install");
+    directInstallCheckbox.checked = await idbKeyval.get("enable-direct-install");
+    await updateDirectInstall();
+    directInstallCheckbox.addEventListener("input", async (e) => {
+      await idbKeyval.set("enable-direct-install", e.currentTarget.checked);
+      await updateDirectInstall();
     });
-    getEl("game-folder-group").addEventListener("click", async () => {
-      await promptDirectory();
-    });
-    getEl("game-folder-clear").addEventListener("click", async (e) => {
-      e.stopPropagation();
-      await clearDirectory();
-    });
-    await updateDirectory();
   }
 }
 
