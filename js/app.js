@@ -338,26 +338,32 @@ async function app() {
   let userDirectory = null;
   let appDirectory = null;
 
+  let bindDirectInstall = true;
+
   async function updateDirectInstall() {
     const directInstall = await idbKeyval.get("enable-direct-install");
     if (!directInstall) {
       getEl("game-folder-container").classList.add("d-none");
+      await restoreDirectoryInstructions();
       return;
     }
     getEl("game-folder-container").classList.remove("d-none");
     if (!(await idbKeyval.get("hide-game-folder-warning"))) {
       getEl("game-folder-warning").classList.remove("d-none");
     }
-    getEl("game-folder-warning-btn").addEventListener("click", async () => {
-      await idbKeyval.set("hide-game-folder-warning", true);
-    });
-    getEl("game-folder-group").addEventListener("click", async () => {
-      await promptDirectory();
-    });
-    getEl("game-folder-clear").addEventListener("click", async (e) => {
-      e.stopPropagation();
-      await clearDirectory();
-    });
+    if (bindDirectInstall) {
+      bindDirectInstall = false;
+      getEl("game-folder-warning-btn").addEventListener("click", async () => {
+        await idbKeyval.set("hide-game-folder-warning", true);
+      });
+      getEl("game-folder-group").addEventListener("click", async () => {
+        await promptDirectory();
+      });
+      getEl("game-folder-clear").addEventListener("click", async (e) => {
+        e.stopPropagation();
+        await clearDirectory();
+      });
+    }
     await updateDirectory();
   }
 
@@ -547,7 +553,8 @@ async function app() {
       }),
     ];
     let presetUrl = getPresetUrl();
-    if (customDirectory) {
+    const directInstall = await idbKeyval.get("enable-direct-install");
+    if (directInstall && customDirectory) {
       // Clear out all existing files
       let presetKeys = Object.keys(presets);
       for (const preset of presetKeys) {
