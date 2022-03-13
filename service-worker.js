@@ -58,8 +58,9 @@ const OFFLINE_FILES = [
   "https://cdn.jsdelivr.net/npm/font-awesome@4/css/font-awesome.min.css",
   "https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/css/index.min.css",
   "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js",
-  "https://cdn.jsdelivr.net/npm/idb-keyval@5/dist/iife/index-min.js",
+  "https://cdn.jsdelivr.net/npm/idb-keyval@6/dist/umd.js",
   "https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/index.min.js",
+  "https://cdn.jsdelivr.net/npm/vdf-parser@1.2.0/main.min.js",
 ];
 
 self.addEventListener("install", (event) => {
