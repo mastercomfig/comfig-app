@@ -748,7 +748,11 @@ async function app() {
     }
     getEl("assets-link").href = assetUrl;
 
-    // TODO: replace modules def with raw github user content for that version tag
+    let tag = null;
+    if (userVer !== "latest") {
+      tag = `https://mastercomfig.mcoms.workers.dev/?t=${userVer}`;
+    }
+    sendApiRequest(tag);
   }
 
   async function setPreset(id, fromDB) {
@@ -1386,6 +1390,29 @@ async function app() {
     handleModulesRoot(cachedData.m);
   }
 
+  function sendApiRequest(url) {
+    fetch(
+      (isLocalHost ? "https://cors-anywhere.herokuapp.com/" : "") +
+        (url ? url : "https://mastercomfig.mcoms.workers.dev/?v=2")
+    )
+      .then((resp) => resp.json())
+      .then(async (data) => {
+        await handleApiResponse(data);
+        if (!url) {
+          await idbKeyval.set("cachedData", cachedData);
+        }
+      })
+      .catch(async (err) => {
+        let data = await idbKeyval.get("cachedData");
+        if (data) {
+          console.error("Get data failed, falling back to cache:", err);
+          await handleApiResponse(data);
+        } else {
+          console.error("Failed to get download data:", err);
+        }
+      });
+  }
+
   // If we have a stored preset, select it
   if (await idbKeyval.get("preset")) {
     await setPreset(await idbKeyval.get("preset"), true);
@@ -1431,24 +1458,7 @@ async function app() {
   }
 
   // get latest release, and update page
-  fetch(
-    (isLocalHost ? "https://cors-anywhere.herokuapp.com/" : "") +
-      "https://mastercomfig.mcoms.workers.dev/?v=2"
-  )
-    .then((resp) => resp.json())
-    .then(async (data) => {
-      await handleApiResponse(data);
-      await idbKeyval.set("cachedData", cachedData);
-    })
-    .catch(async (err) => {
-      let data = await idbKeyval.get("cachedData");
-      if (data) {
-        console.error("Get data failed, falling back to cache:", err);
-        await handleApiResponse(data);
-      } else {
-        console.error("Failed to get download data:", err);
-      }
-    });
+  sendApiRequest();
 
   getEl("customize-toggler").addEventListener("click", (e) => {
     e.currentTarget.classList.toggle("active");
