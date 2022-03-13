@@ -9,7 +9,7 @@ $(function() {
 });
 
 // Init customization example highlighting
-hljs.initHighlightingOnLoad();
+hljs.highlightAll();
 
 function updateBars() {
     document.getElementById('mastercomfig-bar').style.width = '100%';
