@@ -1850,36 +1850,35 @@ async function app() {
     }
   });
 
-  const crosshairs = {
-    "Large Circle": {
-      pos: ["64", "64"],
-      size: "64",
+  const crosshairPacks = {
+    "Default": {
       card: "sprites/crosshairs",
-    },
-    Circle: {
-      pos: ["32", "32"],
-      size: "32",
-      card: "sprites/crosshairs",
-    },
-    Cross: {
-      pos: ["64", "0"],
-      size: "32",
-      card: "sprites/crosshairs",
-    },
-    Heal: {
-      pos: ["0", "64"],
-      size: "32",
-      card: "sprites/crosshairs",
-    },
-    Brackets: {
-      pos: ["0", "0"],
-      size: "32",
-      card: "sprites/crosshairs",
-    },
-    None: {
-      pos: ["0", "48"],
-      size: "24",
-      card: "sprites/crosshairs",
+      crosshairs: {
+        "Large Circle": {
+          pos: ["64", "64"],
+          size: "64",
+        },
+        Circle: {
+          pos: ["32", "32"],
+          size: "32",
+        },
+        Sniper: {
+          pos: ["64", "0"],
+          size: "32",
+        },
+        "Medic Cross": {
+          pos: ["0", "64"],
+          size: "32",
+        },
+        Brackets: {
+          pos: ["0", "0"],
+          size: "32",
+        },
+        None: {
+          pos: ["0", "48"],
+          size: "24",
+        },
+      },
     },
   }
 
