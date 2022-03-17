@@ -1250,7 +1250,7 @@ async function app() {
       (e) => {
         e.preventDefault();
         let top = getRelativePos(categoryContainer).top;
-        getEl("modules-controls").scrollTop = top;
+        getEl("modules-controls").scrollTop = top - 10;
       },
       {
         passive: false,
