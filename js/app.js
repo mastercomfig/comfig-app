@@ -1854,26 +1854,32 @@ async function app() {
     "Large Circle": {
       pos: ["64", "64"],
       size: "64",
+      card: "sprites/crosshairs",
     },
     Circle: {
       pos: ["32", "32"],
       size: "32",
+      card: "sprites/crosshairs",
     },
     Cross: {
       pos: ["64", "0"],
       size: "32",
+      card: "sprites/crosshairs",
     },
     Heal: {
       pos: ["0", "64"],
       size: "32",
+      card: "sprites/crosshairs",
     },
     Brackets: {
       pos: ["0", "0"],
       size: "32",
+      card: "sprites/crosshairs",
     },
     None: {
       pos: ["0", "48"],
       size: "24",
+      card: "sprites/crosshairs",
     },
   }
 
