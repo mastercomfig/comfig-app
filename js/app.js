@@ -1293,7 +1293,7 @@ async function app() {
     modulesRow.append(sidebarCol);
 
     // For each module category, create its element and add it to the columns.
-    Object.keys(modules).forEach((module) => {
+    Object.keys(modules).forEach((module, index) => {
       let [moduleCategoryElement, moduleCategoryNavLink] = handleCategory(
         module,
         modules[module]
@@ -1303,6 +1303,9 @@ async function app() {
       }
       if (moduleCategoryNavLink) {
         sidebarNav.append(moduleCategoryNavLink);
+        if (index === 0) {
+          moduleCategoryNavLink.classList.add("active");
+        }
       }
     });
 
