@@ -227,6 +227,10 @@ a.disabled {
   padding-top: 0.2rem;
 }
 
+#modules-sidebar .nav-link:focus:not(.active) {
+  color: #b2dfdb
+}
+
 .addons-list {
   margin-top: 2rem;
   margin-bottom: 2rem;
@@ -257,11 +261,15 @@ a.disabled {
 }
 
 a.text-light.addon-card:focus {
-  color: #f8f9fa !important;
+  color: #cbd3da !important;
 }
 
-a.text-light.addon-card:hover {
+a.text-light.addon-card {
   color: #cbd3da !important;
+}
+
+a.text-light.addon-card.active, a.text-light.addon-card:hover {
+  color: #f8f9fa !important;
 }
 
 #blockMisc {
