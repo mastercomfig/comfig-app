@@ -388,7 +388,6 @@ async function app() {
   let silentBannedDirectories = [""];
 
   function checkDirectory(directoryHandle) {
-    console.log();
     const name = directoryHandle.name;
     let fail = bannedDirectories.includes(name);
     if (fail) {
@@ -811,6 +810,8 @@ async function app() {
     DELETE: "DEL",
     PAGEUP: "PGUP",
     PAGEDOWN: "PGDN",
+    CONTROL: "CTRL",
+    OS: "WIN",
     " ": "SPACE",
     ";": "SEMICOLON",
   };
@@ -858,7 +859,7 @@ async function app() {
     let binding = e.key.toUpperCase();
     // Shift, alt, ctrl on the right side
     if (e.location === KeyboardEvent.DOM_KEY_LOCATION_RIGHT) {
-      return "R" + binding;
+      return "R" + bindingToBind(binding);
     }
     if (e.location === KeyboardEvent.DOM_KEY_LOCATION_NUMPAD) {
       if (keypadBindMap.hasOwnProperty(binding)) {
@@ -869,12 +870,13 @@ async function app() {
     return bindingToBind(binding);
   }
 
+  const numpadKeyword = "NUMPAD";
+
   function simpleKeyboardKeyToKeyBind(key) {
     let binding = key.toUpperCase();
     if (binding.startsWith("{")) {
       binding = binding.substr(1, binding.length - 2);
     }
-    let numpadKeyword = "NUMPAD";
     if (binding.startsWith(numpadKeyword)) {
       binding = binding.substr(numpadKeyword.length, binding.length - 1);
       if (simpleKeypadMap.hasOwnProperty(binding)) {
@@ -917,8 +919,10 @@ async function app() {
       if (selectedModules.hasOwnProperty(name)) {
         delete selectedModules[name];
       }
+      updateUndoLink(name, true);
     } else {
       selectedModules[name] = value;
+      updateUndoLink(name, false);
     }
     updateCustomizationDownload();
   }
@@ -942,19 +946,43 @@ async function app() {
     return inputElement;
   }
 
+  function updateUndoLink(name, isDefault) {
+    let undoLink = getEl(`undo-${name}`);
+    undoLink.classList.toggle("d-none", isDefault);
+  }
+
   // Convenience method for creating input containers
-  function createInputContainer() {
+  function createInputContainer(name) {
     let row = document.createElement("div");
     row.classList.add("row");
     let col = document.createElement("div");
     col.classList.add("col-sm-5");
     row.append(col);
-    return [row, col];
+    let undoCol = document.createElement("div")
+    undoCol.classList.add("col");
+    let undoLink = document.createElement("a");
+    undoLink.href = "#";
+    undoLink.id = `undo-${name}`;
+    undoLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      setModule(name, getBuiltinModuleDefault(name));
+    })
+    let value = getModuleDefault(name);
+    let configDefault = getBuiltinModuleDefault(name);
+    if (value === configDefault) {
+      undoLink.classList.add("d-none");
+    }
+    let undoIcon = document.createElement("span");
+    undoIcon.classList.add("fa", "fa-undo", "fa-fw");
+    undoLink.append(undoIcon);
+    undoCol.append(undoLink)
+    row.append(undoCol);
+    return [row, col, undoLink];
   }
 
   // Create a dropdown select input
   function handleModuleInputSelect(name, values) {
-    let [inputOuter, inputContainer] = createInputContainer();
+    let [inputOuter, inputContainer, inputUndo] = createInputContainer(name);
     // Create the element
     let selectElement = document.createElement("select");
     selectElement.classList.add(
@@ -964,20 +992,30 @@ async function app() {
       "text-light"
     );
     let defaultValue = getModuleDefault(name);
+    let configDefault = getBuiltinModuleDefault(name);
+    let defaultIndex = 0;
     // Add the values
-    values.forEach((value) => {
+    values.forEach((value, index) => {
       // Create the option element
       let optionElement = document.createElement("option");
       optionElement.value = value.value;
       if (value.value === defaultValue) {
         optionElement.selected = true;
       }
+      // Find the default index
+      if (value.value === configDefault) {
+        defaultIndex = index;
+      }
       // Name the value
       let displayName = properCaseOrDisplayModuleName(value, value.value);
       optionElement.innerText = displayName;
       selectElement.append(optionElement);
     });
-    // Event listener
+    // Event listener for undoing
+    inputUndo.addEventListener("click", () => {
+      selectElement.selectedIndex = defaultIndex;
+    });
+    // Event listener for setting module
     selectElement.addEventListener("input", (e) => {
       let select = e.target;
       let value = select.options[select.selectedIndex].value;
@@ -989,7 +1027,7 @@ async function app() {
 
   // Create a switch/toggle input
   function handleModuleInputSwitch(name, values) {
-    let [inputOuter, inputContainer] = createInputContainer();
+    let [inputOuter, inputContainer, inputUndo] = createInputContainer(name);
     // Create the switch element
     let switchContainer = document.createElement("div");
     switchContainer.classList.add("form-check", "form-switch");
@@ -1001,6 +1039,11 @@ async function app() {
     if (defaultValue) {
       switchElement.checked = true;
     }
+    // Event listener for undoing
+    let configDefault = getDefaultValueFromName(values, getBuiltinModuleDefault(name));
+    inputUndo.addEventListener("click", () => {
+      switchElement.checked = configDefault;
+    });
     // Event listener
     switchContainer.addEventListener("input", (e) => {
       let selected = values[e.target.checked ? 1 : 0];
@@ -1015,7 +1058,7 @@ async function app() {
 
   // Creates a range slider
   function handleModuleInputSlider(name, values) {
-    let [inputOuter, inputContainer] = createInputContainer();
+    let [inputOuter, inputContainer, inputUndo] = createInputContainer(name);
     // Create the range element
     let rangeElement = createInputElement("range", "form-range");
     let defaultValue = getDefaultValueFromName(values, getModuleDefault(name));
@@ -1034,6 +1077,20 @@ async function app() {
     } else {
       valueIndicator.innerText = capitalize(defaultSelection);
     }
+    // Event listener for undoing
+    let configDefault = getDefaultValueFromName(values, getBuiltinModuleDefault(name));
+    inputUndo.addEventListener("click", () => {
+      rangeElement.value = configDefault;
+      let configDefaultSelection = values[configDefault];
+      if (typeof configDefaultSelection === "object") {
+        valueIndicator.innerText = properCaseOrDisplayModuleName(
+          configDefaultSelection,
+          configDefaultSelection.value
+        );
+      } else {
+        valueIndicator.innerText = capitalize(configDefaultSelection);
+      }
+    });
     // Event listener
     rangeElement.addEventListener("input", (e) => {
       let selected = values[e.target.valueAsNumber];
@@ -1143,7 +1200,7 @@ async function app() {
 
   // Function to accurately calculate scroll position because scrollTop is busted...
   function getRelativePos(elm) {
-    var pPos = elm.parentNode.getBoundingClientRect(), // parent pos
+    let pPos = elm.parentNode.getBoundingClientRect(), // parent pos
       cPos = elm.getBoundingClientRect(), // target pos
       pos = {};
 
@@ -1208,6 +1265,8 @@ async function app() {
     }
   }
 
+  let scrollSpy = null;
+
   function handleModulesRoot(modules) {
     if (!getEl("modules-root")) {
       return;
@@ -1248,7 +1307,7 @@ async function app() {
     });
 
     let resetButton = document.createElement("button");
-    resetButton.innerText = "Reset all customizations";
+    resetButton.innerHTML = '<span class="fa fa-undo fa-fw"></span> Reset all modules';
     resetButton.classList.add(
       "position-absolute",
       "bottom-0",
@@ -1275,8 +1334,12 @@ async function app() {
     getEl("modules-root").append(modulesRow);
 
     // Init scrollspy
-    new bootstrap.ScrollSpy(customizationsCol, {
+    if (scrollSpy) {
+      scrollSpy.dispose();
+    }
+    scrollSpy = new bootstrap.ScrollSpy(customizationsCol, {
       target: "#modules-nav",
+      offset: 40,
     });
 
     // Update after travesing all modules
@@ -1512,8 +1575,8 @@ async function app() {
           "` 1 2 3 4 5 6 7 8 9 0 - = {backspace}",
           "{tab} q w e r t y u i o p [ ] \\",
           "{capslock} a s d f g h j k l ; ' {enter}",
-          "{shiftleft} z x c v b n m , . / {shiftright}",
-          "{controlleft} {altleft} {space} {altright} {controlright}",
+          "{shift} z x c v b n m , . / {rshift}",
+          "{ctrl} {lwin} {alt} {space} {ralt} {rwin} {rctrl}",
         ],
       },
       display: {
@@ -1522,14 +1585,14 @@ async function app() {
         "{backspace}": "backspace ⌫",
         "{enter}": "enter ↵",
         "{capslock}": "caps lock ⇪",
-        "{shiftleft}": "shift ⇧",
-        "{shiftright}": "shift ⇧",
-        "{controlleft}": "ctrl",
-        "{controlright}": "ctrl",
-        "{altleft}": "alt",
-        "{altright}": "alt",
-        "{metaleft}": "⊞",
-        "{metaright}": "⊞",
+        "{shift}": "shift ⇧",
+        "{rshift}": "shift ⇧",
+        "{ctrl}": "ctrl",
+        "{rctrl}": "ctrl",
+        "{alt}": "alt",
+        "{ralt}": "alt",
+        "{lwin}": "⊞",
+        "{rwin}": "⊞",
       },
     });
 
@@ -1784,19 +1847,31 @@ async function app() {
     }
   });
 
-  const weapons = {
-    "scout": [
-      {
-        "scattergun": ["Scattergun", "Force-A-Nature", "Back Scatter"],
-        "soda_popper": ["Soda Popper"],
-        "handgun_scout_primary": ["Shortstop"],
-        "pep_brawler_blaster": ["Baby Face's Blaster"]
-      },
-      {
-        "pistol_scout": ["Pistol", ],
-        "handgun_scout_secondary": ["Winger", "Pretty Boy's Pocket Pistol"]
-      }
-    ]
+  const crosshairs = {
+    "Large Circle": {
+      pos: ["64", "64"],
+      size: "64",
+    },
+    Circle: {
+      pos: ["32", "32"],
+      size: "32",
+    },
+    Cross: {
+      pos: ["64", "0"],
+      size: "32",
+    },
+    Heal: {
+      pos: ["0", "64"],
+      size: "32",
+    },
+    Brackets: {
+      pos: ["0", "0"],
+      size: "32",
+    },
+    None: {
+      pos: ["0", "48"],
+      size: "24",
+    },
   }
 
   let resourceCache = {};
