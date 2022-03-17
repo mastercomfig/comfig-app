@@ -100,7 +100,7 @@ a, .nav-link {
   vertical-align: text-bottom;
 }
 
-a:hover, .nav-link:hover {
+a:hover, .nav-link:hover, .nav-link:focus {
   color: #00e3ce;
   text-decoration: none;
 }
