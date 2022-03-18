@@ -614,6 +614,9 @@ async function app() {
     return null;
   }
 
+  const emptyActionValue = "empty";
+  const customActionValue = "custom";
+
   function updateBinds() {
     const bindFields = document.querySelectorAll(".binding-field");
     selectedBinds = {};
@@ -621,7 +624,14 @@ async function app() {
       let keyInput = bindField.childNodes[0].firstChild.value;
       let actionSelect = bindField.childNodes[1].firstChild.value;
       if (keyInput && actionSelect) {
-        selectedBinds[keyInput] = actionMappings[actionSelect];
+        let bindCommand = "";
+        if (actionSelect === customActionValue) {
+          bindCommand = bindField.childNodes[1].lastChild.firstChild.value;
+          bindCommand.replaceAll("\"", "");
+        } else {
+          bindCommand = actionMappings[actionSelect];
+        }
+        selectedBinds[keyInput] = bindCommand;
       }
     }
   }
@@ -729,6 +739,7 @@ async function app() {
     if (userVer === "Dev build") {
       userVer = "dev";
     }
+    const didChange = userVersion !== userVer;
     userVersion = userVer;
     if (userVer === "latest") {
       userVer = latestVersion;
@@ -754,11 +765,16 @@ async function app() {
     }
     getEl("assets-link").href = assetUrl;
 
-    let tag = null;
-    if (userVer !== "latest") {
-      tag = `https://mastercomfig.mcoms.workers.dev/?t=${userVer}`;
+    if (didChange) {
+      if (userVersion === "latest") {
+        if (cachedData) {
+          handleApiResponse(cachedData);
+        }
+      } else {
+        let tag = `https://mastercomfig.mcoms.workers.dev/?t=${userVersion}`;
+        sendApiRequest(tag);
+      }
     }
-    sendApiRequest(tag);
   }
 
   async function setPreset(id, fromDB) {
@@ -1304,7 +1320,7 @@ async function app() {
       if (moduleCategoryNavLink) {
         sidebarNav.append(moduleCategoryNavLink);
         if (index === 0) {
-          moduleCategoryNavLink.classList.add("active");
+          moduleCategoryNavLink.firstChild.classList.add("active");
         }
       }
     });
@@ -1486,6 +1502,9 @@ async function app() {
       });
   }
 
+  // get latest release, and update page
+  sendApiRequest();
+
   // If we have a stored preset, select it
   if (await idbKeyval.get("preset")) {
     await setPreset(await idbKeyval.get("preset"), true);
@@ -1530,11 +1549,12 @@ async function app() {
     }
   }
 
-  // get latest release, and update page
-  sendApiRequest();
-
-  getEl("customize-toggler").addEventListener("click", (e) => {
+  let customizeToggler = getEl("customize-toggler");
+  customizeToggler.addEventListener("click", (e) => {
     e.currentTarget.classList.toggle("active");
+    if (e.currentTarget.classList.contains("active")) {
+      customizeToggler.scrollIntoView({ behavior: "smooth" });
+    }
   });
 
   let lastBindInput = null;
@@ -1815,15 +1835,56 @@ async function app() {
       "bg-dark",
       "text-light"
     );
+    // Add empty
+    let optionElement = document.createElement("option");
+    optionElement.value = emptyActionValue;
+    optionElement.innerText = "Select a Command";
+    selectElement.append(optionElement);
+    // Add custom bind
+    optionElement = document.createElement("option");
+    optionElement.value = customActionValue;
+    optionElement.innerText = "Custom Command";
+    selectElement.append(optionElement);
     // Create the option element for each available action
     for (const actionName of actionNames) {
-      let optionElement = document.createElement("option");
+      optionElement = document.createElement("option");
       optionElement.value = actionName;
       optionElement.innerText = actionName;
       selectElement.append(optionElement);
     }
+
+    // Make custom command input group
+    let inputGroup = document.createElement("div");
+    inputGroup.classList.add("input-group", "d-none");
+    let textInput = document.createElement("input");
+    textInput.type = "text";
+    textInput.classList.add("form-control", "form-control-sm", "text-light", "bg-dark");
+    textInput.placeholder = "Command to run";
+    textInput.ariaLabel = "Custom command to run";
+    inputGroup.append(textInput);
+    let undoButton = document.createElement("button");
+    undoButton.classList.add("btn", "btn-sm", "btn-outline-secondary");
+    undoButton.type = "button";
+    undoButton.innerHTML = "<span class='fa fa-undo fa-fw'></span>";
+    undoButton.addEventListener("click", () => {
+      selectElement.selectedIndex = 0;
+      selectElement.dispatchEvent(new Event("input", { bubbles: true }))
+    });
+    inputGroup.append(undoButton);
+
+    // Show text input when Custom is selected
+    selectElement.addEventListener("input", (e) => {
+      let select = e.target;
+      let value = select.options[select.selectedIndex].value;
+      console.log(value);
+      let isCustom = value === customActionValue;
+      inputGroup.classList.toggle("d-none", !isCustom);
+      selectElement.classList.toggle("d-none", isCustom);
+    });
+
     let actionCol = inputCol.cloneNode();
     actionCol.append(selectElement);
+    actionCol.append(inputGroup);
     let row = document.createElement("div");
     row.classList.add("row", "binding-field");
     
