@@ -16,7 +16,7 @@ async function app() {
     return this.filter(function(item){
         return typeof item == 'string' && item.match(reg);
     });
-}
+  }
 
   function capitalize(str) {
     return str.charAt(0).toUpperCase() + str.substr(1);
@@ -26,19 +26,48 @@ async function app() {
     return document.getElementById(element);
   }
 
+  let memDB = {};
+
+  async function tryDBGet(key) {
+    try {
+      return await idbKeyval.get(key);
+    } catch (err) {
+      console.error(err);
+      return memDB[key]
+    }
+  }
+
+  async function tryDBSet(key, value) {
+    try {
+      await idbKeyval.set(key, value);
+    } catch (err) {
+      console.error(err);
+      memDB[key] = value;
+    }
+  }
+
+  async function tryDBDelete(key) {
+    try {
+      await idbKeyval.del(key);
+    } catch (err) {
+      console.error(err);
+      delete memDB[key];
+    }
+  }
+
   async function loadModules() {
-    let storedModulesDB = await idbKeyval.get("modules");
+    let storedModulesDB = await tryDBGet("modules");
     if (storedModulesDB) {
       storedModules = storedModulesDB;
     }
   }
 
   async function saveModules() {
-    await idbKeyval.set("modules", selectedModules);
+    await tryDBSet("modules", selectedModules);
   }
 
   async function resetModules() {
-    await idbKeyval.del("modules");
+    await tryDBDelete("modules");
     selectedModules = {};
     storedModules = {};
   }
@@ -341,20 +370,20 @@ async function app() {
   let bindDirectInstall = true;
 
   async function updateDirectInstall() {
-    const directInstall = await idbKeyval.get("enable-direct-install");
+    const directInstall = await tryDBGet("enable-direct-install");
     if (!directInstall) {
       getEl("game-folder-container").classList.add("d-none");
       await restoreDirectoryInstructions();
       return;
     }
     getEl("game-folder-container").classList.remove("d-none");
-    if (!(await idbKeyval.get("hide-game-folder-warning"))) {
+    if (!(await tryDBGet("hide-game-folder-warning"))) {
       getEl("game-folder-warning").classList.remove("d-none");
     }
     if (bindDirectInstall) {
       bindDirectInstall = false;
       getEl("game-folder-warning-btn").addEventListener("click", async () => {
-        await idbKeyval.set("hide-game-folder-warning", true);
+        await tryDBSet("hide-game-folder-warning", true);
       });
       getEl("game-folder-group").addEventListener("click", async () => {
         await promptDirectory();
@@ -379,7 +408,7 @@ async function app() {
     for (const instructionEl of instructionEls) {
       instructionEl.classList.remove("d-none");
     }
-    if ((await idbKeyval.get("hide-game-folder-warning"))) {
+    if ((await tryDBGet("hide-game-folder-warning"))) {
       getEl("game-folder-warning").classList.add("d-none");
     }
   }
@@ -413,7 +442,7 @@ async function app() {
       if (!checkDirectory(directoryHandle)) {
         return;
       }
-      await idbKeyval.set("directory", directoryHandle);
+      await tryDBSet("directory", directoryHandle);
       await updateDirectory();
     } catch (error) {
       console.error("Directory prompt failed", error);
@@ -425,7 +454,7 @@ async function app() {
     if (!window.showDirectoryPicker) {
       return;
     }
-    await idbKeyval.del("directory");
+    await tryDBDelete("directory");
     gameDirectory = null;
     customDirectory = null;
     userDirectory = null;
@@ -441,7 +470,7 @@ async function app() {
       return;
     }
     try {
-      let directoryHandle = await idbKeyval.get("directory");
+      let directoryHandle = await tryDBGet("directory");
       if (!directoryHandle) {
         return;
       }
@@ -552,7 +581,7 @@ async function app() {
       }),
     ];
     let presetUrl = getPresetUrl();
-    const directInstall = await idbKeyval.get("enable-direct-install");
+    const directInstall = await tryDBGet("enable-direct-install");
     if (directInstall && customDirectory) {
       // Clear out all existing files
       let presetKeys = Object.keys(presets);
@@ -590,7 +619,7 @@ async function app() {
       }
     }
     // We downloaded this version, so track it!
-    await idbKeyval.set("lastVersion", version);
+    await tryDBSet("lastVersion", version);
     if (cachedData) {
       await handleVersions(cachedData.v);
     }
@@ -719,7 +748,7 @@ async function app() {
   async function setAddon(id, checked, fromDB) {
     // Update our DB with the value
     if (!fromDB) {
-      await idbKeyval.set(id, checked);
+      await tryDBSet(id, checked);
     }
     if (checked) {
       // If checked, add it in if its not there already
@@ -783,7 +812,7 @@ async function app() {
     }
     selectedPreset = id; // save download ID
     if (!fromDB) {
-      await idbKeyval.set("preset", id);
+      await tryDBSet("preset", id);
 
       // If we change preset after modules UI is initialized
       // we have to redraw the modules UI with the new preset's
@@ -1403,7 +1432,7 @@ async function app() {
 
     versions = JSON.parse(JSON.stringify(versions));
 
-    let lastVersion = await idbKeyval.get("lastVersion");
+    let lastVersion = await tryDBGet("lastVersion");
     let foundVersion = false;
 
     latestVersion = versions.shift();
@@ -1488,11 +1517,11 @@ async function app() {
       .then(async (data) => {
         await handleApiResponse(data);
         if (!url) {
-          await idbKeyval.set("cachedData", cachedData);
+          await tryDBSet("cachedData", cachedData);
         }
       })
       .catch(async (err) => {
-        let data = await idbKeyval.get("cachedData");
+        let data = await tryDBGet("cachedData");
         if (data) {
           console.error("Get data failed, falling back to cache:", err);
           await handleApiResponse(data);
@@ -1503,8 +1532,8 @@ async function app() {
   }
 
   // If we have a stored preset, select it
-  if (await idbKeyval.get("preset")) {
-    await setPreset(await idbKeyval.get("preset"), true);
+  if (await tryDBGet("preset")) {
+    await setPreset(await tryDBGet("preset"), true);
   } else {
     await setPreset("medium-high", true);
   }
@@ -1544,8 +1573,8 @@ async function app() {
 
   // For all defined addons, check if we have it stored
   for (const id of addons) {
-    if (await idbKeyval.get(id)) {
-      await setAddon(id, await idbKeyval.get(id), true);
+    if (await tryDBGet(id)) {
+      await setAddon(id, await tryDBGet(id), true);
     }
   }
 
@@ -1905,7 +1934,7 @@ async function app() {
     bindsList.append(row);
   }
 
-  idbKeyval.get("keybinds").then((keybinds) => {
+  tryDBGet("keybinds").then((keybinds) => {
     if (!keybinds) {
       createBindingField();
     }
@@ -2117,10 +2146,10 @@ async function app() {
   if (window.showDirectoryPicker) {
     getEl("game-folder-wrapper").classList.remove("d-none");
     let directInstallCheckbox = getEl("direct-install");
-    directInstallCheckbox.checked = await idbKeyval.get("enable-direct-install");
+    directInstallCheckbox.checked = await tryDBGet("enable-direct-install");
     await updateDirectInstall();
     directInstallCheckbox.addEventListener("input", async (e) => {
-      await idbKeyval.set("enable-direct-install", e.currentTarget.checked);
+      await tryDBSet("enable-direct-install", e.currentTarget.checked);
       await updateDirectInstall();
     });
   }
