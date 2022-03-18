@@ -1502,15 +1502,15 @@ async function app() {
       });
   }
 
-  // get latest release, and update page
-  sendApiRequest();
-
   // If we have a stored preset, select it
   if (await idbKeyval.get("preset")) {
     await setPreset(await idbKeyval.get("preset"), true);
   } else {
     await setPreset("medium-high", true);
   }
+
+  // get latest release, and update page
+  sendApiRequest();
 
   // Register event for all presets defined in the HTML.
   document.querySelectorAll("#presets a").forEach((element) => {
