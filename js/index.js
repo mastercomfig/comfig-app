@@ -33,7 +33,7 @@ if ($('#comanglia-bar').visible()) {
     $(window).off('scroll');
 }
 
-$('#compareModal').on('shown.bs.modal', function () {
+$('#compareModal').on('shown.bs.modal', function() {
   $("#quality-compare-large").twentytwenty({
       before_label: 'Low',
       after_label: 'Ultra'

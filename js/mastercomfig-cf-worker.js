@@ -178,8 +178,8 @@ async function updateData(requests) {
       }
       data[i] = value
     }
-  } catch (error) {
-    console.error(error)
+  } catch (err) {
+    console.error(err)
   } finally {
     return data
   }
@@ -470,8 +470,8 @@ async function updateData(requests) {
       }
       data[i] = value
     }
-  } catch (error) {
-    console.error(error)
+  } catch (err) {
+    console.error(err)
   } finally {
     return data
   }

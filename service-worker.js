@@ -120,12 +120,12 @@ self.addEventListener("fetch", (event) => {
         // Always try the network first.
         const networkResponse = await fetch(event.request);
         return networkResponse;
-      } catch (error) {
+      } catch (err) {
         // catch is only triggered if an exception is thrown, which is likely
         // due to a network error.
         // If fetch() returns a valid HTTP response with a response code in
         // the 4xx or 5xx range, the catch() will NOT be called.
-        console.log("Fetch failed; returning offline file instead.", error);
+        console.log("Fetch failed; returning offline file instead.", err);
 
         const cache = await caches.open(CACHE_NAME);
         const cachedResponse = await cache.match(event.request);
