@@ -1,10 +1,38 @@
 "use strict";
 
 async function app() {
+  if ("Sentry" in window) {
+    const logLevelToSentrySeverity = {
+      "warn": "warning",
+    };
+
+    function consoleHook(level) {
+      const original = console[level].bind(console);
+      return function() {
+        Sentry.addBreadcrumb(
+          {
+            category: 'console',
+            level: logLevelToSentrySeverity[level] ? logLevelToSentrySeverity[level] : level,
+            message: !arguments ? "undefined" : arguments.length === 1 ? `${arguments[0]}` : `${arguments[0]}: ${Array.prototype.slice.call(arguments, 1).join()}`,
+          },
+          {
+            input: [...arguments],
+            level,
+          },
+        );
+        original.apply(console, arguments);
+      }
+    }
+
+    for (const level of ['debug', 'info', 'warn', 'error', 'log']) {
+      console[level] = consoleHook(level);
+    }
+  }
+
   // convenience format method for string
-  String.prototype.format = function () {
+  String.prototype.format = function() {
     const args = arguments;
-    return this.replace(/{(\d+)}/g, function (match, number) {
+    return this.replace(/{(\d+)}/g, function(match, number) {
       return typeof args[number] !== "undefined" ? args[number] : match;
     });
   };
@@ -444,8 +472,8 @@ async function app() {
       }
       await tryDBSet("directory", directoryHandle);
       await updateDirectory();
-    } catch (error) {
-      console.error("Directory prompt failed", error);
+    } catch (err) {
+      console.error("Directory prompt failed", err);
     }
   }
 
@@ -483,8 +511,8 @@ async function app() {
       getEl(
         "game-folder-text"
       ).innerText = `${gameDirectory.name} folder chosen, click to change`;
-    } catch (error) {
-      console.error("Get directory failed", error);
+    } catch (err) {
+      console.error("Get directory failed", err);
     }
   }
 
@@ -515,8 +543,8 @@ async function app() {
       appDirectory = await cfgDirectory.getDirectoryHandle("app", {
         create: true,
       });
-    } catch (error) {
-      console.error("Get directory failed", error);
+    } catch (err) {
+      console.error("Get directory failed", err);
       clearDirectory();
     }
   }
@@ -524,9 +552,13 @@ async function app() {
   async function safeUnlink(name, directory) {
     try {
       await directory.removeEntry(name);
-    } catch (error) {
+    } catch (err) {
       if (!error.toString().includes("could not be found")) {
-        console.error(`Failed deleting ${name}`, error); 
+        console.error(`Failed deleting ${name}`, err); 
+      } else {
+        if ("Sentry" in window) {
+          Sentry.captureException(err);
+        }
       }
     }
   }
@@ -1523,7 +1555,7 @@ async function app() {
       .catch(async (err) => {
         let data = await tryDBGet("cachedData");
         if (data) {
-          console.error("Get data failed, falling back to cache:", err);
+          console.log("Get data failed, falling back to cache:", err);
           await handleApiResponse(data);
         } else {
           console.error("Failed to get download data:", err);
@@ -1905,7 +1937,6 @@ async function app() {
     selectElement.addEventListener("input", (e) => {
       let select = e.target;
       let value = select.options[select.selectedIndex].value;
-      console.log(value);
       let isCustom = value === customActionValue;
       inputGroup.classList.toggle("d-none", !isCustom);
       selectElement.classList.toggle("d-none", isCustom);
@@ -2068,10 +2099,10 @@ async function app() {
         ghToken = credential.accessToken;
         ghUser = result.user;
       })
-      .catch((error) => {
+      .catch((err) => {
         // Handle Errors here.
-        let errorCode = error.code;
-        let errorMessage = error.message;
+        let errorCode = err.code;
+        let errorMessage = err.message;
         console.error("Login failed: ", errorCode, errorMessage);
       });
   }
@@ -2155,6 +2186,6 @@ async function app() {
   }
 }
 
-(function () {
+(function() {
   app();
 })();
