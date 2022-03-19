@@ -114,11 +114,6 @@ input {
   border-color: #3d454c;
 }
 
-.download-preview {
-  max-height: 35vh;
-  width: auto;
-}
-
 .module-title {
   margin-top: 0.5rem;
 }
