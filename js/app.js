@@ -1,6 +1,38 @@
 "use strict";
 
 async function app() {
+  function loadScript(url) {
+    return new Promise(function (resolve, reject) {
+      const script = document.createElement("script");
+      script.src = url;
+      script.crossOrigin = "anonymous";
+      script.onload = resolve;
+      script.onerror = reject;
+      document.head.appendChild(script);
+    });
+  }
+
+  const deferredScripts = {
+    firebase: loadScript("https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"),
+    firebaseAuth: loadScript("https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"),
+    firebaseMessaging: loadScript("https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js"),
+    SimpleKeyboard: loadScript("https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/index.modern.js")
+  }
+
+  deferredScripts.firebase.then(() => {
+    const firebaseConfig = {
+      apiKey: "AIzaSyBKDPeOgq97k5whdxL_Z94ak9jSfdjXU4E",
+      authDomain: "mastercomfig-app.firebaseapp.com",
+      projectId: "mastercomfig-app",
+      storageBucket: "mastercomfig-app.appspot.com",
+      messagingSenderId: "1055009628964",
+      appId: "1:1055009628964:web:6ad7954859d843050d49b1",
+      measurementId: "G-S0F8JT6ZQE"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+  });
+
   if ("Sentry" in window) {
     const logLevelToSentrySeverity = {
       "warn": "warning",
@@ -119,14 +151,38 @@ async function app() {
 
   // Map preset IDs to display names for download
   var presets = {
-    none: "None",
-    ultra: "Ultra",
-    high: "High",
-    "medium-high": "Medium High",
-    medium: "Medium",
-    "medium-low": "Medium Low",
-    low: "Low",
-    "very-low": "Very Low",
+    none: {
+      name: "None",
+      description: "<h4>Special preset which skips setting quality options.</h4>",
+    },
+    ultra: {
+      name: "Ultra",
+      description: "<h4>Absolute maximum quality, with even the slightest and most performance-intensive quality improvements included.</h4>",
+    },
+    high: {
+      name: "High",
+      description: "<h4>Enables all graphical features without making them extremely high quality.</h4>",
+    },
+    "medium-high": {
+      name: "Medium High",
+      description: "<h4>Disables unoptimized features and optimizes the game without making the game look bad.</h4>",
+    },
+    medium: {
+      name: "Medium",
+      description: "<h4>The maximum performance you can get while enabling a few effects that may give you a slight edge.</h4>",
+    },
+    "medium-low": {
+      name: "Medium Low",
+      description: "<h4>The maximum performance you can get without making the game too hard to play because of awful visual quality and glitches.</h4>",
+    },
+    low: {
+      name: "Low",
+      description: "<h4>Maximum performance without caring much about visibility or possible visual glitches.</h4>",
+    },
+    "very-low": {
+      name: "Very Low",
+      description: "<h4>Negatively affects playability by <strong>a lot</strong> and disables very essential features like HUD elements in desperation for performance.</h4>Not recommended unless the game has such low performance that it is more of a hinderance than not having HUD elements and good player visibility.<br><strong>BY DOWNLOADING THIS PRESET YOU UNDERSTAND THAT IT <em>REMOVES HUD ELEMENTS AND REDUCES VISIBILITY</em>. IF YOU DON'T WANT THIS <em>USE LOW</em>, THAT'S THE <em>ONLY</em> DIFFERENCE.</strong><br>",
+    },
   };
 
   // The only addons we can override when preset switches
@@ -305,8 +361,7 @@ async function app() {
     if (customDirectory && !notDirect) {
       url = url.replace(
         "https://github.com/mastercomfig/mastercomfig/releases",
-        (isLocalHost ? "https://cors-anywhere.herokuapp.com/" : "") +
-          "https://mastercomfig.mcoms.workers.dev/download"
+        "https://mastercomfig.mcoms.workers.dev/download"
       );
     }
     return url;
@@ -857,17 +912,22 @@ async function app() {
         handleModulesRoot(cachedData.m);
       }
     }
+    let presetInfo = presets[selectedPreset];
+    let presetImage = getEl("preset-image");
+    presetImage.src = `/img/presets/${selectedPreset}.png`;
+    presetImage.alt = `${presetInfo.name} preset screenshot`;
+    getEl("preset-description").innerHTML = presetInfo.description;
     new bootstrap.Tab(getEl(selectedPreset)).show(); // visually select in tabs menu
     getEl("vpk-dl").removeAttribute("href"); // we don't need the static download anymore
     if (!downloading) {
       getEl(
         "vpk-dl"
-      ).innerHTML = `<span class="fa fa-cloud-download fa-fw"></span> Download ${presets[selectedPreset]} preset and selected addons `; // update download text
+      ).innerHTML = `<span class="fa fa-cloud-download fa-fw"></span> Download ${presetInfo.name} preset and selected addons `; // update download text
     }
     getEl("preset-dl").href = getPresetUrl(true);
     getEl(
       "preset-dl"
-    ).innerHTML = `<span class="fa fa-download fa-fw"></span> Download ${presets[selectedPreset]} preset `; // update preset text
+    ).innerHTML = `<span class="fa fa-download fa-fw"></span> Download ${presetInfo.name} preset `; // update preset text
     // if not loading from DB, set recommended addons
     if (!fromDB) {
       // reset all recommendable addons
@@ -1521,15 +1581,6 @@ async function app() {
     getEl("versionDropdown").classList.add("ready");
   }
 
-  const isLocalHost =
-    window.location.hostname === "localhost" ||
-    // [::1] is the IPv6 localhost address.
-    window.location.hostname === "[::1]" ||
-    // 127.0.0.1/8 is considered localhost for IPv4.
-    window.location.hostname.match(
-      /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/
-    );
-
   async function handleApiResponse(data) {
     cachedData = data;
     // Get the version
@@ -1541,10 +1592,7 @@ async function app() {
   }
 
   function sendApiRequest(url) {
-    fetch(
-      (isLocalHost ? "https://cors-anywhere.herokuapp.com/" : "") +
-        (url ? url : "https://mastercomfig.mcoms.workers.dev/?v=2")
-    )
+    fetch("https://mastercomfig.mcoms.workers.dev/?v=2")
       .then((resp) => resp.json())
       .then(async (data) => {
         await handleApiResponse(data);
@@ -1636,14 +1684,17 @@ async function app() {
     mergeDisplay: true,
   };
 
-  const Keyboard = window.SimpleKeyboard.default;
   var blockKeyboard = false;
   var inittedKeyboard = false;
 
-  function initKeyboard() {
+  async function initKeyboard() {
     if (inittedKeyboard) {
       return;
     }
+
+    await deferredScripts.SimpleKeyboard;
+
+    const Keyboard = window.SimpleKeyboard.default;
 
     inittedKeyboard = true;
 
@@ -1772,9 +1823,9 @@ async function app() {
     '#customizations a[data-bs-toggle="tab"]'
   );
   for (const tabEl of tabEls) {
-    tabEl.addEventListener("shown.bs.tab", (event) => {
+    tabEl.addEventListener("shown.bs.tab", async (event) => {
       if (event.target.id === "bindings") {
-        initKeyboard();
+        await initKeyboard();
       } else {
         blockKeyboard = false;
       }
