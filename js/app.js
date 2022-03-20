@@ -458,14 +458,16 @@ async function app() {
       return;
     }
     getEl("game-folder-container").classList.remove("d-none");
-    if (!(await tryDBGet("hide-game-folder-warning"))) {
+    if (!(await tryDBGet("hide-game-folder-warning")) && getEl("game-folder-warning")) {
       getEl("game-folder-warning").classList.remove("d-none");
     }
     if (bindDirectInstall) {
       bindDirectInstall = false;
-      getEl("game-folder-warning-btn").addEventListener("click", async () => {
-        await tryDBSet("hide-game-folder-warning", true);
-      });
+      if (getEl("game-folder-warning-btn")) {
+        getEl("game-folder-warning-btn").addEventListener("click", async () => {
+          await tryDBSet("hide-game-folder-warning", true);
+        });
+      }
       getEl("game-folder-group").addEventListener("click", async () => {
         await promptDirectory();
       });
@@ -489,7 +491,7 @@ async function app() {
     for (const instructionEl of instructionEls) {
       instructionEl.classList.remove("d-none");
     }
-    if ((await tryDBGet("hide-game-folder-warning"))) {
+    if ((await tryDBGet("hide-game-folder-warning")) && getEl("game-folder-warning")) {
       getEl("game-folder-warning").classList.add("d-none");
     }
   }
