@@ -11,8 +11,8 @@ Copyright 2015, 2019, 2020, 2021 Google LLC. All Rights Reserved.
  limitations under the License.
 */
 
-importScripts('https://www.gstatic.com/firebasejs/8.6.7/firebase-app.js');
-importScripts('https://www.gstatic.com/firebasejs/8.6.7/firebase-messaging.js');
+importScripts('https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js');
+importScripts('https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js');
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -28,11 +28,26 @@ var firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 
-const messaging = firebase.messaging();
+try {
+  const messaging = firebase.messaging();
+  messaging.onBackgroundMessage((payload) => {
+    console.log("[Service Worker] Received background message", payload);
+    const notificationTitle = payload.title ? payload.title : "mastercomfig update";
+    const notificationOptions = {
+      body: payload.body ? payload.body : "There is a new update for mastercomfig available!",
+      icon: "/img/mastercomfig_logo_512x.png"
+    };
+
+    self.registration.showNotification(notificationTitle,
+      notificationOptions);
+  });
+} catch (err) {
+  console.error(err);
+}
 
 // Incrementing OFFLINE_VERSION will kick off the install event and force
 // previously cached resources to be updated from the network.
-const OFFLINE_VERSION = 2;
+const OFFLINE_VERSION = 3;
 const CACHE_NAME = "offline-v" + OFFLINE_VERSION;
 
 const OFFLINE_FILES = [
@@ -140,16 +155,4 @@ self.addEventListener("fetch", (event) => {
   // chance to call event.respondWith(). If no fetch handlers call
   // event.respondWith(), the request will be handled by the browser as if there
   // were no service worker involvement.
-});
-
-messaging.onBackgroundMessage((payload) => {
-  console.log("[Service Worker] Received background message", payload);
-  const notificationTitle = payload.title ? payload.title : "mastercomfig update";
-  const notificationOptions = {
-    body: payload.body ? payload.body : "There is a new update for mastercomfig available!",
-    icon: "/img/mastercomfig_logo_512x.png"
-  };
-
-  self.registration.showNotification(notificationTitle,
-    notificationOptions);
 });
