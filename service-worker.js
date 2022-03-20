@@ -38,10 +38,12 @@ const CACHE_NAME = "offline-v" + OFFLINE_VERSION;
 const OFFLINE_FILES = [
   "/manifest.webmanifest",
   "/app",
+  "/app.html",
   "/css/main.css",
   "/css/app.css",
   "/favicon.png",
   "/js/app.js",
+  "/js/vdf-parser.js",
   "/img/mastercomfig_logo_192x.png",
   "/img/mastercomfig_logo_512x.png",
   "/img/mastercomfig_logo_transparent_i.svg",
@@ -52,6 +54,7 @@ const OFFLINE_FILES = [
   "/img/presets/medium-low.png",
   "/img/presets/low.png",
   "/img/presets/very-low.png",
+  "https://js.sentry-cdn.com/42c25ee2fb084eb5a832ee92d97057d5.min.js",
   "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css",
   "https://cdn.jsdelivr.net/npm/font-awesome@4/fonts/fontawesome-webfont.woff?v=4.7.0",
   "https://cdn.jsdelivr.net/npm/font-awesome@4/fonts/fontawesome-webfont.ttf?v=4.7.0",
@@ -59,8 +62,7 @@ const OFFLINE_FILES = [
   "https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/css/index.min.css",
   "https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js",
   "https://cdn.jsdelivr.net/npm/idb-keyval@6/dist/umd.js",
-  "https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/index.min.js",
-  "https://cdn.jsdelivr.net/npm/vdf-parser@1.2.0/main.min.js",
+  "https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/index.modern.js",
 ];
 
 self.addEventListener("install", (event) => {
