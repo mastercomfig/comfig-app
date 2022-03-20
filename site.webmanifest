@@ -1,19 +1,19 @@
 {
-    "short_name": "mastercomfig",
     "name": "mastercomfig",
+    "short_name": "mastercomfig",
     "categories": ["games", "utilities", "personalization"],
     "lang": "en-US",
     "dir": "ltr",
     "orientation": "any",
     "icons": [
       {
-        "src": "/img/maskable_icon_192x.png",
+        "src": "/android-chrome-192x192.png",
         "type": "image/png",
         "sizes": "192x192",
         "purpose": "maskable"
       },
       {
-        "src": "/img/maskable_icon_512x.png",
+        "src": "/android-chrome-512x512.png",
         "type": "image/png",
         "sizes": "512x512",
         "purpose": "maskable"

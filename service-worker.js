@@ -43,7 +43,7 @@ const OFFLINE_FILES = [
   "/css/app.css",
   "/favicon.png",
   "/js/app.js",
-  "/js/vdf-parser.js",
+  "/third_party/js/vdf-parser.js",
   "/img/mastercomfig_logo_192x.png",
   "/img/mastercomfig_logo_512x.png",
   "/img/mastercomfig_logo_transparent_i.svg",
