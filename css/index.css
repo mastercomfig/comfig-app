@@ -1,21 +1,22 @@
 .home-header {
-    background: linear-gradient(rgba(38, 50, 56, 0.7) 10%, rgba(38, 50, 56, 0.7)), url('../img/cp_badlands01.jpg');
-    background-size: cover;
-    background-position: center
+  background: linear-gradient(rgba(38, 50, 56, 0.7) 10%, rgba(38, 50, 56, 0.7)), url('../img/cp_badlands01.jpg');
+  background-size: cover;
+  background-position: center
 }
 
 .img-separator {
-    height: 40vh;
-    margin-bottom: 2rem
+  height: 40vh;
+  margin-bottom: 2rem
 }
 
 .progress {
-    border-radius: 0
+  border-radius: 0
 }
 
 .progress-bar {
-    padding-left: 1rem;
-    text-align: left;
-    background-color: #00aa9b;
-    color: #000
+  padding-left: 1rem;
+  text-align: left;
+  background-color: #00aa9b;
+  color: #000;
+  will-change: width;
 }
