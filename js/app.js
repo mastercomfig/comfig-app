@@ -1592,7 +1592,7 @@ async function app() {
   }
 
   function sendApiRequest(url) {
-    fetch("https://mastercomfig.mcoms.workers.dev/?v=2")
+    fetch(url ? url : "https://mastercomfig.mcoms.workers.dev/?v=2")
       .then((resp) => resp.json())
       .then(async (data) => {
         await handleApiResponse(data);
