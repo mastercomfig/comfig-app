@@ -36,7 +36,7 @@ const OFFLINE_VERSION = 2;
 const CACHE_NAME = "offline-v" + OFFLINE_VERSION;
 
 const OFFLINE_FILES = [
-  "/manifest.webmanifest",
+  "/site.webmanifest",
   "/app",
   "/app.html",
   "/css/main.css",
