@@ -2174,8 +2174,6 @@ async function app() {
   var firebaseMessaging;
 
   function messaging() {
-    await deferredScripts.firebase;
-    await deferredScripts.firebaseMessaging;
     if (!firebaseMessaging) {
       firebaseMessaging = firebase.messaging();
     }
@@ -2183,6 +2181,8 @@ async function app() {
   }
 
   async function getToken(serviceWorkerRegistration) {
+    await deferredScripts.firebase;
+    await deferredScripts.firebaseMessaging;
     try {
       messaging().onMessage((payload) => {
         console.log("Message received. ", payload);
