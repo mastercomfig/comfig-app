@@ -913,7 +913,7 @@ async function app() {
     let presetInfo = presets[selectedPreset];
     new bootstrap.Tab(getEl(selectedPreset)).show(); // visually select in tabs menu
     let presetImage = getEl("preset-image");
-    presetImage.src = `/img/presets/${selectedPreset}.png`;
+    presetImage.src = `/img/presets/${selectedPreset}.webp`;
     presetImage.alt = `${presetInfo.name} preset screenshot`;
     getEl("preset-description").innerHTML = presetInfo.description;
     getEl("vpk-dl").removeAttribute("href"); // we don't need the static download anymore
