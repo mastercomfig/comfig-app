@@ -12,10 +12,14 @@ async function app() {
     });
   }
 
+  function loadScriptEx(url, ...dependencies) {
+    return Promise.all(dependencies.map(loadScript)).then(() => loadScript(url));
+  }
+
   const deferredScripts = {
     firebase: loadScript("https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"),
-    firebaseAuth: loadScript("https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"),
-    firebaseMessaging: loadScript("https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js"),
+    firebaseAuth: loadScript("https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js", deferredScripts.firebase),
+    firebaseMessaging: loadScript("https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js", deferredScripts.firebase),
     SimpleKeyboard: loadScript("https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/index.modern.js")
   }
 
@@ -45,12 +49,12 @@ async function app() {
           {
             category: 'console',
             level: logLevelToSentrySeverity[level] ? logLevelToSentrySeverity[level] : level,
-            message: !arguments ? "undefined" : arguments.length === 1 ? `${arguments[0]}` : `${arguments[0]}: ${Array.prototype.slice.call(arguments, 1).join()}`,
+            message: !arguments ? "undefined" : arguments.length === 1 ? `${arguments[0]}` : `${arguments[0]}: ${Array.prototype.slice.call(arguments, 1).join()}`
           },
           {
             input: [...arguments],
-            level,
-          },
+            level
+          }
         );
         original.apply(console, arguments);
       }
@@ -608,7 +612,7 @@ async function app() {
     try {
       await directory.removeEntry(name);
     } catch (err) {
-      if (!error.toString().includes("could not be found")) {
+      if (!err.toString().includes("could not be found")) {
         console.error(`Failed deleting ${name}`, err); 
       } else {
         if ("Sentry" in window) {
@@ -914,9 +918,16 @@ async function app() {
     }
     let presetInfo = presets[selectedPreset];
     let presetImage = getEl("preset-image");
-    presetImage.src = `/img/presets/${selectedPreset}.png`;
-    presetImage.alt = `${presetInfo.name} preset screenshot`;
-    getEl("preset-description").innerHTML = presetInfo.description;
+    // TODO: html not synced with JS?
+    if (presetImage) {
+      presetImage.src = `/img/presets/${selectedPreset}.png`;
+      presetImage.alt = `${presetInfo.name} preset screenshot`;
+    }
+    let presetDescription = getEl("preset-description");
+    // TODO: html not synced with JS?
+    if (presetDescription) {
+      presetDescription.innerHTML = presetInfo.description;
+    }
     new bootstrap.Tab(getEl(selectedPreset)).show(); // visually select in tabs menu
     getEl("vpk-dl").removeAttribute("href"); // we don't need the static download anymore
     if (!downloading) {
@@ -2139,6 +2150,8 @@ async function app() {
   var ghUser;
 
   async function loginWithGitHub() {
+    await deferredScripts.firebase;
+    await deferredScripts.firebaseAuth;
     if (!ghProvider) {
       ghProvider = new firebase.auth.GithubAuthProvider();
     }
@@ -2161,6 +2174,8 @@ async function app() {
   var firebaseMessaging;
 
   function messaging() {
+    await deferredScripts.firebase;
+    await deferredScripts.firebaseMessaging;
     if (!firebaseMessaging) {
       firebaseMessaging = firebase.messaging();
     }
@@ -2168,18 +2183,22 @@ async function app() {
   }
 
   async function getToken(serviceWorkerRegistration) {
-    messaging().onMessage((payload) => {
-      console.log("Message received. ", payload);
-    });
-    return messaging()
-      .getToken({
-        vapidKey:
-          "BPfZekvCE2KeCCGFTvCtu2J1kW8cXiYS3LxrNK4pAewiw4sYWip92u9LPl4Mlo4dBXogHKEvURve3DUlA_eh1U4",
-        serviceWorkerRegistration,
-      })
-      .then((token) => {
-        console.log(token);
+    try {
+      messaging().onMessage((payload) => {
+        console.log("Message received. ", payload);
       });
+      return messaging()
+        .getToken({
+          vapidKey:
+            "BPfZekvCE2KeCCGFTvCtu2J1kW8cXiYS3LxrNK4pAewiw4sYWip92u9LPl4Mlo4dBXogHKEvURve3DUlA_eh1U4",
+          serviceWorkerRegistration,
+        })
+        .then((token) => {
+          console.log(token);
+        });
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   function handleNotifications(registration) {
