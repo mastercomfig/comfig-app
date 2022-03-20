@@ -918,16 +918,9 @@ async function app() {
     }
     let presetInfo = presets[selectedPreset];
     let presetImage = getEl("preset-image");
-    // TODO: html not synced with JS?
-    if (presetImage) {
-      presetImage.src = `/img/presets/${selectedPreset}.png`;
-      presetImage.alt = `${presetInfo.name} preset screenshot`;
-    }
-    let presetDescription = getEl("preset-description");
-    // TODO: html not synced with JS?
-    if (presetDescription) {
-      presetDescription.innerHTML = presetInfo.description;
-    }
+    presetImage.src = `/img/presets/${selectedPreset}.png`;
+    presetImage.alt = `${presetInfo.name} preset screenshot`;
+    getEl("preset-description").innerHTML = presetInfo.description;
     new bootstrap.Tab(getEl(selectedPreset)).show(); // visually select in tabs menu
     getEl("vpk-dl").removeAttribute("href"); // we don't need the static download anymore
     if (!downloading) {
