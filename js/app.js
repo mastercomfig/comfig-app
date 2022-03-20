@@ -328,7 +328,7 @@ async function app() {
     }
   }
 
-  function handleConnectivityChange(event) {
+  function handleConnectivityChange(e) {
     let element = getEl("vpk-dl");
     // HACK: we are currently using a hack, by using the "downloading" variable
     // to block downloads and track blocked download state.
@@ -1502,8 +1502,8 @@ async function app() {
     let dropdownItem = document.createElement("a");
     dropdownItem.classList.add("dropdown-item");
     dropdownItem.href = "#";
-    dropdownItem.addEventListener("click", (event) => {
-      event.preventDefault();
+    dropdownItem.addEventListener("click", (e) => {
+      e.preventDefault();
       setUserVersion(ver);
     });
     dropdownItem.innerText = ver === "latest" ? latestVersion : ver;
@@ -1781,20 +1781,20 @@ async function app() {
     });
   }
 
-  document.addEventListener("keydown", (event) => {
+  document.addEventListener("keydown", (e) => {
     if (blockKeyboard && lastBindInput) {
-      event.preventDefault();
-      lastBindInput.value = keyEventToKeyBind(event);
+      e.preventDefault();
+      lastBindInput.value = keyEventToKeyBind(e);
       finishBindInput(lastBindInput, true);
     }
   });
 
   let capturedMouseDown = null;
 
-  document.addEventListener("mousedown", (event) => {
+  document.addEventListener("mousedown", (e) => {
     if (blockKeyboard && lastBindInput) {
-      event.preventDefault();
-      let button = event.button;
+      e.preventDefault();
+      let button = e.button;
       if (button === 1) {
         button = 2;
       } else if (button === 2) {
@@ -1809,19 +1809,19 @@ async function app() {
     return !blockKeyboard;
   }
 
-  document.addEventListener("mouseup", (event) => {
+  document.addEventListener("mouseup", (e) => {
     if (blockKeyboard && lastBindInput && capturedMouseDown) {
-      event.preventDefault();
+      e.preventDefault();
       lastBindInput.value = capturedMouseDown;
       capturedMouseDown = null;
       finishBindInput(lastBindInput, true);
     }
   })
 
-  document.addEventListener("wheel", (event) => {
+  document.addEventListener("wheel", (e) => {
     if (blockKeyboard && lastBindInput) {
-      event.preventDefault();
-      lastBindInput.value = event.wheelDelta > 0 ? "MWHEELUP" : "MWHEELDOWN";
+      e.preventDefault();
+      lastBindInput.value = e.wheelDelta > 0 ? "MWHEELUP" : "MWHEELDOWN";
       finishBindInput(lastBindInput, true);
       return false;
     }
@@ -1834,8 +1834,8 @@ async function app() {
     '#customizations a[data-bs-toggle="tab"]'
   );
   for (const tabEl of tabEls) {
-    tabEl.addEventListener("shown.bs.tab", async (event) => {
-      if (event.target.id === "bindings") {
+    tabEl.addEventListener("shown.bs.tab", async (e) => {
+      if (e.target.id === "bindings") {
         await initKeyboard();
       } else {
         blockKeyboard = false;
@@ -1864,19 +1864,19 @@ async function app() {
   }
 
   function bindBindingField(bindField) {
-    bindField.addEventListener("focus", (event) => {
+    bindField.addEventListener("focus", (e) => {
       blockKeyboard = true;
-      lastBindInput = event.currentTarget;
-      event.currentTarget.classList.remove("disabled");
-      event.currentTarget.value = "";
+      lastBindInput = e.currentTarget;
+      e.currentTarget.classList.remove("disabled");
+      e.currentTarget.value = "";
       history.pushState(null, document.title, location.href);
-      event.currentTarget.placeholder = "<Press key or mouse button to bind>";
+      e.currentTarget.placeholder = "<Press key or mouse button to bind>";
     });
-    bindField.addEventListener("input", (event) => {
-      finishBindInput(event.currentTarget, true);
+    bindField.addEventListener("input", (e) => {
+      finishBindInput(e.currentTarget, true);
     });
-    bindField.addEventListener("blur", (event) => {
-      finishBindInput(event.currentTarget);
+    bindField.addEventListener("blur", (e) => {
+      finishBindInput(e.currentTarget);
     });
   }
 
