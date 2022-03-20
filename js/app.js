@@ -10,17 +10,15 @@ function loadScript(url) {
 }
 
 function loadScriptEx(url, ...dependencies) {
-  return Promise.all(dependencies.map((d) => loadScript(deferredScripts[d]))).then(() => loadScript(url));
+  return Promise.all(dependencies).then(() => loadScript(url));
 }
 
-const deferredScripts = {
-  firebase: loadScript("https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"),
-  firebaseAuth: loadScript("https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js", "firebase"),
-  firebaseMessaging: loadScript("https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js", "firebase"),
-  SimpleKeyboard: loadScript("https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/index.modern.js")
-}
+let dfirebase = loadScript("https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js");
+let dfirebaseAuth = loadScriptEx("https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js", dfirebase);
+let dfirebaseMessaging = loadScriptEx("https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js", dfirebase);
+let dSimpleKeyboard = loadScript("https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/index.modern.js");
 
-deferredScripts.firebase.then(() => {
+dfirebase.then(() => {
   const firebaseConfig = {
     apiKey: "AIzaSyBKDPeOgq97k5whdxL_Z94ak9jSfdjXU4E",
     authDomain: "mastercomfig-app.firebaseapp.com",
@@ -1693,7 +1691,7 @@ async function initKeyboard() {
     return;
   }
 
-  await deferredScripts.SimpleKeyboard;
+  await dSimpleKeyboard;
 
   const Keyboard = window.SimpleKeyboard.default;
 
@@ -2140,8 +2138,8 @@ var ghToken;
 var ghUser;
 
 async function loginWithGitHub() {
-  await deferredScripts.firebase;
-  await deferredScripts.firebaseAuth;
+  await dfirebase;
+  await dfirebaseAuth;
   if (!ghProvider) {
     ghProvider = new firebase.auth.GithubAuthProvider();
   }
@@ -2171,8 +2169,8 @@ function messaging() {
 }
 
 async function getToken(serviceWorkerRegistration) {
-  await deferredScripts.firebase;
-  await deferredScripts.firebaseMessaging;
+  await dfirebase;
+  await dfirebaseMessaging;
   try {
     messaging().onMessage((payload) => {
       console.log("Message received. ", payload);
