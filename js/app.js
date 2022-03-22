@@ -1,6 +1,6 @@
 async function app() {
   function loadScript(url) {
-    return new Promise(function (resolve, reject) {
+    return new Promise((resolve, reject) => {
       const script = document.createElement("script");
       script.src = url;
       script.crossOrigin = "anonymous";
@@ -14,10 +14,19 @@ async function app() {
     return Promise.all(dependencies).then(() => loadScript(url));
   }
 
+  function hasDynamicImport() {
+    try {
+      return new Function("return import('data:text/javascript;base64,Cg==').then(r => true)")();
+    } catch(e) {
+      return Promise.resolve(false);
+    }
+  }
+
   let dfirebase = loadScript("https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js");
   let dfirebaseAuth = loadScriptEx("https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js", dfirebase);
   let dfirebaseMessaging = loadScriptEx("https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js", dfirebase);
   let dSimpleKeyboard = loadScript("https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/index.modern.js");
+  let dVDF = hasDynamicImport().then(() => import("../third_party/js/vdf-parser.js"));
 
   dfirebase.then(() => {
     const firebaseConfig = {
@@ -2034,6 +2043,8 @@ async function app() {
     }
   });
 
+  const classes = ["scout", "soldier", "pyro", "demoman", "heavy", "engineer", "medic", "sniper", "spy"];
+
   const crosshairPacks = {
     "Default": {
       card: "sprites/crosshairs",
@@ -2067,55 +2078,175 @@ async function app() {
   }
 
   let resourceCache = {};
+  let language = "English";
+  let languageCache = {};
 
-  function getGameResourceFile(game, path) {
-    if (resourceCache[game]?.[path]) {
-      return resourceCache[game][path]
+  async function getGameResourceFile(path) {
+    if (resourceCache[path]) {
+      return resourceCache[path]
     }
-    // TODO: get GitHub repo file content
-    let file = null;
-    let content = file.content;
-    resourceCache[game][path] = parse(content);
+    let response = await fetch(`https://raw.githubusercontent.com/SteamDatabase/GameTracking-TF2/master/${path}`);
+    let content = await response.text();
+    let vdf = await dVDF;
+    content = vdf.parse(content);
+    // kind of a hack, but works for now
+    if (content.fWeaponData) {
+      content.WeaponData = content.fWeaponData;
+      delete content.fWeaponData;
+    }
+    if (path.includes("tf_weapon")) {
+      let parents = path.split("/");
+      content.WeaponData.classname = parents[parents.length - 1].split(".")[0];
+    }
+    resourceCache[path] = content;
     return content;
   }
 
-  function getGameResourceDir(game, path, recursive) {
-    // TODO: get GitHub repo contents
-    let folder = [];
+  async function getGameResourceDir(path) {
+    let response = await fetch(`https://api.github.com/repos/SteamDatabase/GameTracking-TF2/contents/${path}`);
+    let contents = await response.json();
     let result = [];
-    for (const file of folder) {
+    for (const file of contents) {
       if (file.type === "file") {
         result.push(file.path)
       } else if (file.type === "symlink") {
         result.push(file.target);
-      } else if (recursive && file.type === "dir") {
-        result.concat(getGameResourceDir(game, path + file, true));
       }
     }
     return result;
   }
 
-  function getGameResource(game, path, file, regex) {
+  function getLocalization(key) {
+    if (!key.startsWith("#")) {
+      return key;
+    }
+    return languageCache[language][key.substring(1)];
+  }
+
+  const classNameToName = {
+    tf_weapon_bat_fish: "#TF_TheHolyMackerel",
+    tf_weapon_bat_giftwrap: "#TF_BallBuster",
+    tf_weapon_bat_wood: "#TF_Unique_Achievement_Bat",
+    tf_weapon_breakable_sign: "#TF_SD_Sign",
+    tf_weapon_buff_item: "Banners",
+    tf_weapon_builder: "PDA",
+    tf_weapon_charged_smg: "#TF_Pro_SMG",
+    tf_weapon_compound_bow: "#TF_Unique_Achievement_CompoundBow",
+    tf_weapon_compound_bow: "#TF_CrusadersCrossbow",
+    tf_weapon_drg_pomson: "#TF_Pomson",
+    tf_weapon_flaregun_revenge: "#TF_ManMelter",
+    tf_weapon_handgun_scout_primary: "#TF_TheShortstop",
+    tf_weapon_handgun_scout_secondary: "Winger and Pretty Boy's Pocket Pistol",
+    tf_weapon_invis: "#TF_Weapon_Watch",
+    tf_weapon_jar: "#TF_Unique_Achievement_Jar",
+    tf_weapon_jar_gas: "#TF_GasPasser",
+    tf_weapon_jar_milk: "#TF_MadMilk",
+    tf_weapon_katana: "#TF_SoldierKatana",
+    tf_weapon_laser_pointer: "#TF_Unique_Achievement_Laser_Pointer",
+    tf_weapon_lunchbox_drink: "Crit-a-Cola and BONK",
+    tf_weapon_mechanical_arm: "#TF_DEX_Pistol",
+    tf_weapon_objectselection: "#TF_Weapon_PDA_Engineer_Builder",
+    tf_weapon_parachute: "#TF_Weapon_BaseJumper",
+    tf_weapon_parachute_primary: "#TF_Weapon_BaseJumper",
+    tf_weapon_parachute_secondary: "#TF_Weapon_BaseJumper",
+    tf_weapon_particle_cannon: "#TF_CowMangler",
+    tf_weapon_pda_engineer_build: "#TF_Weapon_PDA_Engineer_Builder",
+    tf_weapon_pda_engineer_destroy: "#TF_Weapon_PDA_Engineer_Destroyer",
+    tf_weapon_pda_spy: "#TF_Weapon_Disguise_Kit",
+    tf_weapon_pep_brawler_blaster: "#TF_Weapon_PEP_Scattergun",
+    tf_weapon_raygun: "#TF_RighteousBison",
+    //tf_weapon_revolver: "Revolvers",
+    tf_weapon_robot_arm: "#TF_Unique_Robot_Arm",
+    tf_weapon_rocketlauncher_airstrike: "#TF_Weapon_AirStrike",
+    tf_weapon_rocketlauncher_directhit: "#TF_Unique_Achievement_RocketLauncher",
+    tf_weapon_rocketlauncher_fireball: "#TF_Weapon_DragonsFury",
+    tf_weapon_rocketpack: "#TF_ThermalThruster",
+    tf_weapon_sapper: "#TF_SD_Sapper",
+    tf_weapon_sentry_revenge: "#TF_Unique_Sentry_Shotgun",
+    tf_weapon_shotgun_primary: "Shotgun and Widowmaker",
+    tf_weapon_shovel: "Soldier Melees and Pain Train",
+    tf_weapon_slap: "#TF_Weapon_HotHand",
+    tf_weapon_sniperrifle_classic: "#TF_ClassicSniperRifle",
+    tf_weapon_sniperrifle_decap: "#TF_BazaarBargain",
+    tf_weapon_soda_popper: "#TF_SodaPopper",
+    tf_weapon_spellbook: "#TF_FancySpellbook",
+    tf_weapon_stickbomb: "#TF_UllapoolCaber",
+    //tf_weapon_sword: "Swords",
+    //tf_weapon_syringegun_medic: "Syringe Guns",
+    //tf_weapon_wrench: "Wrenches"
+  }
+
+  function getItemName(weapon) {
+    let key = weapon.printname;
+    if (classNameToName[weapon.classname]) {
+      key = classNameToName[weapon.classname];
+    }
+    return getLocalization(key);
+  }
+
+  const customItemSlot = {
+    tf_weapon_compound_bow: "Primary",
+    tf_weapon_grapplinghook: "Action Item",
+    tf_weapon_invis: "Invis Watch",
+    tf_weapon_jar_gas: "Secondary",
+    tf_weapon_passtime_gun: "PASS Time Ball",
+    tf_weapon_rocketpack: "Secondary",
+    tf_weapon_pda_spy: "Disguise Kit",
+    tf_weapon_spellbook: "Action Item",
+  };
+
+  const normalizedSlots = {
+    primary: "Primary",
+    secondary: "Secondary",
+    melee: "Melee",
+    item1: "Secondary",
+    item2: "Melee",
+  }
+
+  function getNormalizedSlotName(weapon) {
+    if (customItemSlot[weapon.classname]) {
+      return customItemSlot[weapon.classname];
+    }
+    let slot = weapon.WeaponType;
+    if (normalizedSlots[slot]) {
+      return normalizedSlots[slot];
+    }
+    return slot;
+  }
+
+  async function getGameResource(path, file, regex) {
     if (regex) {
-      let folder = getGameResourceDir(game, path);
-      let files = folder.query(file);
+      let folder = await getGameResourceDir(path);
+      let re = new RegExp(file);
+      let files = folder.filter((f) => re.test(f));
+      console.log(files);
       let res = [];
       for (const file of files) {
-        res.push(getGameResourceFile(file));
+        res.push(await getGameResourceFile(file));
       }
       return res;
     } else {
-      return getGameResourceFile(game, path + file);
+      return getGameResourceFile(path + file);
     }
   }
 
-  function initWeapons() {
-    const tfWeapons = getGameResource("TF2", "tf/scripts/", "tf_weapon_.*\.txt", true);
-    const langRes = getGameResource("TF2", "tf/resource/", "tf_english.txt").lang.tokens;
+  async function initWeapons() {
+    const tfWeapons = await getGameResource("tf/tf2_misc_dir/scripts/", "tf_weapon_.*\.txt", true);
+    const langRes = await getGameResource("tf/resource/", "tf_english.txt");
+    languageCache[langRes.lang.Language] = langRes.lang.Tokens;
+    console.log(langRes);
     for (const weapon of tfWeapons) {
       const data = weapon.WeaponData;
-      const type = data.WeaponType;
+      console.log(data);
+      console.log(data.classname);
+      console.log(getItemName(data));
+      console.log(getNormalizedSlotName(data));
     }
+  }
+
+  let vdf = await dVDF;
+  if (vdf) {
+    await initWeapons();
   }
 
   let deferredPrompt;
