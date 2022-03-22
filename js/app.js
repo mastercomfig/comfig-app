@@ -851,6 +851,12 @@ async function app() {
     getEl(id).classList.toggle("active", checked);
   }
 
+  function updateDocsLinks(version) {
+    for (const el of document.querySelectorAll(".docs-link")) {
+      el.href = `https://docs.mastercomfig.com/${version}/${el.dataset.url}/`;
+    }
+  }
+
   function setUserVersion(userVer) {
     if (userVer === "Dev build") {
       userVer = "dev";
@@ -885,10 +891,12 @@ async function app() {
       if (userVersion === "latest") {
         if (cachedData) {
           handleApiResponse(cachedData);
+          updateDocsLinks("page")
         }
       } else {
         let tag = `https://mastercomfig.mcoms.workers.dev/?t=${userVersion}`;
         sendApiRequest(tag);
+        updateDocsLinks(userVersion)
       }
     }
   }
@@ -931,13 +939,13 @@ async function app() {
     // if not loading from DB, set recommended addons
     if (!fromDB) {
       // reset all recommendable addons
-      recommendableAddons.forEach(async (addon) => {
+      for (const addon of recommendableAddons) {
         await setAddon(addon, false);
-      });
+      }
       // set recommended addons
-      recommendedAddons.get(selectedPreset).forEach(async (addon) => {
+      for (const addon of recommendedAddons.get(selectedPreset)) {
         await setAddon(addon, true);
-      });
+      }
     }
   }
 
@@ -1365,13 +1373,13 @@ async function app() {
     categoryContainer.append(categoryTitle);
     // Traverse modules to add
     let bHasModule = false;
-    category.modules.forEach((module) => {
+    for (const module of category.modules) {
       let moduleElement = handleModule(module);
       if (moduleElement) {
         bHasModule = true;
         categoryContainer.append(moduleElement);
       }
-    });
+    }
     let categoryNavItem = document.createElement("li");
     categoryNavItem.classList.add("nav-item");
     let categoryNavLink = document.createElement("a");
@@ -1626,21 +1634,21 @@ async function app() {
   sendApiRequest();
 
   // Register event for all presets defined in the HTML.
-  document.querySelectorAll("#presets a").forEach((element) => {
+  for (const element of document.querySelectorAll("#presets a")) {
     element.addEventListener("click", async (e) => {
       e.preventDefault();
       await setPreset(e.currentTarget.id);
     });
-  });
+  }
 
   // Now, register events for all addons defined in the HTML.
-  document.querySelectorAll(".addon-card").forEach((element) => {
+  for (const element of document.querySelectorAll(".addon-card")) {
     addons.push(element.id);
     element.addEventListener("click", async (e) => {
       e.preventDefault();
       await updateAddon(e.currentTarget);
     });
-  });
+  }
 
   // Bind the download button with our multi-downloader
   bindDownloadClick("vpk-dl", async () => {
