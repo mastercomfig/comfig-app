@@ -2235,6 +2235,9 @@ async function app() {
         .register("service-worker.js")
         .then((registration) => {
           handleNotifications(registration);
+        })
+        .catch((err) => {
+          console.error("Service worker registration failed:", err);
         });
     }
   });
