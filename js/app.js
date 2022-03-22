@@ -2117,63 +2117,111 @@ async function app() {
   }
 
   function getLocalization(key) {
+    if (Array.isArray(key)) {
+      let result = [];
+      for (const k of key) {
+        result.push(getLocalization(k));
+      }
+      return result.join(", ");
+    }
     if (!key.startsWith("#")) {
       return key;
     }
     return languageCache[language][key.substring(1)];
   }
 
+  const blockedItems = ["tf_weapon_invis", "tf_weapon_objectselection", "tf_weapon_parachute"];
+
+  const itemUsedBy = {
+    scout: ["tf_weapon_bat", "tf_weapon_bat_fish", "tf_weapon_bat_giftwrap", "tf_weapon_bat_wood", "tf_weapon_cleaver", "tf_weapon_handgun_scout_primary", "tf_weapon_handgun_scout_secondary", "tf_weapon_jar_milk", "tf_weapon_lunchbox_drink", "tf_weapon_pep_brawler_blaster", "tf_weapon_pistol_scout", "tf_weapon_scattergun", "tf_weapon_soda_popper"],
+    soldier: ["tf_weapon_buff_item", "tf_weapon_katana", "tf_weapon_parachute_secondary", "tf_weapon_particle_cannon", "tf_weapon_raygun", "tf_weapon_rocketlauncher", "tf_weapon_rocketlauncher_airstrike", "tf_weapon_rocketlauncher_directhit", "tf_weapon_shotgun_soldier", "tf_weapon_shovel"],
+    pyro: ["tf_weapon_breakable_sign", "tf_weapon_fireaxe", "tf_weapon_flamethrower", "tf_weapon_flaregun", "tf_weapon_flaregun_revenge", "tf_weapon_jar_gas", "tf_weapon_rocketlauncher_fireball", "tf_weapon_rocketpack", "tf_weapon_shotgun_pyro", "tf_weapon_slap"],
+    demoman: ["tf_weapon_bottle", "tf_weapon_cannon", "tf_weapon_grenadelauncher", "tf_weapon_katana", "tf_weapon_parachute_primary", "tf_weapon_pipebomblauncher", "tf_weapon_stickbomb", "tf_weapon_sword"],
+    heavy: ["tf_weapon_fists", "tf_weapon_lunchbox", "tf_weapon_minigun", "tf_weapon_shotgun_hwg"],
+    engineer: ["tf_weapon_builder", "tf_weapon_drg_pomson", "tf_weapon_laser_pointer", "tf_weapon_mechanical_arm", "tf_weapon_pda_engineer_build", "tf_weapon_pda_engineer_destroy", "tf_weapon_pistol", "tf_weapon_robot_arm", "tf_weapon_sentry_revenge", "tf_weapon_shotgun_building_rescue", "tf_weapon_shotgun_primary", "tf_weapon_wrench"],
+    medic: ["tf_weapon_bonesaw", "tf_weapon_crossbow", "tf_weapon_medigun", "tf_weapon_syringegun_medic"],
+    sniper: ["tf_weapon_charged_smg", "tf_weapon_club", "tf_weapon_compound_bow", "tf_weapon_jar", "tf_weapon_smg", "tf_weapon_sniperrifle", "tf_weapon_sniperrifle_classic", "tf_weapon_sniperrifle_decap"],
+    spy: ["tf_weapon_knife", "tf_weapon_pda_spy", "tf_weapon_revolver", "tf_weapon_sapper"],
+    all: ["tf_weapon_grapplinghook", "tf_weapon_spellbook", "tf_weapon_passtime_gun"]
+  }
+
   const classNameToName = {
+    tf_weapon_bat: ["#TF_Weapon_Bat", "#TF_CandyCane", "#TF_BostonBasher", "#TF_Unique_RiftFireMace", "#TF_Gunbai", "#TF_Atomizer"],
     tf_weapon_bat_fish: "#TF_TheHolyMackerel",
     tf_weapon_bat_giftwrap: "#TF_BallBuster",
     tf_weapon_bat_wood: "#TF_Unique_Achievement_Bat",
+    tf_weapon_bottle: ["#TF_Weapon_Bottle", "#TF_ScottishHandshake", "#TF_Unique_Makeshiftclub"],
+    tf_weapon_bonesaw: ["#TF_Weapon_Bonesaw", "#TF_Unique_Achievement_Bonesaw1", "#TF_Unique_BattleSaw", "#TF_Amputator", "#TF_SolemnVow"],
     tf_weapon_breakable_sign: "#TF_SD_Sign",
-    tf_weapon_buff_item: "Banners",
-    tf_weapon_builder: "PDA",
+    tf_weapon_buff_item: ["#TF_Unique_Achievement_SoldierBuff", "#TF_TheBattalionsBackup", "#TF_SoldierSashimono"],
+    tf_weapon_builder: "Toolbox",
     tf_weapon_charged_smg: "#TF_Pro_SMG",
+    tf_weapon_cleaver: "#TF_SD_Cleaver",
+    //tf_weapon_club: ["#TF_Weapon_Club", "#TF_Unique_TribalmanKukri", "#TF_TheBushwacka", "#TF_Shahanshah"],
+    //tf_weapon_compound_bow: ["#TF_Unique_Achievement_CompoundBow", "#TF_FortifiedCompound"],
     tf_weapon_compound_bow: "#TF_Unique_Achievement_CompoundBow",
-    tf_weapon_compound_bow: "#TF_CrusadersCrossbow",
+    tf_weapon_crossbow: "#TF_CrusadersCrossbow",
     tf_weapon_drg_pomson: "#TF_Pomson",
+    //tf_weapon_fireaxe: ["#TF_Weapon_FireAxe", "#TF_Unique_Achievement_FireAxe1", "#TF_Unique_SledgeHammer", "#TF_ThePowerjack", "#TF_BackScratcher", "#TF_Unique_RiftFireAxe", "#TF_Mailbox", "#TF_RFAHammer", "#TF_ThirdDegree", "#TF_Lollichop"],
+    //tf_weapon_fists: ["#TF_Weapon_Fists", "#TF_Unique_Achievement_Fists", "#TF_Unique_Gloves_of_Running_Urgently", "#TF_WarriorsSpirit", "#TF_FistsOfSteel", "#TF_EvictionNotice", "#TF_Apocofists", "#TF_MasculineMittens", "#TF_Weapon_BreadBite"],
+    //tf_weapon_flamethrower: ["#TF_Weapon_FlameThrower", "#TF_Unique_Achievement_Flamethrower", "#TF_TheDegreaser", "#TF_Phlogistinator", "#TF_Rainblower"],
+    //tf_weapon_flaregun: ["#TF_Weapon_Flaregun", "#TF_Weapon_Flaregun_Detonator", "#TF_ScorchShot"],
     tf_weapon_flaregun_revenge: "#TF_ManMelter",
+    //tf_weapon_grenadelauncher: ["#TF_Weapon_GrenadeLauncher", "#TF_LochNLoad", "#TF_Weapon_Iron_bomber"],
     tf_weapon_handgun_scout_primary: "#TF_TheShortstop",
-    tf_weapon_handgun_scout_secondary: "Winger and Pretty Boy's Pocket Pistol",
-    tf_weapon_invis: "#TF_Weapon_Watch",
+    tf_weapon_handgun_scout_secondary: ["#TF_Winger", "#TF_Weapon_PEP_Pistol"],
+    //tf_weapon_invis: ["#TF_Weapon_Watch", "#TF_Unique_Achievement_FeignWatch", "#TF_Unique_Achievement_CloakWatch", "#TF_TTG_Watch", "#TF_HM_Watch"],
     tf_weapon_jar: "#TF_Unique_Achievement_Jar",
     tf_weapon_jar_gas: "#TF_GasPasser",
     tf_weapon_jar_milk: "#TF_MadMilk",
     tf_weapon_katana: "#TF_SoldierKatana",
+    //tf_weapon_knife: ["#TF_Weapon_Knife", "#TF_EternalReward", "#TF_Kunai", "#TF_BigEarner", "#TF_VoodooPin", "#TF_SharpDresser", "#TF_SpyCicle", "#TF_BlackRose",],
     tf_weapon_laser_pointer: "#TF_Unique_Achievement_Laser_Pointer",
-    tf_weapon_lunchbox_drink: "Crit-a-Cola and BONK",
+    tf_weapon_lunchbox: ["#TF_Unique_Achievement_LunchBox", "#TF_Unique_Lunchbox_Chocolate", "#TF_BuffaloSteak", "#TF_SpaceChem_Fishcake", "#TF_Robot_Sandvich", "#TF_Unique_Lunchbox_Banana"],
+    tf_weapon_lunchbox_drink: ["#TF_Unique_Achievement_EnergyDrink", "#TF_Unique_EnergyDrink_CritCola"],
     tf_weapon_mechanical_arm: "#TF_DEX_Pistol",
-    tf_weapon_objectselection: "#TF_Weapon_PDA_Engineer_Builder",
-    tf_weapon_parachute: "#TF_Weapon_BaseJumper",
+    //tf_weapon_medigun: ["#TF_Weapon_Medigun", "#TF_Unique_Achievement_Medigun1", "#TF_Unique_MediGun_QuickFix", "#TF_Unique_MediGun_Resist"],
+    //tf_weapon_minigun: ["#TF_Weapon_Minigun", "#TF_Unique_Achievement_Minigun", "#TF_Iron_Curtain", "#TF_GatlingGun", "#TF_Tomislav", "#TF_SD_Minigun"],
+    //tf_weapon_parachute: "#TF_Weapon_BaseJumper",
     tf_weapon_parachute_primary: "#TF_Weapon_BaseJumper",
     tf_weapon_parachute_secondary: "#TF_Weapon_BaseJumper",
     tf_weapon_particle_cannon: "#TF_CowMangler",
+    tf_weapon_passtime_gun: "PASS Time JACK",
     tf_weapon_pda_engineer_build: "#TF_Weapon_PDA_Engineer_Builder",
     tf_weapon_pda_engineer_destroy: "#TF_Weapon_PDA_Engineer_Destroyer",
     tf_weapon_pda_spy: "#TF_Weapon_Disguise_Kit",
     tf_weapon_pep_brawler_blaster: "#TF_Weapon_PEP_Scattergun",
+    //tf_weapon_pipebomblauncher: ["#TF_Weapon_PipebombLauncher", "#TF_Unique_Achievement_StickyLauncher", "#TF_Weapon_StickyBomb_Jump"],
+    tf_weapon_pipebomblauncher: "#TF_Weapon_PipebombLauncher",
     tf_weapon_raygun: "#TF_RighteousBison",
-    //tf_weapon_revolver: "Revolvers",
+    //tf_weapon_revolver: ["#TF_Weapon_Revolver", "#TF_Unique_Achievement_Revolver", "#TF_TTG_SamRevolver", "#TF_LEtranger", "#TF_Enforcer", "#TF_DEX_Revolver"],
+    tf_weapon_revolver: "#TF_Weapon_Revolver",
     tf_weapon_robot_arm: "#TF_Unique_Robot_Arm",
+    tf_weapon_rocketlauncher: ["#TF_Weapon_RocketLauncher", "#TF_TheBlackBox", "#TF_Weapon_RocketLauncher_Jump", "#TF_LibertyLauncher", "#TF_TheOriginal", "#TF_DS_DumpsterDevice"],
     tf_weapon_rocketlauncher_airstrike: "#TF_Weapon_AirStrike",
     tf_weapon_rocketlauncher_directhit: "#TF_Unique_Achievement_RocketLauncher",
     tf_weapon_rocketlauncher_fireball: "#TF_Weapon_DragonsFury",
     tf_weapon_rocketpack: "#TF_ThermalThruster",
-    tf_weapon_sapper: "#TF_SD_Sapper",
+    //tf_weapon_sapper: ["#TF_Weapon_Spy_Sapper", "#TF_SD_Sapper", "#TF_Weapon_Ap_Sap", "#TF_Weapon_SnackAttack",],
+    tf_weapon_sapper: "#TF_Weapon_Spy_Sapper",
+    tf_weapon_scattergun: ["#TF_Weapon_Scattergun", "#TF_Unique_Achievement_Scattergun_Double", "#TF_Weapon_BackScatter"],
     tf_weapon_sentry_revenge: "#TF_Unique_Sentry_Shotgun",
-    tf_weapon_shotgun_primary: "Shotgun and Widowmaker",
-    tf_weapon_shovel: "Soldier Melees and Pain Train",
+    tf_weapon_shotgun_hwg: ["#TF_Weapon_Shotgun", "#TF_RussianRiot", "#TF_Weapon_PanicAttack"],
+    tf_weapon_shotgun_primary: ["#TF_Weapon_Shotgun", "#TF_DEX_Shotgun", "#TF_Weapon_PanicAttack"],
+    tf_weapon_shotgun_pyro: ["#TF_Weapon_Shotgun", "#TF_ReserveShooter", "#TF_Weapon_PanicAttack"],
+    tf_weapon_shotgun_soldier: ["#TF_Weapon_Shotgun", "#TF_ReserveShooter", "#TF_Weapon_PanicAttack"],
+    tf_weapon_shovel: ["#TF_Weapon_Shovel", "#TF_Unique_Achievement_Pickaxe", "#TF_MarketGardener", "#TF_DisciplinaryAction", "#TF_Unique_Pickaxe_EscapePlan", "#TF_Unique_Makeshiftclub"],
     tf_weapon_slap: "#TF_Weapon_HotHand",
+    tf_weapon_sniperrifle: ["#TF_Weapon_SniperRifle", "#TF_SydneySleeper", "#TF_DEX_Rifle", "#TF_Pro_SniperRifle", "#TF_CSGO_AWP"],
     tf_weapon_sniperrifle_classic: "#TF_ClassicSniperRifle",
     tf_weapon_sniperrifle_decap: "#TF_BazaarBargain",
     tf_weapon_soda_popper: "#TF_SodaPopper",
     tf_weapon_spellbook: "#TF_FancySpellbook",
     tf_weapon_stickbomb: "#TF_UllapoolCaber",
-    //tf_weapon_sword: "Swords",
-    //tf_weapon_syringegun_medic: "Syringe Guns",
-    //tf_weapon_wrench: "Wrenches"
+    tf_weapon_sword: ["#TF_Unique_Achievement_Sword", "#TF_Unique_BattleAxe", "#TF_HalloweenBoss_Axe", "#TF_Claidheamohmor", "#TF_PersianPersuader", "#TF_NineIron"],
+    tf_weapon_syringegun_medic: ["#TF_Weapon_SyringeGun", "#TF_Unique_Achievement_Syringegun1", "#TF_Overdose"],
+    //tf_weapon_wrench: ["#TF_Weapon_Wrench", "#TF_Unique_Combat_Wrench", "#TF_Unique_Golden_Wrench", "#TF_Jag", "#TF_Wrenchmotron"],
+    tf_weapon_wrench: "#TF_Weapon_Wrench",
   }
 
   function getItemName(weapon) {
@@ -2187,12 +2235,12 @@ async function app() {
   const customItemSlot = {
     tf_weapon_compound_bow: "Primary",
     tf_weapon_grapplinghook: "Action Item",
-    tf_weapon_invis: "Invis Watch",
     tf_weapon_jar_gas: "Secondary",
-    tf_weapon_passtime_gun: "PASS Time Ball",
+    tf_weapon_passtime_gun: "Utility",
     tf_weapon_rocketpack: "Secondary",
-    tf_weapon_pda_spy: "Disguise Kit",
+    tf_weapon_pda_spy: "PDA",
     tf_weapon_spellbook: "Action Item",
+    tf_weapon_builder: "Building"
   };
 
   const normalizedSlots = {
@@ -2201,7 +2249,19 @@ async function app() {
     melee: "Melee",
     item1: "Secondary",
     item2: "Melee",
+    pda: "PDA",
+    building: "Building",
   }
+
+  const slotToIndex = [
+    "Primary",
+    "Secondary",
+    "Melee",
+    "PDA",
+    "Building",
+    "Action Item",
+    "Utility",
+  ]
 
   function getNormalizedSlotName(weapon) {
     if (customItemSlot[weapon.classname]) {
@@ -2230,23 +2290,60 @@ async function app() {
     }
   }
 
-  async function initWeapons() {
+  let items = {};
+
+  async function initGameData() {
     const tfWeapons = await getGameResource("tf/tf2_misc_dir/scripts/", "tf_weapon_.*\.txt", true);
-    const langRes = await getGameResource("tf/resource/", "tf_english.txt");
+    const langRes = await getGameResource("tf/resource/", `tf_${language.toLowerCase()}.txt`);
     languageCache[langRes.lang.Language] = langRes.lang.Tokens;
-    console.log(langRes);
     for (const weapon of tfWeapons) {
       const data = weapon.WeaponData;
-      console.log(data);
-      console.log(data.classname);
-      console.log(getItemName(data));
-      console.log(getNormalizedSlotName(data));
+      if (!blockedItems.includes(data.classname)){
+        items[data.classname] = data;
+      }
+    }
+    let weaponsRoot = getEl("weapons-root");
+    weaponsRoot.innerText = "";
+    for (const playerclass of Object.keys(itemUsedBy)) {
+      let classEl = document.createElement("h4");
+      classEl.innerText = playerclass[0].toUpperCase() + playerclass.substring(1);
+      weaponsRoot.appendChild(classEl);
+      const weaponClasses = itemUsedBy[playerclass];
+      let slots = {};
+      for (const weaponClass of weaponClasses) {
+        const weapon = items[weaponClass];
+        if (!weapon) {
+          continue;
+        }
+        let slot = getNormalizedSlotName(weapon);
+        if (slots[slot]) {
+          slots[slot].push(weapon);
+        } else {
+          slots[slot] = [weapon];
+        }
+      }
+      for (const slot of slotToIndex) {
+        if (!slots[slot]) {
+          continue;
+        }
+        let slotEl = document.createElement("h5");
+        slotEl.innerText = slot;
+        weaponsRoot.appendChild(slotEl);
+        for (const weapon of slots[slot]) {
+          let weaponName = getItemName(weapon);
+          let weaponEl = document.createElement("p");
+          weaponEl.innerHTML = weaponName;
+          weaponEl.addEventListener("click", (e) => {
+          });
+          weaponsRoot.appendChild(weaponEl);
+        }
+      }
     }
   }
 
   let vdf = await dVDF;
   if (vdf) {
-    await initWeapons();
+    await initGameData();
   }
 
   let deferredPrompt;
