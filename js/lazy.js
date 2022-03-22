@@ -1,33 +1,33 @@
 function loadImage(lazyImage) {
-    if (lazyImage.parentNode.classList.contains("twentytwenty-container")) {
-        lazyImage.onload = function() {
-            $(window).trigger("resize.twentytwenty");
-        }
+  if (lazyImage.parentNode.classList.contains("twentytwenty-container")) {
+    lazyImage.onload = () => {
+      window.dispatchEvent(new Event("resize.twentytwenty"));
     }
-    lazyImage.src = lazyImage.dataset.src;
-    lazyImage.classList.remove("lazy");
+  }
+  lazyImage.src = lazyImage.dataset.src;
+  lazyImage.classList.remove("lazy");
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-  var lazyImages = [].slice.call(document.querySelectorAll("img.lazy"));
+  const lazyImages = [].slice.call(document.querySelectorAll("img.lazy"));
 
   if ("IntersectionObserver" in window) {
-    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
-      entries.forEach(function(entry) {
+    let lazyImageObserver = new IntersectionObserver((entries, observer) => {
+      for (const entry of entries) {
         if (entry.isIntersecting) {
           let lazyImage = entry.target;
           loadImage(lazyImage);
-          lazyImageObserver.unobserve(lazyImage);
+          observer.unobserve(lazyImage);
         }
-      });
+      }
     });
 
-    lazyImages.forEach(function(lazyImage) {
+    for (const lazyImage of lazyImages) {
       lazyImageObserver.observe(lazyImage);
-    });
+    }
   } else {
-    lazyImages.forEach(function(image) {
-        loadImage(image);
-    });
+    for (const lazyImage of lazyImages) {
+      loadImage(image);
+    }
   }
 });
