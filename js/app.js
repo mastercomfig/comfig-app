@@ -1306,7 +1306,7 @@ async function app() {
     // Create a link to module documentation
     let moduleDocsLink = document.createElement("a");
     moduleDocsLink.href =
-      "https://docs.mastercomfig.com/page/customization/modules/#" +
+      `https://docs.mastercomfig.com/${userVersion !== "latest" ? userVersion : "page"}/customization/modules/#` +
       displayName.split(" ").join("-").toLowerCase();
     moduleDocsLink.target = "_blank";
     moduleDocsLink.rel = "noopener";
@@ -1486,15 +1486,19 @@ async function app() {
     updateCustomizationDownload();
   }
 
-  function addVersion(ver, dropdown, badge) {
+  function addVersion(ver, dropdown, badge, disabled) {
     let versionListItem = document.createElement("li");
     let dropdownItem = document.createElement("a");
     dropdownItem.classList.add("dropdown-item");
-    dropdownItem.href = "#";
-    dropdownItem.addEventListener("click", (e) => {
-      e.preventDefault();
-      setUserVersion(ver);
-    });
+    if (disabled) {
+      dropdownItem.classList.add("disabled");
+    } else {
+      dropdownItem.href = "#";
+      dropdownItem.addEventListener("click", (e) => {
+        e.preventDefault();
+        setUserVersion(ver);
+      });
+    }
     dropdownItem.innerText = ver === "latest" ? latestVersion : ver;
     if (badge) {
       dropdownItem.innerText += " ";
@@ -1569,9 +1573,9 @@ async function app() {
       addVersion(thisVersion, versionDropdown, badge);
     }
 
-    if (lastVersion && !foundVersion) {
+    if (lastVersion && !foundVersion && lastVersion !== "dev") {
       addDropdownDivider(versionDropdown);
-      addVersion(lastVersion, versionDropdown, lastDownloadedBadge);
+      addVersion(lastVersion, versionDropdown, lastDownloadedBadge, true);
     }
 
     addDropdownDivider(versionDropdown);
