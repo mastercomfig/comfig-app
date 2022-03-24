@@ -2175,7 +2175,7 @@ async function app() {
     tf_weapon_jar_gas: "#TF_GasPasser",
     tf_weapon_jar_milk: "#TF_MadMilk",
     tf_weapon_katana: "#TF_SoldierKatana",
-    //tf_weapon_knife: ["#TF_Weapon_Knife", "#TF_EternalReward", "#TF_Kunai", "#TF_BigEarner", "#TF_VoodooPin", "#TF_SharpDresser", "#TF_SpyCicle", "#TF_BlackRose",],
+    //tf_weapon_knife: ["#TF_Weapon_Knife", "#TF_EternalReward", "#TF_Kunai", "#TF_BigEarner", "#TF_VoodooPin", "#TF_SharpDresser", "#TF_SpyCicle", "#TF_BlackRose"],
     tf_weapon_laser_pointer: "#TF_Unique_Achievement_Laser_Pointer",
     tf_weapon_lunchbox: ["#TF_Unique_Achievement_LunchBox", "#TF_Unique_Lunchbox_Chocolate", "#TF_BuffaloSteak", "#TF_SpaceChem_Fishcake", "#TF_Robot_Sandvich", "#TF_Unique_Lunchbox_Banana"],
     tf_weapon_lunchbox_drink: ["#TF_Unique_Achievement_EnergyDrink", "#TF_Unique_EnergyDrink_CritCola"],
@@ -2202,7 +2202,7 @@ async function app() {
     tf_weapon_rocketlauncher_directhit: "#TF_Unique_Achievement_RocketLauncher",
     tf_weapon_rocketlauncher_fireball: "#TF_Weapon_DragonsFury",
     tf_weapon_rocketpack: "#TF_ThermalThruster",
-    //tf_weapon_sapper: ["#TF_Weapon_Spy_Sapper", "#TF_SD_Sapper", "#TF_Weapon_Ap_Sap", "#TF_Weapon_SnackAttack",],
+    //tf_weapon_sapper: ["#TF_Weapon_Spy_Sapper", "#TF_SD_Sapper", "#TF_Weapon_Ap_Sap", "#TF_Weapon_SnackAttack"],
     tf_weapon_sapper: "#TF_Weapon_Spy_Sapper",
     tf_weapon_scattergun: ["#TF_Weapon_Scattergun", "#TF_Unique_Achievement_Scattergun_Double", "#TF_Weapon_BackScatter"],
     tf_weapon_sentry_revenge: "#TF_Unique_Sentry_Shotgun",
@@ -2233,9 +2233,12 @@ async function app() {
   }
 
   const customItemSlot = {
+    tf_weapon_buff_item: "Secondary",
     tf_weapon_compound_bow: "Primary",
     tf_weapon_grapplinghook: "Action Item",
     tf_weapon_jar_gas: "Secondary",
+    tf_weapon_parachute_primary: "Primary",
+    tf_weapon_parachute_secondary: "Secondary",
     tf_weapon_passtime_gun: "Utility",
     tf_weapon_rocketpack: "Secondary",
     tf_weapon_pda_spy: "PDA",
