@@ -212,6 +212,20 @@ a.disabled {
   color: #8afff4;
 }
 
+#launch-options code {
+  margin-top: 2px;
+  margin-right: 0.5rem;
+}
+
+#launch-options > * {
+  float: left;
+}
+
+#launch-options > .fa {
+  margin-top: 5px;
+  margin-right: 5px;
+}
+
 .toggler.active span {
   transform: rotate(180deg);
 }
