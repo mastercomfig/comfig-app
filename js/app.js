@@ -643,7 +643,8 @@ async function app() {
     if (contents.length < 1) {
       return null;
     }
-    if (directory) {
+    const directInstall = await tryDBGet("enable-direct-install");
+    if (directory && directInstall) {
       const writable = await getWritable(name, directory);
       await writable.write(contents);
       await writable.close();
@@ -704,7 +705,7 @@ async function app() {
     // Then push all our addon downloads
     for (const selection of selectedAddons) {
       let addonUrl = getAddonUrl(selection);
-      if (customDirectory) {
+      if (directInstall && customDirectory) {
         await writeRemoteFile(addonUrl, customDirectory);
       } else {
         downloads.push(
@@ -713,6 +714,9 @@ async function app() {
           })
         );
       }
+    }
+    if (directInstall) {
+      await getCustomDownloadUrls();
     }
     // We downloaded this version, so track it!
     await tryDBSet("lastVersion", version);
@@ -1602,6 +1606,15 @@ async function app() {
     getEl("versionDropdown").classList.add("ready");
   }
 
+  const isLocalHost =
+    window.location.hostname === "localhost" ||
+    // [::1] is the IPv6 localhost address.
+    window.location.hostname === "[::1]" ||
+    // 127.0.0.1/8 is considered localhost for IPv4.
+    window.location.hostname.match(
+      /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/
+    );
+
   async function handleApiResponse(data) {
     cachedData = data;
     // Get the version
@@ -1638,6 +1651,41 @@ async function app() {
   } else {
     await setPreset("medium-high", true);
   }
+
+  let currentTimeout = null;
+
+  getEl("launch-options").addEventListener("click", () => {
+    let target = getEl("launch-options");
+    if (currentTimeout !== null) {
+      clearTimeout(currentTimeout);
+    }
+    navigator.clipboard.writeText(target.firstChild.innerText)
+      .then(() => {
+        console.log("Success!");
+        let status = target.children[2];
+        status.innerText = "Copied!";
+        target.classList.add("text-success");
+        currentTimeout = setTimeout(() => {
+          status.innerText = "Click to copy";
+          target.classList.remove("text-success");
+        }, 1000);
+      })
+      .catch(() => {
+        console.error("Failed to copy text");
+        let status = target.children[2];
+        status.innerText = "Please copy manually";
+        target.classList.add("text-danger");
+        currentTimeout = setTimeout(() => {
+          status.innerText = "Click to copy";
+          target.classList.remove("text-danger");
+        }, 5000);
+        let selection = getSelection();
+        let range = document.createRange();
+        range.selectNodeContents(target.firstChild);
+        selection.removeAllRanges();
+        selection.addRange(range);
+      })
+  });
 
   // get latest release, and update page
   sendApiRequest();
@@ -1814,10 +1862,14 @@ async function app() {
     }
   })
 
-  document.oncontextmenu = (e) => {
-    e.preventDefault();
+  document.addEventListener("contextmenu", (e) => {
+    if (e) {
+      e.preventDefault();
+    } else {
+      console.error("Context menu event is null: ", e);
+    }
     return !blockKeyboard;
-  }
+  });
 
   document.addEventListener("mouseup", (e) => {
     if (blockKeyboard && lastBindInput && capturedMouseDown) {
@@ -2344,9 +2396,19 @@ async function app() {
     }
   }
 
-  let vdf = await dVDF;
-  if (vdf) {
-    await initGameData();
+  if (isLocalHost) {
+    for (const child of getEl("customizations").children) {
+      child.classList.remove("d-none");
+    }
+    let vdf = await dVDF;
+    if (vdf) {
+      try {
+        initGameData();
+      } catch(e) {
+        console.log(e);
+      }
+    }
+    
   }
 
   let deferredPrompt;
