@@ -78,6 +78,10 @@ async function app() {
     });
   };
 
+  function isValid(value) {
+    return value !== undefined || value !== null;
+  }
+
   // find RegEx
   Array.prototype.query = function(match) {
     let  reg = new RegExp(match);
@@ -287,6 +291,19 @@ async function app() {
   // Data cache
   let cachedData = null;
 
+  // Overrides for default game action binds
+  let customActionMappings = {};
+
+  // Addons which overide action mappings
+  const addonActionMappings = {
+    "null-canceling-movement": {
+      "Move Forward": "+mf",
+      "Move Back": "+mb",
+      "Move Left": "+ml",
+      "Move Right": "+mr",
+    }
+  };
+
   var storedModules = {};
   await loadModules();
 
@@ -344,6 +361,27 @@ async function app() {
     }
   }
 
+  function requireVersion(major, minor, patch) {
+    if (userVersion !== "latest") {
+      let versions = [major, minor, patch];
+      let versionSplit = userVersion.split(".");
+      for (let i = 0; i < versions.length; i++) {
+        let requiredVersion = versions[i];
+        if (!isValid(requiredVersion)) {
+          continue;
+        }
+        let currentVersion = versionSplit[i];
+        if (currentVersion < requiredVersion) {
+          return false;
+        }
+        if (currentVersion > requiredVersion) {
+          return true;
+        }
+      }
+    }
+    return true;
+  }
+
   // This is what we do when multi-download is ready (init or after finish)
   function bindDownloadClick(id, fnGatherUrls) {
     // Reregister that we can respond to a click
@@ -375,13 +413,8 @@ async function app() {
   }
 
   function getAddonUrl(id, notDirect) {
-    if (id === "null-canceling-movement") {
-      if (userVersion !== "latest") {
-        let versionSplit = userVersion.split(".");
-        if (versionSplit[0] < 9 || (versionSplit[0] === 9 && versionSplit[1] < 6)) {
-          id = "null-cancelling-movement";
-        }
-      }
+    if (id === "null-canceling-movement" && !requireVersion(9, 6)) {
+      id = "null-cancelling-movement";
     }
     return getDownloadUrl(id, false, notDirect);
   }
@@ -464,6 +497,10 @@ async function app() {
     if (!directInstall) {
       getEl("game-folder-container").classList.add("d-none");
       await restoreDirectoryInstructions();
+      gameDirectory = null;
+      customDirectory = null;
+      userDirectory = null;
+      appDirectory = null;
       return;
     }
     getEl("game-folder-container").classList.remove("d-none");
@@ -643,8 +680,7 @@ async function app() {
     if (contents.length < 1) {
       return null;
     }
-    const directInstall = await tryDBGet("enable-direct-install");
-    if (directory && directInstall) {
+    if (directory) {
       const writable = await getWritable(name, directory);
       await writable.write(contents);
       await writable.close();
@@ -678,8 +714,7 @@ async function app() {
       }),
     ];
     let presetUrl = getPresetUrl();
-    const directInstall = await tryDBGet("enable-direct-install");
-    if (directInstall && customDirectory) {
+    if (customDirectory) {
       // Clear out all existing files
       let presetKeys = Object.keys(presets);
       for (const preset of presetKeys) {
@@ -705,7 +740,7 @@ async function app() {
     // Then push all our addon downloads
     for (const selection of selectedAddons) {
       let addonUrl = getAddonUrl(selection);
-      if (directInstall && customDirectory) {
+      if (customDirectory) {
         await writeRemoteFile(addonUrl, customDirectory);
       } else {
         downloads.push(
@@ -715,7 +750,8 @@ async function app() {
         );
       }
     }
-    if (directInstall) {
+    // Also handle customizations when we are using Direct Install
+    if (customDirectory) {
       await getCustomDownloadUrls();
     }
     // We downloaded this version, so track it!
@@ -743,31 +779,48 @@ async function app() {
     return null;
   }
 
-  const emptyActionValue = "empty";
-  const customActionValue = "custom";
+  const EMPTY_ACTION_VALUE = "empty";
+  const CUSTOM_ACTION_VALUE = "custom";
 
-  function updateBinds() {
+  async function updateBinds() {
     const bindFields = document.querySelectorAll(".binding-field");
+
+    // Override actions
+    let actionOverrides = {};
+    for (const namespace of Object.keys(customActionMappings)) {
+      for (const action of Object.keys(customActionMappings[namespace])) {
+        actionOverrides[action] = customActionMappings[namespace][action];
+      }
+    }
+
+    // Keep track of command binds & user saved binds
+    let actionBinds = {};
     selectedBinds = {};
     for (const bindField of bindFields) {
       let keyInput = bindField.childNodes[0].firstChild.value;
       let actionSelect = bindField.childNodes[1].firstChild.value;
       if (keyInput && actionSelect) {
+        if (actionSelect === EMPTY_ACTION_VALUE) {
+          continue;
+        }
         let bindCommand = "";
-        if (actionSelect === customActionValue) {
+        if (actionSelect === CUSTOM_ACTION_VALUE) {
           bindCommand = bindField.childNodes[1].lastChild.firstChild.value;
-          bindCommand.replaceAll("\"", "");
+          actionBinds[keyInput] = bindCommand;
+          bindCommand = bindCommand.replaceAll("\"", "");
         } else {
-          bindCommand = actionMappings[actionSelect];
+          actionBinds[keyInput] = actionSelect;
+          bindCommand = actionOverrides[actionSelect] ? actionOverrides[actionSelect] : actionMappings[actionSelect];
         }
         selectedBinds[keyInput] = bindCommand;
       }
     }
+    await tryDBSet("keybinds", actionBinds);
   }
 
   async function newAutoexecFile() {
     let contents = "";
-    updateBinds();
+    await updateBinds();
     for (const key of Object.keys(selectedBinds)) {
       let binding = selectedBinds[key];
       let bindingStr;
@@ -855,9 +908,17 @@ async function app() {
       if (selectedAddons.indexOf(id) === -1) {
         selectedAddons.push(id);
       }
+      // Add any binds associated with this addon
+      if (addonActionMappings[id]) {
+        customActionMappings[id] = addonActionMappings[id];
+      }
     } else {
       // Filter out the addon if it's there
       selectedAddons = selectedAddons.filter((selection) => selection !== id);
+      // Delete any binds associated with this addon
+      if (customActionMappings[id]) {
+        delete customActionMappings[id];
+      }
     }
     // Make sure the UI reflects the selected state
     getEl(id + "-dl").style.display = checked ? "initial" : "none";
@@ -2004,11 +2065,15 @@ async function app() {
 
   const bindsList = getEl("binds-list")
 
-  function createBindingField(notLast) {
+  function createBindingField(bindOptions) {
     let keyInput = document.createElement("input");
     keyInput.type = "text";
     keyInput.classList.add("form-control", "form-control-sm", "disabled", "text-light", "bg-dark");
     keyInput.placeholder = "<Unbound>";
+    let key = bindOptions?.key;
+    if (key) {
+      keyInput.value = key;
+    }
     bindBindingField(keyInput);
     let inputCol = document.createElement("div");
     inputCol.classList.add("col");
@@ -2022,20 +2087,30 @@ async function app() {
     );
     // Add empty
     let optionElement = document.createElement("option");
-    optionElement.value = emptyActionValue;
+    optionElement.value = EMPTY_ACTION_VALUE;
     optionElement.innerText = "Select a Command";
     selectElement.append(optionElement);
     // Add custom bind
     optionElement = document.createElement("option");
-    optionElement.value = customActionValue;
+    optionElement.value = CUSTOM_ACTION_VALUE;
     optionElement.innerText = "Custom Command";
     selectElement.append(optionElement);
+    let action = bindOptions?.action;
+    if (action) {
+      action = actionMappings[action] ? action : CUSTOM_ACTION_VALUE;
+      if (action === CUSTOM_ACTION_VALUE) {
+        selectElement.selectedIndex = 1;
+      }
+    }
     // Create the option element for each available action
-    for (const actionName of actionNames) {
+    for (const [index, actionName] of actionNames.entries()) {
       optionElement = document.createElement("option");
       optionElement.value = actionName;
       optionElement.innerText = actionName;
       selectElement.append(optionElement);
+      if (actionName === action) {
+        selectElement.selectedIndex = index + 2;
+      }
     }
 
     // Make custom command input group
@@ -2061,10 +2136,16 @@ async function app() {
     selectElement.addEventListener("input", (e) => {
       let select = e.target;
       let value = select.options[select.selectedIndex].value;
-      let isCustom = value === customActionValue;
+      let isCustom = value === CUSTOM_ACTION_VALUE;
       inputGroup.classList.toggle("d-none", !isCustom);
       selectElement.classList.toggle("d-none", isCustom);
     });
+
+    if (action === CUSTOM_ACTION_VALUE) {
+      textInput.value = bindOptions.action;
+      inputGroup.classList.remove("d-none");
+      selectElement.classList.add("d-none");
+    }
 
     let actionCol = inputCol.cloneNode();
     actionCol.append(selectElement);
@@ -2079,7 +2160,7 @@ async function app() {
       row.remove();
     }
     removeBtn.classList.add("fa", "fa-close", "fa-fw");
-    if (!notLast) {
+    if (!bindOptions) {
       removeBtn.classList.add("d-none");
     }
     let removeCol = document.createElement("div");
@@ -2090,9 +2171,12 @@ async function app() {
   }
 
   tryDBGet("keybinds").then((keybinds) => {
-    if (!keybinds) {
-      createBindingField();
+    if (keybinds) {
+      for (const [key, action] of Object.entries(keybinds)) {
+        createBindingField({ key, action });
+      }
     }
+    createBindingField();
   });
 
   const classes = ["scout", "soldier", "pyro", "demoman", "heavy", "engineer", "medic", "sniper", "spy"];
