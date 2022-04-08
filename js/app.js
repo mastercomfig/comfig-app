@@ -2042,6 +2042,8 @@ async function app() {
     "Voice Menu 3": "voice_menu_3",
     "Change class": "changeclass",
     "Change team": "changeteam",
+    "Kill (self)": "kill",
+    "Explode (self)": "explode",
     "Open loadout": "open_charinfo_direct",
     "Open Backpack": "open_charinfo_backpack",
     "Open Contracts Drawer": "show_quest_log",
