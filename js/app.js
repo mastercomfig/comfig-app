@@ -820,6 +820,7 @@ async function app() {
 
   async function newAutoexecFile() {
     let contents = "";
+    // Binds
     await updateBinds();
     for (const key of Object.keys(selectedBinds)) {
       let binding = selectedBinds[key];
@@ -832,6 +833,7 @@ async function app() {
       }
       contents += `bind ${key}${bindingStr}\n`;
     }
+    // Commands
     for (const cvar of Object.keys(selectedOverrides)) {
       contents += `${cvar} ${selectedOverrides[cvar]}\n`;
     }
@@ -2295,17 +2297,17 @@ async function app() {
     tf_weapon_builder: "Toolbox",
     tf_weapon_charged_smg: "#TF_Pro_SMG",
     tf_weapon_cleaver: "#TF_SD_Cleaver",
-    //tf_weapon_club: ["#TF_Weapon_Club", "#TF_Unique_TribalmanKukri", "#TF_TheBushwacka", "#TF_Shahanshah"],
+    tf_weapon_club: ["#TF_Weapon_Club", "#TF_Unique_TribalmanKukri", "#TF_TheBushwacka", "#TF_Shahanshah"],
     //tf_weapon_compound_bow: ["#TF_Unique_Achievement_CompoundBow", "#TF_FortifiedCompound"],
     tf_weapon_compound_bow: "#TF_Unique_Achievement_CompoundBow",
     tf_weapon_crossbow: "#TF_CrusadersCrossbow",
     tf_weapon_drg_pomson: "#TF_Pomson",
-    //tf_weapon_fireaxe: ["#TF_Weapon_FireAxe", "#TF_Unique_Achievement_FireAxe1", "#TF_Unique_SledgeHammer", "#TF_ThePowerjack", "#TF_BackScratcher", "#TF_Unique_RiftFireAxe", "#TF_Mailbox", "#TF_RFAHammer", "#TF_ThirdDegree", "#TF_Lollichop"],
+    tf_weapon_fireaxe: ["#TF_Weapon_FireAxe", "#TF_Unique_Achievement_FireAxe1", "#TF_Unique_SledgeHammer", "#TF_ThePowerjack", "#TF_BackScratcher", "#TF_Unique_RiftFireAxe", "#TF_Mailbox", "#TF_RFAHammer", "#TF_ThirdDegree", "#TF_Lollichop"],
     //tf_weapon_fists: ["#TF_Weapon_Fists", "#TF_Unique_Achievement_Fists", "#TF_Unique_Gloves_of_Running_Urgently", "#TF_WarriorsSpirit", "#TF_FistsOfSteel", "#TF_EvictionNotice", "#TF_Apocofists", "#TF_MasculineMittens", "#TF_Weapon_BreadBite"],
     //tf_weapon_flamethrower: ["#TF_Weapon_FlameThrower", "#TF_Unique_Achievement_Flamethrower", "#TF_TheDegreaser", "#TF_Phlogistinator", "#TF_Rainblower"],
-    //tf_weapon_flaregun: ["#TF_Weapon_Flaregun", "#TF_Weapon_Flaregun_Detonator", "#TF_ScorchShot"],
+    tf_weapon_flaregun: ["#TF_Weapon_Flaregun", "#TF_Weapon_Flaregun_Detonator", "#TF_ScorchShot"],
     tf_weapon_flaregun_revenge: "#TF_ManMelter",
-    //tf_weapon_grenadelauncher: ["#TF_Weapon_GrenadeLauncher", "#TF_LochNLoad", "#TF_Weapon_Iron_bomber"],
+    tf_weapon_grenadelauncher: ["#TF_Weapon_GrenadeLauncher", "#TF_LochNLoad", "#TF_Weapon_Iron_bomber"],
     tf_weapon_handgun_scout_primary: "#TF_TheShortstop",
     tf_weapon_handgun_scout_secondary: ["#TF_Winger", "#TF_Weapon_PEP_Pistol"],
     //tf_weapon_invis: ["#TF_Weapon_Watch", "#TF_Unique_Achievement_FeignWatch", "#TF_Unique_Achievement_CloakWatch", "#TF_TTG_Watch", "#TF_HM_Watch"],
