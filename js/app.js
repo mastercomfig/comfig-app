@@ -361,22 +361,57 @@ async function app() {
     }
   }
 
-  function requireVersion(major, minor, patch) {
-    if (userVersion !== "latest") {
-      let versions = [major, minor, patch];
-      let versionSplit = userVersion.split(".");
-      for (let i = 0; i < versions.length; i++) {
-        let requiredVersion = versions[i];
-        if (!isValid(requiredVersion)) {
-          continue;
+  function requireVersion(major, minor, patch, latest, dev) {
+    if (isLocalHost && cachedData) {
+      let debugVersion = "" + major;
+      if (minor !== undefined) {
+        debugVersion += "." + minor;
+      }
+      if (patch !== undefined) {
+        debugVersion += "." + patch;
+      }
+      let isSupported = false;
+      for (const version of cachedData.v) {
+        if (version.startsWith(debugVersion)) {
+          isSupported = true;
         }
-        let currentVersion = versionSplit[i];
-        if (currentVersion < requiredVersion) {
-          return false;
+      }
+      if (!isSupported) {
+        // Check if even the latest version doesn't support the requirement
+        // If so, it's an upcoming version, currently unknown, so we shouldn't throw
+        let backupVersion = userVersion;
+        userVersion = cachedData.v[0];
+        let backupData = cachedData;
+        cachedData = null;
+        let fatal = requireVersion(major, minor, patch);
+        userVersion = backupVersion;
+        cachedData = backupData;
+        if (fatal) {
+          throw new Error("Requiring unsupported version: " + debugVersion);
+        } else {
+          console.log("Requiring unknown version: " + debugVersion);
         }
-        if (currentVersion > requiredVersion) {
-          return true;
-        }
+      }
+    }
+    if (userVersion === "dev") {
+      return dev === undefined ? true : dev;
+    }
+    if (userVersion === "latest") {
+      return latest === undefined ? true : latest;
+    }
+    let versions = [major, minor, patch];
+    let versionSplit = userVersion.split(".");
+    for (let i = 0; i < versions.length; i++) {
+      let requiredVersion = versions[i];
+      if (!isValid(requiredVersion)) {
+        continue;
+      }
+      let currentVersion = parseInt(versionSplit[i], 10);
+      if (currentVersion < requiredVersion) {
+        return false;
+      }
+      if (currentVersion > requiredVersion) {
+        return true;
       }
     }
     return true;
@@ -413,9 +448,6 @@ async function app() {
   }
 
   function getAddonUrl(id, notDirect) {
-    if (id === "null-canceling-movement" && !requireVersion(9, 6)) {
-      id = "null-cancelling-movement";
-    }
     return getDownloadUrl(id, false, notDirect);
   }
 
@@ -487,7 +519,7 @@ async function app() {
 
   let gameDirectory = null;
   let customDirectory = null;
-  let userDirectory = null;
+  let overridesDirectory = null;
   let appDirectory = null;
 
   let bindDirectInstall = true;
@@ -499,7 +531,7 @@ async function app() {
       await restoreDirectoryInstructions();
       gameDirectory = null;
       customDirectory = null;
-      userDirectory = null;
+      overridesDirectory = null;
       appDirectory = null;
       return;
     }
@@ -542,7 +574,7 @@ async function app() {
     }
   }
 
-  let bannedDirectories = ["tf", "custom", "cfg", "user", "app"];
+  let bannedDirectories = ["tf", "custom", "cfg", "user", "overrides", "app"];
   let silentBannedDirectories = [""];
 
   function checkDirectory(directoryHandle) {
@@ -638,7 +670,7 @@ async function app() {
       const cfgDirectory = await tfDirectory.getDirectoryHandle("cfg", {
         create: true,
       });
-      userDirectory = await cfgDirectory.getDirectoryHandle("user", {
+      overridesDirectory = await cfgDirectory.getDirectoryHandle(getOverridesFolder(), {
         create: true,
       });
       appDirectory = await cfgDirectory.getDirectoryHandle("app", {
@@ -661,6 +693,14 @@ async function app() {
           Sentry.captureException(err);
         }
       }
+    }
+  }
+
+  function getOverridesFolder() {
+    if (requireVersion(9, 8)) {
+      return "overrides";
+    } else {
+      return "user";
     }
   }
 
@@ -774,7 +814,7 @@ async function app() {
       }
     }
     if (contents.length > 0) {
-      return await newFile(contents, "modules.cfg", userDirectory);
+      return await newFile(contents, "modules.cfg", overridesDirectory);
     }
     return null;
   }
@@ -933,6 +973,11 @@ async function app() {
     }
   }
 
+  function updateInstructions() {
+    let overridesFolder = getEl("overrides-folder");
+    overridesFolder.innerText = getOverridesFolder();
+  }
+
   function setUserVersion(userVer) {
     if (userVer === "Dev build") {
       userVer = "dev";
@@ -967,13 +1012,14 @@ async function app() {
       if (userVersion === "latest") {
         if (cachedData) {
           handleApiResponse(cachedData);
-          updateDocsLinks("page")
+          updateDocsLinks("page");
         }
       } else {
         let tag = `https://mastercomfig.mcoms.workers.dev/?t=${userVersion}`;
         sendApiRequest(tag);
-        updateDocsLinks(userVersion)
+        updateDocsLinks(userVersion);
       }
+      updateInstructions();
     }
   }
 

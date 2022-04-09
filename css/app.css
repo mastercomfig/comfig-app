@@ -1,3 +1,7 @@
+html {
+  scroll-padding-top: 89px;
+}
+
 .list-group-item-dark.list-group-item-action.active {
   color: #fff !important;
   background-color: #1c1e1f !important;
@@ -291,6 +295,14 @@ a.text-light.addon-card.active, a.text-light.addon-card:hover {
 
 #blockMisc {
   margin-bottom: 2rem;
+}
+
+#collapseMiscButton {
+  color: #a0a0a0;
+}
+
+.collapse-wrapper {
+  padding-bottom: 1px;
 }
 
 #binds-list {
