@@ -109,6 +109,9 @@
         <div style="min-height: 100%">
             <div>
                 <br>
+                <noscript>Note: Customizations require JavaScript.</noscript>
+                <span><a href="#downloads-section">Skip to downloads</a></span>
+                <br><br>
                 <h2 class="fw-normal"><span class="fa fa-cube fa-fw" aria-hidden="true"></span> Choose a preset</h2>
                 <br>
                 <ul class="nav nav-pills bg-teal-nav" id="presets" role="tablist">
@@ -144,65 +147,67 @@
                   <span class="fa fa-angle-double-down fa-fw"></span> <strong>Customize</strong>
                 </a>
                 <div class="collapse" id="customize">
-                  <br>
-                  <noscript>JavaScript must be enabled for customization.</noscript>
-                  <ul class="nav nav-pills" id="customizations" role="tablist">
-                    <li class="nav-item" role="presentation">
-                      <a class="nav-link active" id="modules" data-bs-toggle="tab" data-bs-target="#modules-tab" type="button" role="tab" aria-controls="modules-tab">Modules</a>
-                    </li>
-                    <li class="nav-item d-none" role="presentation">
-                      <a class="nav-link" id="config" data-bs-toggle="tab" data-bs-target="#config-tab" type="button" role="tab" aria-controls="config-tab">Configs</a>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                      <a class="nav-link" id="bindings" data-bs-toggle="tab" data-bs-target="#bindings-tab" type="button" role="tab" aria-controls="bindings-tab">Binds</a>
-                    </li>
-                    <li class="nav-item d-none" role="presentation">
-                      <a class="nav-link" id="weapons" data-bs-toggle="tab" data-bs-target="#weapons-tab" type="button" role="tab"
-                        aria-controls="weapons-tab">Weapons</a>
-                    </li>
-                  </ul>
-                  <br>
-                  <div class="customization-info">
-                    <h5><span class="fa fa-info-circle" aria-hidden="true"></span> Customize here, and then download with <strong>Direct Install</strong> or the <strong>Download customizations</strong> button in the download section below!</h5>
-                  </div>
-                  <br>
-                  <div class="tab-content" id="customizationsContent">
-                    <div class="tab-pane fade show active" id="modules-tab" role="tabpanel" aria-labelledby="modules">
-                      <p>For more information about modules, <a href="https://docs.mastercomfig.com/page/customization/modules/" data-url="customization/modules" target="_blank" class="docs-link" rel="noopener">see the documentation.</a></p>
-                      <div id="modules-root">
-                        <span class="fa fa-spinner fa-pulse fa-fw"></span> Loading, please wait...
-                      </div>
+                  <div class="collapse-wrapper">
+                    <br>
+                    <noscript>JavaScript must be enabled for customization.</noscript>
+                    <ul class="nav nav-pills" id="customizations" role="tablist">
+                      <li class="nav-item" role="presentation">
+                        <a class="nav-link active" id="modules" data-bs-toggle="tab" data-bs-target="#modules-tab" type="button" role="tab" aria-controls="modules-tab">Modules</a>
+                      </li>
+                      <li class="nav-item d-none" role="presentation">
+                        <a class="nav-link" id="config" data-bs-toggle="tab" data-bs-target="#config-tab" type="button" role="tab" aria-controls="config-tab">Configs</a>
+                      </li>
+                      <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="bindings" data-bs-toggle="tab" data-bs-target="#bindings-tab" type="button" role="tab" aria-controls="bindings-tab">Binds</a>
+                      </li>
+                      <li class="nav-item d-none" role="presentation">
+                        <a class="nav-link" id="weapons" data-bs-toggle="tab" data-bs-target="#weapons-tab" type="button" role="tab"
+                          aria-controls="weapons-tab">Weapons</a>
+                      </li>
+                    </ul>
+                    <br>
+                    <div class="customization-info">
+                      <h5><span class="fa fa-info-circle" aria-hidden="true"></span> Customize here, and then download with <strong>Direct Install</strong> or the <strong>Download customizations</strong> button in the download section below!</h5>
                     </div>
-                    <div class="tab-pane fade" id="config-tab" role="tabpanel" aria-labelledby="config">
-                      <p>For more information about configs, <a href="https://docs.mastercomfig.com/page/customization/custom_configs/" data-url="customization/custom_configs" target="_blank" class="docs-link" rel="noopener">see the documentation.</a></p>
-                      <div id="configs-root">
-                        <span class="fa fa-spinner fa-pulse fa-fw"></span> Loading, please wait...
-                      </div>
-                    </div>
-                    <div class="tab-pane fade" id="bindings-tab" role="tabpanel" aria-labelledby="bindings">
-                      <div id="binds-root" class="inset-box">
-                        <div id="binds-list" class="container">
-                        </div>
-                        <br>
-                        <div class="keyboardContainer">
-                          <div class="simple-keyboard-main"></div>
-
-                          <div class="controlArrows">
-                            <div class="simple-keyboard-control"></div>
-                            <div class="simple-keyboard-arrows"></div>
-                          </div>
-
-                          <div class="numPad">
-                            <div class="simple-keyboard-numpad"></div>
-                            <div class="simple-keyboard-numpadEnd"></div>
-                          </div>
-
+                    <br>
+                    <div class="tab-content" id="customizationsContent">
+                      <div class="tab-pane fade show active" id="modules-tab" role="tabpanel" aria-labelledby="modules">
+                        <p>For more information about modules, <a href="https://docs.mastercomfig.com/page/customization/modules/" data-url="customization/modules" target="_blank" class="docs-link" rel="noopener">see the documentation.</a></p>
+                        <div id="modules-root">
+                          <span class="fa fa-spinner fa-pulse fa-fw"></span> Loading, please wait...
                         </div>
                       </div>
-                    </div>
-                    <div class="tab-pane fade" id="weapons-tab" role="tabpanel" aria-labelledby="weapons">
-                      <div id="weapons-root">
-                        <span class="fa fa-spinner fa-pulse fa-fw"></span> Loading, please wait...
+                      <div class="tab-pane fade" id="config-tab" role="tabpanel" aria-labelledby="config">
+                        <p>For more information about configs, <a href="https://docs.mastercomfig.com/page/customization/custom_configs/" data-url="customization/custom_configs" target="_blank" class="docs-link" rel="noopener">see the documentation.</a></p>
+                        <div id="configs-root">
+                          <span class="fa fa-spinner fa-pulse fa-fw"></span> Loading, please wait...
+                        </div>
+                      </div>
+                      <div class="tab-pane fade" id="bindings-tab" role="tabpanel" aria-labelledby="bindings">
+                        <div id="binds-root" class="inset-box">
+                          <div id="binds-list" class="container">
+                          </div>
+                          <br>
+                          <div class="keyboardContainer">
+                            <div class="simple-keyboard-main"></div>
+
+                            <div class="controlArrows">
+                              <div class="simple-keyboard-control"></div>
+                              <div class="simple-keyboard-arrows"></div>
+                            </div>
+
+                            <div class="numPad">
+                              <div class="simple-keyboard-numpad"></div>
+                              <div class="simple-keyboard-numpadEnd"></div>
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+                      <div class="tab-pane fade" id="weapons-tab" role="tabpanel" aria-labelledby="weapons">
+                        <div id="weapons-root">
+                          <span class="fa fa-spinner fa-pulse fa-fw"></span> Loading, please wait...
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -312,7 +317,7 @@
                   </div>
                 </div>
                 <hr>
-                <div class="row">
+                <div class="row" id="downloads-section">
                   <div class="col-sm-12">
                     <h2 class="fw-normal"><span class="fa fa-download fa-fw"></span> Download your files</h2>
                     <br>
@@ -350,17 +355,19 @@
                         Not working? Download manually
                     </a>
                     <div class="collapse" id="collapseManual">
-                      <br>
-                      <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest" class="text-light" id="preset-dl"><span class="fa fa-download fa-fw"></span> Download preset</a></p>
-                      <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-null-canceling-movement-addon.vpk" class="text-light" id="null-canceling-movement-dl" style="display: none"><span class="fa fa-download fa-fw"></span> Download Null-Canceling Movement addon</a></p>
-                      <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-flat-mouse-addon.vpk" class="text-light" id="flat-mouse-dl" style="display: none"><span class="fa fa-download fa-fw"></span> Download Flat Mouse addon</a></p>
-                      <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-no-tutorial-addon.vpk" class="text-light" id="no-tutorial-dl" style="display: none"><span class="fa fa-download fa-fw"></span> Download No Tutorial addon</a></p>
-                      <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-opengl-addon.vpk" class="text-light" id="opengl-dl" style="display: none"><span class="fa fa-download fa-fw"></span> Download OpenGL addon</a></p>
-                      <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-disable-pyroland-addon.vpk" class="text-light" id="disable-pyroland-dl" style="display: none"><span class="fa fa-download fa-fw"></span> Download Disable Pyroland addon</a></p>
-                      <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-no-footsteps-addon.vpk" class="text-light" id="no-footsteps-dl" style="display: none"><span class="fa fa-download fa-fw"></span> Download No Footsteps addon</a></p>
-                      <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-no-soundscapes-addon.vpk" class="text-light" id="no-soundscapes-dl" style="display: none"><span class="fa fa-download fa-fw"></span> Download No Soundscapes addon</a></p>
-                      <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-transparent-viewmodels-addon.vpk" class="text-light" id="transparent-viewmodels-dl" style="display: none"><span class="fa fa-download fa-fw"></span> Download Transparent Viewmodels addon</a></p>
-                      <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-lowmem-addon.vpk" class="text-light" id="lowmem-dl" style="display: none"><span class="fa fa-download fa-fw"></span> Download Low Memory addon</a></p>
+                      <div class="collapse-wrapper">
+                        <br>
+                        <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest" class="text-light" id="preset-dl"><span class="fa fa-download fa-fw"></span> Download preset</a></p>
+                        <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-null-canceling-movement-addon.vpk" class="text-light" id="null-canceling-movement-dl" style="display: none"><span class="fa fa-download fa-fw"></span> Download Null-Canceling Movement addon</a></p>
+                        <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-flat-mouse-addon.vpk" class="text-light" id="flat-mouse-dl" style="display: none"><span class="fa fa-download fa-fw"></span> Download Flat Mouse addon</a></p>
+                        <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-no-tutorial-addon.vpk" class="text-light" id="no-tutorial-dl" style="display: none"><span class="fa fa-download fa-fw"></span> Download No Tutorial addon</a></p>
+                        <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-opengl-addon.vpk" class="text-light" id="opengl-dl" style="display: none"><span class="fa fa-download fa-fw"></span> Download OpenGL addon</a></p>
+                        <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-disable-pyroland-addon.vpk" class="text-light" id="disable-pyroland-dl" style="display: none"><span class="fa fa-download fa-fw"></span> Download Disable Pyroland addon</a></p>
+                        <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-no-footsteps-addon.vpk" class="text-light" id="no-footsteps-dl" style="display: none"><span class="fa fa-download fa-fw"></span> Download No Footsteps addon</a></p>
+                        <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-no-soundscapes-addon.vpk" class="text-light" id="no-soundscapes-dl" style="display: none"><span class="fa fa-download fa-fw"></span> Download No Soundscapes addon</a></p>
+                        <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-transparent-viewmodels-addon.vpk" class="text-light" id="transparent-viewmodels-dl" style="display: none"><span class="fa fa-download fa-fw"></span> Download Transparent Viewmodels addon</a></p>
+                        <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-lowmem-addon.vpk" class="text-light" id="lowmem-dl" style="display: none"><span class="fa fa-download fa-fw"></span> Download Low Memory addon</a></p>
+                      </div>
                     </div>
                     <hr>
                     <div>
@@ -372,19 +379,21 @@
                     <hr>
                     <div class="instructions-text">
                       <p class="lead"><b><a class="download-link" id="custom-dl"><span class="fa fa-download fa-fw"></span> Download customizations </a></b></p>
-                      <p class="instructions-text">Create a <code>user</code> folder in your <code>tf/cfg</code> folder and drop the files in there to override mastercomfig with your selected customizations!</p>
+                      <p class="instructions-text">Create a <code id="overrides-folder">overrides</code> folder in your <code>tf/cfg</code> folder and drop the files in there to override mastercomfig with your selected customizations!</p>
                       <noscript>Note: Customizations require JavaScript.</noscript>
                       <hr>
                     </div>
                     <div id="blockMisc">
                       <a id="collapseMiscButton" data-bs-toggle="collapse" href="#collapseMisc" role="button" aria-expanded="false"
-                        aria-controls="collapseMisc" style="color: #a0a0a0">
+                        aria-controls="collapseMisc">
                         Other downloads
                       </a>
                       <div class="collapse" id="collapseMisc">
-                        <p>Looking for something else (like config templates and alternative formats)? You can find it on GitHub <a
-                            href="https://github.com/mastercomfig/mastercomfig/releases/latest" class="text-light" id="assets-link"
-                            style="text-decoration: underline dotted;">release assets</a>.</p>
+                        <div class="collapse-wrapper">
+                          <p>Looking for something else (like config templates and alternative formats)? You can find it on GitHub <a
+                              href="https://github.com/mastercomfig/mastercomfig/releases/latest" class="text-light" id="assets-link"
+                              style="text-decoration: underline dotted;">release assets</a>.</p>
+                        </div>
                       </div>
                     </div>
                   </div>
