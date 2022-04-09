@@ -235,6 +235,10 @@ a.disabled {
   transition-timing-function: ease-in-out;
 }
 
+#customizations {
+  background: rgba(255,255,255,0.1);
+}
+
 #modules-sidebar {
   background: #fff1;
   padding-top: 0.2rem;
