@@ -1391,7 +1391,7 @@ async function app() {
     let moduleDocsLink = document.createElement("a");
     moduleDocsLink.href =
       `https://docs.mastercomfig.com/${userVersion !== "latest" ? userVersion : "page"}/customization/modules/#` +
-      displayName.replaceAll(/\(|\)/g, "").split(" ").join("-").toLowerCase();
+      displayName.replace(/\(|\)/g, "").split(" ").join("-").toLowerCase();
     moduleDocsLink.target = "_blank";
     moduleDocsLink.rel = "noopener";
     let modulesDocsIcon = document.createElement("span");
