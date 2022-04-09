@@ -1770,7 +1770,6 @@ async function app() {
     }
     navigator.clipboard.writeText(target.firstChild.innerText)
       .then(() => {
-        console.log("Success!");
         let status = target.children[2];
         status.innerText = "Copied!";
         target.classList.add("text-success");
