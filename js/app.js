@@ -294,7 +294,7 @@ async function app() {
   // Overrides for default game action binds
   let customActionMappings = {};
 
-  // Addons which overide action mappings
+  // Addons which override action mappings
   const addonActionMappings = {
     "null-canceling-movement": {
       "Move Forward": "+mf",
@@ -846,6 +846,15 @@ async function app() {
         let bindCommand = "";
         if (actionSelect === CUSTOM_ACTION_VALUE) {
           bindCommand = bindField.childNodes[1].lastChild.firstChild.value;
+          // Empty command, skip
+          /* TODO: we can't do this for now because we bind a download with any existing keybind (not non-empty command)
+          if (!bindCommand) {
+            continue;
+          } */
+          if (!bindCommand) {
+            // Force quoting later on
+            bindCommand = " ";
+          }
           actionBinds[keyInput] = bindCommand;
           bindCommand = bindCommand.replaceAll("\"", "");
         } else {
@@ -916,7 +925,10 @@ async function app() {
 
   function updateCustomizationDownload() {
     let element = getEl("custom-dl");
-    let bHasSelection = Object.keys(selectedModules).length > 0;
+    const bHasModules = Object.keys(selectedModules).length > 0;
+    const bHasOverrides = Object.keys(selectedOverrides).length > 0;
+    const bHasBinds = document.querySelectorAll(".binding-field").length > 1; // last one is empty
+    const bHasSelection = bHasModules || bHasOverrides || bHasBinds;
     if (bHasSelection) {
       element.classList.remove("disabled", "text-light");
       element.style.cursor = "pointer";
@@ -2207,6 +2219,7 @@ async function app() {
     removeBtn.onclick = (e) => {
       e.preventDefault();
       row.remove();
+      updateCustomizationDownload();
     }
     removeBtn.classList.add("fa", "fa-close", "fa-fw");
     if (!bindOptions) {
@@ -2217,6 +2230,12 @@ async function app() {
     removeCol.append(removeBtn);
     row.append(inputCol, actionCol, removeCol);
     bindsList.append(row);
+
+    // When we add a new empty one, that means we added a new binding
+    if (!bindOptions) {
+      // TODO: how to handle custom command?
+      updateCustomizationDownload();
+    }
   }
 
   tryDBGet("keybinds").then((keybinds) => {
