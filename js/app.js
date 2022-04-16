@@ -334,8 +334,11 @@ async function app() {
     let element = getEl(id);
     element.onclick = null; // Ignore clicks
     disableDownload(element);
+    console.log(gameDirectory);
+    let directInstall = await tryDBGet("enable-direct-install");
     element.innerHTML = element.innerHTML
-      .replace("Download", "Downloading")
+      .replace("Install", directInstall ? "Installing" : "Downloading")
+      .replace("Download", directInstall ? "Installing" : "Downloading")
       .replace(" ", "…");
     // Do the download once clicked
     let urls = await fnGatherUrls();
@@ -423,8 +426,10 @@ async function app() {
     let element = getEl(id);
     element.onclick = async () => await downloadClickEvent(id, fnGatherUrls);
     enableDownload(element);
+    console.log(gameDirectory);
     element.innerHTML = element.innerHTML
-      .replace("Downloading", "Download")
+      .replace("Installing", gameDirectory ? "Install" : "Download")
+      .replace("Downloading", gameDirectory ? "Install" : "Download")
       .replace("…", " ");
   }
 
@@ -533,6 +538,7 @@ async function app() {
       customDirectory = null;
       overridesDirectory = null;
       appDirectory = null;
+      updatePresetDownloadButton();
       return;
     }
     getEl("game-folder-container").classList.remove("d-none");
@@ -555,6 +561,7 @@ async function app() {
       });
     }
     await updateDirectory();
+    updatePresetDownloadButton();
   }
 
   async function clearDirectoryInstructions() {
@@ -624,6 +631,7 @@ async function app() {
         "game-folder-text"
     ).innerText = "No folder chosen, Direct Install not enabled";
     restoreDirectoryInstructions();
+    updatePresetDownloadButton();
   }
 
   async function updateDirectory() {
@@ -641,6 +649,7 @@ async function app() {
       }
       clearDirectoryInstructions();
       gameDirectory = directoryHandle;
+      updatePresetDownloadButton();
       getEl(
         "game-folder-text"
       ).innerText = `${gameDirectory.name} folder chosen, click to change`;
@@ -1035,6 +1044,22 @@ async function app() {
     }
   }
 
+  function updatePresetDownloadButton() {
+    let presetInfo = presets[selectedPreset];
+    console.log(gameDirectory);
+    if (!downloading) {
+      let icon = "cloud-download";
+      let text = `Download mastercomfig base (${presetInfo.name} preset and addons)`;
+      if (gameDirectory) {
+        text = `Install mastercomfig (${presetInfo.name} preset, addons and customizations)`;
+        icon = "download";
+      }
+      getEl(
+        "vpk-dl"
+      ).innerHTML = `<span class="fa fa-${icon} fa-fw"></span> ${text} `; // update download text
+    }
+  }
+
   async function setPreset(id, fromDB) {
     if (selectedPreset === id) {
       return;
@@ -1055,21 +1080,17 @@ async function app() {
       }
     }
     let presetInfo = presets[selectedPreset];
-    new bootstrap.Tab(getEl(selectedPreset)).show(); // visually select in tabs menu
+    new bootstrap.Tab(getEl(selectedPreset)).show(); // visually display as active in tabs menu bar
     let presetImage = getEl("preset-image");
     presetImage.src = `/img/presets/${selectedPreset}.webp`;
     presetImage.alt = `${presetInfo.name} preset screenshot`;
     getEl("preset-description").innerHTML = presetInfo.description;
     getEl("vpk-dl").removeAttribute("href"); // we don't need the static download anymore
-    if (!downloading) {
-      getEl(
-        "vpk-dl"
-      ).innerHTML = `<span class="fa fa-cloud-download fa-fw"></span> Download ${presetInfo.name} preset and selected addons `; // update download text
-    }
+    updatePresetDownloadButton();
     getEl("preset-dl").href = getPresetUrl(true);
     getEl(
       "preset-dl"
-    ).innerHTML = `<span class="fa fa-download fa-fw"></span> Download ${presetInfo.name} preset `; // update preset text
+    ).innerHTML = `<span class="fa fa-cloud-download fa-fw"></span> Download ${presetInfo.name} preset `; // update preset text
     // if not loading from DB, set recommended addons
     if (!fromDB) {
       // reset all recommendable addons
