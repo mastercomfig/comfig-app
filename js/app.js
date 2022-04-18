@@ -334,7 +334,6 @@ async function app() {
     let element = getEl(id);
     element.onclick = null; // Ignore clicks
     disableDownload(element);
-    console.log(gameDirectory);
     let directInstall = await tryDBGet("enable-direct-install");
     element.innerHTML = element.innerHTML
       .replace("Install", directInstall ? "Installing" : "Downloading")
@@ -426,7 +425,6 @@ async function app() {
     let element = getEl(id);
     element.onclick = async () => await downloadClickEvent(id, fnGatherUrls);
     enableDownload(element);
-    console.log(gameDirectory);
     element.innerHTML = element.innerHTML
       .replace("Installing", gameDirectory ? "Install" : "Download")
       .replace("Downloading", gameDirectory ? "Install" : "Download")
@@ -625,7 +623,7 @@ async function app() {
     await tryDBDelete("directory");
     gameDirectory = null;
     customDirectory = null;
-    userDirectory = null;
+    overridesDirectory = null;
     appDirectory = null;
     getEl(
         "game-folder-text"
@@ -1046,7 +1044,6 @@ async function app() {
 
   function updatePresetDownloadButton() {
     let presetInfo = presets[selectedPreset];
-    console.log(gameDirectory);
     if (!downloading) {
       let icon = "cloud-download";
       let text = `Download mastercomfig base (${presetInfo.name} preset and addons)`;
@@ -1794,39 +1791,40 @@ async function app() {
     await setPreset("medium-high", true);
   }
 
-  let currentTimeout = null;
-
-  getEl("launch-options").addEventListener("click", () => {
-    let target = getEl("launch-options");
-    if (currentTimeout !== null) {
-      clearTimeout(currentTimeout);
-    }
-    navigator.clipboard.writeText(target.firstChild.innerText)
-      .then(() => {
-        let status = target.children[2];
-        status.innerText = "Copied!";
-        target.classList.add("text-success");
-        currentTimeout = setTimeout(() => {
-          status.innerText = "Click to copy";
-          target.classList.remove("text-success");
-        }, 1000);
-      })
-      .catch(() => {
-        console.error("Failed to copy text");
-        let status = target.children[2];
-        status.innerText = "Please copy manually";
-        target.classList.add("text-danger");
-        currentTimeout = setTimeout(() => {
-          status.innerText = "Click to copy";
-          target.classList.remove("text-danger");
-        }, 5000);
-        let selection = getSelection();
-        let range = document.createRange();
-        range.selectNodeContents(target.firstChild);
-        selection.removeAllRanges();
-        selection.addRange(range);
-      })
-  });
+  if (getEl("launch-options")) {
+    let currentTimeout = null;
+    getEl("launch-options").addEventListener("click", () => {
+      let target = getEl("launch-options");
+      if (currentTimeout !== null) {
+        clearTimeout(currentTimeout);
+      }
+      navigator.clipboard.writeText(target.firstChild.innerText)
+        .then(() => {
+          let status = target.children[2];
+          status.innerText = "Copied!";
+          target.classList.add("text-success");
+          currentTimeout = setTimeout(() => {
+            status.innerText = "Click to copy";
+            target.classList.remove("text-success");
+          }, 1000);
+        })
+        .catch(() => {
+          console.error("Failed to copy text");
+          let status = target.children[2];
+          status.innerText = "Please copy manually";
+          target.classList.add("text-danger");
+          currentTimeout = setTimeout(() => {
+            status.innerText = "Click to copy";
+            target.classList.remove("text-danger");
+          }, 5000);
+          let selection = getSelection();
+          let range = document.createRange();
+          range.selectNodeContents(target.firstChild);
+          selection.removeAllRanges();
+          selection.addRange(range);
+        })
+    });
+  }
 
   // get latest release, and update page
   sendApiRequest();
@@ -2507,7 +2505,6 @@ async function app() {
       let folder = await getGameResourceDir(path);
       let re = new RegExp(file);
       let files = folder.filter((f) => re.test(f));
-      console.log(files);
       let res = [];
       for (const file of files) {
         res.push(await getGameResourceFile(file));
