@@ -283,10 +283,22 @@ async function app() {
   var selectedAddons = [];
   // Current state of module selections
   var selectedModules = {};
-  // Current state of binds
+  // Current state of autoexec binds
   var selectedBinds = {};
+  // Overlaid bind layers
+  var bindLayers = {
+    "gameoverrides": {}
+  };
   // Current state of overrides
   var selectedOverrides = {};
+  // Config contents
+  var configContentsRaw = {};
+  var contentsDefaulter = {
+    get: (target, name) => {
+      return target.hasOwnProperty(name) ? target[name] : "";
+    }
+  }
+  var configContents = new Proxy(configContentsRaw, contentsDefaulter);
 
   // Data cache
   let cachedData = null;
@@ -302,6 +314,19 @@ async function app() {
       "Move Left": "+ml",
       "Move Right": "+mr",
     }
+  };
+
+  const bindConfigLayers = {
+    "scout": "scout.cfg",
+    "soldier": "soldier.cfg",
+    "pyro": "pyro.cfg",
+    "demoman": "demoman.cfg",
+    "heavy": "heavyweapons.cfg",
+    "engineer": "engineer.cfg",
+    "medic": "medic.cfg",
+    "sniper": "sniper.cfg",
+    "spy": "spy.cfg",
+    "gameoverrides": "game_overrides.cfg",
   };
 
   var storedModules = {};
@@ -820,6 +845,11 @@ async function app() {
         contents += `alias ${moduleName}\n`;
       }
     }
+    // Get any additional contents
+    if (configContentsRaw["modules.cfg"]) {
+      contents += configContentsRaw["modules.cfg"];
+      delete configContentsRaw["modules.cfg"];
+    }
     if (contents.length > 0) {
       return await newFile(contents, "modules.cfg", overridesDirectory);
     }
@@ -842,15 +872,28 @@ async function app() {
 
     // Keep track of command binds & user saved binds
     let actionBinds = {};
+    let actionLayerBinds = {};
     selectedBinds = {};
+    bindLayers = {"gameoverrides": {}};
     for (const bindField of bindFields) {
       let keyInput = bindField.childNodes[0].firstChild.value;
       let actionSelect = bindField.childNodes[1].firstChild.value;
+      let layerName = bindField.dataset.layer;
       if (keyInput && actionSelect) {
         if (actionSelect === EMPTY_ACTION_VALUE) {
           continue;
         }
         let bindCommand = "";
+        let actionBindObject;
+        if (layerName) {
+          actionBindObject = actionLayerBinds[layerName];
+          if (!actionBindObject) {
+            actionLayerBinds[layerName] = {};
+            actionBindObject = actionLayerBinds[layerName];
+          }
+        } else {
+          actionBindObject = actionBinds;
+        }
         if (actionSelect === CUSTOM_ACTION_VALUE) {
           bindCommand = bindField.childNodes[1].lastChild.firstChild.value;
           // Empty command, skip
@@ -862,24 +905,103 @@ async function app() {
             // Force quoting later on
             bindCommand = " ";
           }
-          actionBinds[keyInput] = bindCommand;
+          actionBindObject[keyInput] = bindCommand;
           bindCommand = bindCommand.replaceAll("\"", "");
         } else {
-          actionBinds[keyInput] = actionSelect;
+          actionBindObject[keyInput] = actionSelect;
           bindCommand = actionOverrides[actionSelect] ? actionOverrides[actionSelect] : actionMappings[actionSelect];
         }
-        selectedBinds[keyInput] = bindCommand;
+        let bindObject;
+        if (layerName) {
+          let bindObject = bindLayers[layerName];
+          if (!bindObject) {
+            bindLayers[layerName] = {};
+            bindObject = bindLayers[layerName];
+          }
+        } else {
+          bindObject = selectedBinds;
+        }
+        bindObject[keyInput] = bindCommand;
+      }
+    }
+    let hasCustomLayers = false;
+    let pendingOverrideLayer = {};
+    for (const bindLayer of Object.keys(bindLayers)) {
+      // We don't need to handle resets for game overrides
+      if (bindLayer === "gameoverrides") {
+        continue;
+      }
+      // Check if a default file exists for this layer
+      if (!hasCustomLayers && !bindConfigLayers[bindLayer]) {
+        hasCustomLayers = true;
+      }
+      for (const key of Object.keys(bindLayers[bindLayer])) {
+        let defaultBind = selectedBinds[key];
+        if (defaultBind) {
+          // If we have a bind for this key, we need to override it
+          pendingOverrideLayer[key] = defaultBind;
+          delete selectedBinds[key];
+        } else {
+          // If we don't have a bind, we need to bind on override
+          pendingOverrideLayer[key] = `unbind ${key}`;
+        }
+      }
+    }
+    // Our pending overrides are just placeholders to make sure layers don't propagate. If we have user set ones, use those.
+    let overrides = {...pendingOverrideLayer, ...bindLayers["gameoverrides"]}
+    // If we have custom layers, put them in a new binds config so we don't re-run game overrides when we reset
+    if (hasCustomLayers) {
+      let contents = getBindsFromBindsObject(overrides);
+      if (contents.length > 0) {
+        configContents["reset_game_overrides.cfg"] = contents;
+      }
+    } else
+      bindLayers["gameoverrides"] = overrides;
+    }
+    let customOverrideFiles = [];
+    let customLayers = [];
+    // Populate other files with binds
+    for (const bindLayer of Object.keys(bindLayers)) {
+      let fileName = bindConfigLayers[bindLayer];
+      let contents = getBindsFromBindsObject(bindLayers[bindLayer]);
+      if (contents.length > 0) {
+        continue;
+      }
+      if (!fileName) {
+        fileName = `layer_${bindLayer}.cfg`;
+        // On key down, apply layer
+        configContents["autoexec.cfg"] += `alias +layer_${bindLayer}"exec app/${fileName}"\n`;
+        // On key up, reset binds
+        configContents["autoexec.cfg"] += `alias -layer_${bindLayer}"exec app/reset_game_overrides.cfg\n`;
+        customLayers.push(bindLayer);
+      } else {
+        customOverrideFiles.push(fileName);
+      }
+      let prefix = hasCustomLayers ? "reset_" : "";
+      configContents[`${prefix}${fileName}`] += contents;
+    }
+    if (hasCustomLayers) {
+      // Execute reset cfg at the end of game overrides to apply binds
+      configContents["game_overrides.cfg"] += "exec app/reset_game_overrides.cfg";
+      // Apply class specific layer resets
+      for (const fileName of customOverrideFiles) {
+        let isClassConfig = fileName !== "game_overrides.cfg";
+        for (const layer of customLayers) {
+          if (isClassConfig) {
+            configContents[fileName] += `alias -layer_${layer}"exec app/reset_game_overrides.cfg;exec app/reset_${fileName}"\n`;
+          }
+          configContents[fileName] += `exec app/reset_${fileName}`;
+        }
       }
     }
     await tryDBSet("keybinds", actionBinds);
+    await tryDBSet("bindLayers", actionLayerBinds);
   }
 
-  async function newAutoexecFile() {
+  function getBindsFromBindsObject(bindsObject) {
     let contents = "";
-    // Binds
-    await updateBinds();
-    for (const key of Object.keys(selectedBinds)) {
-      let binding = selectedBinds[key];
+    for (const key of Object.keys(bindsObject)) {
+      let binding = bindsObject[key];
       let bindingStr;
       // Should we quote arg, or raw arg?
       if (typeof binding === "string" && binding.indexOf(" ") !== -1) {
@@ -889,9 +1011,21 @@ async function app() {
       }
       contents += `bind ${key}${bindingStr}\n`;
     }
+    return contents;
+  }
+
+  async function newAutoexecFile() {
+    let contents = "";
+    // Binds
+    contents += getBindsFromBindsObject(selectedBinds);
     // Commands
     for (const cvar of Object.keys(selectedOverrides)) {
       contents += `${cvar} ${selectedOverrides[cvar]}\n`;
+    }
+    // Get any additional contents
+    if (configContentsRaw["autoexec.cfg"]) {
+      contents += configContentsRaw["autoexec.cfg"];
+      delete configContentsRaw["autoexec.cfg"];
     }
     if (contents.length > 0) {
       return await newFile(contents, "autoexec.cfg", appDirectory);
@@ -918,14 +1052,24 @@ async function app() {
         url: "",
       }),
     ];
+    // Update binds
+    await updateBinds();
     // Create the modules.cfg file
     let modulesFile = await newModulesFile();
     if (modulesFile) {
       downloads.push(getObjectFilePromise(modulesFile));
     }
+    // Create the autoexec.cfg file
     let autoexecFile = await newAutoexecFile();
     if (autoexecFile) {
       downloads.push(getObjectFilePromise(autoexecFile));
+    }
+    for (const fileName of Object.keys(configContentsRaw)) {
+      let contents = configContentsRaw[fileName];
+      if (contents.length > 0) {
+        let file = await newFile(contents, fileName, appDirectory);
+        downloads.push(getObjectFilePromise(file));
+      }
     }
     return downloads;
   }
