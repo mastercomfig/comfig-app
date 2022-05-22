@@ -1,0 +1,42 @@
+---
+import Layout from '../layouts/Layout.astro';
+import BaseHead from '../components/head/BaseHead.astro';
+import PreloadHead from '../components/head/PreloadHead.astro';
+import ImportHead from '../components/head/ImportHead.astro';
+import MainHead from '../components/head/MainHead.astro';
+import Footer from '../components/Footer.astro';
+---
+<Layout>
+<head>
+  <BaseHead />
+  <PreloadHead>
+    <link rel="prefetch" href="/">
+  </PreloadHead>
+  <ImportHead>
+    <link rel="stylesheet" href="/css/index.css">
+  </ImportHead>
+  <MainHead title="404 | mastercomfig" />
+</head>
+<body class="bg-dark">
+  <header class="jumbotron jumbotron-fluid text-light home-header">
+    <div class="container d-flex align-items-center justify-content-center" style="height: 100%">
+      <div class="align-middle text-center">
+        <img class="img-logo" src="/img/mastercomfig_logo_transparent_i.svg" alt="logo" />
+        <h1 class="display-4">404 Not Found!</h1>
+        <p class="lead">Looks like we messed up, and now you're on a page that doesn't exist.</p>
+        <a class="btn btn-outline-primary btn-lg" href="/">
+          <span class="fa fa-home fa-fw"></span> Back to home
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <section class="container">
+    <hr class="bg-light">
+  </section>
+  <Footer>
+    <a href="https://github.com/mastercomfig/mastercomfig"><span class="fa fa-github fa-fw"></span> Source code</a>
+    <br><br>
+  </Footer>
+</body>
+</Layout>

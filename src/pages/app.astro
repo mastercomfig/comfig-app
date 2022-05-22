@@ -1,0 +1,546 @@
+---
+import Layout from '../layouts/Layout.astro';
+import BaseHead from '../components/head/BaseHead.astro';
+import PreloadHead from '../components/head/PreloadHead.astro';
+import ImportHead from '../components/head/ImportHead.astro';
+import MainHead from '../components/head/MainHead.astro';
+import Footer from '../components/Footer.astro';
+---
+<Layout>
+<head>
+  <BaseHead />
+  <PreloadHead>
+    <link rel="preload" as="fetch" href="https://mastercomfig.mcoms.workers.dev/?v=2" crossorigin>
+    <link rel="preload" as="image" href="img/presets/medium-high.webp">
+    <link rel="preload" as="image" href="img/presets/low.webp">
+    <link rel="preload" as="image" href="img/presets/medium-low.webp">
+    <link rel="preload" as="image" href="img/presets/medium.webp">
+    <link rel="preload" as="image" href="img/presets/ultra.webp">
+    <link rel="preload" as="image" href="img/presets/very-low.webp">
+    <link rel="preload" as="image" href="img/presets/high.webp">
+    <link rel="preload" as="image" href="img/presets/none.webp">
+  </PreloadHead>
+  <ImportHead>
+    <link rel="stylesheet" href="css/app.css">
+
+    <script>
+            var $buoop = { required: { e: 0, f: 0, o: 0, s: 0, c: 0 }, insecure: true, unsupported: true, api: 2022.04 };
+            function $buo_f() {
+              var e = document.createElement("script");
+              e.src = "//browser-update.org/update.min.js";
+              document.body.appendChild(e);
+            };
+            try { document.addEventListener("DOMContentLoaded", $buo_f, false) }
+            catch (e) { window.attachEvent("onload", $buo_f) }
+          </script>
+
+    <script defer src="https://js.sentry-cdn.com/42c25ee2fb084eb5a832ee92d97057d5.min.js" data-lazy="no"
+      crossorigin></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha256-9SEPo+fwJFpMUet/KACSwO+Z/dKMReF9q4zFhU/fT9M=" crossorigin></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/idb-keyval@6/dist/umd.js" crossorigin></script>
+
+    <script type="module" src="/js/app.js"></script>
+  </ImportHead>
+  <MainHead>
+    <script type="application/ld+json">
+      {
+        "@context": "http://schema.org/",
+        "@type": "WebApplication",
+        "name": "mastercomfig",
+        "operatingSystem": "Windows,macOS,OSX,Linux",
+        "applicationCategory": "GameApplication",
+        "offers": {
+          "@type": "Offer",
+          "price": "0"
+        }
+      }
+    </script>
+  </MainHead>
+</head>
+<body class="dark-header">
+  <nav class="navbar navbar-expand-sm sticky-top navbar-dark bg-teal">
+    <div class="container">
+      <span class="navbar-brand"><img src="img/mastercomfig_logo_transparent_i.svg" alt=""
+          class="d-inline-block align-bottom" width="30" height="24"> mastercomfig</span>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="versionDropdown" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false"><span class="badge bg-dark" id="version">9.8.1</span></a>
+            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="versionDropdown" id="versionDropdownMenu">
+            </ul>
+          </li>
+          <li class="nav-item d-none" id="up-to-date-mark">
+            <span class="nav-link"><span class="badge bg-success"><span class="fa fa-check fa-fw"
+                  aria-hidden="true"></span> Up to Date</span></span>
+          </li>
+          <li class="nav-item">
+            <a id="changelog-link" class="nav-link active" aria-current="page"
+              href="https://github.com/mastercomfig/mastercomfig/releases/latest" target="_blank"
+              rel="noopener"><strong>Changelog</strong></a>
+          </li>
+          <li class="nav-item">
+            <a id="install-link" class="nav-link d-none" aria-current="page" href="#"><strong>Install
+                app</strong></a>
+          </li>
+          <li class="nav-item">
+            <a id="subscribe-link" class="nav-link d-none" aria-current="page" href="#"><strong>Subscribe to
+                notifications</strong></a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <!--
+  <section id="sponsor" class="container" style="padding-bottom: 1rem">
+    <div class="card">
+      <div class="card-body">
+        <strong>Want to sponsor mastercomfig and reserve a spot here?</strong> Contact me at mastercoms@tuta.io.
+      </div>
+    </div>
+  </section>
+  -->
+  <section class="container text-light" style="margin-bottom: 1rem;padding-bottom: 0;padding-top: 0">
+    <div style="min-height: 100%">
+      <div>
+        <br>
+        <noscript>Note: Customizations require JavaScript.</noscript>
+        <span><a href="#downloads-section">Skip to downloads</a></span>
+        <br><br>
+        <h2 class="fw-normal"><span class="fa fa-cube fa-fw" aria-hidden="true"></span> Choose a preset</h2>
+        <br>
+        <ul class="nav nav-pills bg-teal-nav" id="presets" role="tablist">
+          <li class="nav-item" role="presentation">
+            <a class="nav-link" id="ultra" type="button" role="tab">Ultra</a>
+          </li>
+          <li class="nav-item" role="presentation">
+            <a class="nav-link" id="high" type="button" role="tab">High</a>
+          </li>
+          <li class="nav-item" role="presentation">
+            <a class="nav-link" id="medium-high" type="button" role="tab">Medium High</a>
+          </li>
+          <li class="nav-item" role="presentation">
+            <a class="nav-link" id="medium" type="button" role="tab">Medium</a>
+          </li>
+          <li class="nav-item" role="presentation">
+            <a class="nav-link" id="medium-low" type="button" role="tab">Medium Low</a>
+          </li>
+          <li class="nav-item" role="presentation">
+            <a class="nav-link" id="low" type="button" role="tab">Low</a>
+          </li>
+          <li class="nav-item" role="presentation">
+            <a class="nav-link" id="very-low" type="button" role="tab">Very Low</a>
+          </li>
+          <li class="nav-item" role="presentation">
+            <a class="nav-link" id="none" type="button" role="tab">None</a>
+          </li>
+        </ul>
+        <br><img src="" width="640" height="360" id="preset-image" class="my-auto d-block" alt=" " /><br>
+        <div id="preset-description">
+          <h4>&hellip;</h4>
+        </div>
+        <br>
+        <a class="lead toggler btn btn-primary" id="customize-toggler" data-bs-toggle="collapse" href="#customize"
+          role="button" aria-expanded="false" aria-controls="customize">
+          <span class="fa fa-angle-double-down fa-fw"></span> <strong>Customize</strong>
+        </a>
+        <div class="collapse" id="customize">
+          <div class="collapse-wrapper">
+            <br>
+            <noscript>JavaScript must be enabled for customization.</noscript>
+            <ul class="nav nav-pills" id="customizations" role="tablist">
+              <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="modules" data-bs-toggle="tab" data-bs-target="#modules-tab"
+                  type="button" role="tab" aria-controls="modules-tab">Modules</a>
+              </li>
+              <li class="nav-item d-none" role="presentation">
+                <a class="nav-link" id="config" data-bs-toggle="tab" data-bs-target="#config-tab" type="button"
+                  role="tab" aria-controls="config-tab">Configs</a>
+              </li>
+              <li class="nav-item" role="presentation">
+                <a class="nav-link" id="bindings" data-bs-toggle="tab" data-bs-target="#bindings-tab" type="button"
+                  role="tab" aria-controls="bindings-tab">Binds</a>
+              </li>
+              <li class="nav-item d-none" role="presentation">
+                <a class="nav-link" id="weapons" data-bs-toggle="tab" data-bs-target="#weapons-tab" type="button"
+                  role="tab" aria-controls="weapons-tab">Weapons</a>
+              </li>
+            </ul>
+            <br>
+            <div class="customization-info">
+              <h5><span class="fa fa-info-circle" aria-hidden="true"></span> Customize here, and then
+                download with <strong>Direct Install</strong> or the <strong>Download
+                  customizations</strong> button in the download section below!</h5>
+            </div>
+            <br>
+            <div class="tab-content" id="customizationsContent">
+              <div class="tab-pane fade show active" id="modules-tab" role="tabpanel" aria-labelledby="modules">
+                <p>For more information about modules, <a
+                    href="https://docs.mastercomfig.com/page/customization/modules/" data-url="customization/modules"
+                    target="_blank" class="docs-link" rel="noopener">see the documentation.</a></p>
+                <div id="modules-root">
+                  <span class="fa fa-spinner fa-pulse fa-fw"></span> Loading, please wait...
+                </div>
+              </div>
+              <div class="tab-pane fade" id="config-tab" role="tabpanel" aria-labelledby="config">
+                <p>For more information about configs, <a
+                    href="https://docs.mastercomfig.com/page/customization/custom_configs/"
+                    data-url="customization/custom_configs" target="_blank" class="docs-link" rel="noopener">see the
+                    documentation.</a></p>
+                <div id="configs-root">
+                  <span class="fa fa-spinner fa-pulse fa-fw"></span> Loading, please wait...
+                </div>
+              </div>
+              <div class="tab-pane fade" id="bindings-tab" role="tabpanel" aria-labelledby="bindings">
+                <div id="binds-root" class="inset-box">
+                  <div id="binds-list" class="container">
+                  </div>
+                  <br>
+                  <div class="keyboardContainer">
+                    <div class="simple-keyboard-main"></div>
+
+                    <div class="controlArrows">
+                      <div class="simple-keyboard-control"></div>
+                      <div class="simple-keyboard-arrows"></div>
+                    </div>
+
+                    <div class="numPad">
+                      <div class="simple-keyboard-numpad"></div>
+                      <div class="simple-keyboard-numpadEnd"></div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+              <div class="tab-pane fade" id="weapons-tab" role="tabpanel" aria-labelledby="weapons">
+                <div id="weapons-root">
+                  <span class="fa fa-spinner fa-pulse fa-fw"></span> Loading, please wait...
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr>
+        <h2 class="fw-normal"><span class="fa fa-plus-square fa-fw"></span> Select any addons</h2>
+        <br>
+        <h4>Official Addons</h4>
+        <div class="addons-list">
+          <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div class="col">
+              <a class="card addon-card bg-dark text-light h-100" href="#" id="null-canceling-movement">
+                <div class="card-body">
+                  <h5 class="card-title">Null-Canceling Movement</h5>
+                  <p class="card-text">Prevents you from pressing two opposing directions, which
+                    causes you to stop moving</p>
+                </div>
+                <div class="card-footer">
+                  <small>
+                    You must bind the keys using Customize above, or manually using the +mf,
+                    +mb, +ml and +mr commands for Forward, Backward,
+                    Left and Right respectively.
+                  </small>
+                </div>
+              </a>
+            </div>
+            <div class="col">
+              <a class="card addon-card bg-dark text-light h-100" href="#" id="flat-mouse">
+                <div class="card-body">
+                  <h5 class="card-title">Flat Mouse</h5>
+                  <p class="card-text">Makes mouse input "flat" with stable input, no acceleration
+                    and 1:1 zoom sensitivity</p>
+                </div>
+              </a>
+            </div>
+            <div class="col">
+              <a class="card addon-card bg-dark text-light h-100" href="#" id="no-tutorial">
+                <div class="card-body">
+                  <h5 class="card-title">No Tutorial</h5>
+                  <p class="card-text">Disables tutorial messages and other popups</p>
+                </div>
+              </a>
+            </div>
+            <div class="col">
+              <a class="card addon-card bg-dark text-light h-100" href="#" id="opengl">
+                <div class="card-body">
+                  <h5 class="card-title">OpenGL</h5>
+                  <p class="card-text">Provides additional optimizations for OpenGL (macOS and
+                    Linux)</p>
+                </div>
+              </a>
+            </div>
+            <div class="col">
+              <a class="card addon-card bg-dark text-light h-100" href="#" id="disable-pyroland">
+                <div class="card-body">
+                  <h5 class="card-title">Disable Pyroland</h5>
+                  <p class="card-text">Removes Pyroland map textures</p>
+                </div>
+              </a>
+            </div>
+            <div class="col">
+              <a class="card addon-card bg-dark text-light h-100" href="#" id="no-footsteps">
+                <div class="card-body">
+                  <h5 class="card-title">No Footsteps</h5>
+                  <p class="card-text">Removes footstep sounds</p>
+                </div>
+              </a>
+            </div>
+            <div class="col">
+              <a class="card addon-card bg-dark text-light h-100" href="#" id="no-soundscapes">
+                <div class="card-body">
+                  <h5 class="card-title">No Soundscapes</h5>
+                  <p class="card-text">Remove soundscapes (ambient map noise)</p>
+                </div>
+              </a>
+            </div>
+            <div class="col">
+              <a class="card addon-card bg-dark text-light h-100" href="#" id="transparent-viewmodels">
+                <div class="card-body">
+                  <h5 class="card-title">Transparent Viewmodels</h5>
+                  <p class="card-text">Enables support for transparent viewmodels</p>
+                </div>
+                <div class="card-footer">
+                  <small>
+                    This does not enable transparent viewmodels, your HUD must enable them.
+                    This only allows transparent viewmodels to work. Transparent viewmodels also
+                    require
+                    dxlevel 90 or higher, and disable Anti-Aliasing.
+                  </small>
+                </div>
+              </a>
+            </div>
+            <div class="col">
+              <a class="card addon-card bg-dark text-light h-100" href="#" id="lowmem">
+                <div class="card-body">
+                  <h5 class="card-title">Low Memory</h5>
+                  <p class="card-text">Optimizations for low memory (RAM) systems (2GB and lower)
+                  </p>
+                </div>
+                <div class="card-footer">
+                  <small>
+                    <strong>WARNING:</strong> will <strong>REDUCE</strong> performance on high
+                    memory!!!
+                  </small>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="d-none">
+          <h4>Community Addons</h4>
+          <p><a id="submit-link">Submit</a> your own community addon!</p>
+          <div class="addons-list addons-list-community">
+          </div>
+        </div>
+        <hr>
+        <div class="row" id="downloads-section">
+          <div class="col-sm-12">
+            <h2 class="fw-normal"><span class="fa fa-cloud-download fa-fw"></span> Download your files
+            </h2>
+            <br>
+            <div class="mb-3 d-none" id="game-folder-wrapper">
+              <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="direct-install">
+                <label class="custom-control-label" for="direct-install">
+                  <strong>Use Direct Install</strong> &mdash; Installs mastercomfig and all
+                  customizations directly to your game.
+                </label>
+              </div>
+              <div class="d-none" id="game-folder-container">
+                <br>
+                <div class="instructions-text alert alert-warning alert-dismissible fade show d-none" role="alert"
+                  id="game-folder-warning">
+                  <span class="lead">Heads Up!</span><br>
+                  Installations in system folders like <strong>Program Files</strong> (which is
+                  the default Steam library folder) are not supported by the browser for security
+                  reasons.<br><br>
+                  Please <a href="https://help.steampowered.com/en/faqs/view/4BD4-4528-6B2E-8327#exist"
+                    target="_blank" rel="noopener">move Steam</a> to a new folder, or <a
+                    href="https://help.steampowered.com/en/faqs/view/4BD4-4528-6B2E-8327#default" target="_blank"
+                    rel="noopener">use a separate library folder</a> for Team
+                  Fortress 2.<br>
+                  You may also create a new empty folder for mastercomfig to install the files
+                  into and then copy this folder into your TF2 folder.<br><br>
+                  <strong class="fw-bolder">If you do not wish to do either, download the files
+                    without choosing a folder (don't use Direct Install).</strong>
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"
+                    id="game-folder-warning-btn"></button>
+                </div>
+                <label for="game-folder-group" class="form-label">Choose your Team Fortress 2
+                  installation folder (or a folder in your Downloads folder to copy later)</label>
+                <div class="row" role="group" id="game-folder-group">
+                  <button type="button" class="btn btn-outline-primary col-auto" id="game-folder-btn">Choose
+                    Folder</button>
+                  <span class="bg-teal col d-flex align-items-center" id="game-folder-text">No
+                    folder chosen, Direct Install not enabled</span>
+                  <div class="col-auto btn btn-outline-primary d-flex align-items-center" id="game-folder-clear">
+                    <span class="fa fa-times fa-fw"></span>
+                  </div>
+                </div>
+              </div>
+              <hr>
+            </div>
+            <p class="lead"><b><a href="https://github.com/mastercomfig/mastercomfig/releases/latest" id="vpk-dl"
+                  class="download-link" style="cursor: pointer"><span class="fa fa-cloud-download fa-fw"></span>
+                  Download from GitHub</a></b></p>
+            <p class="instructions-text">Drop the files in your <code>tf/custom</code> folder and
+              they'll automatically run.</p>
+            <a id="collapseManualButton" data-bs-toggle="collapse" href="#collapseManual" role="button"
+              aria-expanded="false" aria-controls="collapseManual">
+              Not working? Download manually
+            </a>
+            <div class="collapse" id="collapseManual">
+              <div class="collapse-wrapper">
+                <br>
+                <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest"
+                    class="text-light" id="preset-dl"><span class="fa fa-cloud-download fa-fw"></span> Download
+                    preset</a></p>
+                <p class="lead"><a
+                    href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-null-canceling-movement-addon.vpk"
+                    class="text-light" id="null-canceling-movement-dl" style="display: none"><span
+                      class="fa fa-cloud-download fa-fw"></span>
+                    Download Null-Canceling Movement addon</a></p>
+                <p class="lead"><a
+                    href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-flat-mouse-addon.vpk"
+                    class="text-light" id="flat-mouse-dl" style="display: none"><span
+                      class="fa fa-cloud-download fa-fw"></span> Download Flat Mouse addon</a>
+                </p>
+                <p class="lead"><a
+                    href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-no-tutorial-addon.vpk"
+                    class="text-light" id="no-tutorial-dl" style="display: none"><span
+                      class="fa fa-cloud-download fa-fw"></span> Download No Tutorial
+                    addon</a></p>
+                <p class="lead"><a
+                    href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-opengl-addon.vpk"
+                    class="text-light" id="opengl-dl" style="display: none"><span
+                      class="fa fa-cloud-download fa-fw"></span> Download OpenGL addon</a></p>
+                <p class="lead"><a
+                    href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-disable-pyroland-addon.vpk"
+                    class="text-light" id="disable-pyroland-dl" style="display: none"><span
+                      class="fa fa-cloud-download fa-fw"></span> Download Disable Pyroland
+                    addon</a></p>
+                <p class="lead"><a
+                    href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-no-footsteps-addon.vpk"
+                    class="text-light" id="no-footsteps-dl" style="display: none"><span
+                      class="fa fa-cloud-download fa-fw"></span> Download No Footsteps
+                    addon</a></p>
+                <p class="lead"><a
+                    href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-no-soundscapes-addon.vpk"
+                    class="text-light" id="no-soundscapes-dl" style="display: none"><span
+                      class="fa fa-cloud-download fa-fw"></span> Download No Soundscapes
+                    addon</a></p>
+                <p class="lead"><a
+                    href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-transparent-viewmodels-addon.vpk"
+                    class="text-light" id="transparent-viewmodels-dl" style="display: none"><span
+                      class="fa fa-cloud-download fa-fw"></span>
+                    Download Transparent Viewmodels addon</a></p>
+                <p class="lead"><a
+                    href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-lowmem-addon.vpk"
+                    class="text-light" id="lowmem-dl" style="display: none"><span
+                      class="fa fa-cloud-download fa-fw"></span> Download Low Memory addon</a>
+                </p>
+              </div>
+            </div>
+            <hr>
+            <div>
+              <p class="lead"><b><span class="fa fa-cogs fa-fw"></span> Launch Options</b></p>
+              <p id="launch-options">
+                <code>-novid -nojoy -nosteamcontroller -nohltv -particles 1 -precachefontchars -noquicktime</code>
+                <span class="fa fa-clipboard fa-fw"></span> <span>Click to copy</span>
+              </p>
+              <div style="margin-bottom: 1rem;clear:both"></div>
+              <p>Right click Team Fortress 2 in your Steam library and click <b>Properties…</b> . In
+                the window that appears, under Launch Options, remove anything that's in there and
+                paste the above text.</p>
+            </div>
+            <hr>
+            <div class="instructions-text">
+              <p class="lead"><b><a class="download-link" id="custom-dl"><span
+                      class="fa fa-cloud-download fa-fw"></span> Download
+                    customizations </a></b></p>
+              <p class="instructions-text">Create a <code id="overrides-folder">overrides</code>
+                folder in your <code>tf/cfg</code> folder and drop the files in there to override
+                mastercomfig with your selected customizations!</p>
+              <noscript>Note: Customizations require JavaScript.</noscript>
+              <hr>
+            </div>
+            <div id="blockMisc">
+              <a id="collapseMiscButton" data-bs-toggle="collapse" href="#collapseMisc" role="button"
+                aria-expanded="false" aria-controls="collapseMisc">
+                Other downloads
+              </a>
+              <div class="collapse" id="collapseMisc">
+                <div class="collapse-wrapper">
+                  <p>Looking for something else (like config templates and alternative formats)?
+                    You can find it on GitHub <a href="https://github.com/mastercomfig/mastercomfig/releases/latest"
+                      class="text-light" id="assets-link" style="text-decoration: underline dotted;">release
+                      assets</a>.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-12">
+            <h2 class="fw-normal"><span class="fa fa-arrow-circle-o-right fa-fw"></span> Next steps</h2>
+            <br>
+            <div class="lead row">
+              <div class="col-sm-auto">
+                <p><a class="docs-link" href="https://docs.mastercomfig.com/page/setup/install/"
+                    data-url="setup/install"><span class="fa fa-desktop fa-fw"></span> <b>How to
+                      install</b></a></p>
+              </div>
+              <div class="col-sm-auto">
+                <p><a class="docs-link" href="https://docs.mastercomfig.com/page/next_steps/update/"
+                    data-url="next_steps/update"><span class="fa fa-refresh fa-fw"></span>
+                    <b>How to update</b></a></p>
+              </div>
+              <div class="col-sm-auto">
+                <p><a href="https://docs.mastercomfig.com/page/support_me/"><span class="fa fa-heart fa-fw"></span>
+                    <b>Support me</b></a></p>
+              </div>
+              <!--
+              <div class="col-sm-auto">
+                <p><a href="https://ko-fi.com/mastercoms/shop"><span class="fa fa-bookmark fa-fw"></span> <b>Early Access</b></a></p>
+              </div>
+              -->
+            </div>
+            <h5 style="padding-top: 16px"><b>Documentation</b></h5>
+            <p><strong>Want to customize and get the most out of mastercomfig?</strong> Learn how to use
+              modules and do advanced customization.</p>
+            <a class="btn btn-primary docs-link" href="https://docs.mastercomfig.com/page/customization/modules/"
+              data-url="customization/modules">Modules</a>
+            <a class="btn btn-primary docs-link"
+              href="https://docs.mastercomfig.com/page/customization/custom_configs/"
+              data-url="customization/custom_configs">Configs</a>
+            <h5 style="padding-top: 16px"><b>Support</b></h5>
+            <p>
+              <strong>Experiencing problems with mastercomfig?</strong> Head to the Quick Fixes page
+              to get help with common issues.<br>
+              <strong>Don't see your issue?</strong> Ask our community for help! You can also join to
+              give feedback and suggestions about the config.
+            </p>
+            <a class="btn btn-primary docs-link" href="https://docs.mastercomfig.com/page/next_steps/troubleshoot/"
+              data-url="next_steps/troubleshoot">Quick Fixes</a>
+            <a class="btn btn-secondary" href="https://discord.gg/CuPb2zV" target="_blank" rel="noopener">Discord</a>
+            <a class="btn btn-secondary" href="https://steamcommunity.com/groups/comfig" target="_blank"
+              rel="noopener">Steam Group</a>
+            <h5 style="padding-top: 16px"><b>See Also</b></h5>
+            <p><strong>Want even more from TF2?</strong> There are some other great mods and custom
+              configs which you may want to check out in addition to mastercomfig.</p>
+            <a class="btn btn-primary" href="https://docs.mastercomfig.com/page/customization/see_also/">Extra
+              mods</a>
+            <a class="btn btn-primary"
+              href="https://docs.mastercomfig.com/page/customization/custom_config_list/">Community
+              configs</a>
+          </div>
+        </div>
+        <hr>
+      </div>
+    </div>
+  </section>
+  <Footer />
+</body>
+</Layout>
