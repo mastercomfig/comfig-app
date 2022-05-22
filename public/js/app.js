@@ -955,7 +955,7 @@ async function app() {
       if (contents.length > 0) {
         configContents["reset_game_overrides.cfg"] = contents;
       }
-    } else
+    } else {
       bindLayers["gameoverrides"] = overrides;
     }
     let customOverrideFiles = [];
@@ -1941,6 +1941,10 @@ async function app() {
       let target = getEl("launch-options");
       if (currentTimeout !== null) {
         clearTimeout(currentTimeout);
+      }
+      if (!navigator.clipboard) {
+        console.error("Clipboard unsupported.")
+        return;
       }
       navigator.clipboard.writeText(target.firstChild.innerText)
         .then(() => {
