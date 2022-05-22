@@ -1,7 +1,7 @@
 function loadImage(lazyImage) {
   if (lazyImage.parentNode.classList.contains("twentytwenty-container")) {
     lazyImage.onload = () => {
-      window.dispatchEvent(new Event("resize.twentytwenty"));
+      $(window).trigger("resize.twentytwenty");
     }
   }
   lazyImage.src = lazyImage.dataset.src;

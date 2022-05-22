@@ -20,8 +20,3 @@
   color: #000;
   will-change: width;
 }
-
-.twentytwenty-before,
-.twentytwenty-after {
-  min-height: 240px;
-}
