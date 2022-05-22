@@ -4,6 +4,7 @@ import BaseHead from '../components/head/BaseHead.astro';
 import PreloadHead from '../components/head/PreloadHead.astro';
 import ImportHead from '../components/head/ImportHead.astro';
 import MainHead from '../components/head/MainHead.astro';
+import Body from '../components/Body.astro';
 import Footer from '../components/Footer.astro';
 ---
 <Layout>
@@ -17,7 +18,7 @@ import Footer from '../components/Footer.astro';
   </ImportHead>
   <MainHead title="404 | mastercomfig" />
 </head>
-<body class="bg-dark">
+<Body>
   <header class="jumbotron jumbotron-fluid text-light home-header">
     <div class="container d-flex align-items-center justify-content-center" style="height: 100%">
       <div class="align-middle text-center">
@@ -38,5 +39,5 @@ import Footer from '../components/Footer.astro';
     <a href="https://github.com/mastercomfig/mastercomfig"><span class="fa fa-github fa-fw"></span> Source code</a>
     <br><br>
   </Footer>
-</body>
+</Body>
 </Layout>

@@ -4,6 +4,7 @@ import BaseHead from '../components/head/BaseHead.astro';
 import PreloadHead from '../components/head/PreloadHead.astro';
 import ImportHead from '../components/head/ImportHead.astro';
 import MainHead from '../components/head/MainHead.astro';
+import Body from '../components/Body.astro';
 import Footer from '../components/Footer.astro';
 ---
 <Layout>
@@ -11,28 +12,31 @@ import Footer from '../components/Footer.astro';
   <BaseHead />
   <PreloadHead>
     <link rel="preload" as="fetch" href="https://mastercomfig.mcoms.workers.dev/?v=2" crossorigin>
-    <link rel="preload" as="image" href="img/presets/medium-high.webp">
-    <link rel="preload" as="image" href="img/presets/low.webp">
-    <link rel="preload" as="image" href="img/presets/medium-low.webp">
-    <link rel="preload" as="image" href="img/presets/medium.webp">
-    <link rel="preload" as="image" href="img/presets/ultra.webp">
-    <link rel="preload" as="image" href="img/presets/very-low.webp">
-    <link rel="preload" as="image" href="img/presets/high.webp">
-    <link rel="preload" as="image" href="img/presets/none.webp">
+    <link rel="preload" as="image" href="/img/presets/medium-high.webp">
+    <link rel="preload" as="image" href="/img/presets/low.webp">
+    <link rel="preload" as="image" href="/img/presets/medium-low.webp">
+    <link rel="preload" as="image" href="/img/presets/medium.webp">
+    <link rel="preload" as="image" href="/img/presets/ultra.webp">
+    <link rel="preload" as="image" href="/img/presets/very-low.webp">
+    <link rel="preload" as="image" href="/img/presets/high.webp">
+    <link rel="preload" as="image" href="/img/presets/none.webp">
   </PreloadHead>
   <ImportHead>
-    <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="/css/app.css">
+
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/css/index.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" crossorigin>
+    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/css/index.min.css" crossorigin></noscript>
 
     <script>
-            var $buoop = { required: { e: 0, f: 0, o: 0, s: 0, c: 0 }, insecure: true, unsupported: true, api: 2022.04 };
-            function $buo_f() {
-              var e = document.createElement("script");
-              e.src = "//browser-update.org/update.min.js";
-              document.body.appendChild(e);
-            };
-            try { document.addEventListener("DOMContentLoaded", $buo_f, false) }
-            catch (e) { window.attachEvent("onload", $buo_f) }
-          </script>
+      var $buoop = { required: { e: 0, f: 0, o: 0, s: 0, c: 0 }, insecure: true, unsupported: true, api: 2022.04 };
+      function $buo_f() {
+        var e = document.createElement("script");
+        e.src = "//browser-update.org/update.min.js";
+        document.body.appendChild(e);
+      };
+      try { document.addEventListener("DOMContentLoaded", $buo_f, false) }
+      catch (e) { window.attachEvent("onload", $buo_f) }
+    </script>
 
     <script defer src="https://js.sentry-cdn.com/42c25ee2fb084eb5a832ee92d97057d5.min.js" data-lazy="no"
       crossorigin></script>
@@ -58,10 +62,10 @@ import Footer from '../components/Footer.astro';
     </script>
   </MainHead>
 </head>
-<body class="dark-header">
+<Body>
   <nav class="navbar navbar-expand-sm sticky-top navbar-dark bg-teal">
     <div class="container">
-      <span class="navbar-brand"><img src="img/mastercomfig_logo_transparent_i.svg" alt=""
+      <span class="navbar-brand"><img src="/img/mastercomfig_logo_transparent_i.svg" alt=""
           class="d-inline-block align-bottom" width="30" height="24"> mastercomfig</span>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -542,5 +546,5 @@ import Footer from '../components/Footer.astro';
     </div>
   </section>
   <Footer />
-</body>
+</Body>
 </Layout>

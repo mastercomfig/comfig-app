@@ -26,7 +26,9 @@ You'll see the following folders and files:
 
 Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
 
-All other folders are for organizational purposes and can be used for any Astro/Preact components.
+Any Astro/Preact [components](https://docs.astro.build/en/core-concepts/astro-components/) are put in `src/components/`.
+
+Astro [layouts](https://docs.astro.build/en/core-concepts/layouts/) are put in `src/layouts/`.
 
 Any static assets, like images, scripts, CSS, can be placed in the `public/` directory.
 

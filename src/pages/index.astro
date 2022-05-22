@@ -4,6 +4,7 @@ import BaseHead from '../components/head/BaseHead.astro';
 import PreloadHead from '../components/head/PreloadHead.astro';
 import ImportHead from '../components/head/ImportHead.astro';
 import MainHead from '../components/head/MainHead.astro';
+import Body from '../components/Body.astro';
 import Footer from '../components/Footer.astro';
 ---
 <Layout>
@@ -13,7 +14,7 @@ import Footer from '../components/Footer.astro';
     <link rel="prefetch" href="app">
   </PreloadHead>
   <ImportHead>
-    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="/css/index.css">
 
     <script defer
       src="https://cdn.jsdelivr.net/combine/npm/jquery@3.6/dist/jquery.min.js,npm/jquery-visible@1,npm/zurb-twentytwenty@0/js/jquery.event.move.min.js,npm/zurb-twentytwenty@0.1.1/js/jquery.twentytwenty.min.js"
@@ -50,11 +51,11 @@ import Footer from '../components/Footer.astro';
     </script>
   </MainHead>
 </head>
-<body class="bg-dark">
+<Body>
   <header class="jumbotron jumbotron-fluid text-light home-header">
     <div class="container d-flex align-items-center justify-content-center" style="height: 100%">
       <div class="align-middle text-center">
-        <img class="img-logo" src="img/mastercomfig_logo_transparent_i.svg" alt="logo" />
+        <img class="img-logo" src="/img/mastercomfig_logo_transparent_i.svg" alt="logo" />
         <h1 class="display-1">mastercomfig</h1>
         <p class="lead display-6">a modern customization framework</p>
         <a class="btn btn-outline-primary btn-lg" href="/app">
@@ -144,8 +145,8 @@ import Footer from '../components/Footer.astro';
       <div class="row d-flex align-items-center justify-content-center" style="height: 100%">
         <div class="col-md align-middle">
           <div id="quality-compare" class="twentytwenty-container">
-            <img class="lazy" data-src="img/koth_sawmill_performance.jpg" alt="koth_sawmill low">
-            <img class="lazy" data-src="img/koth_sawmill_quality.jpg" alt="koth_sawmill ultra">
+            <img class="lazy" data-src="/img/koth_sawmill_performance.jpg" alt="koth_sawmill low">
+            <img class="lazy" data-src="/img/koth_sawmill_quality.jpg" alt="koth_sawmill ultra">
           </div>
           <br>
           <button type="button" class="btn btn-secondary btn-sm d-none d-md-block" data-bs-toggle="modal"
@@ -251,12 +252,12 @@ tf_item_inspect_model_spin_rate 30 // Rate at which items spin in the inspect vi
         </div>
         <div class="modal-body">
           <div id="quality-compare-large" class="twentytwenty-container">
-            <img class="lazy" data-src="img/koth_sawmill_performance.jpg" alt="koth_sawmill low">
-            <img class="lazy" data-src="img/koth_sawmill_quality.jpg" alt="koth_sawmill ultra">
+            <img class="lazy" data-src="/img/koth_sawmill_performance.jpg" alt="koth_sawmill low">
+            <img class="lazy" data-src="/img/koth_sawmill_quality.jpg" alt="koth_sawmill ultra">
           </div>
         </div>
       </div>
     </div>
   </div>
-</body>
+</Body>
 </Layout>
