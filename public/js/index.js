@@ -20,27 +20,5 @@ function updateBars(entries) {
 const barsObserver = new IntersectionObserver(updateBars, {threshold: 1.0});
 barsObserver.observe(document.getElementById("mastercomfig-bar"));
 
-// Init quality image compare
-function updateCompare(entries) {
-  if (!entries[0].isIntersecting) {
-    return;
-  }
-  $("#quality-compare").twentytwenty({
-    before_label: 'Low',
-    after_label: 'Ultra'
-  });
-  compareObserver.disconnect();
-}
-
-const compareObserver = new IntersectionObserver(updateCompare, {threshold: 1.0});
-compareObserver.observe(document.getElementById("quality-compare"));
-
-document.getElementById("compareModal").addEventListener("shown.bs.modal", () => {
-  $("#quality-compare-large").twentytwenty({
-    before_label: "Low",
-    after_label: "Ultra"
-  });
-});
-
 // Init customization example highlighting
 hljs.highlightAll();

@@ -17,7 +17,11 @@
     "preact": "^10.7.2",
     "preact-render-to-string": "^5.2.0",
     "react": "npm:@preact/compat@^17.0.3",
+    "react-compare-slider": "^2.2.0",
     "react-dom": "npm:@preact/compat@^17.0.3",
-    "sass": "^1.52.1"
+    "sass": "^1.52.1",
+    "serialize-javascript": "^6.0.0",
+    "shorthash": "^0.0.2",
+    "vite": "^2.9.9"
   }
 }
