@@ -1864,7 +1864,7 @@ async function app() {
 
     addVersion("latest", versionDropdown, latestBadge);
 
-    let lastDownloadedBadge = ["last downloaded", "bg-secondary"];
+    let lastDownloadedBadge = ["last downloaded", "bg-gray"];
 
     for (const thisVersion of versions) {
       let badge;

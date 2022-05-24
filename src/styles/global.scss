@@ -1,0 +1,58 @@
+@import "./bootstrap.scss";
+
+// 8. Add additional custom code here
+
+// Base
+* {
+  scrollbar-color: $primary $dark;
+  scrollbar-width: thin;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  * {
+    scroll-behavior: smooth;
+  }
+}
+
+::-webkit-scrollbar-track {
+  background: $dark;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $primary;
+}
+
+::-webkit-scrollbar {
+  width: 0.5rem;
+  height: 0.5rem;
+}
+
+::selection {
+  background: rgba($primary, 0.5);
+  color: $light;
+}
+
+// Link adjustments
+a, .nav-link {
+  transition: 0.25s;
+  text-decoration: none;
+}
+
+.alert a {
+  color: #0d6efd
+}
+
+.alert a:hover {
+  color: #0a58ca;
+}
+
+// Classes
+.img-separator {
+  height: 40vh;
+  margin-bottom: 2rem
+}
+
+// Elements
+footer {
+  padding-bottom: 2rem;
+}

@@ -6,6 +6,7 @@ import ImportHead from '../components/head/ImportHead.astro';
 import MainHead from '../components/head/MainHead.astro';
 import Body from '../components/Body.astro';
 import Footer from '../components/Footer.astro';
+import "../styles/app.scss";
 ---
 <Layout>
 <head>
@@ -22,8 +23,6 @@ import Footer from '../components/Footer.astro';
     <link rel="preload" as="image" href="/img/presets/none.webp">
   </PreloadHead>
   <ImportHead>
-    <link rel="stylesheet" href="/css/app.css">
-
     <link rel="preload" href="https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/css/index.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" crossorigin>
     <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/css/index.min.css" crossorigin></noscript>
 
@@ -236,7 +235,7 @@ import Footer from '../components/Footer.astro';
         <div class="addons-list">
           <div class="row row-cols-1 row-cols-md-3 g-4">
             <div class="col">
-              <a class="card addon-card bg-dark text-light h-100" href="#" id="null-canceling-movement">
+              <a class="card addon-card h-100" href="#" id="null-canceling-movement">
                 <div class="card-body">
                   <h5 class="card-title">Null-Canceling Movement</h5>
                   <p class="card-text">Prevents you from pressing two opposing directions, which
@@ -252,7 +251,7 @@ import Footer from '../components/Footer.astro';
               </a>
             </div>
             <div class="col">
-              <a class="card addon-card bg-dark text-light h-100" href="#" id="flat-mouse">
+              <a class="card addon-card h-100" href="#" id="flat-mouse">
                 <div class="card-body">
                   <h5 class="card-title">Flat Mouse</h5>
                   <p class="card-text">Makes mouse input "flat" with stable input, no acceleration
@@ -261,7 +260,7 @@ import Footer from '../components/Footer.astro';
               </a>
             </div>
             <div class="col">
-              <a class="card addon-card bg-dark text-light h-100" href="#" id="no-tutorial">
+              <a class="card addon-card h-100" href="#" id="no-tutorial">
                 <div class="card-body">
                   <h5 class="card-title">No Tutorial</h5>
                   <p class="card-text">Disables tutorial messages and other popups</p>
@@ -269,7 +268,7 @@ import Footer from '../components/Footer.astro';
               </a>
             </div>
             <div class="col">
-              <a class="card addon-card bg-dark text-light h-100" href="#" id="opengl">
+              <a class="card addon-card h-100" href="#" id="opengl">
                 <div class="card-body">
                   <h5 class="card-title">OpenGL</h5>
                   <p class="card-text">Provides additional optimizations for OpenGL (macOS and
@@ -278,7 +277,7 @@ import Footer from '../components/Footer.astro';
               </a>
             </div>
             <div class="col">
-              <a class="card addon-card bg-dark text-light h-100" href="#" id="disable-pyroland">
+              <a class="card addon-card h-100" href="#" id="disable-pyroland">
                 <div class="card-body">
                   <h5 class="card-title">Disable Pyroland</h5>
                   <p class="card-text">Removes Pyroland map textures</p>
@@ -286,7 +285,7 @@ import Footer from '../components/Footer.astro';
               </a>
             </div>
             <div class="col">
-              <a class="card addon-card bg-dark text-light h-100" href="#" id="no-footsteps">
+              <a class="card addon-card h-100" href="#" id="no-footsteps">
                 <div class="card-body">
                   <h5 class="card-title">No Footsteps</h5>
                   <p class="card-text">Removes footstep sounds</p>
@@ -294,7 +293,7 @@ import Footer from '../components/Footer.astro';
               </a>
             </div>
             <div class="col">
-              <a class="card addon-card bg-dark text-light h-100" href="#" id="no-soundscapes">
+              <a class="card addon-card h-100" href="#" id="no-soundscapes">
                 <div class="card-body">
                   <h5 class="card-title">No Soundscapes</h5>
                   <p class="card-text">Remove soundscapes (ambient map noise)</p>
@@ -302,7 +301,7 @@ import Footer from '../components/Footer.astro';
               </a>
             </div>
             <div class="col">
-              <a class="card addon-card bg-dark text-light h-100" href="#" id="transparent-viewmodels">
+              <a class="card addon-card h-100" href="#" id="transparent-viewmodels">
                 <div class="card-body">
                   <h5 class="card-title">Transparent Viewmodels</h5>
                   <p class="card-text">Enables support for transparent viewmodels</p>
@@ -318,7 +317,7 @@ import Footer from '../components/Footer.astro';
               </a>
             </div>
             <div class="col">
-              <a class="card addon-card bg-dark text-light h-100" href="#" id="lowmem">
+              <a class="card addon-card h-100" href="#" id="lowmem">
                 <div class="card-body">
                   <h5 class="card-title">Low Memory</h5>
                   <p class="card-text">Optimizations for low memory (RAM) systems (2GB and lower)
@@ -401,50 +400,50 @@ import Footer from '../components/Footer.astro';
               <div class="collapse-wrapper">
                 <br>
                 <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest"
-                    class="text-light" id="preset-dl"><span class="fa fa-cloud-download fa-fw"></span> Download
+                    class="link-light" id="preset-dl"><span class="fa fa-cloud-download fa-fw"></span> Download
                     preset</a></p>
                 <p class="lead"><a
                     href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-null-canceling-movement-addon.vpk"
-                    class="text-light" id="null-canceling-movement-dl" style="display: none"><span
+                    class="link-light" id="null-canceling-movement-dl" style="display: none"><span
                       class="fa fa-cloud-download fa-fw"></span>
                     Download Null-Canceling Movement addon</a></p>
                 <p class="lead"><a
                     href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-flat-mouse-addon.vpk"
-                    class="text-light" id="flat-mouse-dl" style="display: none"><span
+                    class="link-light" id="flat-mouse-dl" style="display: none"><span
                       class="fa fa-cloud-download fa-fw"></span> Download Flat Mouse addon</a>
                 </p>
                 <p class="lead"><a
                     href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-no-tutorial-addon.vpk"
-                    class="text-light" id="no-tutorial-dl" style="display: none"><span
+                    class="link-light" id="no-tutorial-dl" style="display: none"><span
                       class="fa fa-cloud-download fa-fw"></span> Download No Tutorial
                     addon</a></p>
                 <p class="lead"><a
                     href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-opengl-addon.vpk"
-                    class="text-light" id="opengl-dl" style="display: none"><span
+                    class="link-light" id="opengl-dl" style="display: none"><span
                       class="fa fa-cloud-download fa-fw"></span> Download OpenGL addon</a></p>
                 <p class="lead"><a
                     href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-disable-pyroland-addon.vpk"
-                    class="text-light" id="disable-pyroland-dl" style="display: none"><span
+                    class="link-light" id="disable-pyroland-dl" style="display: none"><span
                       class="fa fa-cloud-download fa-fw"></span> Download Disable Pyroland
                     addon</a></p>
                 <p class="lead"><a
                     href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-no-footsteps-addon.vpk"
-                    class="text-light" id="no-footsteps-dl" style="display: none"><span
+                    class="link-light" id="no-footsteps-dl" style="display: none"><span
                       class="fa fa-cloud-download fa-fw"></span> Download No Footsteps
                     addon</a></p>
                 <p class="lead"><a
                     href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-no-soundscapes-addon.vpk"
-                    class="text-light" id="no-soundscapes-dl" style="display: none"><span
+                    class="link-light" id="no-soundscapes-dl" style="display: none"><span
                       class="fa fa-cloud-download fa-fw"></span> Download No Soundscapes
                     addon</a></p>
                 <p class="lead"><a
                     href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-transparent-viewmodels-addon.vpk"
-                    class="text-light" id="transparent-viewmodels-dl" style="display: none"><span
+                    class="link-light" id="transparent-viewmodels-dl" style="display: none"><span
                       class="fa fa-cloud-download fa-fw"></span>
                     Download Transparent Viewmodels addon</a></p>
                 <p class="lead"><a
                     href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-lowmem-addon.vpk"
-                    class="text-light" id="lowmem-dl" style="display: none"><span
+                    class="link-light" id="lowmem-dl" style="display: none"><span
                       class="fa fa-cloud-download fa-fw"></span> Download Low Memory addon</a>
                 </p>
               </div>
