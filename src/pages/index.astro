@@ -142,7 +142,7 @@ import "../styles/index.scss";
     <div class="container" style="height: 100%">
       <div class="row d-flex align-items-center justify-content-center" style="height: 100%">
         <div class="col-md align-middle">
-          <ImageSlider client:load
+          <ImageSlider client:only="preact"
             srcOne="/img/koth_sawmill_performance.jpg" altOne="koth_sawmill low"
             srcTwo="/img/koth_sawmill_quality.jpg" altTwo="koth_sawmill ultra"
           />
@@ -249,7 +249,7 @@ tf_item_inspect_model_spin_rate 30 // Rate at which items spin in the inspect vi
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <ImageSlider client:load
+          <ImageSlider client:only="preact"
             srcOne="/img/koth_sawmill_performance.jpg" altOne="koth_sawmill low"
             srcTwo="/img/koth_sawmill_quality.jpg" altTwo="koth_sawmill ultra"
           />
