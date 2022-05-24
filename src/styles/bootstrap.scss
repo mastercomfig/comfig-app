@@ -16,6 +16,7 @@ $light: #f8f9fa;
 
 // Form
 $input-border-color: rgb(108, 117, 125);
+$form-select-indicator-color: $light;
 
 // 3. Include remainder of required Bootstrap stylesheets
 @import "../../node_modules/bootstrap/scss/_variables.scss";
@@ -45,6 +46,8 @@ $progress-bar-color: $dark;
 $progress-bg: $backdrop;
 // Card
 $card-bg: $gray-900;
+// Form Select
+$form-select-color: $white;
 
 
 // 5. Include remainder of required parts
