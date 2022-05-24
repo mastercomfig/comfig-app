@@ -47,7 +47,7 @@ try {
 
 // Incrementing OFFLINE_VERSION will kick off the install event and force
 // previously cached resources to be updated from the network.
-const OFFLINE_VERSION = 4;
+const OFFLINE_VERSION = 5;
 const CACHE_NAME = "offline-v" + OFFLINE_VERSION;
 
 const OFFLINE_FILES = [
@@ -67,7 +67,6 @@ const OFFLINE_FILES = [
   "/img/presets/none.webp",
   "https://js.sentry-cdn.com/42c25ee2fb084eb5a832ee92d97057d5.min.js",
   "https://cdn.jsdelivr.net/npm/font-awesome@4/fonts/fontawesome-webfont.woff?v=4.7.0",
-  "https://cdn.jsdelivr.net/npm/font-awesome@4/fonts/fontawesome-webfont.ttf?v=4.7.0",
   "https://cdn.jsdelivr.net/npm/font-awesome@4/css/font-awesome.min.css",
   "https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/css/index.min.css",
   "https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js",
