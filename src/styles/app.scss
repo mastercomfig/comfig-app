@@ -52,7 +52,16 @@ b {
 // Form adjustments
 .form-switch {
   .form-check-input {
-    border-radius: 2em;
+    border-radius: $form-switch-border-radius;
+  }
+}
+
+.form-range {
+  &::-webkit-slider-thumb {
+    border-radius: $form-range-thumb-border-radius;
+  }
+  &::-moz-range-thumb {
+    border-radius: $form-range-thumb-border-radius;
   }
 }
 
