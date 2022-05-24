@@ -46,6 +46,13 @@ a, .nav-link {
   color: #0a58ca;
 }
 
+// Button
+.btn-primary {
+  --bs-btn-color: $white;
+  --bs-btn-hover-color: $white;
+  --bs-btn-active-color: $white;
+}
+
 // Classes
 .img-separator {
   height: 40vh;
