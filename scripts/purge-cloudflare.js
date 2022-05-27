@@ -4,10 +4,10 @@ const https = require('https');
 const MAX_CF_URLS = 30;
 
 const headers = {
-  'X-Auth-Email': process.env.CF_API_EMAIL,
-  'X-Auth-Key': process.env.CF_API_KEY,
-  'Content-Type': 'application/json',
-}
+  "X-Auth-Email": process.env.CF_API_EMAIL,
+  Authorization: `Bearer ${process.env.CF_API_KEY}`,
+  "Content-Type": "application/json",
+};
 
 function purgeOnCloudflare(files) {
   const data = JSON.stringify({
