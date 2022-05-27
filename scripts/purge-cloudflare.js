@@ -15,7 +15,6 @@ function purgeOnCloudflare(files) {
   const data = JSON.stringify({
     files: files.map(f => `https://mastercomfig.com/${f}`)
   });
-  return;
   const options = {
       hostname: "api.cloudflare.com",
       port: 443,
