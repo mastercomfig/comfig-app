@@ -3,11 +3,9 @@ const https = require('https');
 
 const MAX_CF_URLS = 30;
 
-const API_KEY = process.env.CF_API_KEY;
-const API_EMAIL = process.env.CF_API_EMAIL;
 const headers = {
-  'Authorization': `Bearer ${API_KEY}`,
-  'X-Auth-Email': API_EMAIL,
+  'X-Auth-Email': process.env.CF_API_EMAIL,
+  'X-Auth-Key': process.env.CF_API_KEY,
   'Content-Type': 'application/json',
 }
 
@@ -21,7 +19,7 @@ function purgeOnCloudflare(files) {
       path: `/client/v4/zones/${process.env.CF_ZONE_ID}/purge_cache`,
       method: "POST",
       headers,
-    };
+  };
     const req = https.request(options, (res) => {
       res.on('data', (d) => {
         process.stdout.write(d);
