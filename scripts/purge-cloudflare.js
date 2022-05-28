@@ -34,9 +34,15 @@ glob("src/pages/*.astro", (err, files) => {
     console.warn(err);
     return;
   }
-  const html_files = files.map(f => `${f.substring(f.lastIndexOf('/') + 1, f.lastIndexOf('.'))}.html`)
-  files = files.map(f => f.endsWith("index.astro") ? '' : `${f.substring(f.lastIndexOf('/') + 1, f.lastIndexOf('.'))}`);
-  files = files.concat(html_files);
+  files = files.map(f => {
+    if (f.endsWith("index.astro")) {
+      return "";
+    }
+    if (f.endsWith("404.astro")) {
+      return "404";
+    }
+    return `${f.substring(f.lastIndexOf("/") + 1, f.lastIndexOf("."))}/`;
+  });
   if (files.length > MAX_CF_URLS) {
     while (files.length) {
       purgeOnCloudflare(files.splice(0, MAX_CF_URLS));
