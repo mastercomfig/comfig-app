@@ -12,6 +12,7 @@ import gm from '../utils/game.js';
 
 const appResponse = await fetch("https://mastercomfig.mcoms.workers.dev/?v=2");
 const appData = await appResponse.json();
+await gm.initGameData();
 const clientLanguageCache = {};
 for (const lang of Object.keys(gm.languageCache)) {
   let langCache = {};
@@ -36,7 +37,6 @@ for (const lang of Object.keys(gm.languageCache)) {
   }
   clientLanguageCache[lang] = langCache;
 }
-await gm.initGameData();
 ---
 <Layout>
 <head>
@@ -576,6 +576,6 @@ await gm.initGameData();
       </div>
     </div>
   </section>
-  <Footer />
+  <Footer><></></Footer>
 </Body>
 </Layout>
