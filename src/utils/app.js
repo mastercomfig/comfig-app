@@ -24,7 +24,7 @@ async function app() {
     firebase.initializeApp(firebaseConfig);
     return firebase;
   });
-  let dkeyboard = import("simple-keyboard").then((Keyboard) => Keyboard.default);
+  let dkeyboard = import("simple-keyboard/build/index.modern.js").then((Keyboard) => Keyboard.default);
 
   if ("Sentry" in window) {
     const logLevelToSentrySeverity = {
@@ -2084,7 +2084,6 @@ async function app() {
     }
 
     let Keyboard = await dkeyboard;
-    console.log(Keyboard);
 
     inittedKeyboard = true;
 
