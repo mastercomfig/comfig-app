@@ -117,7 +117,7 @@ packages:
     resolution: {integrity: sha512-Kcqwia3DOdI6/hi/kmYbMuQ9kQPLlcyinsaoYgjGHspvx4oSCtJ1gO68V5Vg2Ap3L0VJSmikI1p/Aw26s8tk0w==}
     engines: {node: ^14.15.0 || >=16.0.0}
     peerDependencies:
-      react: ^17.0.2 || ^18.0.0
+      react: ^17.0.2 || ^18.0.0 || ^18.1.0
       react-dom: ^17.0.2 || ^18.0.0
     dependencies:
       '@babel/plugin-transform-react-jsx': 7.17.12_@babel+core@7.18.2
@@ -505,7 +505,7 @@ packages:
   /@react-aria/ssr/3.1.2_react@18.1.0:
     resolution: {integrity: sha512-amXY11ImpokvkTMeKRHjsSsG7v1yzzs6yeqArCyBIk60J3Yhgxwx9Cah+Uu/804ATFwqzN22AXIo7SdtIaMP+g==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0-rc.1
+      react: ^16.8.0 || ^17.0.0-rc.1 || ^18.1.0
     dependencies:
       '@babel/runtime': 7.18.3
       react: 18.1.0
@@ -514,7 +514,7 @@ packages:
   /@restart/hooks/0.4.7_react@18.1.0:
     resolution: {integrity: sha512-ZbjlEHcG+FQtpDPHd7i4FzNNvJf2enAwZfJbpM8CW7BhmOAbsHpZe3tsHwfQUrBuyrxWqPYp2x5UMnilWcY22A==}
     peerDependencies:
-      react: '>=16.8.0'
+      react: '>=16.8.0 || ^18.1.0'
     dependencies:
       dequal: 2.0.2
       react: 18.1.0
@@ -523,7 +523,7 @@ packages:
   /@restart/ui/1.2.0_ef5jwxihqo6n7gxfmzogljlgcm:
     resolution: {integrity: sha512-oIh2t3tG8drZtZ9SlaV5CY6wGsUViHk8ZajjhcI+74IQHyWy+AnxDv8rJR5wVgsgcgrPBUvGNkC1AEdcGNPaLQ==}
     peerDependencies:
-      react: '>=16.14.0'
+      react: '>=16.14.0 || ^18.1.0'
       react-dom: '>=16.14.0'
     dependencies:
       '@babel/runtime': 7.18.3
@@ -3102,7 +3102,7 @@ packages:
   /prop-types-extra/1.1.1_react@18.1.0:
     resolution: {integrity: sha512-59+AHNnHYCdiC+vMwY52WmvP5dM3QLeoumYuEyceQDi9aEhtwN9zIQ2ZNo25sMyXnbh32h+P1ezDsUpUH3JAew==}
     peerDependencies:
-      react: '>=0.14.0'
+      react: '>=0.14.0 || ^18.1.0'
     dependencies:
       react: 18.1.0
       react-is: 16.13.1
@@ -3135,7 +3135,7 @@ packages:
     resolution: {integrity: sha512-dn599jNK1Fg5GGjJH+lQQDwELVzigh/MdusKpB/0el+sCjsO5MZDH5gRMmBjRhC+vb7VlCDr6OXffPIDSkNMLw==}
     peerDependencies:
       '@types/react': '>=16.14.8'
-      react: '>=16.14.0'
+      react: '>=16.14.0 || ^18.1.0'
       react-dom: '>=16.14.0'
     peerDependenciesMeta:
       '@types/react':
@@ -3160,7 +3160,7 @@ packages:
   /react-compare-slider/2.2.0_ef5jwxihqo6n7gxfmzogljlgcm:
     resolution: {integrity: sha512-I77xqulpoibZ9eqjn5wjpZL5IRpUZYcUlde70YaJ+MORGbUThrjTlHKl/UeGyCIPUWtPID5f5/zK9Q+1ovQLeA==}
     peerDependencies:
-      react: '>=16.8'
+      react: '>=16.8 || ^18.1.0'
       react-dom: '>=16.8'
     dependencies:
       react: 18.1.0
@@ -3188,7 +3188,7 @@ packages:
   /react-transition-group/4.4.2_ef5jwxihqo6n7gxfmzogljlgcm:
     resolution: {integrity: sha512-/RNYfRAMlZwDSr6z4zNKV6xu53/e2BuaBbGhbyYIXTrmgu/bGHzmqOs7mJSJBHy9Ud+ApHx3QjrkKSp1pxvlFg==}
     peerDependencies:
-      react: '>=16.6.0'
+      react: '>=16.6.0 || ^18.1.0'
       react-dom: '>=16.6.0'
     dependencies:
       '@babel/runtime': 7.18.3
@@ -3721,7 +3721,7 @@ packages:
   /uncontrollable/7.2.1_react@18.1.0:
     resolution: {integrity: sha512-svtcfoTADIB0nT9nltgjujTi7BzVmwjZClOmskKu/E8FW9BXzg9os8OLr4f8Dlnk0rYWJIWr4wv9eKUXiQvQwQ==}
     peerDependencies:
-      react: '>=15.0.0'
+      react: '>=15.0.0 || ^18.1.0'
     dependencies:
       '@babel/runtime': 7.18.3
       '@types/react': 18.0.9
@@ -3834,7 +3834,7 @@ packages:
   /use-sync-external-store/1.1.0_react@18.1.0:
     resolution: {integrity: sha512-SEnieB2FPKEVne66NpXPd1Np4R1lTNKfjuy3XdIoPQKYBAFdzbzSZlSn1KJZUiihQLQC5Znot4SBz1EOTBwQAQ==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^18.1.0
     dependencies:
       react: 18.1.0
     dev: true
@@ -4110,7 +4110,7 @@ packages:
     engines: {node: '>=12.7.0'}
     peerDependencies:
       immer: '>=9.0'
-      react: '>=16.8'
+      react: '>=16.8 || ^18.1.0'
     peerDependenciesMeta:
       immer:
         optional: true
