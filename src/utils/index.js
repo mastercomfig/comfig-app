@@ -1,3 +1,6 @@
+import hljs from "highlight.js/lib/core";
+import cpp from "highlight.js/lib/languages/cpp";
+
 function updateBarWidth(id, width) {
   let el = document.getElementById(id);
   el.style.width = `${width}%`;
@@ -17,8 +20,9 @@ function updateBars(entries) {
 }
 
 // If bars are visible, do an anim
-const barsObserver = new IntersectionObserver(updateBars, {threshold: 1.0});
+const barsObserver = new IntersectionObserver(updateBars, { threshold: 1.0 });
 barsObserver.observe(document.getElementById("mastercomfig-bar"));
 
 // Init customization example highlighting
+hljs.registerLanguage("cpp", cpp);
 hljs.highlightAll();

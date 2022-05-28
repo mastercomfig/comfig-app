@@ -7,6 +7,7 @@ import MainHead from '../components/head/MainHead.astro';
 import Body from '../components/Body.astro';
 import Footer from '../components/Footer.astro';
 import ImageSlider from '../components/ImageSlider.jsx';
+import "highlight.js/styles/atom-one-dark.css";
 ---
 <Layout>
 <head>
@@ -17,23 +18,10 @@ import ImageSlider from '../components/ImageSlider.jsx';
   <ImportHead>
     <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin></script>
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/highlight.min.js"
-      integrity="sha512-BNc7saQYlxCL10lykUYhFBcnzdKMnjx5fp5s5wPucDyZ7rKNwCoqJh1GwEAIhuePEK4WM9askJBRsu7ma0Rzvg=="
-      crossorigin></script>
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/languages/cpp.min.js"
-      integrity="sha512-1o9A00YkjPocGor6LsozqYnO4CXzIXgrNZw87wYOJSLYMYBtASu4hl1gALrMlwHs6oXDFAJl2BQEpUTseGyKJg=="
-      crossorigin></script>
 
-    <script type="module" src="/js/index.js"></script>
-
-    <link rel="preload"
-      href="https://cdn.jsdelivr.net/npm/highlight.js@10.6/styles/atom-one-dark.min.css"
-      as="style" onload="this.onload=null;this.rel='stylesheet'" crossorigin>
-    <noscript>
-      <link rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/highlight.js@10.6/styles/atom-one-dark.min.css"
-        crossorigin>
-    </noscript>
+    <script>
+      import '../utils/index.js';
+    </script>
 
   </ImportHead>
   <MainHead>

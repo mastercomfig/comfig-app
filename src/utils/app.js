@@ -1,34 +1,16 @@
+import { get, set } from "idb-keyval";
+
+let idbKeyval = {
+  get,
+  set
+}
+
 async function app() {
-  function loadScript(url) {
-    return new Promise((resolve, reject) => {
-      const script = document.createElement("script");
-      script.src = url;
-      script.crossOrigin = "anonymous";
-      script.onload = resolve;
-      script.onerror = reject;
-      document.head.appendChild(script);
-    });
-  }
-
-  function loadScriptEx(url, ...dependencies) {
-    return Promise.all(dependencies).then(() => loadScript(url));
-  }
-
-  function hasDynamicImport() {
-    try {
-      return new Function("return import('data:text/javascript;base64,Cg==').then(r => true)")();
-    } catch(e) {
-      return Promise.resolve(false);
-    }
-  }
-
-  let dfirebase = loadScript("https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js");
-  let dfirebaseAuth = loadScriptEx("https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js", dfirebase);
-  let dfirebaseMessaging = loadScriptEx("https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js", dfirebase);
-  let dSimpleKeyboard = loadScript("https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/index.modern.js");
-  let dVDF = hasDynamicImport().then(() => import("../third_party/js/vdf-parser.js"));
-
-  dfirebase.then(() => {
+  let dfirebase = import("firebase/compat/app").then(async (firebase) => {
+    await import("firebase/compat/auth");
+    await import("firebase/compat/firestore");
+    return firebase.default;
+  }).then((firebase) => {
     const firebaseConfig = {
       apiKey: "AIzaSyBKDPeOgq97k5whdxL_Z94ak9jSfdjXU4E",
       authDomain: "mastercomfig-app.firebaseapp.com",
@@ -36,44 +18,54 @@ async function app() {
       storageBucket: "mastercomfig-app.appspot.com",
       messagingSenderId: "1055009628964",
       appId: "1:1055009628964:web:6ad7954859d843050d49b1",
-      measurementId: "G-S0F8JT6ZQE"
+      measurementId: "G-S0F8JT6ZQE",
     };
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
+    return firebase;
   });
+  let dkeyboard = import("simple-keyboard").then((Keyboard) => Keyboard.default);
 
   if ("Sentry" in window) {
     const logLevelToSentrySeverity = {
-      "warn": "warning",
+      warn: "warning",
     };
 
     function consoleHook(level) {
       const original = console[level].bind(console);
-      return function() {
+      return function () {
         Sentry.addBreadcrumb(
           {
-            category: 'console',
-            level: logLevelToSentrySeverity[level] ? logLevelToSentrySeverity[level] : level,
-            message: !arguments ? "undefined" : arguments.length === 1 ? `${arguments[0]}` : `${arguments[0]}: ${Array.prototype.slice.call(arguments, 1).join()}`
+            category: "console",
+            level: logLevelToSentrySeverity[level]
+              ? logLevelToSentrySeverity[level]
+              : level,
+            message: !arguments
+              ? "undefined"
+              : arguments.length === 1
+              ? `${arguments[0]}`
+              : `${arguments[0]}: ${Array.prototype.slice
+                  .call(arguments, 1)
+                  .join()}`,
           },
           {
             input: [...arguments],
-            level
+            level,
           }
         );
         original.apply(console, arguments);
-      }
+      };
     }
 
-    for (const level of ['debug', 'info', 'warn', 'error', 'log']) {
+    for (const level of ["debug", "info", "warn", "error", "log"]) {
       console[level] = consoleHook(level);
     }
   }
 
   // convenience format method for string
-  String.prototype.format = function() {
+  String.prototype.format = function () {
     const args = arguments;
-    return this.replace(/{(\d+)}/g, function(match, number) {
+    return this.replace(/{(\d+)}/g, function (match, number) {
       return typeof args[number] !== "undefined" ? args[number] : match;
     });
   };
@@ -83,13 +75,13 @@ async function app() {
   }
 
   // find RegEx
-  Array.prototype.query = function(match) {
-    let  reg = new RegExp(match);
+  Array.prototype.query = function (match) {
+    let reg = new RegExp(match);
 
-    return this.filter(function(item){
-        return typeof item == 'string' && item.match(reg);
+    return this.filter(function (item) {
+      return typeof item == "string" && item.match(reg);
     });
-  }
+  };
 
   function capitalize(str) {
     return str.charAt(0).toUpperCase() + str.substr(1);
@@ -106,7 +98,7 @@ async function app() {
       return await idbKeyval.get(key);
     } catch (err) {
       console.error(err);
-      return memDB[key]
+      return memDB[key];
     }
   }
 
@@ -166,35 +158,43 @@ async function app() {
   var presets = {
     none: {
       name: "None",
-      description: "<h4>Special preset which skips setting quality options.</h4>",
+      description:
+        "<h4>Special preset which skips setting quality options.</h4>",
     },
     ultra: {
       name: "Ultra",
-      description: "<h4>Absolute maximum quality, with even the slightest and most performance-intensive quality improvements included.</h4>",
+      description:
+        "<h4>Absolute maximum quality, with even the slightest and most performance-intensive quality improvements included.</h4>",
     },
     high: {
       name: "High",
-      description: "<h4>Enables all graphical features without making them extremely high quality.</h4>",
+      description:
+        "<h4>Enables all graphical features without making them extremely high quality.</h4>",
     },
     "medium-high": {
       name: "Medium High",
-      description: "<h4>Disables unoptimized features and optimizes the game without making the game look bad.</h4>",
+      description:
+        "<h4>Disables unoptimized features and optimizes the game without making the game look bad.</h4>",
     },
     medium: {
       name: "Medium",
-      description: "<h4>The maximum performance you can get while enabling a few effects that may give you a slight edge.</h4>",
+      description:
+        "<h4>The maximum performance you can get while enabling a few effects that may give you a slight edge.</h4>",
     },
     "medium-low": {
       name: "Medium Low",
-      description: "<h4>The maximum performance you can get without making the game too hard to play because of awful visual quality and glitches.</h4>",
+      description:
+        "<h4>The maximum performance you can get without making the game too hard to play because of awful visual quality and glitches.</h4>",
     },
     low: {
       name: "Low",
-      description: "<h4>Maximum performance without caring much about visibility or possible visual glitches.</h4>",
+      description:
+        "<h4>Maximum performance without caring much about visibility or possible visual glitches.</h4>",
     },
     "very-low": {
       name: "Very Low",
-      description: "<h4>Negatively affects playability by <strong>a lot</strong> and disables very essential features like HUD elements in desperation for performance.</h4>Not recommended unless the game has such low performance that it is more of a hinderance than not having HUD elements and good player visibility.<br><strong>BY DOWNLOADING THIS PRESET YOU UNDERSTAND THAT IT <em>REMOVES HUD ELEMENTS AND REDUCES VISIBILITY</em>. IF YOU DON'T WANT THIS <em>USE LOW</em>, THAT'S THE <em>ONLY</em> DIFFERENCE.</strong><br>",
+      description:
+        "<h4>Negatively affects playability by <strong>a lot</strong> and disables very essential features like HUD elements in desperation for performance.</h4>Not recommended unless the game has such low performance that it is more of a hinderance than not having HUD elements and good player visibility.<br><strong>BY DOWNLOADING THIS PRESET YOU UNDERSTAND THAT IT <em>REMOVES HUD ELEMENTS AND REDUCES VISIBILITY</em>. IF YOU DON'T WANT THIS <em>USE LOW</em>, THAT'S THE <em>ONLY</em> DIFFERENCE.</strong><br>",
     },
   };
 
@@ -287,7 +287,7 @@ async function app() {
   var selectedBinds = {};
   // Overlaid bind layers
   var bindLayers = {
-    "gameoverrides": {}
+    gameoverrides: {},
   };
   // Current state of overrides
   var selectedOverrides = {};
@@ -296,8 +296,8 @@ async function app() {
   var contentsDefaulter = {
     get: (target, name) => {
       return target.hasOwnProperty(name) ? target[name] : "";
-    }
-  }
+    },
+  };
   var configContents = new Proxy(configContentsRaw, contentsDefaulter);
 
   // Data cache
@@ -313,20 +313,20 @@ async function app() {
       "Move Back": "+mb",
       "Move Left": "+ml",
       "Move Right": "+mr",
-    }
+    },
   };
 
   const bindConfigLayers = {
-    "scout": "scout.cfg",
-    "soldier": "soldier.cfg",
-    "pyro": "pyro.cfg",
-    "demoman": "demoman.cfg",
-    "heavy": "heavyweapons.cfg",
-    "engineer": "engineer.cfg",
-    "medic": "medic.cfg",
-    "sniper": "sniper.cfg",
-    "spy": "spy.cfg",
-    "gameoverrides": "game_overrides.cfg",
+    scout: "scout.cfg",
+    soldier: "soldier.cfg",
+    pyro: "pyro.cfg",
+    demoman: "demoman.cfg",
+    heavy: "heavyweapons.cfg",
+    engineer: "engineer.cfg",
+    medic: "medic.cfg",
+    sniper: "sniper.cfg",
+    spy: "spy.cfg",
+    gameoverrides: "game_overrides.cfg",
   };
 
   var storedModules = {};
@@ -565,7 +565,10 @@ async function app() {
       return;
     }
     getEl("game-folder-container").classList.remove("d-none");
-    if (!(await tryDBGet("hide-game-folder-warning")) && getEl("game-folder-warning")) {
+    if (
+      !(await tryDBGet("hide-game-folder-warning")) &&
+      getEl("game-folder-warning")
+    ) {
       getEl("game-folder-warning").classList.remove("d-none");
     }
     if (bindDirectInstall) {
@@ -599,7 +602,10 @@ async function app() {
     for (const instructionEl of instructionEls) {
       instructionEl.classList.remove("d-none");
     }
-    if ((await tryDBGet("hide-game-folder-warning")) && getEl("game-folder-warning")) {
+    if (
+      (await tryDBGet("hide-game-folder-warning")) &&
+      getEl("game-folder-warning")
+    ) {
       getEl("game-folder-warning").classList.add("d-none");
     }
   }
@@ -611,7 +617,9 @@ async function app() {
     const name = directoryHandle.name;
     let fail = bannedDirectories.includes(name);
     if (fail) {
-      alert(`${name} is not a valid folder. To install to your game, please select the top-level "Team Fortress 2" folder.`)
+      alert(
+        `${name} is not a valid folder. To install to your game, please select the top-level "Team Fortress 2" folder.`
+      );
     } else {
       fail = silentBannedDirectories.includes(name);
     }
@@ -650,9 +658,8 @@ async function app() {
     customDirectory = null;
     overridesDirectory = null;
     appDirectory = null;
-    getEl(
-        "game-folder-text"
-    ).innerText = "No folder chosen, Direct Install not enabled";
+    getEl("game-folder-text").innerText =
+      "No folder chosen, Direct Install not enabled";
     restoreDirectoryInstructions();
     updatePresetDownloadButton();
   }
@@ -702,9 +709,12 @@ async function app() {
       const cfgDirectory = await tfDirectory.getDirectoryHandle("cfg", {
         create: true,
       });
-      overridesDirectory = await cfgDirectory.getDirectoryHandle(getOverridesFolder(), {
-        create: true,
-      });
+      overridesDirectory = await cfgDirectory.getDirectoryHandle(
+        getOverridesFolder(),
+        {
+          create: true,
+        }
+      );
       appDirectory = await cfgDirectory.getDirectoryHandle("app", {
         create: true,
       });
@@ -719,7 +729,7 @@ async function app() {
       await directory.removeEntry(name);
     } catch (err) {
       if (!err.toString().includes("could not be found")) {
-        console.error(`Failed deleting ${name}`, err); 
+        console.error(`Failed deleting ${name}`, err);
       } else {
         if ("Sentry" in window) {
           Sentry.captureException(err);
@@ -874,7 +884,7 @@ async function app() {
     let actionBinds = {};
     let actionLayerBinds = {};
     selectedBinds = {};
-    bindLayers = {"gameoverrides": {}};
+    bindLayers = { gameoverrides: {} };
     for (const bindField of bindFields) {
       let keyInput = bindField.childNodes[0].firstChild.value;
       let actionSelect = bindField.childNodes[1].firstChild.value;
@@ -906,10 +916,12 @@ async function app() {
             bindCommand = " ";
           }
           actionBindObject[keyInput] = bindCommand;
-          bindCommand = bindCommand.replaceAll("\"", "");
+          bindCommand = bindCommand.replaceAll('"', "");
         } else {
           actionBindObject[keyInput] = actionSelect;
-          bindCommand = actionOverrides[actionSelect] ? actionOverrides[actionSelect] : actionMappings[actionSelect];
+          bindCommand = actionOverrides[actionSelect]
+            ? actionOverrides[actionSelect]
+            : actionMappings[actionSelect];
         }
         let bindObject;
         if (layerName) {
@@ -948,7 +960,7 @@ async function app() {
       }
     }
     // Our pending overrides are just placeholders to make sure layers don't propagate. If we have user set ones, use those.
-    let overrides = {...pendingOverrideLayer, ...bindLayers["gameoverrides"]}
+    let overrides = { ...pendingOverrideLayer, ...bindLayers["gameoverrides"] };
     // If we have custom layers, put them in a new binds config so we don't re-run game overrides when we reset
     if (hasCustomLayers) {
       let contents = getBindsFromBindsObject(overrides);
@@ -970,9 +982,13 @@ async function app() {
       if (!fileName) {
         fileName = `layer_${bindLayer}.cfg`;
         // On key down, apply layer
-        configContents["autoexec.cfg"] += `alias +layer_${bindLayer}"exec app/${fileName}"\n`;
+        configContents[
+          "autoexec.cfg"
+        ] += `alias +layer_${bindLayer}"exec app/${fileName}"\n`;
         // On key up, reset binds
-        configContents["autoexec.cfg"] += `alias -layer_${bindLayer}"exec app/reset_game_overrides.cfg\n`;
+        configContents[
+          "autoexec.cfg"
+        ] += `alias -layer_${bindLayer}"exec app/reset_game_overrides.cfg\n`;
         customLayers.push(bindLayer);
       } else {
         customOverrideFiles.push(fileName);
@@ -982,13 +998,16 @@ async function app() {
     }
     if (hasCustomLayers) {
       // Execute reset cfg at the end of game overrides to apply binds
-      configContents["game_overrides.cfg"] += "exec app/reset_game_overrides.cfg";
+      configContents["game_overrides.cfg"] +=
+        "exec app/reset_game_overrides.cfg";
       // Apply class specific layer resets
       for (const fileName of customOverrideFiles) {
         let isClassConfig = fileName !== "game_overrides.cfg";
         for (const layer of customLayers) {
           if (isClassConfig) {
-            configContents[fileName] += `alias -layer_${layer}"exec app/reset_game_overrides.cfg;exec app/reset_${fileName}"\n`;
+            configContents[
+              fileName
+            ] += `alias -layer_${layer}"exec app/reset_game_overrides.cfg;exec app/reset_${fileName}"\n`;
           }
           configContents[fileName] += `exec app/reset_${fileName}`;
         }
@@ -1399,7 +1418,7 @@ async function app() {
     let col = document.createElement("div");
     col.classList.add("col-sm-5");
     row.append(col);
-    let undoCol = document.createElement("div")
+    let undoCol = document.createElement("div");
     undoCol.classList.add("col");
     let undoLink = document.createElement("a");
     undoLink.href = "#";
@@ -1407,7 +1426,7 @@ async function app() {
     undoLink.addEventListener("click", (e) => {
       e.preventDefault();
       setModule(name, getBuiltinModuleDefault(name));
-    })
+    });
     let value = getModuleDefault(name);
     let configDefault = getBuiltinModuleDefault(name);
     if (value === configDefault) {
@@ -1416,7 +1435,7 @@ async function app() {
     let undoIcon = document.createElement("span");
     undoIcon.classList.add("fa", "fa-undo", "fa-fw");
     undoLink.append(undoIcon);
-    undoCol.append(undoLink)
+    undoCol.append(undoLink);
     row.append(undoCol);
     return [row, col, undoLink];
   }
@@ -1481,7 +1500,10 @@ async function app() {
       switchElement.checked = true;
     }
     // Event listener for undoing
-    let configDefault = getDefaultValueFromName(values, getBuiltinModuleDefault(name));
+    let configDefault = getDefaultValueFromName(
+      values,
+      getBuiltinModuleDefault(name)
+    );
     inputUndo.addEventListener("click", () => {
       switchElement.checked = configDefault;
     });
@@ -1519,7 +1541,10 @@ async function app() {
       valueIndicator.innerText = capitalize(defaultSelection);
     }
     // Event listener for undoing
-    let configDefault = getDefaultValueFromName(values, getBuiltinModuleDefault(name));
+    let configDefault = getDefaultValueFromName(
+      values,
+      getBuiltinModuleDefault(name)
+    );
     inputUndo.addEventListener("click", () => {
       rangeElement.value = configDefault;
       let configDefaultSelection = values[configDefault];
@@ -1610,7 +1635,9 @@ async function app() {
     // Create a link to module documentation
     let moduleDocsLink = document.createElement("a");
     moduleDocsLink.href =
-      `https://docs.mastercomfig.com/${userVersion !== "latest" ? userVersion : "page"}/customization/modules/#` +
+      `https://docs.mastercomfig.com/${
+        userVersion !== "latest" ? userVersion : "page"
+      }/customization/modules/#` +
       displayName.replace(/\(|\)/g, "").split(" ").join("-").toLowerCase();
     moduleDocsLink.target = "_blank";
     moduleDocsLink.rel = "noopener";
@@ -1751,7 +1778,8 @@ async function app() {
     });
 
     let resetButton = document.createElement("button");
-    resetButton.innerHTML = '<span class="fa fa-undo fa-fw"></span> Reset all modules';
+    resetButton.innerHTML =
+      '<span class="fa fa-undo fa-fw"></span> Reset all modules';
     resetButton.classList.add(
       "position-absolute",
       "bottom-0",
@@ -1910,7 +1938,7 @@ async function app() {
 
   async function getApiResponse(url) {
     if (url) {
-      return fetch(url).then(resp => resp.json());
+      return fetch(url).then((resp) => resp.json());
     }
     return latestData;
   }
@@ -1949,10 +1977,11 @@ async function app() {
         clearTimeout(currentTimeout);
       }
       if (!navigator.clipboard) {
-        console.error("Clipboard unsupported.")
+        console.error("Clipboard unsupported.");
         return;
       }
-      navigator.clipboard.writeText(target.firstChild.innerText)
+      navigator.clipboard
+        .writeText(target.firstChild.innerText)
         .then(() => {
           let status = target.children[2];
           status.innerText = "Copied!";
@@ -1976,7 +2005,7 @@ async function app() {
           range.selectNodeContents(target.firstChild);
           selection.removeAllRanges();
           selection.addRange(range);
-        })
+        });
     });
   }
 
@@ -2054,9 +2083,8 @@ async function app() {
       return;
     }
 
-    await dSimpleKeyboard;
-
-    const Keyboard = window.SimpleKeyboard.default;
+    let Keyboard = await dkeyboard;
+    console.log(Keyboard);
 
     inittedKeyboard = true;
 
@@ -2153,7 +2181,7 @@ async function app() {
       }
       capturedMouseDown = `MOUSE${button + 1}`;
     }
-  })
+  });
 
   document.addEventListener("contextmenu", (e) => {
     if (e) {
@@ -2171,18 +2199,22 @@ async function app() {
       capturedMouseDown = null;
       finishBindInput(lastBindInput, true);
     }
-  })
-
-  document.addEventListener("wheel", (e) => {
-    if (blockKeyboard && lastBindInput) {
-      e.preventDefault();
-      lastBindInput.value = e.wheelDelta > 0 ? "MWHEELUP" : "MWHEELDOWN";
-      finishBindInput(lastBindInput, true);
-      return false;
-    }
-  }, {
-    passive: false
   });
+
+  document.addEventListener(
+    "wheel",
+    (e) => {
+      if (blockKeyboard && lastBindInput) {
+        e.preventDefault();
+        lastBindInput.value = e.wheelDelta > 0 ? "MWHEELUP" : "MWHEELDOWN";
+        finishBindInput(lastBindInput, true);
+        return false;
+      }
+    },
+    {
+      passive: false,
+    }
+  );
 
   // Capture keyboard input when bindings are shown
   var tabEls = document.querySelectorAll(
@@ -2211,7 +2243,9 @@ async function app() {
       // input -> col -> row: if this row is the last in the list.
       if (!element.parentNode.parentNode.nextSibling) {
         // display remove button
-        element.parentNode.parentNode.childNodes[2].firstChild.classList.remove("d-none");
+        element.parentNode.parentNode.childNodes[2].firstChild.classList.remove(
+          "d-none"
+        );
         createBindingField();
       }
       element.blur();
@@ -2240,10 +2274,10 @@ async function app() {
     "Move Back": "+back",
     "Move Left": "+moveleft",
     "Move Right": "+moveright",
-    "Jump": "+jump",
-    "Duck": "+duck",
+    Jump: "+jump",
+    Duck: "+duck",
     "Show scoreboard": "+showscores",
-    "Drop": "dropitem",
+    Drop: "dropitem",
     "Call MEDIC!": "+helpme",
     "Push to Talk": "+voicerecord",
     "Primary attack": "+attack",
@@ -2284,25 +2318,31 @@ async function app() {
     "Loadout C": "load_itempreset 2",
     "Loadout D": "load_itempreset 3",
     "Action Slot": "+use_action_slot_item",
-    "Taunts": "+taunt",
+    Taunts: "+taunt",
     "Weapon Taunt": "cmd taunt",
     "Stop Taunt": "cmd stop_taunt",
     "Open Map information": "showmapinfo",
-    "Inspect": "+inspect",
+    Inspect: "+inspect",
     "Toggle Ready": "player_ready_toggle",
-    "Spray": "impulse 201",
+    Spray: "impulse 201",
     "View/Accept alert": "cl_trigger_first_notification",
-    "Remove/Decline alert": "cl_decline_first_notification"
+    "Remove/Decline alert": "cl_decline_first_notification",
   };
 
   const actionNames = Object.keys(actionMappings);
 
-  const bindsList = getEl("binds-list")
+  const bindsList = getEl("binds-list");
 
   function createBindingField(bindOptions) {
     let keyInput = document.createElement("input");
     keyInput.type = "text";
-    keyInput.classList.add("form-control", "form-control-sm", "disabled", "text-light", "bg-dark");
+    keyInput.classList.add(
+      "form-control",
+      "form-control-sm",
+      "disabled",
+      "text-light",
+      "bg-dark"
+    );
     keyInput.placeholder = "<Unbound>";
     let key = bindOptions?.key;
     if (key) {
@@ -2352,7 +2392,12 @@ async function app() {
     inputGroup.classList.add("input-group", "d-none");
     let textInput = document.createElement("input");
     textInput.type = "text";
-    textInput.classList.add("form-control", "form-control-sm", "text-light", "bg-dark");
+    textInput.classList.add(
+      "form-control",
+      "form-control-sm",
+      "text-light",
+      "bg-dark"
+    );
     textInput.placeholder = "Command to run";
     textInput.ariaLabel = "Custom command to run";
     inputGroup.append(textInput);
@@ -2362,7 +2407,7 @@ async function app() {
     undoButton.innerHTML = "<span class='fa fa-undo fa-fw'></span>";
     undoButton.addEventListener("click", () => {
       selectElement.selectedIndex = 0;
-      selectElement.dispatchEvent(new Event("input", { bubbles: true }))
+      selectElement.dispatchEvent(new Event("input", { bubbles: true }));
     });
     inputGroup.append(undoButton);
 
@@ -2386,14 +2431,14 @@ async function app() {
     actionCol.append(inputGroup);
     let row = document.createElement("div");
     row.classList.add("row", "binding-field");
-    
+
     let removeBtn = document.createElement("a");
     removeBtn.href = "#";
     removeBtn.onclick = (e) => {
       e.preventDefault();
       row.remove();
       updateCustomizationDownload();
-    }
+    };
     removeBtn.classList.add("fa", "fa-close", "fa-fw");
     if (!bindOptions) {
       removeBtn.classList.add("d-none");
@@ -2459,8 +2504,7 @@ async function app() {
   var ghUser;
 
   async function loginWithGitHub() {
-    await dfirebase;
-    await dfirebaseAuth;
+    let firebase = await dfirebase;
     if (!ghProvider) {
       ghProvider = new firebase.auth.GithubAuthProvider();
     }
@@ -2491,7 +2535,6 @@ async function app() {
 
   async function getToken(serviceWorkerRegistration) {
     await dfirebase;
-    await dfirebaseMessaging;
     try {
       messaging().onMessage((payload) => {
         console.log("Message received. ", payload);
