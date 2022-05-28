@@ -1174,7 +1174,7 @@ async function app() {
     if (didChange) {
       if (userVersion === "latest") {
         if (cachedData) {
-          handleApiResponse(cachedData);
+          handleApiResponse(latestData);
           updateDocsLinks("page");
         }
       } else {
@@ -1908,9 +1908,15 @@ async function app() {
     handleModulesRoot(cachedData.m);
   }
 
+  async function getApiResponse(url) {
+    if (url) {
+      return fetch(url).then(resp => resp.json());
+    }
+    return latestData;
+  }
+
   function sendApiRequest(url) {
-    fetch(url ? url : "https://mastercomfig.mcoms.workers.dev/?v=2")
-      .then((resp) => resp.json())
+    getApiResponse(url)
       .then(async (data) => {
         await handleApiResponse(data);
         if (!url) {

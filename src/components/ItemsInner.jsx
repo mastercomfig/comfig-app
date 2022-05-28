@@ -1,9 +1,9 @@
-import Tab from 'react-bootstrap/Tab';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Nav from 'react-bootstrap/Nav';
+import Tab from 'react-bootstrap/cjs/Tab.js';
+import Row from 'react-bootstrap/cjs/Row.js';
+import Col from 'react-bootstrap/cjs/Col.js';
+import Nav from 'react-bootstrap/cjs/Nav.js';
 
-export default function ItemsInner({playerClass, items, slotToIndex, getNormalizedSlotName, getItemName}) {
+export default function ItemsInner({ playerClass, items }) {
   let slots = {};
 
   for (const item of items) {
@@ -22,18 +22,21 @@ export default function ItemsInner({playerClass, items, slotToIndex, getNormaliz
     }
   }
 
+  const firstKey = `${playerClass}-${slots[slotNames[0]][0].classname}`;
+
   return (
-    <Tab.Container>
+    <Tab.Container defaultActiveKey={firstKey}>
       <Row>
-        <Col sm={3}>
+        <Col sm={3} className="bg-dark py-2">
           <Nav variant="pills" className="flex-column">
             {slotNames.map(slot => <>
-              <Nav.Item><small>{slot}</small></Nav.Item>
+              <Nav.Item key={`${playerClass}-${slot}`} className="pt-2"><small class="fw-semibold">{slot.toUpperCase()}</small></Nav.Item>
+              <hr></hr>
               {slots[slot].map(item => {
                 const itemName = getItemName(item);
                 return (
                   <Nav.Item>
-                    <Nav.Link eventKey={`${playerClass}-${item.classname}`}>{itemName}</Nav.Link>
+                    <Nav.Link type="button" key={`${playerClass}-${item.classname}`} eventKey={`${playerClass}-${item.classname}`}>{itemName}</Nav.Link>
                   </Nav.Item>
                 )
               })}
@@ -45,7 +48,22 @@ export default function ItemsInner({playerClass, items, slotToIndex, getNormaliz
             {slotNames.map(slot => <>
                 {slots[slot].map(item =>
                     <Tab.Pane eventKey={`${playerClass}-${item.classname}`}>
-                      <p>Test</p>
+                      <div class="container py-4">
+                        <h3>Crosshairs</h3>
+                        <h3>Sound</h3>
+                        {item.MuzzleFlashParticleEffect && (
+                          <h3>Muzzle Flash</h3>
+                        )}
+                        {item.BrassModel && (
+                          <h3>Shell Ejection</h3>
+                        )}
+                        {item.TracerEffect && (
+                          <h3>Tracer</h3>
+                        )}
+                        {item.ExplosionEffect && (
+                          <h3>Explosion Effect</h3>
+                        )}
+                      </div>
                     </Tab.Pane>
                 )}
             </>)}

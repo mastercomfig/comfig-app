@@ -71,8 +71,19 @@ async function getGameResourceFile(path) {
 }
 
 async function getGameResourceDir(path) {
+  let headers = {
+    "User-Agent": "comfig app",
+    Accept: "application/vnd.github.v3+json",
+  };
+
+  if (import.meta.env.GITHUB_TOKEN) {
+    headers["Authorization"] = `token ${import.meta.env.GITHUB_TOKEN}`
+  }
+
   let response = await fetch(
-    `https://api.github.com/repos/SteamDatabase/GameTracking-TF2/contents/${path}`
+    `https://api.github.com/repos/SteamDatabase/GameTracking-TF2/contents/${path}`, {
+      headers,
+    }
   );
   let contents = await response.json();
   let result = [];
@@ -97,7 +108,7 @@ function getLocalization(key) {
   if (!key.startsWith("#")) {
     return key;
   }
-  return languageCache[language][key.substring(1)];
+  return globalThis.languageCache[language][key.substring(1)];
 }
 
 const blockedItems = [
@@ -265,7 +276,7 @@ const classNameToName = {
   //tf_weapon_fists: ["#TF_Weapon_Fists", "#TF_Unique_Achievement_Fists", "#TF_Unique_Gloves_of_Running_Urgently", "#TF_WarriorsSpirit", "#TF_FistsOfSteel", "#TF_EvictionNotice", "#TF_Apocofists", "#TF_MasculineMittens", "#TF_Weapon_BreadBite"],
   //tf_weapon_flamethrower: ["#TF_Weapon_FlameThrower", "#TF_Unique_Achievement_Flamethrower", "#TF_TheDegreaser", "#TF_Phlogistinator", "#TF_Rainblower"],
   tf_weapon_flaregun: [
-    "#TF_Weapon_Flaregun",
+    "#TF_Weapon_FlareGun",
     "#TF_Weapon_Flaregun_Detonator",
     "#TF_ScorchShot",
   ],
@@ -392,10 +403,10 @@ const classNameToName = {
   tf_weapon_wrench: "#TF_Weapon_Wrench",
 };
 
-function getItemName(weapon) {
-  let key = weapon.printname;
-  if (classNameToName[weapon.classname]) {
-    key = classNameToName[weapon.classname];
+function getItemName(item) {
+  let key = item.printname;
+  if (classNameToName[item.classname]) {
+    key = classNameToName[item.classname];
   }
   return getLocalization(key);
 }
@@ -434,11 +445,11 @@ const slotToIndex = [
   "Utility",
 ];
 
-function getNormalizedSlotName(weapon) {
-  if (customItemSlot[weapon.classname]) {
-    return customItemSlot[weapon.classname];
+function getNormalizedSlotName(item) {
+  if (customItemSlot[item.classname]) {
+    return customItemSlot[item.classname];
   }
-  let slot = weapon.WeaponType;
+  let slot = item.WeaponType;
   if (normalizedSlots[slot]) {
     return normalizedSlots[slot];
   }
@@ -463,7 +474,7 @@ async function getGameResource(path, file, regex) {
 let items = {};
 
 async function initGameData() {
-  const tfWeapons = await getGameResource(
+  const tfItems = await getGameResource(
     "tf/tf2_misc_dir/scripts/",
     "tf_weapon_.*.txt",
     true
@@ -473,14 +484,25 @@ async function initGameData() {
     `tf_${language.toLowerCase()}.txt`
   );
   languageCache[langRes.lang.Language] = langRes.lang.Tokens;
-  for (const weapon of tfWeapons) {
-    const data = weapon.WeaponData;
+  for (const item of tfItems) {
+    const data = item.WeaponData;
     if (!blockedItems.includes(data.classname)) {
       items[data.classname] = data;
     }
   }
 }
 
-await initGameData();
+globalThis.itemUsedBy = itemUsedBy;
+globalThis.slotToIndex = slotToIndex;
+globalThis.customItemSlot = customItemSlot;
+globalThis.normalizedSlots = normalizedSlots;
+globalThis.classNameToName = classNameToName;
+globalThis.getLocalization = getLocalization;
+globalThis.getItemName = getItemName;
+globalThis.getNormalizedSlotName = getNormalizedSlotName;
 
-export default { itemUsedBy, slotToIndex, items, getNormalizedSlotName, getItemName };
+export default {
+  languageCache,
+  items,
+  initGameData,
+};

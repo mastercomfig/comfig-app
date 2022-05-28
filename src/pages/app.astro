@@ -5,18 +5,43 @@ import PreloadHead from '../components/head/PreloadHead.astro';
 import ImportHead from '../components/head/ImportHead.astro';
 import MainHead from '../components/head/MainHead.astro';
 import Body from '../components/Body.astro';
+import Global from '../components/Global.jsx';
 import Items from '../components/Items.jsx';
 import Footer from '../components/Footer.astro';
 import gm from '../utils/game.js';
 
 const appResponse = await fetch("https://mastercomfig.mcoms.workers.dev/?v=2");
 const appData = await appResponse.json();
+const clientLanguageCache = {};
+for (const lang of Object.keys(gm.languageCache)) {
+  let langCache = {};
+  for (const playerClass of Object.keys(itemUsedBy)) {
+    const classItems = itemUsedBy[playerClass];
+    for (const item of classItems) {
+      const itemData = gm.items[item];
+      let key = itemData.printname;
+      if (classNameToName[itemData.classname]) {
+        key = classNameToName[itemData.classname];
+      }
+      if (Array.isArray(key)) {
+        for (const k of key) {
+          key = k.substring(1);
+          langCache[key] = gm.languageCache[lang][key];
+        }
+      } else if (key.startsWith("#")) {
+        key = key.substring(1);
+        langCache[key] = gm.languageCache[lang][key]; 
+      }
+    }
+  }
+  clientLanguageCache[lang] = langCache;
+}
+await gm.initGameData();
 ---
 <Layout>
 <head>
   <BaseHead />
   <PreloadHead>
-    <link rel="preload" as="fetch" href="https://mastercomfig.mcoms.workers.dev/?v=2" crossorigin>
     <link rel="preload" as="image" href="/img/presets/medium-high.webp">
     <link rel="preload" as="image" href="/img/presets/low.webp">
     <link rel="preload" as="image" href="/img/presets/medium-low.webp">
@@ -29,6 +54,10 @@ const appData = await appResponse.json();
   <ImportHead>
     <link rel="preload" href="https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/css/index.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" crossorigin>
     <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-keyboard@latest/build/css/index.min.css" crossorigin></noscript>
+
+    <script>
+      import '../utils/game.js';
+    </script>
 
     <script>
       var $buoop = { required: { e: 0, f: 0, o: 0, s: 0, c: 0 }, insecure: true, unsupported: true, api: 2022.04 };
@@ -66,6 +95,7 @@ const appData = await appResponse.json();
   </MainHead>
 </head>
 <Body>
+  <Global client:load languageCache={clientLanguageCache} latestData={appData} />
   <nav class="navbar navbar-expand-sm sticky-top navbar-dark bg-teal">
     <div class="container">
       <span class="navbar-brand"><img src="/img/mastercomfig_logo_transparent_i.svg" alt=""
@@ -225,7 +255,7 @@ const appData = await appResponse.json();
                 </div>
               </div>
               <div class="tab-pane fade" id="weapons-tab" role="tabpanel" aria-labelledby="weapons">
-                <Items client:load {...gm} />
+                <Items client:load items={gm.items} />
               </div>
             </div>
           </div>
