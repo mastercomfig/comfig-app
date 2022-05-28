@@ -1733,6 +1733,11 @@ async function app() {
     }
   }
 
+  let customizeCollapse = getEl("customize");
+  function isCustomizeVisible() {
+    return customizeCollapse.classList.contains("show");
+  }
+
   let scrollSpy = null;
 
   function handleModulesRoot(modules) {
@@ -1748,6 +1753,7 @@ async function app() {
     let customizationsCol = document.createElement("div");
     customizationsCol.id = "modules-controls";
     customizationsCol.classList.add("col-8", "inset-box");
+    customizationsCol.tabIndex = 0;
     modulesRow.append(customizationsCol);
 
     // Create column for the sidebar
@@ -1805,14 +1811,17 @@ async function app() {
     // Add the columns to root container.
     getEl("modules-root").append(modulesRow);
 
-    // Init scrollspy
     if (scrollSpy) {
       scrollSpy.dispose();
+      scrollSpy = null;
     }
-    scrollSpy = new bootstrap.ScrollSpy(customizationsCol, {
-      target: "#modules-nav",
-      offset: 40,
-    });
+
+    // Init scrollspy if visible
+    if (isCustomizeVisible()) {
+      scrollSpy = new bootstrap.ScrollSpy(customizationsCol, {
+        target: "#modules-nav",
+      });
+    }
 
     // Update after travesing all modules
     updateCustomizationDownload();
@@ -2054,6 +2063,12 @@ async function app() {
     e.currentTarget.classList.toggle("active");
     if (e.currentTarget.classList.contains("active")) {
       customizeToggler.scrollIntoView({ behavior: "smooth" });
+      // We don't init scrollspy until visible
+      if (!scrollSpy) {
+        scrollSpy = new bootstrap.ScrollSpy(getEl("modules-controls"), {
+          target: "#modules-nav",
+        });
+      }
     }
   });
 
