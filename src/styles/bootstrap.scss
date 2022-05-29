@@ -18,6 +18,9 @@ $light: #f8f9fa;
 $input-border-color: rgb(108, 117, 125);
 $form-select-indicator-color: $light;
 
+// Alert
+$alert-border-radius: 0; // work around 5.2 bug
+
 // 3. Include remainder of required Bootstrap stylesheets
 @import "../../node_modules/bootstrap/scss/_variables.scss";
 
