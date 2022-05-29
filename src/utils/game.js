@@ -471,7 +471,17 @@ async function getGameResource(path, file, regex) {
   }
 }
 
-let items = {};
+let items = {
+  default: {
+    WeaponType: "",
+    classname: "default",
+    printname: "Default",
+    MuzzleFlashParticleEffect: "",
+    BrassModel: "null",
+    TracerEffect: "null",
+    ExplosionEffect: "null",
+  },
+};
 
 async function initGameData() {
   const tfItems = await getGameResource(
@@ -492,6 +502,8 @@ async function initGameData() {
   }
 }
 
+globalThis.classes = classes;
+globalThis.crosshairPacks = crosshairPacks;
 globalThis.itemUsedBy = itemUsedBy;
 globalThis.slotToIndex = slotToIndex;
 globalThis.customItemSlot = customItemSlot;
