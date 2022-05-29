@@ -2597,18 +2597,16 @@ async function app() {
     //getEl("subscribe-link").classList.remove("d-none");
   }
 
-  window.addEventListener("load", () => {
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker
-        .register("/service-worker.js")
-        .then((registration) => {
-          handleNotifications(registration);
-        })
-        .catch((err) => {
-          console.error("Service worker registration failed:", err);
-        });
-    }
-  });
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker
+      .register("/service-worker.js")
+      .then((registration) => {
+        handleNotifications(registration);
+      })
+      .catch((err) => {
+        console.error("Service worker registration failed:", err);
+      });
+  }
 
   window.addEventListener("online", handleConnectivityChange);
   window.addEventListener("offline", handleConnectivityChange);
@@ -2627,6 +2625,4 @@ async function app() {
     });
   }
 }
-window.addEventListener("load", () => {
-  app();
-});
+window.addEventListener("load", app);
