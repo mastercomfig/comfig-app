@@ -46,6 +46,15 @@ a, .nav-link {
   color: #0a58ca;
 }
 
+#modules-root .form-range {
+  margin-bottom: -5px;
+}
+
+.form-range-value {
+  font-weight: lighter;
+  font-size: 0.9rem;
+}
+
 // Button
 .btn-primary {
   --bs-btn-color: $white;

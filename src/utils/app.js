@@ -1532,6 +1532,7 @@ async function app() {
     rangeElement.max = values.length - 1;
     // Create the value indicator (shows what value in the range is selected)
     let valueIndicator = document.createElement("span");
+    valueIndicator.classList.add("form-range-value");
     // Set default value
     let defaultSelection = values[defaultValue];
     if (typeof defaultSelection === "object") {
