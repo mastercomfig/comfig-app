@@ -1,9 +1,12 @@
 import { get, set } from "idb-keyval";
+import { registerSW } from "virtual:pwa-register";
 
 let idbKeyval = {
   get,
   set
 }
+
+const reloadSW = "__RELOAD_SW__";
 
 async function app() {
   let dfirebase = import("firebase/compat/app").then(async (firebase) => {
@@ -2597,16 +2600,38 @@ async function app() {
     //getEl("subscribe-link").classList.remove("d-none");
   }
 
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker
-      .register("/service-worker.js")
-      .then((registration) => {
-        handleNotifications(registration);
-      })
-      .catch((err) => {
-        console.error("Service worker registration failed:", err);
-      });
+  function registerServiceWorker() {
+    const updateSW = registerSW({
+      immediate: true,
+      onNeedRefresh() {},
+      onOfflineReady() {
+        console.log("Offline ready");
+      },
+    });
+
+    updateSW();
   }
+
+  if ("serviceWorker" in navigator) {
+    let bFoundSW = false;
+
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (let registration of registrations) {
+        if (registration.active?.scriptURL.endsWith("/service-worker.js")) {
+          bFoundSW = true;
+          registration.unregister().then(() => {
+            registerServiceWorker();
+          })
+        }
+      }
+
+      if (!bFoundSW) {
+        registerServiceWorker();
+      }
+    });
+  }
+
+  
 
   window.addEventListener("online", handleConnectivityChange);
   window.addEventListener("offline", handleConnectivityChange);

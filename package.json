@@ -35,6 +35,8 @@
     "simple-keyboard": "^3.4.105",
     "vdf-parser": "^1.2.0",
     "vite": "^2.9.9",
+    "vite-plugin-pwa": "^0.12.0",
+    "workbox-window": "^6.5.3",
     "zustand": "4.0.0-rc.1"
   },
   "pnpm": {
