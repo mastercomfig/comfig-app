@@ -1740,6 +1740,13 @@ async function app() {
 
   let scrollSpy = null;
 
+  function initScrollSpy(customizationsCol) {
+    scrollSpy = new bootstrap.ScrollSpy(customizationsCol, {
+      target: getEl("modules-nav"),
+      rootMargin: "0px 0px -73%",
+    });
+  }
+
   function handleModulesRoot(modules) {
     if (!getEl("modules-root")) {
       return;
@@ -1818,9 +1825,7 @@ async function app() {
 
     // Init scrollspy if visible
     if (isCustomizeVisible()) {
-      scrollSpy = new bootstrap.ScrollSpy(customizationsCol, {
-        target: "#modules-nav",
-      });
+      initScrollSpy(customizationsCol);
     }
 
     // Update after travesing all modules
@@ -1990,7 +1995,7 @@ async function app() {
         return;
       }
       navigator.clipboard
-        .writeText(target.firstChild.innerText)
+        .writeText(target.firstElementChild.innerText)
         .then(() => {
           let status = target.children[2];
           status.innerText = "Copied!";
@@ -2065,9 +2070,7 @@ async function app() {
       customizeToggler.scrollIntoView({ behavior: "smooth" });
       // We don't init scrollspy until visible
       if (!scrollSpy) {
-        scrollSpy = new bootstrap.ScrollSpy(getEl("modules-controls"), {
-          target: "#modules-nav",
-        });
+        initScrollSpy(getEl("modules-controls"));
       }
     }
   });
