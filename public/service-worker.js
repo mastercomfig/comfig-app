@@ -77,7 +77,11 @@ self.addEventListener("install", (event) => {
       // the network.
       console.log('[Service Worker] Caching all: app shell and content');
       for (const url of OFFLINE_FILES) {
-        await cache.add(new Request(url, { cache: "reload" }));
+        try {
+          await cache.add(new Request(url, { cache: "reload" }));
+        } catch {
+          console.error(`[Service Worker] Failed to cache ${url}`);
+        }
       }
     })()
   );

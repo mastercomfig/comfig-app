@@ -53,6 +53,10 @@ a, .nav-link {
   --bs-btn-active-color: $white;
 }
 
+.btn-outline-primary {
+  --bs-btn-hover-color: $white;
+}
+
 // Classes
 .img-separator {
   height: 40vh;
