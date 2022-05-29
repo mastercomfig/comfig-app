@@ -2016,7 +2016,7 @@ async function app() {
           }, 5000);
           let selection = getSelection();
           let range = document.createRange();
-          range.selectNodeContents(target.firstChild);
+          range.selectNodeContents(target.firstElementChild);
           selection.removeAllRanges();
           selection.addRange(range);
         });
