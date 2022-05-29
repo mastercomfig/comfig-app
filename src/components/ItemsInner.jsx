@@ -2,6 +2,7 @@ import { Tab, Row, Col, Nav} from 'react-bootstrap';
 
 export default function ItemsInner({ playerClass, items }) {
   let slots = {};
+  let slotNames = [];
 
   for (const item of items) {
     const slot = getNormalizedSlotName(item);
@@ -9,9 +10,10 @@ export default function ItemsInner({ playerClass, items }) {
       slots[slot] = [];
     }
     slots[slot].push(item);
+    if (!slot) {
+      slotNames.push(slot);
+    }
   }
-
-  let slotNames = [];
 
   for (const slot of slotToIndex) {
     if (slots[slot]) {
@@ -21,14 +23,16 @@ export default function ItemsInner({ playerClass, items }) {
 
   const firstKey = `${playerClass}-${slots[slotNames[0]][0].classname}`;
 
+  console.log(slots[slotNames[0]][0]);
+
   return (
     <Tab.Container defaultActiveKey={firstKey}>
       <Row>
-        <Col sm={3} className="bg-dark py-2">
+        <Col sm={3} className={`bg-dark py-2 ${slots[""] ? "d-none" : ""}`}>
           <Nav variant="pills" className="flex-column">
             {slotNames.map(slot => <div key={`${playerClass}-${slot}-nav`}>
-              <Nav.Item className="pt-2"><small className="fw-semibold">{slot.toUpperCase()}</small></Nav.Item>
-              <hr></hr>
+              {slot && <><Nav.Item className="pt-2"><small className="fw-semibold">{slot.toUpperCase()}</small></Nav.Item>
+              <hr></hr></>}
               {slots[slot].map(item => {
                 const itemName = getItemName(item);
                 return (
@@ -47,7 +51,9 @@ export default function ItemsInner({ playerClass, items }) {
                   <Tab.Pane key={`${playerClass}-${item.classname}-pane`} eventKey={`${playerClass}-${item.classname}`}>
                     <div className="container py-4">
                       <h3>Crosshairs</h3>
-                      <h3>Sound</h3>
+                      {item.SoundData && (
+                        <h3>Sound</h3>
+                      )}
                       {item.MuzzleFlashParticleEffect && (
                         <h3>Muzzle Flash</h3>
                       )}
