@@ -23,7 +23,7 @@ export default function ItemsInner({ playerClass, items }) {
 
   const firstKey = `${playerClass}-${slots[slotNames[0]][0].classname}`;
 
-  console.log(slots[slotNames[0]][0]);
+  //console.log(slots[slotNames[0]][0]);
 
   return (
     <Tab.Container defaultActiveKey={firstKey}>
