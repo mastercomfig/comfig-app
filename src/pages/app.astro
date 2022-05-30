@@ -415,11 +415,18 @@ for (const lang of Object.keys(gm.languageCache)) {
               </div>
               <hr>
             </div>
-            <p class="lead"><b><a href="https://github.com/mastercomfig/mastercomfig/releases/latest" class="dl" id="vpk-dl"
-                  class="download-link" style="cursor: pointer"><span class="fa fa-cloud-download fa-fw"></span>
+            <p class="lead"><b><a href="https://github.com/mastercomfig/mastercomfig/releases/latest" class="btn btn-primary" id="vpk-dl"
+                  style="cursor: pointer"><span class="fa fa-cloud-download fa-fw"></span>
                   Download from GitHub</a></b></p>
             <p class="instructions-text">Drop the files in your <code>tf/custom</code> folder and
               they'll automatically run.</p>
+            <div class="instructions-text">
+              <p class="lead"><b><a class="btn btn-primary" id="custom-dl"><span class="fa fa-cloud-download fa-fw"></span> Download customizations </a></b></p>
+              <p class="instructions-text">Create a <code id="overrides-folder">overrides</code>
+                folder in your <code>tf/cfg</code> folder and drop the files in there to override
+                mastercomfig with your selected customizations!</p>
+              <noscript>Note: Customizations require JavaScript.</noscript>
+            </div>
             <a id="collapseManualButton" data-bs-toggle="collapse" href="#collapseManual" role="button"
               aria-expanded="false" aria-controls="collapseManual">
               Not working? Download manually
@@ -486,19 +493,9 @@ for (const lang of Object.keys(gm.languageCache)) {
               <div style="margin-bottom: 1rem;clear:both"></div>
               <p>Right click Team Fortress 2 in your Steam library and click <b>Properties…</b> . In
                 the window that appears, under Launch Options, remove anything that's in there and
-                paste the above text.</p>
+                paste the above text.<br><a target="_blank" class="docs-link" rel="noopener" href="https://docs.mastercomfig.com/latest/customization/launch_options/" data-url="customization/launch_options">Learn more</a></p>
             </div>
             <hr>
-            <div class="instructions-text">
-              <p class="lead"><b><a class="download-link" class="dl" id="custom-dl"><span
-                      class="fa fa-cloud-download fa-fw"></span> Download
-                    customizations </a></b></p>
-              <p class="instructions-text">Create a <code id="overrides-folder">overrides</code>
-                folder in your <code>tf/cfg</code> folder and drop the files in there to override
-                mastercomfig with your selected customizations!</p>
-              <noscript>Note: Customizations require JavaScript.</noscript>
-              <hr>
-            </div>
             <div id="blockMisc">
               <a id="collapseMiscButton" data-bs-toggle="collapse" href="#collapseMisc" role="button"
                 aria-expanded="false" aria-controls="collapseMisc">
