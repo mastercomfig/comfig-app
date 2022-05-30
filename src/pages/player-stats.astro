@@ -1,0 +1,41 @@
+---
+import Layout from '../layouts/Layout.astro';
+import BaseHead from '../components/head/BaseHead.astro';
+import PreloadHead from '../components/head/PreloadHead.astro';
+import ImportHead from '../components/head/ImportHead.astro';
+import MainHead from '../components/head/MainHead.astro';
+import Body from '../components/Body.astro';
+import Footer from '../components/Footer.astro';
+---
+<Layout>
+<head>
+  <BaseHead />
+  <PreloadHead>
+    <></>
+  </PreloadHead>
+  <ImportHead>
+    <></>
+  </ImportHead>
+  <MainHead title="Player Stats | mastercomfig">
+    <></>
+  </MainHead>
+</head>
+<Body>
+  <header class="jumbotron jumbotron-fluid home-header">
+    <div class="container d-flex align-items-center justify-content-center" style="height: 100%">
+      <div class="align-middle text-center">
+        <img class="img-logo" src="/img/mastercomfig_logo_transparent_i.svg" alt="logo" />
+        <h1 class="display-4">Player Stats Coming Soon!</h1>
+        <p class="lead">See live player stats for TF2, and break down current bot, idler and real player counts.</p>
+        <a class="btn btn-outline-secondary btn-lg" href="/">
+          <span class="fa fa-home fa-fw"></span> Back to home
+        </a>
+      </div>
+    </div>
+  </header>
+  <section></section>
+  <Footer>
+    <></>
+  </Footer>
+</Body>
+</Layout>
