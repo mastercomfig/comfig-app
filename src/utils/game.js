@@ -13,7 +13,7 @@ const classes = [
 ];
 
 const crosshairPacks = {
-  Default: {
+  default: {
     card: "sprites/crosshairs",
     crosshairs: {
       "Large Circle": {

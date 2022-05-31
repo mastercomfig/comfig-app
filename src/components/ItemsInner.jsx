@@ -1,6 +1,7 @@
-import { Tab, Row, Col, Nav} from 'react-bootstrap';
+import { useMemo, useEffect } from 'react';
+import { Tab, Row, Col, Nav, FormSelect } from 'react-bootstrap';
 
-export default function ItemsInner({ playerClass, items }) {
+function calculateItemSlots(playerClass, items) {
   let slots = {};
   let slotNames = [];
 
@@ -24,6 +25,28 @@ export default function ItemsInner({ playerClass, items }) {
   const firstKey = `${playerClass}-${slots[slotNames[0]][0].classname}`;
 
   //console.log(slots[slotNames[0]][0]);
+
+  return [slots, slotNames, firstKey];
+}
+
+function calculateCrosshairs() {
+  for (const packName of Object.keys(crosshairPacks)) {
+    const pack = crosshairPacks[packName];
+    const packIndex = crosshairs.length;
+    cardLookup.push(pack.card);
+    crosshairs.concat(pack.crosshairs.map(x => ({
+      crosshair: x, 
+      packIndex
+    })));
+  }
+}
+
+export default function ItemsInner({ playerClass, items }) {
+
+
+  let [slots, slotNames] = useMemo(calculateItemSlots, [playerClass, items]);
+
+  let [cardLookup, crosshairs] = useMemo(calculateCrosshairs, []);
 
   return (
     <Tab.Container defaultActiveKey={firstKey}>
@@ -51,6 +74,15 @@ export default function ItemsInner({ playerClass, items }) {
                   <Tab.Pane key={`${playerClass}-${item.classname}-pane`} eventKey={`${playerClass}-${item.classname}`}>
                     <div className="container py-4">
                       <h3>Crosshairs</h3>
+                      <div className="row">
+                        <div className="col">
+                          <FormSelect>
+                            <option></option>
+                          </FormSelect>
+                        </div>
+                        <div className="col">
+                        </div>
+                      </div>
                       {item.SoundData && (
                         <h3>Sound</h3>
                       )}
