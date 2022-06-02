@@ -19,22 +19,27 @@ const crosshairPacks = {
       "Large Circle": {
         pos: ["64", "64"],
         size: "64",
+        preview: "ring.svg",
       },
       Circle: {
         pos: ["32", "32"],
         size: "32",
+        preview: "ring.svg",
       },
       Sniper: {
         pos: ["64", "0"],
         size: "32",
+        preview: "sniper.png",
       },
       "Medic Cross": {
         pos: ["0", "64"],
         size: "32",
+        preview: "mediccross.png",
       },
       Brackets: {
         pos: ["0", "0"],
         size: "32",
+        preview: "default.svg",
       },
       None: {
         pos: ["0", "48"],

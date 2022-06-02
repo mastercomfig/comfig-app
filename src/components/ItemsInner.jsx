@@ -1,4 +1,4 @@
-import { useMemo, useEffect } from 'react';
+import { useMemo, useState } from 'react';
 import { Tab, Row, Col, Nav, FormSelect } from 'react-bootstrap';
 
 function calculateItemSlots(playerClass, items) {
@@ -24,29 +24,37 @@ function calculateItemSlots(playerClass, items) {
 
   const firstKey = `${playerClass}-${slots[slotNames[0]][0].classname}`;
 
-  //console.log(slots[slotNames[0]][0]);
+  console.log(slots[slotNames[0]][0]);
 
   return [slots, slotNames, firstKey];
 }
 
 function calculateCrosshairs() {
+  let cardLookup = [];
+  let crosshairs = {Default: null};
+
   for (const packName of Object.keys(crosshairPacks)) {
     const pack = crosshairPacks[packName];
-    const packIndex = crosshairs.length;
+    const packIndex = cardLookup.length;
     cardLookup.push(pack.card);
-    crosshairs.concat(pack.crosshairs.map(x => ({
-      crosshair: x, 
-      packIndex
-    })));
+    for (const x of Object.keys(pack.crosshairs)) {
+      crosshairs[x] = {
+        crosshair: pack.crosshairs[x],
+        packIndex
+      }
+    }
   }
+
+  return [cardLookup, crosshairs];
 }
 
 export default function ItemsInner({ playerClass, items }) {
 
-
-  let [slots, slotNames] = useMemo(calculateItemSlots, [playerClass, items]);
+  let [slots, slotNames, firstKey] = useMemo(() => calculateItemSlots(playerClass, items), [playerClass, items]);
 
   let [cardLookup, crosshairs] = useMemo(calculateCrosshairs, []);
+
+  let [crosshairSelections, setCrosshairSelections] = useState(new Map(slotNames.map(slot => slots[slot].map(item => [item.classname, ""]))));
 
   return (
     <Tab.Container defaultActiveKey={firstKey}>
@@ -75,12 +83,17 @@ export default function ItemsInner({ playerClass, items }) {
                     <div className="container py-4">
                       <h3>Crosshairs</h3>
                       <div className="row">
-                        <div className="col">
-                          <FormSelect>
-                            <option></option>
+                        <div className="col-3">
+                          <FormSelect className="bg-dark text-light" onChange={((e) => {
+                            let select = e.target;
+                            let option = select.options[select.selectedIndex];
+                            let value = option.value;
+                            setCrosshairSelections(new Map(crosshairSelections.set(item.classname, value)));
+                          })}>
+                            {Object.keys(crosshairs).map(x => <option key={`${playerClass}-${item.classname}-crosshair-${x}`} value={x}>{x}</option>)}
                           </FormSelect>
                         </div>
-                        <div className="col">
+                        <div className="col-9">
                         </div>
                       </div>
                       {item.SoundData && (
