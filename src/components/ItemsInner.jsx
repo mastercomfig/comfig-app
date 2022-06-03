@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Tab, Row, Col, Nav, FormSelect } from 'react-bootstrap';
+import { get, set } from "idb-keyval";
 
 function calculateItemSlots(playerClass, items) {
   let slots = {};
@@ -29,30 +30,43 @@ function calculateItemSlots(playerClass, items) {
   return [slots, slotNames, firstKey];
 }
 
-function calculateCrosshairs() {
+function calculateCrosshairs(items) {
   let cardLookup = [];
   let crosshairs = {Default: null};
 
   for (const packName of Object.keys(crosshairPacks)) {
-    const pack = crosshairPacks[packName];
     const packIndex = cardLookup.length;
-    cardLookup.push(pack.card);
-    for (const x of Object.keys(pack.crosshairs)) {
-      crosshairs[x] = {
-        crosshair: pack.crosshairs[x],
+    cardLookup.push(packName);
+    const pack = crosshairPacks[packName];
+    for (const x of Object.keys(pack)) {
+      let crosshair = pack[x];
+      crosshairs[crosshair.name] = {
+        crosshair,
         packIndex
       }
     }
   }
 
-  return [cardLookup, crosshairs];
+  let defaultCrosshairs = {};
+
+  for (const item of items) {
+    if (!item.TextureData) {
+      continue;
+    }
+    let crosshair = item.TextureData.crosshair;
+    const crosshairPack = crosshairs[crosshair.file];
+    const crosshairObj = crosshairPack[`_${crosshair.x}_${crosshair.y}`];
+    defaultCrosshairs[item.classname] = crosshairObj.name;
+  }
+
+  return [cardLookup, crosshairs, defaultCrosshairs];
 }
 
 export default function ItemsInner({ playerClass, items }) {
 
   let [slots, slotNames, firstKey] = useMemo(() => calculateItemSlots(playerClass, items), [playerClass, items]);
 
-  let [cardLookup, crosshairs] = useMemo(calculateCrosshairs, []);
+  let [cardLookup, crosshairs, defaultCrosshairs] = useMemo(() => calculateCrosshairs(items), []);
 
   let [crosshairSelections, setCrosshairSelections] = useState(new Map(slotNames.map(slot => slots[slot].map(item => [item.classname, ""]))));
 

@@ -13,38 +13,41 @@ const classes = [
 ];
 
 const crosshairPacks = {
-  default: {
-    card: "sprites/crosshairs",
-    crosshairs: {
-      "Large Circle": {
-        pos: ["64", "64"],
-        size: "64",
-        preview: "ring.svg",
-      },
-      Circle: {
-        pos: ["32", "32"],
-        size: "32",
-        preview: "ring.svg",
-      },
-      Sniper: {
-        pos: ["64", "0"],
-        size: "32",
-        preview: "sniper.png",
-      },
-      "Medic Cross": {
-        pos: ["0", "64"],
-        size: "32",
-        preview: "mediccross.png",
-      },
-      Brackets: {
-        pos: ["0", "0"],
-        size: "32",
-        preview: "default.svg",
-      },
-      None: {
-        pos: ["0", "48"],
-        size: "24",
-      },
+  "sprites/crosshairs": {
+    _64_64: {
+      pos: ["64", "64"],
+      name: "Large Circle",
+      size: "64",
+      preview: "ring.svg",
+    },
+    _32_32: {
+      pos: ["32", "32"],
+      name: "Circle",
+      size: "32",
+      preview: "ring.svg",
+    },
+    _64_0: {
+      pos: ["64", "0"],
+      name: "Sniper",
+      size: "32",
+      preview: "sniper.png",
+    },
+    _0_64: {
+      pos: ["0", "64"],
+      name: "Medic Cross",
+      size: "32",
+      preview: "mediccross.png",
+    },
+    _0_0: {
+      pos: ["0", "0"],
+      name: "Brackets",
+      size: "32",
+      preview: "default.svg",
+    },
+    _0_48: {
+      pos: ["0", "48"],
+      name: "None",
+      size: "24",
     },
   },
 };
