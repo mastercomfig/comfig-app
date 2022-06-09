@@ -1,4 +1,6 @@
 import { defineConfig } from 'astro/config';
+import crypto from "crypto";
+import fs from "fs";
 
 import react from "@astrojs/react";
 import { VitePWA } from "vite-plugin-pwa";
@@ -68,9 +70,9 @@ const reload = process.env.NO_RELOAD_SW !== "true";
 
 if (process.env.NO_SW !== "true") {
   pwaOptions.srcDir = "src";
-  pwaOptions.filename = "claims-sw.ts";
+  pwaOptions.filename = "sw.ts";
   pwaOptions.strategies = "injectManifest";
-  pwaOptions.manifest.description = "Astro PWA Inject Manifest";
+  pwaOptions.manifest.description = "Manage your mastercomfig installation";
 }
 
 let pwaPlugin;
@@ -81,27 +83,52 @@ export default defineConfig({
   integrations: [
     react(),
     {
-      name: "vite-plugin-pwa:astro:hook",
+      name: "@astrojs/pwa",
       hooks: {
+        "astro:config:setup": ({ config, updateConfig }) => {
+          updateConfig({
+            vite: {
+              plugins: [VitePWA(pwaOptions)],
+            },
+          });
+        },
         "astro:config:done": ({ config }) => {
-          const vite = config.vite;
-          for (const p of vite.plugins) {
+          const plugins = config.vite.plugins ?? [];
+          for (const p of plugins) {
             if (Array.isArray(p)) {
-              pwaPlugin = p.find((p1) => p1.name === "vite-plugin-pwa");
+              pwaPlugin = p.find(
+                (p1) =>
+                  p1 && !Array.isArray(p1) && p1.name === "vite-plugin-pwa"
+              );
               break;
             }
           }
         },
         "astro:build:done": async ({ dir, routes }) => {
           const api = pwaPlugin?.api;
-          if (routes && api && !api.isDisabled()) {
+          if (routes && api && !api.disabled) {
             // todo@userquin: rn we only add the static pages, we should exclude dynamic routes
             const addRoutes = await Promise.all(
               routes
-                .filter((r) => r.type === "page" && r.pathname && r.distURL)
-                .map((r) => {
-                  return buildManifestEntry(r.pathname, r.distURL);
-                })
+                .filter(r => r.type === "page" && r.pathname && r.distURL)
+                .map((r) => new Promise((resolve, reject) => {
+                  let url = r.pathname;
+                  let path = r.distURL;
+                  const cHash = crypto.createHash("MD5");
+                  const stream = fs.createReadStream(path);
+                  stream.on("error", (err) => {
+                    reject(err);
+                  });
+                  stream.on("data", (chunk) => {
+                    cHash.update(chunk);
+                  });
+                  stream.on("end", () => {
+                    return resolve({
+                      url,
+                      revision: `${cHash.digest("hex")}`,
+                    });
+                  });
+                }))
             );
             api.extendManifestEntries((manifestEntries) => {
               manifestEntries.push(...addRoutes);
@@ -116,7 +143,4 @@ export default defineConfig({
       },
     },
   ],
-  vite: {
-    plugins: [VitePWA(pwaOptions)],
-  },
 });

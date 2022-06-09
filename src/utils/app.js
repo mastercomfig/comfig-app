@@ -6,8 +6,6 @@ let idbKeyval = {
   set
 }
 
-const reloadSW = "__RELOAD_SW__";
-
 async function app() {
   const bIsDevelopment = import.meta.env.MODE == "development";
 
