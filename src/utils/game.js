@@ -1,4 +1,4 @@
-import { parse, stringify } from "vdf-parser";
+import { parse } from "vdf-parser";
 
 const classes = [
   "scout",
@@ -116,7 +116,12 @@ function getLocalization(key) {
   if (!key.startsWith("#")) {
     return key;
   }
-  return globalThis.languageCache[language][key.substring(1)];
+  try {
+    return globalThis.languageCache[language][key.substring(1)];
+  } catch (err) {
+    console.log(err);
+    return key;
+  }
 }
 
 const blockedItems = [

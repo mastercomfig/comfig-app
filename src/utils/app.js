@@ -7,7 +7,7 @@ let idbKeyval = {
 }
 
 async function app() {
-  const bIsDevelopment = import.meta.env.MODE == "development";
+  const bIsDevelopment = import.meta.env.MODE === "development";
 
   let dfirebase = import("firebase/compat/app").then(async (firebase) => {
     await import("firebase/compat/auth");

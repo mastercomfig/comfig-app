@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Tab, Row, Col, Nav, FormSelect } from 'react-bootstrap';
-import { get, set } from "idb-keyval";
+//import { get, set } from "idb-keyval";
 
 function calculateItemSlots(playerClass, items) {
   let slots = {};
