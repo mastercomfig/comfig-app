@@ -25,7 +25,7 @@ function calculateItemSlots(playerClass, items) {
 
   const firstKey = `${playerClass}-${slots[slotNames[0]][0].classname}`;
 
-  console.log(slots[slotNames[0]][0]);
+  //console.log(slots[slotNames[0]][0]);
 
   return [slots, slotNames, firstKey];
 }
@@ -54,7 +54,7 @@ function calculateCrosshairs(items) {
       continue;
     }
     let crosshair = item.TextureData.crosshair;
-    const crosshairPack = crosshairs[crosshair.file];
+    const crosshairPack = crosshairPacks[crosshair.file];
     const crosshairObj = crosshairPack[`_${crosshair.x}_${crosshair.y}`];
     defaultCrosshairs[item.classname] = crosshairObj.name;
   }
