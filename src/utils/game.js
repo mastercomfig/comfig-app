@@ -13,33 +13,41 @@ const classes = [
 ];
 
 const crosshairPacks = {
-  Default: {
-    card: "sprites/crosshairs",
-    crosshairs: {
-      "Large Circle": {
-        pos: ["64", "64"],
-        size: "64",
-      },
-      Circle: {
-        pos: ["32", "32"],
-        size: "32",
-      },
-      Sniper: {
-        pos: ["64", "0"],
-        size: "32",
-      },
-      "Medic Cross": {
-        pos: ["0", "64"],
-        size: "32",
-      },
-      Brackets: {
-        pos: ["0", "0"],
-        size: "32",
-      },
-      None: {
-        pos: ["0", "48"],
-        size: "24",
-      },
+  "sprites/crosshairs": {
+    _64_64: {
+      pos: ["64", "64"],
+      name: "Large Circle",
+      size: "64",
+      preview: "ring.svg",
+    },
+    _32_32: {
+      pos: ["32", "32"],
+      name: "Circle",
+      size: "32",
+      preview: "ring.svg",
+    },
+    _64_0: {
+      pos: ["64", "0"],
+      name: "Sniper",
+      size: "32",
+      preview: "sniper.png",
+    },
+    _0_64: {
+      pos: ["0", "64"],
+      name: "Medic Cross",
+      size: "32",
+      preview: "mediccross.png",
+    },
+    _0_0: {
+      pos: ["0", "0"],
+      name: "Brackets",
+      size: "32",
+      preview: "default.svg",
+    },
+    _0_48: {
+      pos: ["0", "48"],
+      name: "None",
+      size: "24",
     },
   },
 };
@@ -471,7 +479,17 @@ async function getGameResource(path, file, regex) {
   }
 }
 
-let items = {};
+let items = {
+  default: {
+    WeaponType: "",
+    classname: "default",
+    printname: "Default",
+    MuzzleFlashParticleEffect: "",
+    BrassModel: "null",
+    TracerEffect: "null",
+    ExplosionEffect: "null",
+  },
+};
 
 async function initGameData() {
   const tfItems = await getGameResource(
@@ -492,6 +510,8 @@ async function initGameData() {
   }
 }
 
+globalThis.classes = classes;
+globalThis.crosshairPacks = crosshairPacks;
 globalThis.itemUsedBy = itemUsedBy;
 globalThis.slotToIndex = slotToIndex;
 globalThis.customItemSlot = customItemSlot;

@@ -9,6 +9,8 @@ let idbKeyval = {
 const reloadSW = "__RELOAD_SW__";
 
 async function app() {
+  const bIsDevelopment = import.meta.env.MODE == "development";
+
   let dfirebase = import("firebase/compat/app").then(async (firebase) => {
     await import("firebase/compat/auth");
     await import("firebase/compat/firestore");
@@ -392,7 +394,7 @@ async function app() {
   }
 
   function requireVersion(major, minor, patch, latest, dev) {
-    if (isLocalHost && cachedData) {
+    if (bIsDevelopment && cachedData) {
       let debugVersion = "" + major;
       if (minor !== undefined) {
         debugVersion += "." + minor;
@@ -1533,6 +1535,7 @@ async function app() {
     rangeElement.max = values.length - 1;
     // Create the value indicator (shows what value in the range is selected)
     let valueIndicator = document.createElement("span");
+    valueIndicator.classList.add("form-range-value");
     // Set default value
     let defaultSelection = values[defaultValue];
     if (typeof defaultSelection === "object") {
@@ -1933,15 +1936,6 @@ async function app() {
 
     getEl("versionDropdown").classList.add("ready");
   }
-
-  const isLocalHost =
-    window.location.hostname === "localhost" ||
-    // [::1] is the IPv6 localhost address.
-    window.location.hostname === "[::1]" ||
-    // 127.0.0.1/8 is considered localhost for IPv4.
-    window.location.hostname.match(
-      /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/
-    );
 
   async function handleApiResponse(data) {
     cachedData = data;
@@ -2485,7 +2479,7 @@ async function app() {
     createBindingField();
   });
 
-  if (isLocalHost) {
+  if (bIsDevelopment) {
     for (const child of getEl("customizations").children) {
       child.classList.remove("d-none");
     }
