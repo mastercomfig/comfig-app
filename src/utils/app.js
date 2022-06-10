@@ -7,8 +7,6 @@ let idbKeyval = {
 }
 
 async function app() {
-  const bIsDevelopment = import.meta.env.MODE === "development";
-
   let dfirebase = import("firebase/compat/app").then(async (firebase) => {
     await import("firebase/compat/auth");
     await import("firebase/compat/firestore");
@@ -392,7 +390,7 @@ async function app() {
   }
 
   function requireVersion(major, minor, patch, latest, dev) {
-    if (bIsDevelopment && cachedData) {
+    if (import.meta.env.DEV && cachedData) {
       let debugVersion = "" + major;
       if (minor !== undefined) {
         debugVersion += "." + minor;
@@ -2477,7 +2475,7 @@ async function app() {
     createBindingField();
   });
 
-  if (bIsDevelopment) {
+  if (import.meta.env.DEV) {
     for (const child of getEl("customizations").children) {
       child.classList.remove("d-none");
     }

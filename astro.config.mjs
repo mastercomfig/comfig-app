@@ -6,10 +6,8 @@ import react from "@astrojs/react";
 import { VitePWA } from "vite-plugin-pwa";
 
 const pwaOptions = {
-  mode: "development",
-  base: "/",
   registerType: "autoUpdate",
-  includeAssets: ["favicon.svg"],
+  includeAssets: ["favicon.ico"],
   manifest: {
     name: "mastercomfig",
     short_name: "mastercomfig",
@@ -51,7 +49,7 @@ const pwaOptions = {
     description: "Manage your mastercomfig installation",
   },
   workbox: {
-    navigateFallback: "/",
+    navigateFallback: "/app",
     // we don't need the html files: we only need the navigation fallback
     globPatterns: ["**/*.{js,css}"],
   },
@@ -59,7 +57,7 @@ const pwaOptions = {
     globPatterns: ["**/*.{js,css}"],
   },
   devOptions: {
-    enabled: process.env.NO_SW_DEV !== "true",
+    enabled: process.env.SW_DEV === "true",
     /* when using generateSW the PWA plugin will switch to classic */
     type: "module",
     navigateFallback: "app.html",
