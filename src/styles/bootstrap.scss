@@ -1,5 +1,5 @@
 // 1. Include functions first (so you can manipulate colors, SVGs, calc, etc)
-@import "../../node_modules/bootstrap/scss/_functions.scss";
+@import "~bootstrap/scss/functions";
 
 // 2. Include any default variable overrides here
 
@@ -22,7 +22,7 @@ $form-select-indicator-color: $light;
 $alert-border-radius: 0; // work around 5.2 bug
 
 // 3. Include remainder of required Bootstrap stylesheets
-@import "../../node_modules/bootstrap/scss/_variables.scss";
+@import "~bootstrap/scss/variables";
 
 // 4. Include any default map overrides here
 // Create your own map
@@ -54,46 +54,46 @@ $form-select-color: $white;
 
 
 // 5. Include remainder of required parts
-@import "../../node_modules/bootstrap/scss/_maps.scss";
-@import "../../node_modules/bootstrap/scss/_mixins.scss";
-@import "../../node_modules/bootstrap/scss/_utilities.scss";
+@import "~bootstrap/scss/maps";
+@import "~bootstrap/scss/mixins";
+@import "~bootstrap/scss/utilities";
 // Layout
-@import "../../node_modules/bootstrap/scss/_root.scss";
+@import "~bootstrap/scss/root";
 
 // 6. Optionally include any other parts as needed
-@import "../../node_modules/bootstrap/scss/_reboot.scss";
-@import "../../node_modules/bootstrap/scss/_type.scss";
-@import "../../node_modules/bootstrap/scss/_images.scss";
-@import "../../node_modules/bootstrap/scss/_containers.scss";
-@import "../../node_modules/bootstrap/scss/_grid.scss";
-@import "../../node_modules/bootstrap/scss/_tables.scss";
-@import "../../node_modules/bootstrap/scss/_forms.scss";
-@import "../../node_modules/bootstrap/scss/_buttons.scss";
-@import "../../node_modules/bootstrap/scss/_transitions.scss";
-@import "../../node_modules/bootstrap/scss/_dropdown.scss";
-@import "../../node_modules/bootstrap/scss/_button-group.scss";
-@import "../../node_modules/bootstrap/scss/_nav.scss";
-@import "../../node_modules/bootstrap/scss/_navbar.scss";
-@import "../../node_modules/bootstrap/scss/_card.scss";
-@import "../../node_modules/bootstrap/scss/_accordion.scss";
-@import "../../node_modules/bootstrap/scss/_breadcrumb.scss";
-@import "../../node_modules/bootstrap/scss/_pagination.scss";
-@import "../../node_modules/bootstrap/scss/_badge.scss";
-@import "../../node_modules/bootstrap/scss/_alert.scss";
-@import "../../node_modules/bootstrap/scss/_progress.scss";
-@import "../../node_modules/bootstrap/scss/_list-group.scss";
-@import "../../node_modules/bootstrap/scss/_close.scss";
-@import "../../node_modules/bootstrap/scss/_toasts.scss";
-@import "../../node_modules/bootstrap/scss/_modal.scss";
-@import "../../node_modules/bootstrap/scss/_tooltip.scss";
-@import "../../node_modules/bootstrap/scss/_popover.scss";
-@import "../../node_modules/bootstrap/scss/_carousel.scss";
-@import "../../node_modules/bootstrap/scss/_spinners.scss";
-@import "../../node_modules/bootstrap/scss/_offcanvas.scss";
-@import "../../node_modules/bootstrap/scss/_placeholders.scss";
+@import "~bootstrap/scss/reboot";
+@import "~bootstrap/scss/type";
+@import "~bootstrap/scss/images";
+@import "~bootstrap/scss/containers";
+@import "~bootstrap/scss/grid";
+@import "~bootstrap/scss/tables";
+@import "~bootstrap/scss/forms";
+@import "~bootstrap/scss/buttons";
+@import "~bootstrap/scss/transitions";
+@import "~bootstrap/scss/dropdown";
+@import "~bootstrap/scss/button-group";
+@import "~bootstrap/scss/nav";
+@import "~bootstrap/scss/navbar";
+@import "~bootstrap/scss/card";
+@import "~bootstrap/scss/accordion";
+@import "~bootstrap/scss/breadcrumb";
+@import "~bootstrap/scss/pagination";
+@import "~bootstrap/scss/badge";
+@import "~bootstrap/scss/alert";
+@import "~bootstrap/scss/progress";
+@import "~bootstrap/scss/list-group";
+@import "~bootstrap/scss/close";
+@import "~bootstrap/scss/toasts";
+@import "~bootstrap/scss/modal";
+@import "~bootstrap/scss/tooltip";
+@import "~bootstrap/scss/popover";
+@import "~bootstrap/scss/carousel";
+@import "~bootstrap/scss/spinners";
+@import "~bootstrap/scss/offcanvas";
+@import "~bootstrap/scss/placeholders";
 
 // Helpers
-@import "../../node_modules/bootstrap/scss/_helpers.scss";
+@import "~bootstrap/scss/helpers";
 
 // 7. Optionally include utilities API last to generate classes based on the Sass map in `_utilities.scss`
-@import "../../node_modules/bootstrap/scss/utilities/_api.scss";
+@import "~bootstrap/scss/utilities/api";

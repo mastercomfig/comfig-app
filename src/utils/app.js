@@ -1,5 +1,6 @@
 import { get, set } from "idb-keyval";
 import { registerSW } from "virtual:pwa-register";
+import { Tab, ScrollSpy } from "bootstrap";
 
 let idbKeyval = {
   get,
@@ -1232,7 +1233,7 @@ async function app() {
       }
     }
     let presetInfo = presets[selectedPreset];
-    new bootstrap.Tab(getEl(selectedPreset)).show(); // visually display as active in tabs menu bar
+    new Tab(getEl(selectedPreset)).show(); // visually display as active in tabs menu bar
     let presetImage = getEl("preset-image");
     presetImage.src = `/img/presets/${selectedPreset}.webp`;
     presetImage.alt = `${presetInfo.name} preset screenshot`;
@@ -1734,7 +1735,7 @@ async function app() {
   let scrollSpy = null;
 
   function initScrollSpy(customizationsCol) {
-    scrollSpy = new bootstrap.ScrollSpy(customizationsCol, {
+    scrollSpy = new ScrollSpy(customizationsCol, {
       target: getEl("modules-nav"),
       rootMargin: "0px 0px -73%",
     });

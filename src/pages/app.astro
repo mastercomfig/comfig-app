@@ -38,6 +38,8 @@ for (const lang of Object.keys(gm.languageCache)) {
   }
   clientLanguageCache[lang] = langCache;
 }
+
+const npmVersion = process.env.npm_package_version;
 ---
 <Layout>
 <head>
@@ -64,12 +66,18 @@ for (const lang of Object.keys(gm.languageCache)) {
       catch (e) { window.attachEvent("onload", $buo_f) }
     </script>
 
-    <script defer src="https://js.sentry-cdn.com/42c25ee2fb084eb5a832ee92d97057d5.min.js" data-lazy="no"
-      crossorigin></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin></script>
+    <script define:vars={{npmVersion}}>
+      globalThis.npmVersion = npmVersion;
+    </script>
 
     <script>
+      import * as Sentry from "@sentry/browser";
+      Sentry.init({
+        dsn: "https://42c25ee2fb084eb5a832ee92d97057d5@o182209.ingest.sentry.io/6265934",
+        release: `@mastercomfig/mastercomfig@${npmVersion}`,
+      });
+
+      import { Alert, Collapse, Dropdown, Tab } from "bootstrap";
       import '../utils/game.js';
       import '../utils/app.js';
     </script>
