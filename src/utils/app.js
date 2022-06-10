@@ -791,7 +791,11 @@ async function app() {
   async function getVPKDownloadUrls() {
     // We need permissions for the directory
     await accessDirectory();
-    let downloads = [];
+    let downloads = [
+      Promise.resolve({
+        url: "",
+      }),
+    ];
     let presetUrl = getPresetUrl();
     if (customDirectory) {
       // Clear out all existing files
@@ -1063,7 +1067,11 @@ async function app() {
     // We need permissions for the directory
     await accessDirectory();
     // First push an empty download because browsers like that for some reason.
-    let downloads = [];
+    let downloads = [
+      Promise.resolve({
+        url: "",
+      }),
+    ];
     // Update binds
     await updateBinds();
     // Create the modules.cfg file
