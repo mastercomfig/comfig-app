@@ -156,7 +156,7 @@ async function app() {
   }
 
   // Map preset IDs to display names for download
-  var presets = {
+  let presets = {
     none: {
       name: "None",
       description:
@@ -208,7 +208,7 @@ async function app() {
   ];
 
   // Set what addons we recommend for each preset
-  var recommendedAddons = new Map();
+  let recommendedAddons = new Map();
 
   function setRecommendedAddons(id, values) {
     // don't set non-recommendable addons
@@ -237,69 +237,69 @@ async function app() {
   // End preset -> recommended addon mapping
 
   // Base release URL
-  var releasesUrl = "https://github.com/mastercomfig/mastercomfig/releases";
+  let releasesUrl = "https://github.com/mastercomfig/mastercomfig/releases";
   // Release homepage
-  var releaseUrl = {
+  let releaseUrl = {
     latest: releasesUrl + "/latest",
     default: releasesUrl + "/{0}",
   };
-  var assetsUrl = {
+  let assetsUrl = {
     latest: releasesUrl + "/latest",
     default: releaseUrl.default,
   };
   // Where latest downloads come from
-  var downloadUrl = releaseUrl.default + "/download/";
+  let downloadUrl = releaseUrl.default + "/download/";
   // Where a specific release's downloads come from
-  var releaseDownloadUrl = releasesUrl + "/download/{0}/";
+  let releaseDownloadUrl = releasesUrl + "/download/{0}/";
   // Prefix for mastercomfig files
-  var mastercomfigFileUrl = "mastercomfig-";
+  let mastercomfigFileUrl = "mastercomfig-";
   // Addon extension format string to download
-  var addonFileUrl = mastercomfigFileUrl + "{1}-addon.vpk";
-  var addonUrl = {
+  let addonFileUrl = mastercomfigFileUrl + "{1}-addon.vpk";
+  let addonUrl = {
     latest: downloadUrl + addonFileUrl,
     default: releaseDownloadUrl + addonFileUrl,
   };
   // Preset extension format string to download
-  var presetFileUrl = mastercomfigFileUrl + "{1}-preset.vpk";
-  var presetUrl = {
+  let presetFileUrl = mastercomfigFileUrl + "{1}-preset.vpk";
+  let presetUrl = {
     latest: downloadUrl + presetFileUrl,
     default: releaseDownloadUrl + presetFileUrl,
   };
 
   // Current mastercomfig version, comes in from API
-  var version = null;
-  var latestVersion = null;
+  let version = null;
+  let latestVersion = null;
 
-  var userVersion = "latest";
+  let userVersion = "latest";
 
   // Current presets modules def
-  var presetModulesDef = {};
+  let presetModulesDef = {};
 
   // Defined addons (found through parsing HTML)
-  var addons = [];
+  let addons = [];
 
   // Currently selected preset
-  var selectedPreset = null;
+  let selectedPreset = null;
   // Currently selected addons
-  var selectedAddons = [];
+  let selectedAddons = [];
   // Current state of module selections
-  var selectedModules = {};
+  let selectedModules = {};
   // Current state of autoexec binds
-  var selectedBinds = {};
+  let selectedBinds = {};
   // Overlaid bind layers
-  var bindLayers = {
+  let bindLayers = {
     gameoverrides: {},
   };
   // Current state of overrides
-  var selectedOverrides = {};
+  let selectedOverrides = {};
   // Config contents
-  var configContentsRaw = {};
-  var contentsDefaulter = {
+  let configContentsRaw = {};
+  let contentsDefaulter = {
     get: (target, name) => {
       return target.hasOwnProperty(name) ? target[name] : "";
     },
   };
-  var configContents = new Proxy(configContentsRaw, contentsDefaulter);
+  let configContents = new Proxy(configContentsRaw, contentsDefaulter);
 
   // Data cache
   let cachedData = null;
@@ -330,11 +330,11 @@ async function app() {
     gameoverrides: "game_overrides.cfg",
   };
 
-  var storedModules = {};
+  let storedModules = {};
   await loadModules();
 
   // Track if multi-download is active
-  var downloading = false;
+  let downloading = false;
 
   function disableDownload(element) {
     downloading = true; // Still retain in-progress even after switching preset
@@ -790,12 +790,7 @@ async function app() {
   async function getVPKDownloadUrls() {
     // We need permissions for the directory
     await accessDirectory();
-    // First push an empty download because browsers like that for some reason.
-    var downloads = [
-      Promise.resolve({
-        url: "",
-      }),
-    ];
+    let downloads = [];
     let presetUrl = getPresetUrl();
     if (customDirectory) {
       // Clear out all existing files
@@ -1067,11 +1062,7 @@ async function app() {
     // We need permissions for the directory
     await accessDirectory();
     // First push an empty download because browsers like that for some reason.
-    var downloads = [
-      Promise.resolve({
-        url: "",
-      }),
-    ];
+    let downloads = [];
     // Update binds
     await updateBinds();
     // Create the modules.cfg file
@@ -1682,7 +1673,7 @@ async function app() {
     return pos;
   }
 
-  var bSetModuleNavActive = true;
+  let bSetModuleNavActive = true;
 
   // Handles each module category
   function handleCategory(name, category) {
@@ -2086,8 +2077,8 @@ async function app() {
     mergeDisplay: true,
   };
 
-  var blockKeyboard = false;
-  var inittedKeyboard = false;
+  let blockKeyboard = false;
+  let inittedKeyboard = false;
 
   async function initKeyboard() {
     if (inittedKeyboard) {
@@ -2227,7 +2218,7 @@ async function app() {
   );
 
   // Capture keyboard input when bindings are shown
-  var tabEls = document.querySelectorAll(
+  let tabEls = document.querySelectorAll(
     '#customizations a[data-bs-toggle="tab"]'
   );
   for (const tabEl of tabEls) {
@@ -2509,9 +2500,9 @@ async function app() {
     });
   });
 
-  var ghProvider;
-  var ghToken;
-  var ghUser;
+  let ghProvider;
+  let ghToken;
+  let ghUser;
 
   async function loginWithGitHub() {
     let firebase = await dfirebase;
@@ -2534,7 +2525,7 @@ async function app() {
       });
   }
 
-  var firebaseMessaging;
+  let firebaseMessaging;
 
   function messaging() {
     if (!firebaseMessaging) {
