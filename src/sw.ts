@@ -17,7 +17,7 @@ if (import.meta.env.DEV) {
 
 // to allow work offline
 registerRoute(new NavigationRoute(
-  createHandlerBoundToURL('/app'),
+  createHandlerBoundToURL('/'),
   { denylist },
 ));
 
