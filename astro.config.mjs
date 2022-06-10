@@ -1,6 +1,7 @@
 import { defineConfig } from 'astro/config';
 import crypto from "crypto";
 import fs from "fs";
+import url from "url";
 
 import react from "@astrojs/react";
 import { VitePWA } from "vite-plugin-pwa";
@@ -64,8 +65,6 @@ const pwaOptions = {
   },
 };
 
-const reload = process.env.NO_RELOAD_SW !== "true";
-
 if (process.env.NO_SW !== "true") {
   pwaOptions.srcDir = "src";
   pwaOptions.filename = "sw.ts";
@@ -108,25 +107,28 @@ export default defineConfig({
             // todo@userquin: rn we only add the static pages, we should exclude dynamic routes
             const addRoutes = await Promise.all(
               routes
-                .filter(r => r.type === "page" && r.pathname && r.distURL)
-                .map((r) => new Promise((resolve, reject) => {
-                  let url = r.pathname;
-                  let path = r.distURL;
-                  const cHash = crypto.createHash("MD5");
-                  const stream = fs.createReadStream(path);
-                  stream.on("error", (err) => {
-                    reject(err);
-                  });
-                  stream.on("data", (chunk) => {
-                    cHash.update(chunk);
-                  });
-                  stream.on("end", () => {
-                    return resolve({
-                      url,
-                      revision: `${cHash.digest("hex")}`,
-                    });
-                  });
-                }))
+                .filter((r) => r.type === "page" && r.pathname && r.distURL)
+                .map(
+                  (r) =>
+                    new Promise((resolve, reject) => {
+                      let url = r.pathname;
+                      let path = r.distURL;
+                      const cHash = crypto.createHash("MD5");
+                      const stream = fs.createReadStream(path);
+                      stream.on("error", (err) => {
+                        reject(err);
+                      });
+                      stream.on("data", (chunk) => {
+                        cHash.update(chunk);
+                      });
+                      stream.on("end", () => {
+                        return resolve({
+                          url,
+                          revision: `${cHash.digest("hex")}`,
+                        });
+                      });
+                    })
+                )
             );
             api.extendManifestEntries((manifestEntries) => {
               manifestEntries.push(...addRoutes);
@@ -141,4 +143,13 @@ export default defineConfig({
       },
     },
   ],
+  vite: {
+    resolve: {
+      alias: {
+        "~bootstrap": url.fileURLToPath(
+          new URL("./node_modules/bootstrap", import.meta.url)
+        ),
+      },
+    },
+  },
 });
