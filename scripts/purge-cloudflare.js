@@ -34,14 +34,12 @@ glob("src/pages/*.astro", (err, files) => {
     console.warn(err);
     return;
   }
-  files = files.map(f => {
+  files = files.flatMap(f => {
     if (f.endsWith("index.astro")) {
-      return "";
+      return [""];
     }
-    if (f.endsWith("404.astro")) {
-      return "404";
-    }
-    return `${f.substring(f.lastIndexOf("/") + 1, f.lastIndexOf("."))}/`;
+    let base = `${f.substring(f.lastIndexOf("/") + 1, f.lastIndexOf("."))}`;
+    return [base, `${base}/`];
   });
   if (files.length > MAX_CF_URLS) {
     while (files.length) {

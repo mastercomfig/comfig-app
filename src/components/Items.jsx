@@ -1,10 +1,9 @@
 import { Tabs, Tab, SSRProvider } from 'react-bootstrap';
-import Global from './Global.jsx';
 import ItemsInner from './ItemsInner.jsx';
 
 export default function Items({ items }) {
 
-  if (import.meta.env.MODE !== "development") {
+  if (import.meta.env.PROD) {
     return <></>
   }
 

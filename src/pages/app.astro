@@ -89,9 +89,9 @@ for (const lang of Object.keys(gm.languageCache)) {
       }
     </script>
   </MainHead>
+  <Global client:load languageCache={clientLanguageCache} latestData={appData} />
 </head>
 <Body>
-  <Global client:load languageCache={clientLanguageCache} latestData={appData} />
   <nav class="navbar navbar-expand-sm sticky-top navbar-dark bg-teal">
     <div class="container">
       <span class="navbar-brand"><img src="/img/mastercomfig_logo_transparent_i.svg" alt=""
@@ -251,7 +251,7 @@ for (const lang of Object.keys(gm.languageCache)) {
                 </div>
               </div>
               <div class="tab-pane fade" id="weapons-tab" role="tabpanel" aria-labelledby="weapons">
-                <Items client:load items={gm.items} />
+                <Items client:visible items={gm.items} />
               </div>
             </div>
           </div>
