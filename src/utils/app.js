@@ -1,5 +1,5 @@
 import { get, set, del } from "idb-keyval";
-import { registerSW } from "virtual:pwa-register";
+//import { registerSW } from "virtual:pwa-register";
 import { Tab, ScrollSpy } from "bootstrap";
 import * as Sentry from "@sentry/browser";
 
@@ -2630,6 +2630,7 @@ async function app() {
   }
 
   function registerServiceWorker() {
+    /*
     const updateSW = registerSW({
       immediate: true,
       onRegisterError(e) {
@@ -2641,6 +2642,7 @@ async function app() {
     });
 
     updateSW();
+    */
   }
 
   if ("serviceWorker" in navigator) {
@@ -2648,7 +2650,7 @@ async function app() {
 
     navigator.serviceWorker.getRegistrations().then((registrations) => {
       for (let registration of registrations) {
-        if (registration.active?.scriptURL.endsWith("/service-worker.js")) {
+        if (true || registration.active?.scriptURL.endsWith("/service-worker.js")) {
           bFoundSW = true;
           registration.unregister().then(() => {
             registerServiceWorker();
