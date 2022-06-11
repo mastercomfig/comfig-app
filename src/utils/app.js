@@ -1,10 +1,12 @@
-import { get, set } from "idb-keyval";
+import { get, set, del } from "idb-keyval";
 import { registerSW } from "virtual:pwa-register";
 import { Tab, ScrollSpy } from "bootstrap";
+import * as Sentry from "@sentry/browser";
 
 let idbKeyval = {
   get,
-  set
+  set,
+  del
 }
 
 async function app() {
@@ -28,40 +30,38 @@ async function app() {
   });
   let dkeyboard = import("simple-keyboard/build/index.modern.js").then((Keyboard) => Keyboard.default);
 
-  if ("Sentry" in window) {
-    const logLevelToSentrySeverity = {
-      warn: "warning",
+  const logLevelToSentrySeverity = {
+    warn: "warning",
+  };
+
+  function consoleHook(level) {
+    const original = console[level].bind(console);
+    return function () {
+      Sentry.addBreadcrumb(
+        {
+          category: "console",
+          level: logLevelToSentrySeverity[level]
+            ? logLevelToSentrySeverity[level]
+            : level,
+          message: !arguments
+            ? "undefined"
+            : arguments.length === 1
+            ? `${arguments[0]}`
+            : `${arguments[0]}: ${Array.prototype.slice
+                .call(arguments, 1)
+                .join()}`,
+        },
+        {
+          input: [...arguments],
+          level,
+        }
+      );
+      original.apply(console, arguments);
     };
+  }
 
-    function consoleHook(level) {
-      const original = console[level].bind(console);
-      return function () {
-        Sentry.addBreadcrumb(
-          {
-            category: "console",
-            level: logLevelToSentrySeverity[level]
-              ? logLevelToSentrySeverity[level]
-              : level,
-            message: !arguments
-              ? "undefined"
-              : arguments.length === 1
-              ? `${arguments[0]}`
-              : `${arguments[0]}: ${Array.prototype.slice
-                  .call(arguments, 1)
-                  .join()}`,
-          },
-          {
-            input: [...arguments],
-            level,
-          }
-        );
-        original.apply(console, arguments);
-      };
-    }
-
-    for (const level of ["debug", "info", "warn", "error", "log"]) {
-      console[level] = consoleHook(level);
-    }
+  for (const level of ["debug", "info", "warn", "error", "log"]) {
+    console[level] = consoleHook(level);
   }
 
   // convenience format method for string
@@ -489,6 +489,7 @@ async function app() {
   let pendingObjectURLs = [];
 
   async function downloadUrls(urls, id, fnGatherUrls) {
+    console.log("Downloading URLs", urls);
     // Take the top URL promise and resolve it.
     urls[0].then((result) => {
       // If not empty, make the browser download it.
@@ -726,17 +727,25 @@ async function app() {
     }
   }
 
+  let filesInUse = false;
+
+  let unlinkErrHandler = {
+    "could not be found": () => {},
+    "state had changed since it was read from disk": () => { filesInUse = true; },
+  }
+
   async function safeUnlink(name, directory) {
     try {
       await directory.removeEntry(name);
     } catch (err) {
-      if (!err.toString().includes("could not be found")) {
-        console.error(`Failed deleting ${name}`, err);
-      } else {
-        if ("Sentry" in window) {
-          Sentry.captureException(err);
+      let errString = err.toString();
+      for (const key in unlinkErrHandler) {
+        if (errString.includes(key)) {
+          unlinkErrHandler[key]();
+          return;
         }
       }
+      console.error(`Failed deleting ${name}`, err);
     }
   }
 
@@ -798,6 +807,8 @@ async function app() {
     ];
     let presetUrl = getPresetUrl();
     if (customDirectory) {
+      console.log("Using Direct Install.")
+      filesInUse = false;
       // Clear out all existing files
       let presetKeys = Object.keys(presets);
       for (const preset of presetKeys) {
@@ -810,9 +821,14 @@ async function app() {
         await safeUnlink(addonFile, customDirectory);
         await safeUnlink(addonFile + ".sound.cache", customDirectory);
       }
+      if (filesInUse) {
+        alert("Files are in use. Please close TF2 before updating mastercomfig.");
+        return downloads;
+      }
       // Write preset file
       await writeRemoteFile(presetUrl, customDirectory);
     } else {
+      console.log("Using multi-download.");
       // Then push our preset download
       downloads.push(
         Promise.resolve({
@@ -1122,6 +1138,21 @@ async function app() {
     await setAddon(el.id, !el.classList.contains("active"));
   }
 
+  let addonHandler = {
+    "null-canceling-movement": {
+      enabled: () => {
+        if (document.querySelectorAll(".binding-field").length <= 1) {
+          return;
+        }
+        for (const actions of Object.keys(
+          addonActionMappings["null-canceling-movement"]
+        )) {
+          // TODO: add default bindings if user doesn't have any
+        }
+      },
+    },
+  };
+
   // set addon enabled/disabled
   async function setAddon(id, checked, fromDB) {
     // Update our DB with the value
@@ -1137,6 +1168,7 @@ async function app() {
       if (addonActionMappings[id]) {
         customActionMappings[id] = addonActionMappings[id];
       }
+      addonHandler[id]?.enabled?.();
     } else {
       // Filter out the addon if it's there
       selectedAddons = selectedAddons.filter((selection) => selection !== id);
@@ -1144,6 +1176,7 @@ async function app() {
       if (customActionMappings[id]) {
         delete customActionMappings[id];
       }
+      addonHandler[id]?.disabled?.();
     }
     // Make sure the UI reflects the selected state
     getEl(id + "-dl").style.display = checked ? "initial" : "none";
@@ -2493,10 +2526,13 @@ async function app() {
     addBtn.classList.remove("d-none");
 
     addBtn.addEventListener("click", (e) => {
-      // hide our user interface that shows our A2HS button
-      addBtn.classList.add("d-none");
+      if (!deferredPrompt) {
+        return;
+      }
       // Show the prompt
       deferredPrompt.prompt();
+      // hide our user interface that shows our A2HS button
+      addBtn.classList.add("d-none");
       // Wait for the user to respond to the prompt
       deferredPrompt.userChoice.then((choiceResult) => {
         if (choiceResult.outcome === "accepted") {
