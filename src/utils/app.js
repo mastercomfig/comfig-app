@@ -1253,7 +1253,7 @@ async function app() {
       }
       getEl(
         "vpk-dl"
-      ).innerHTML = `<span class="fa fa-${icon} fa-fw"></span> ${text} `; // update download text
+      ).innerHTML = `<span class="fas fa-${icon} fa-fw"></span> ${text} `; // update download text
     }
   }
 
@@ -1287,7 +1287,7 @@ async function app() {
     getEl("preset-dl").href = getPresetUrl(true);
     getEl(
       "preset-dl"
-    ).innerHTML = `<span class="fa fa-cloud-download fa-fw"></span> Download ${presetInfo.name} preset `; // update preset text
+    ).innerHTML = `<span class="fas fa-cloud-download fa-fw"></span> Download ${presetInfo.name} preset `; // update preset text
     // if not loading from DB, set recommended addons
     if (!fromDB) {
       // reset all recommendable addons
@@ -1830,7 +1830,7 @@ async function app() {
 
     let resetButton = document.createElement("button");
     resetButton.innerHTML =
-      '<span class="fa fa-undo fa-fw"></span> Reset all modules';
+      '<span class="fas fa-undo fa-fw"></span> Reset all modules';
     resetButton.classList.add(
       "position-absolute",
       "bottom-0",
@@ -2450,7 +2450,7 @@ async function app() {
     let undoButton = document.createElement("button");
     undoButton.classList.add("btn", "btn-sm", "btn-outline-secondary");
     undoButton.type = "button";
-    undoButton.innerHTML = "<span class='fa fa-undo fa-fw'></span>";
+    undoButton.innerHTML = "<span class='fas fa-undo fa-fw'></span>";
     undoButton.addEventListener("click", () => {
       selectElement.selectedIndex = 0;
       selectElement.dispatchEvent(new Event("input", { bubbles: true }));
