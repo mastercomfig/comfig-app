@@ -117,7 +117,7 @@ const npmVersion = process.env.npm_package_version;
             </ul>
           </li>
           <li class="nav-item d-none" id="up-to-date-mark">
-            <span class="nav-link"><span class="badge bg-success"><span class="fa fa-check fa-fw"
+            <span class="nav-link"><span class="badge bg-success"><span class="fas fa-check fa-fw"
                   aria-hidden="true"></span> Up to Date</span></span>
           </li>
           <li class="nav-item">
@@ -153,7 +153,7 @@ const npmVersion = process.env.npm_package_version;
         <noscript>Note: Customizations require JavaScript.</noscript>
         <span><a href="#downloads-section">Skip to downloads</a></span>
         <br><br>
-        <h2 class="fw-normal"><span class="fa fa-cube fa-fw" aria-hidden="true"></span> Choose a preset</h2>
+        <h2 class="fw-normal"><span class="fas fa-box-open fa-fw" aria-hidden="true"></span> Choose a preset</h2>
         <br>
         <ul class="nav nav-pills bg-teal-nav" id="presets" role="tablist">
           <li class="nav-item" role="presentation">
@@ -188,7 +188,7 @@ const npmVersion = process.env.npm_package_version;
         <br>
         <a class="lead toggler btn btn-primary" id="customize-toggler" data-bs-toggle="collapse" href="#customize"
           role="button" aria-expanded="false" aria-controls="customize">
-          <span class="fa fa-angle-double-down fa-fw"></span> <strong>Customize</strong>
+          <span class="fas fa-angles-down fa-fw"></span> <strong>Customize</strong>
         </a>
         <div class="collapse" id="customize">
           <div class="collapse-wrapper">
@@ -214,7 +214,7 @@ const npmVersion = process.env.npm_package_version;
             </ul>
             <br>
             <div class="customization-info">
-              <h5><span class="fa fa-info-circle" aria-hidden="true"></span> Customize here, and then
+              <h5><span class="fas fa-circle-info" aria-hidden="true"></span> Customize here, and then
                 download with <strong>Direct Install</strong> or the <strong>Download
                   customizations</strong> button in the download section below!</h5>
             </div>
@@ -225,7 +225,7 @@ const npmVersion = process.env.npm_package_version;
                     href="https://docs.mastercomfig.com/page/customization/modules/" data-url="customization/modules"
                     target="_blank" class="docs-link" rel="noopener">see the documentation.</a></p>
                 <div id="modules-root">
-                  <span class="fa fa-spinner fa-pulse fa-fw"></span> Loading, please wait...
+                  <span class="fas fa-circle-notch fa-spin fa-fw"></span> Loading, please wait...
                 </div>
               </div>
               <div class="tab-pane fade" id="config-tab" role="tabpanel" aria-labelledby="config">
@@ -234,7 +234,7 @@ const npmVersion = process.env.npm_package_version;
                     data-url="customization/custom_configs" target="_blank" class="docs-link" rel="noopener">see the
                     documentation.</a></p>
                 <div id="configs-root">
-                  <span class="fa fa-spinner fa-pulse fa-fw"></span> Loading, please wait...
+                  <span class="fas fa-circle-notch fa-spin fa-fw"></span> Loading, please wait...
                 </div>
               </div>
               <div class="tab-pane fade" id="bindings-tab" role="tabpanel" aria-labelledby="bindings">
@@ -265,7 +265,7 @@ const npmVersion = process.env.npm_package_version;
           </div>
         </div>
         <hr>
-        <h2 class="fw-normal"><span class="fa fa-plus-square fa-fw"></span> Select any addons</h2>
+        <h2 class="fw-normal"><span class="fas fa-circle-plus fa-fw"></span> Select any addons</h2>
         <br>
         <h4>Official Addons</h4>
         <div class="addons-list">
@@ -378,7 +378,7 @@ const npmVersion = process.env.npm_package_version;
         <hr>
         <div class="row" id="downloads-section">
           <div class="col-sm-12">
-            <h2 class="fw-normal"><span class="fa fa-cloud-download fa-fw"></span> Download your files
+            <h2 class="fw-normal"><span class="fas fa-cloud-download fa-fw"></span> Download your files
             </h2>
             <br>
             <div class="mb-3 d-none" id="game-folder-wrapper">
@@ -417,19 +417,19 @@ const npmVersion = process.env.npm_package_version;
                   <span class="bg-teal col d-flex align-items-center" id="game-folder-text">No
                     folder chosen, Direct Install not enabled</span>
                   <div class="col-auto btn btn-outline-primary d-flex align-items-center" id="game-folder-clear">
-                    <span class="fa fa-times fa-fw"></span>
+                    <span class="fas fa-xmark fa-fw"></span>
                   </div>
                 </div>
               </div>
               <hr>
             </div>
             <p class="lead"><b><a href="https://github.com/mastercomfig/mastercomfig/releases/latest" class="btn btn-primary" id="vpk-dl"
-                  style="cursor: pointer"><span class="fa fa-cloud-download fa-fw"></span>
+                  style="cursor: pointer"><span class="fas fa-cloud-download fa-fw"></span>
                   Download from GitHub</a></b></p>
             <p class="instructions-text">Drop the files in your <code>tf/custom</code> folder and
               they'll automatically run.</p>
             <div class="instructions-text">
-              <p class="lead"><b><a class="btn btn-primary" id="custom-dl"><span class="fa fa-cloud-download fa-fw"></span> Download customizations </a></b></p>
+              <p class="lead"><b><a class="btn btn-primary" id="custom-dl"><span class="fas fa-cloud-download fa-fw"></span> Download customizations </a></b></p>
               <p class="instructions-text">Create a <code id="overrides-folder">overrides</code>
                 folder in your <code>tf/cfg</code> folder and drop the files in there to override
                 mastercomfig with your selected customizations!</p>
@@ -443,60 +443,60 @@ const npmVersion = process.env.npm_package_version;
               <div class="collapse-wrapper">
                 <br>
                 <p class="lead"><a href="https://github.com/mastercomfig/mastercomfig/releases/latest"
-                    class="link-light" id="preset-dl"><span class="fa fa-cloud-download fa-fw"></span> Download
+                    class="link-light" id="preset-dl"><span class="fas fa-cloud-download fa-fw"></span> Download
                     preset</a></p>
                 <p class="lead"><a
                     href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-null-canceling-movement-addon.vpk"
                     class="link-light" id="null-canceling-movement-dl" style="display: none"><span
-                      class="fa fa-cloud-download fa-fw"></span>
+                      class="fas fa-cloud-download fa-fw"></span>
                     Download Null-Canceling Movement addon</a></p>
                 <p class="lead"><a
                     href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-flat-mouse-addon.vpk"
                     class="link-light" id="flat-mouse-dl" style="display: none"><span
-                      class="fa fa-cloud-download fa-fw"></span> Download Flat Mouse addon</a>
+                      class="fas fa-cloud-download fa-fw"></span> Download Flat Mouse addon</a>
                 </p>
                 <p class="lead"><a
                     href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-no-tutorial-addon.vpk"
                     class="link-light" id="no-tutorial-dl" style="display: none"><span
-                      class="fa fa-cloud-download fa-fw"></span> Download No Tutorial
+                      class="fas fa-cloud-download fa-fw"></span> Download No Tutorial
                     addon</a></p>
                 <p class="lead"><a
                     href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-opengl-addon.vpk"
                     class="link-light" id="opengl-dl" style="display: none"><span
-                      class="fa fa-cloud-download fa-fw"></span> Download OpenGL addon</a></p>
+                      class="fas fa-cloud-download fa-fw"></span> Download OpenGL addon</a></p>
                 <p class="lead"><a
                     href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-disable-pyroland-addon.vpk"
                     class="link-light" id="disable-pyroland-dl" style="display: none"><span
-                      class="fa fa-cloud-download fa-fw"></span> Download Disable Pyroland
+                      class="fas fa-cloud-download fa-fw"></span> Download Disable Pyroland
                     addon</a></p>
                 <p class="lead"><a
                     href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-no-footsteps-addon.vpk"
                     class="link-light" id="no-footsteps-dl" style="display: none"><span
-                      class="fa fa-cloud-download fa-fw"></span> Download No Footsteps
+                      class="fas fa-cloud-download fa-fw"></span> Download No Footsteps
                     addon</a></p>
                 <p class="lead"><a
                     href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-no-soundscapes-addon.vpk"
                     class="link-light" id="no-soundscapes-dl" style="display: none"><span
-                      class="fa fa-cloud-download fa-fw"></span> Download No Soundscapes
+                      class="fas fa-cloud-download fa-fw"></span> Download No Soundscapes
                     addon</a></p>
                 <p class="lead"><a
                     href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-transparent-viewmodels-addon.vpk"
                     class="link-light" id="transparent-viewmodels-dl" style="display: none"><span
-                      class="fa fa-cloud-download fa-fw"></span>
+                      class="fas fa-cloud-download fa-fw"></span>
                     Download Transparent Viewmodels addon</a></p>
                 <p class="lead"><a
                     href="https://github.com/mastercomfig/mastercomfig/releases/latest/download/mastercomfig-lowmem-addon.vpk"
                     class="link-light" id="lowmem-dl" style="display: none"><span
-                      class="fa fa-cloud-download fa-fw"></span> Download Low Memory addon</a>
+                      class="fas fa-cloud-download fa-fw"></span> Download Low Memory addon</a>
                 </p>
               </div>
             </div>
             <hr>
             <div>
-              <p class="lead"><b><span class="fa fa-cogs fa-fw"></span> Launch Options</b></p>
+              <p class="lead"><b><span class="fas fa-gears fa-fw"></span> Launch Options</b></p>
               <p id="launch-options">
                 <code>-novid -nojoy -nosteamcontroller -nohltv -particles 1 -precachefontchars -noquicktime</code>
-                <span class="fa fa-clipboard fa-fw"></span> <span>Click to copy</span>
+                <span class="fas fa-clipboard fa-fw"></span> <span>Click to copy</span>
               </p>
               <div style="margin-bottom: 1rem;clear:both"></div>
               <p>Right click Team Fortress 2 in your Steam library and click <b>Properties…</b> . In
@@ -520,26 +520,26 @@ const npmVersion = process.env.npm_package_version;
             </div>
           </div>
           <div class="col-sm-12">
-            <h2 class="fw-normal"><span class="fa fa-arrow-circle-o-right fa-fw"></span> Next steps</h2>
+            <h2 class="fw-normal"><span class="fas fa-circle-right fa-fw"></span> Next steps</h2>
             <br>
             <div class="lead row">
               <div class="col-sm-auto">
                 <p><a class="docs-link" href="https://docs.mastercomfig.com/page/setup/install/"
-                    data-url="setup/install"><span class="fa fa-desktop fa-fw"></span> <b>How to
+                    data-url="setup/install"><span class="far fa-hard-drive fa-fw"></span> <b>How to
                       install</b></a></p>
               </div>
               <div class="col-sm-auto">
                 <p><a class="docs-link" href="https://docs.mastercomfig.com/page/next_steps/update/"
-                    data-url="next_steps/update"><span class="fa fa-refresh fa-fw"></span>
+                    data-url="next_steps/update"><span class="fas fa-rotate fa-fw"></span>
                     <b>How to update</b></a></p>
               </div>
               <div class="col-sm-auto">
-                <p><a href="https://docs.mastercomfig.com/page/support_me/"><span class="fa fa-heart fa-fw"></span>
+                <p><a href="https://docs.mastercomfig.com/page/support_me/"><span class="fas fa-heart fa-fw"></span>
                     <b>Support me</b></a></p>
               </div>
               <!--
               <div class="col-sm-auto">
-                <p><a href="https://ko-fi.com/mastercoms/shop"><span class="fa fa-bookmark fa-fw"></span> <b>Early Access</b></a></p>
+                <p><a href="https://ko-fi.com/mastercoms/shop"><span class="fas fa-award fa-fw"></span> <b>Early Access</b></a></p>
               </div>
               -->
             </div>
