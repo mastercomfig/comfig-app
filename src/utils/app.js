@@ -489,7 +489,7 @@ async function app() {
   let pendingObjectURLs = [];
 
   async function downloadUrls(urls, id, fnGatherUrls) {
-    console.log("Downloading URLs", urls);
+    console.log("Downloading URLs:", urls);
     // Take the top URL promise and resolve it.
     urls[0].then((result) => {
       // If not empty, make the browser download it.
@@ -647,7 +647,10 @@ async function app() {
       await tryDBSet("directory", directoryHandle);
       await updateDirectory();
     } catch (err) {
-      console.error("Directory prompt failed", err);
+      if (err.toString().includes("aborted")) {
+        return;
+      }
+      console.error("Directory prompt failed:", err);
     }
   }
 
@@ -687,7 +690,7 @@ async function app() {
         "game-folder-text"
       ).innerText = `${gameDirectory.name} folder chosen, click to change`;
     } catch (err) {
-      console.error("Get directory failed", err);
+      console.error("Get directory failed:", err);
     }
   }
 
@@ -722,7 +725,7 @@ async function app() {
         create: true,
       });
     } catch (err) {
-      console.error("Get directory failed", err);
+      console.error("Get directory failed:", err);
       clearDirectory();
     }
   }
@@ -2230,7 +2233,7 @@ async function app() {
     if (e) {
       e.preventDefault();
     } else {
-      console.error("Context menu event is null: ", e);
+      console.error("Context menu event is null:", e);
     }
     return !blockKeyboard;
   });
@@ -2566,7 +2569,7 @@ async function app() {
         // Handle Errors here.
         let errorCode = err.code;
         let errorMessage = err.message;
-        console.error("Login failed: ", errorCode, errorMessage);
+        console.error("Login failed:", errorCode, errorMessage);
       });
   }
 
@@ -2583,7 +2586,7 @@ async function app() {
     await dfirebase;
     try {
       messaging().onMessage((payload) => {
-        console.log("Message received. ", payload);
+        console.log("Message received:", payload);
       });
       return messaging()
         .getToken({
@@ -2629,7 +2632,9 @@ async function app() {
   function registerServiceWorker() {
     const updateSW = registerSW({
       immediate: true,
-      onNeedRefresh() {},
+      onRegisterError(e) {
+        console.error("Error during service worker registration:", e);
+      },
       onOfflineReady() {
         console.log("Offline ready");
       },
