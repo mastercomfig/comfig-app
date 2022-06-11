@@ -2629,7 +2629,6 @@ async function app() {
   function registerServiceWorker() {
     const updateSW = registerSW({
       immediate: true,
-      onNeedRefresh() {},
       onOfflineReady() {
         console.log("Offline ready");
       },

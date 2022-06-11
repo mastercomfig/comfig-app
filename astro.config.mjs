@@ -63,13 +63,6 @@ const pwaOptions = {
   },
 };
 
-if (process.env.NO_SW !== "true") {
-  pwaOptions.srcDir = "src";
-  pwaOptions.filename = "sw.ts";
-  pwaOptions.strategies = "injectManifest";
-  pwaOptions.manifest.description = "Manage your mastercomfig installation";
-}
-
 let pwaPlugin;
 
 // https://astro.build/config
