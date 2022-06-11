@@ -49,13 +49,6 @@ const pwaOptions = {
     theme_color: "#009688",
     description: "Manage your mastercomfig installation",
   },
-  workbox: {
-    // we don't need the html files: we only need the navigation fallback
-    globPatterns: ["**/*.{js,css}"],
-  },
-  injectManifest: {
-    globPatterns: ["**/*.{js,css}"],
-  },
   devOptions: {
     enabled: process.env.SW_DEV === "true",
     /* when using generateSW the PWA plugin will switch to classic */
