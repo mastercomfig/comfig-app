@@ -696,15 +696,15 @@ async function app() {
 
   async function accessDirectory() {
     if (!window.showDirectoryPicker) {
-      return;
+      return true;
     }
     if (!gameDirectory) {
-      return;
+      return true;
     }
     try {
       if (!(await verifyPermission(gameDirectory, true))) {
         console.log("Directory permission refused");
-        return;
+        return false;
       }
       const tfDirectory = await gameDirectory.getDirectoryHandle("tf", {
         create: true,
@@ -724,9 +724,11 @@ async function app() {
       appDirectory = await cfgDirectory.getDirectoryHandle("app", {
         create: true,
       });
+      return true;
     } catch (err) {
       console.error("Get directory failed:", err);
       clearDirectory();
+      return true;
     }
   }
 
@@ -802,7 +804,9 @@ async function app() {
 
   async function getVPKDownloadUrls() {
     // We need permissions for the directory
-    await accessDirectory();
+    if (!await accessDirectory()) {
+      return [];
+    }
     let downloads = [
       Promise.resolve({
         url: "",
