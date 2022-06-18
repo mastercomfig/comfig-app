@@ -10,6 +10,11 @@ let idbKeyval = {
 }
 
 async function app() {
+  let downloadStatusEl = document.getElementById("download-status");
+  if (downloadStatusEl) {
+    downloadStatusEl.innerHTML = "";
+  }
+
   let dfirebase = import("firebase/compat/app").then(async (firebase) => {
     await import("firebase/compat/auth");
     await import("firebase/compat/firestore");
@@ -2012,6 +2017,10 @@ async function app() {
   // If we have a stored preset, select it
   if (await tryDBGet("preset")) {
     await setPreset(await tryDBGet("preset"), true);
+    if (downloadStatusEl) {
+      downloadStatusEl.innerHTML =
+        '<a href="#downloads-section">Skip to downloads</a>';
+    }
   } else {
     await setPreset("medium-high", true);
   }
