@@ -280,6 +280,8 @@ async function app() {
 
   // Current presets modules def
   let presetModulesDef = {};
+  // Available module levels
+  let availableModuleLevels = {};
 
   // Defined addons (found through parsing HTML)
   let addons = [];
@@ -1411,7 +1413,7 @@ async function app() {
   function getModuleDefault(name) {
     // DB can only contain non-builtin-defaults
     let userValue = storedModules[name];
-    if (userValue) {
+    if (userValue && availableModuleLevels[name].has(userValue)) {
       selectedModules[name] = userValue;
       return userValue;
     }
@@ -1985,6 +1987,21 @@ async function app() {
 
     // Now get the modules
     presetModulesDef = cachedData.p;
+    availableModuleLevels = {};
+    for (const category of Object.keys(cachedData.m)) {
+      let modules = cachedData.m[category].modules;
+      for (const module of modules) {
+        let moduleName = module.name;
+        for (const level of module.values) {
+          let levelValue = level.value ? level.value : level;
+          if (moduleName in availableModuleLevels) {
+            availableModuleLevels[moduleName].add(levelValue);
+          } else {
+            availableModuleLevels[moduleName] = new Set([levelValue]);
+          }
+        }
+      }
+    }
     handleModulesRoot(cachedData.m);
   }
 
