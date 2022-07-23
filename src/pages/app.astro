@@ -74,7 +74,7 @@ const npmVersion = process.env.npm_package_version;
       import * as Sentry from "@sentry/browser";
       Sentry.init({
         dsn: "https://42c25ee2fb084eb5a832ee92d97057d5@o182209.ingest.sentry.io/6265934",
-        release: `@mastercomfig/mastercomfig@${npmVersion}`,
+        release: `mastercomfig/mastercomfig@${npmVersion}`,
       });
 
       import { Alert, Collapse, Dropdown, Tab } from "bootstrap";
@@ -404,8 +404,7 @@ const npmVersion = process.env.npm_package_version;
                   Fortress 2.<br>
                   You may also create a "comfig" folder in your Downloads to install the files
                   into and then copy the contents of this folder into your TF2 folder.<br><br>
-                  <strong class="fw-bolder">If you do not wish to do either, download the files
-                    without choosing a folder (don't use Direct Install).</strong>
+                  <strong class="fw-bolder">If you do not wish to do either, don't use Direct Install and install the files manually.</strong>
                   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"
                     id="game-folder-warning-btn"></button>
                 </div>
