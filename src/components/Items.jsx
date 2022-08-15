@@ -12,8 +12,8 @@ export default function Items({ items }) {
   <div className="items-root">
     <SSRProvider>
       <Tabs>
-        <Tab eventKey="default" title="Default">
-          <ItemsInner playerClass="default" items={[items["default"]]}  />
+        <Tab eventKey="base" title="Base">
+          <ItemsInner playerClass="base" items={[items["default"]]}  />
         </Tab>
         {playerClasses.map(playerClass => 
           <Tab key={`${playerClass}-tab`} eventKey={playerClass} title={playerClass[0].toUpperCase() + playerClass.slice(1)}>

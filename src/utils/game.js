@@ -223,7 +223,7 @@ const itemUsedBy = {
     "tf_weapon_revolver",
     "tf_weapon_sapper",
   ],
-  all: [
+  generic: [
     "tf_weapon_grapplinghook",
     "tf_weapon_spellbook",
     "tf_weapon_passtime_gun",
@@ -489,10 +489,17 @@ let items = {
     WeaponType: "",
     classname: "default",
     printname: "Default",
-    MuzzleFlashParticleEffect: "",
+    MuzzleFlashParticleEffect: "null",
     BrassModel: "null",
     TracerEffect: "null",
     ExplosionEffect: "null",
+    TextureData: {
+      crosshair: {
+        file: "sprites/crosshairs",
+        x: 64,
+        y: 64,
+      }
+    }
   },
 };
 
