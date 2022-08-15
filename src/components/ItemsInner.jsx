@@ -32,7 +32,7 @@ function calculateItemSlots(playerClass, items) {
 
 function calculateCrosshairs(items) {
   let cardLookup = [];
-  let crosshairs = {Default: null};
+  let crosshairs = {};
 
   for (const packName of Object.keys(crosshairPacks)) {
     const packIndex = cardLookup.length;
@@ -98,7 +98,7 @@ export default function ItemsInner({ playerClass, items }) {
                       <h3>Crosshairs</h3>
                       <div className="row">
                         <div className="col-3">
-                          <FormSelect className="bg-dark text-light" onChange={((e) => {
+                          <FormSelect className="bg-dark text-light" defaultValue={defaultCrosshairs[item.classname]} onChange={((e) => {
                             let select = e.target;
                             let option = select.options[select.selectedIndex];
                             let value = option.value;
