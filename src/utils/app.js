@@ -1447,9 +1447,10 @@ async function app() {
   }
 
   // Convenience method for creating form input elements
-  function createInputElement(type, clazz) {
+  function createInputElement(type, className) {
     let inputElement = document.createElement("input");
-    inputElement.classList.add(clazz);
+    inputElement.autocomplete = "off";
+    inputElement.classList.add(className);
     inputElement.type = type;
     return inputElement;
   }
@@ -1493,6 +1494,7 @@ async function app() {
     let [inputOuter, inputContainer, inputUndo] = createInputContainer(name);
     // Create the element
     let selectElement = document.createElement("select");
+    selectElement.autocomplete = "off";
     selectElement.classList.add(
       "form-select",
       "form-select-sm",

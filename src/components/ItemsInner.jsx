@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Tab, Row, Col, Nav, FormSelect } from 'react-bootstrap';
+import { Button, Tab, Row, Col, Nav, FormSelect } from 'react-bootstrap';
 //import { get, set } from "idb-keyval";
 
 function calculateItemSlots(playerClass, items) {
@@ -32,7 +32,10 @@ function calculateItemSlots(playerClass, items) {
 
 function calculateCrosshairs(items) {
   let cardLookup = [];
-  let crosshairs = {};
+  let crosshairs = {"Use Base Crosshair": null};
+  if (items.length === 1 && items[0].classname === "default") {
+    crosshairs = {};
+  }
 
   for (const packName of Object.keys(crosshairPacks)) {
     const packIndex = cardLookup.length;
@@ -55,6 +58,7 @@ function calculateCrosshairs(items) {
     }
     let crosshair = item.TextureData.crosshair;
     const crosshairPack = crosshairPacks[crosshair.file];
+    console.log(crosshair.x);
     const crosshairObj = crosshairPack[`_${crosshair.x}_${crosshair.y}`];
     defaultCrosshairs[item.classname] = crosshairObj.name;
   }
@@ -95,10 +99,17 @@ export default function ItemsInner({ playerClass, items }) {
                 slots[slot].map(item =>
                   <Tab.Pane key={`${playerClass}-${item.classname}-pane`} eventKey={`${playerClass}-${item.classname}`}>
                     <div className="container py-4">
+                      {item.classname === "default" && (<>
+                        <h3>All Weapons</h3>
+                        <br/>
+                        <Button>Reset to game defaults</Button>
+                        <Button className="ms-2">Set all to base</Button>
+                        <hr/>
+                      </>)}
                       <h3>Crosshairs</h3>
                       <div className="row">
                         <div className="col-3">
-                          <FormSelect className="bg-dark text-light" defaultValue={defaultCrosshairs[item.classname]} onChange={((e) => {
+                          <FormSelect className="bg-dark text-light" defaultValue={defaultCrosshairs[item.classname]} autoComplete="off" onChange={((e) => {
                             let select = e.target;
                             let option = select.options[select.selectedIndex];
                             let value = option.value;
@@ -111,19 +122,19 @@ export default function ItemsInner({ playerClass, items }) {
                         </div>
                       </div>
                       {item.SoundData && (
-                        <h3>Sound</h3>
+                        <h3 className="pt-4">Sound</h3>
                       )}
                       {item.MuzzleFlashParticleEffect && (
-                        <h3>Muzzle Flash</h3>
+                        <h3 className="pt-4">Muzzle Flash</h3>
                       )}
                       {item.BrassModel && (
-                        <h3>Shell Ejection</h3>
+                        <h3 className="pt-4">Shell Ejection</h3>
                       )}
                       {item.TracerEffect && (
-                        <h3>Tracer</h3>
+                        <h3 className="pt-4">Tracer</h3>
                       )}
                       {item.ExplosionEffect && (
-                        <h3>Explosion Effect</h3>
+                        <h3 className="pt-4">Explosion Effect</h3>
                       )}
                     </div>
                   </Tab.Pane>
