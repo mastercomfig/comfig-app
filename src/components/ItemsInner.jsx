@@ -101,7 +101,6 @@ export default function ItemsInner({ playerClass, items }) {
                     <div className="container py-4">
                       {item.classname === "default" && (<>
                         <h3>All Weapons</h3>
-                        <br/>
                         <Button>Reset to game defaults</Button>
                         <Button className="ms-2">Set all to base</Button>
                         <hr/>

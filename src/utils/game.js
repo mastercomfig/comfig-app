@@ -223,7 +223,7 @@ const itemUsedBy = {
     "tf_weapon_revolver",
     "tf_weapon_sapper",
   ],
-  generic: [
+  "All-Class": [
     "tf_weapon_grapplinghook",
     "tf_weapon_spellbook",
     "tf_weapon_passtime_gun",
@@ -287,12 +287,14 @@ const classNameToName = {
     "#TF_Lollichop",
   ],
   //tf_weapon_fists: ["#TF_Weapon_Fists", "#TF_Unique_Achievement_Fists", "#TF_Unique_Gloves_of_Running_Urgently", "#TF_WarriorsSpirit", "#TF_FistsOfSteel", "#TF_EvictionNotice", "#TF_Apocofists", "#TF_MasculineMittens", "#TF_Weapon_BreadBite"],
+  tf_weapon_fists: "Fists and Gloves",
   //tf_weapon_flamethrower: ["#TF_Weapon_FlameThrower", "#TF_Unique_Achievement_Flamethrower", "#TF_TheDegreaser", "#TF_Phlogistinator", "#TF_Rainblower"],
-  tf_weapon_flaregun: [
+  /*tf_weapon_flaregun: [
     "#TF_Weapon_FlareGun",
     "#TF_Weapon_Flaregun_Detonator",
     "#TF_ScorchShot",
-  ],
+  ],*/
+  tf_weapon_flaregun: "Flare Guns",
   tf_weapon_flaregun_revenge: "#TF_ManMelter",
   tf_weapon_grenadelauncher: [
     "#TF_Weapon_GrenadeLauncher",
@@ -308,14 +310,15 @@ const classNameToName = {
   tf_weapon_katana: "#TF_SoldierKatana",
   //tf_weapon_knife: ["#TF_Weapon_Knife", "#TF_EternalReward", "#TF_Kunai", "#TF_BigEarner", "#TF_VoodooPin", "#TF_SharpDresser", "#TF_SpyCicle", "#TF_BlackRose"],
   tf_weapon_laser_pointer: "#TF_Unique_Achievement_Laser_Pointer",
-  tf_weapon_lunchbox: [
+  /*tf_weapon_lunchbox: [
     "#TF_Unique_Achievement_LunchBox",
     "#TF_Unique_Lunchbox_Chocolate",
     "#TF_BuffaloSteak",
     "#TF_SpaceChem_Fishcake",
     "#TF_Robot_Sandvich",
     "#TF_Unique_Lunchbox_Banana",
-  ],
+  ],*/
+  tf_weapon_lunchbox: "Lunchbox Consumables",
   tf_weapon_lunchbox_drink: [
     "#TF_Unique_Achievement_EnergyDrink",
     "#TF_Unique_EnergyDrink_CritCola",
@@ -323,6 +326,7 @@ const classNameToName = {
   tf_weapon_mechanical_arm: "#TF_DEX_Pistol",
   //tf_weapon_medigun: ["#TF_Weapon_Medigun", "#TF_Unique_Achievement_Medigun1", "#TF_Unique_MediGun_QuickFix", "#TF_Unique_MediGun_Resist"],
   //tf_weapon_minigun: ["#TF_Weapon_Minigun", "#TF_Unique_Achievement_Minigun", "#TF_Iron_Curtain", "#TF_GatlingGun", "#TF_Tomislav", "#TF_SD_Minigun"],
+  tf_weapon_minigun: "Miniguns",
   //tf_weapon_parachute: "#TF_Weapon_BaseJumper",
   tf_weapon_parachute_primary: "#TF_Weapon_BaseJumper",
   tf_weapon_parachute_secondary: "#TF_Weapon_BaseJumper",
@@ -358,26 +362,29 @@ const classNameToName = {
     "#TF_Weapon_BackScatter",
   ],
   tf_weapon_sentry_revenge: "#TF_Unique_Sentry_Shotgun",
-  tf_weapon_shotgun_hwg: [
+  /*tf_weapon_shotgun_hwg: [
     "#TF_Weapon_Shotgun",
     "#TF_RussianRiot",
     "#TF_Weapon_PanicAttack",
-  ],
+  ],*/
+  tf_weapon_shotgun_hwg: "Shotguns",
   tf_weapon_shotgun_primary: [
     "#TF_Weapon_Shotgun",
     "#TF_DEX_Shotgun",
     "#TF_Weapon_PanicAttack",
   ],
-  tf_weapon_shotgun_pyro: [
+  /*tf_weapon_shotgun_pyro: [
     "#TF_Weapon_Shotgun",
     "#TF_ReserveShooter",
     "#TF_Weapon_PanicAttack",
-  ],
-  tf_weapon_shotgun_soldier: [
+  ],*/
+  tf_weapon_shotgun_pyro: "Shotguns",
+  /*tf_weapon_shotgun_soldier: [
     "#TF_Weapon_Shotgun",
     "#TF_ReserveShooter",
     "#TF_Weapon_PanicAttack",
-  ],
+  ],*/
+  tf_weapon_shotgun_soldier: "Shotguns",
   tf_weapon_shovel: [
     "#TF_Weapon_Shovel",
     "#TF_Unique_Achievement_Pickaxe",
@@ -399,14 +406,15 @@ const classNameToName = {
   tf_weapon_soda_popper: "#TF_SodaPopper",
   tf_weapon_spellbook: "#TF_FancySpellbook",
   tf_weapon_stickbomb: "#TF_UllapoolCaber",
-  tf_weapon_sword: [
+  /*tf_weapon_sword: [
     "#TF_Unique_Achievement_Sword",
     "#TF_Unique_BattleAxe",
     "#TF_HalloweenBoss_Axe",
     "#TF_Claidheamohmor",
     "#TF_PersianPersuader",
     "#TF_NineIron",
-  ],
+  ],*/
+  tf_weapon_sword: "Swords",
   tf_weapon_syringegun_medic: [
     "#TF_Weapon_SyringeGun",
     "#TF_Unique_Achievement_Syringegun1",
@@ -489,7 +497,7 @@ let items = {
     WeaponType: "",
     classname: "default",
     printname: "Default",
-    MuzzleFlashParticleEffect: "null",
+    MuzzleFlashParticleEffect: "",
     BrassModel: "null",
     TracerEffect: "null",
     ExplosionEffect: "null",

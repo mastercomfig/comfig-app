@@ -11,7 +11,7 @@ export default function Items({ items }) {
   return (
   <div className="items-root">
     <SSRProvider>
-      <Tabs>
+      <Tabs defaultActiveKey="scout">
         <Tab eventKey="base" title="Base">
           <ItemsInner playerClass="base" items={[items["default"]]}  />
         </Tab>
