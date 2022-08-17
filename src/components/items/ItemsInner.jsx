@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Button, Tab, Row, Col, Nav, FormSelect } from 'react-bootstrap';
-//import { get, set } from "idb-keyval";
+import useItemStore from '../../store/items';
 
 function calculateItemSlots(playerClass, items) {
   let slots = {};
@@ -72,7 +72,7 @@ export default function ItemsInner({ playerClass, items }) {
 
   let [cardLookup, crosshairs, defaultCrosshairs] = useMemo(() => calculateCrosshairs(items), []);
 
-  let [crosshairSelections, setCrosshairSelections] = useState(new Map(slotNames.map(slot => slots[slot].map(item => [item.classname, ""]))));
+  const putCrosshair = useItemStore((state) => state.putCrosshair);
 
   return (
     <Tab.Container defaultActiveKey={firstKey}>
@@ -112,7 +112,7 @@ export default function ItemsInner({ playerClass, items }) {
                             let select = e.target;
                             let option = select.options[select.selectedIndex];
                             let value = option.value;
-                            setCrosshairSelections(new Map(crosshairSelections.set(item.classname, value)));
+                            putCrosshair(item.classname, value);
                           })}>
                             {Object.keys(crosshairs).map(x => <option key={`${playerClass}-${item.classname}-crosshair-${x}`} value={x}>{x}</option>)}
                           </FormSelect>
