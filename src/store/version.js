@@ -1,6 +1,9 @@
 import create from "zustand";
 
-export const useStore = create(set => ({
+const useStore = create(set => ({
   value: "latest",
-  set: set,
+  update: (v) => set({ value: v }),
 }));
+
+
+export default useStore;
