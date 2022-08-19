@@ -1472,6 +1472,7 @@ async function app() {
     let undoLink = document.createElement("a");
     undoLink.href = "#";
     undoLink.id = `undo-${name}`;
+    undoLink.classList.add("align-middle");
     undoLink.addEventListener("click", (e) => {
       e.preventDefault();
       setModule(name, getBuiltinModuleDefault(name));

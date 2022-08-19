@@ -1,12 +1,14 @@
 import { useMemo, useState } from 'react';
 import { Button, Tab, Row, Col, Nav, FormSelect } from 'react-bootstrap';
 import useItemStore from '../../store/items';
+import useHydration from '../../utils/useHydration';
 
 function calculateItemSlots(playerClass, items) {
   let slots = {};
   let slotNames = [];
+  let usedItems = new Set();
 
-  for (const item of items) {
+  function addItemToSlot(item) {
     const slot = getNormalizedSlotName(item);
     if (!(slot in slots)) {
       slots[slot] = [];
@@ -15,6 +17,18 @@ function calculateItemSlots(playerClass, items) {
     if (!slot) {
       slotNames.push(slot);
     }
+  }
+
+  for (const item of stockItems[playerClass]) {
+    usedItems.add(item);
+    addItemToSlot(items[item]);
+  }
+
+  for (const item of Object.values(items)) {
+    if (usedItems.has(item.classname)) {
+      continue;
+    }
+    addItemToSlot(item);
   }
 
   for (const slot of slotToIndex) {
@@ -32,9 +46,11 @@ function calculateItemSlots(playerClass, items) {
 
 function calculateCrosshairs(items) {
   let cardLookup = [];
-  let crosshairs = {"Use Base Crosshair": null};
-  if (items.length === 1 && items[0].classname === "default") {
-    crosshairs = {};
+  let crosshairs = {};
+  let itemClasses = Object.values(items);
+  let isDefault = itemClasses.length === 1 && itemClasses[0].classname === "default";
+  if (isDefault) {
+    crosshairs = {"Per Weapon": null};
   }
 
   for (const packName of Object.keys(crosshairPacks)) {
@@ -52,15 +68,18 @@ function calculateCrosshairs(items) {
 
   let defaultCrosshairs = {};
 
-  for (const item of items) {
-    if (!item.TextureData) {
-      continue;
+  if (isDefault) {
+    defaultCrosshairs = {default: "Per Weapon"};
+  } else {
+    for (const item of itemClasses) {
+      if (!item.TextureData) {
+        continue;
+      }
+      let crosshair = item.TextureData.crosshair;
+      const crosshairPack = crosshairPacks[crosshair.file];
+      const crosshairObj = crosshairPack[`_${crosshair.x}_${crosshair.y}`];
+      defaultCrosshairs[item.classname] = crosshairObj.name;
     }
-    let crosshair = item.TextureData.crosshair;
-    const crosshairPack = crosshairPacks[crosshair.file];
-    console.log(crosshair.x);
-    const crosshairObj = crosshairPack[`_${crosshair.x}_${crosshair.y}`];
-    defaultCrosshairs[item.classname] = crosshairObj.name;
   }
 
   return [cardLookup, crosshairs, defaultCrosshairs];
@@ -72,7 +91,17 @@ export default function ItemsInner({ playerClass, items }) {
 
   let [cardLookup, crosshairs, defaultCrosshairs] = useMemo(() => calculateCrosshairs(items), []);
 
-  const putCrosshair = useItemStore((state) => state.putCrosshair);
+  let [itemStore, setItemStore] = useState({});
+
+  useItemStore.persist.onFinishHydration((state) => {
+    setItemStore(state);
+  });
+
+  const itemClasses = Object.values(items);
+
+  const selectedCrosshairs = itemStore.crosshairs;
+
+  const [putCrosshair, delCrosshair] = useItemStore((state) => [state.putCrosshair, state.delCrosshair]);
 
   return (
     <Tab.Container defaultActiveKey={firstKey}>
@@ -99,25 +128,23 @@ export default function ItemsInner({ playerClass, items }) {
                 slots[slot].map(item =>
                   <Tab.Pane key={`${playerClass}-${item.classname}-pane`} eventKey={`${playerClass}-${item.classname}`}>
                     <div className="container py-4">
-                      {item.classname === "default" && (<>
-                        <h3>All Weapons</h3>
-                        <Button>Reset to game defaults</Button>
-                        <Button className="ms-2">Set all to base</Button>
-                        <hr/>
-                      </>)}
                       <h3>Crosshairs</h3>
-                      <div className="row">
+                      <div className="row d-flex align-items-center">
                         <div className="col-3">
-                          <FormSelect className="bg-dark text-light" defaultValue={defaultCrosshairs[item.classname]} autoComplete="off" onChange={((e) => {
+                          {selectedCrosshairs && <FormSelect className="bg-dark text-light" defaultValue={selectedCrosshairs?.[item.classname] ?? defaultCrosshairs[item.classname]} autoComplete="off" onChange={((e) => {
                             let select = e.target;
                             let option = select.options[select.selectedIndex];
                             let value = option.value;
-                            putCrosshair(item.classname, value);
+                            if (value === defaultCrosshairs[item.classname]) {
+                              delCrosshair(item.classname);
+                            } else {
+                              putCrosshair(item.classname, value);
+                            }
                           })}>
-                            {Object.keys(crosshairs).map(x => <option key={`${playerClass}-${item.classname}-crosshair-${x}`} value={x}>{x}</option>)}
-                          </FormSelect>
+                            {Object.keys(crosshairs).map(x => <option key={`${playerClass}-${item.classname}-crosshair-${x}`} value={x}>{`${x}${x === defaultCrosshairs[item.classname] && itemClasses[0].classname !== "default" ? " (Default)" : ""}`}</option>)}
+                          </FormSelect>}
                         </div>
-                        <div className="col-9">
+                        <div className="col-sm-9">
                         </div>
                       </div>
                       {item.SoundData && (

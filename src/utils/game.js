@@ -530,6 +530,20 @@ async function initGameData() {
   }
 }
 
+let stockItems = {
+  default: [],
+  scout: ["tf_weapon_scattergun", "tf_weapon_pistol_scout", "tf_weapon_bat"],
+  soldier: ["tf_weapon_rocketlauncher", "tf_weapon_shotgun_soldier", "tf_weapon_shovel"],
+  pyro: ["tf_weapon_flamethrower", "tf_weapon_shotgun_pyro", "tf_weapon_fireaxe"],
+  demoman: ["tf_weapon_grenadelauncher", "tf_weapon_pipebomblauncher", "tf_weapon_bottle"],
+  heavy: ["tf_weapon_minigun", "tf_weapon_shotgun_hwg", "tf_weapon_fists"],
+  engineer: ["tf_weapon_shotgun_primary", "tf_weapon_pistol", "tf_weapon_wrench"],
+  medic: ["tf_weapon_syringegun_medic", "tf_weapon_medigun", "tf_weapon_bonesaw"],
+  sniper: ["tf_weapon_sniperrifle", "tf_weapon_smg", "tf_weapon_club"],
+  spy: ["tf_weapon_revolver", "tf_weapon_knife", "tf_weapon_sapper"],
+  "All-Class": []
+};
+
 globalThis.classes = classes;
 globalThis.crosshairPacks = crosshairPacks;
 globalThis.itemUsedBy = itemUsedBy;
@@ -537,6 +551,7 @@ globalThis.slotToIndex = slotToIndex;
 globalThis.customItemSlot = customItemSlot;
 globalThis.normalizedSlots = normalizedSlots;
 globalThis.classNameToName = classNameToName;
+globalThis.stockItems = stockItems;
 globalThis.getLocalization = getLocalization;
 globalThis.getItemName = getItemName;
 globalThis.getNormalizedSlotName = getNormalizedSlotName;
