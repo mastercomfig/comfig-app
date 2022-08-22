@@ -1793,6 +1793,10 @@ async function app() {
   let scrollSpy = null;
 
   function initScrollSpy(customizationsCol) {
+    if (!customizationsCol) {
+      return;
+    }
+
     scrollSpy = new ScrollSpy(customizationsCol, {
       target: getEl("modules-nav"),
       rootMargin: "0px 0px -73%",
