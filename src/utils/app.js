@@ -798,15 +798,36 @@ async function app() {
     }
   }
 
+  function wait(delay) {
+    return new Promise((resolve) => setTimeout(resolve, delay));
+  }
+
+  function fetchRetry(url, delay, tries, fetchOptions = {}) {
+    function onError(err) {
+      triesLeft = tries - 1;
+      if (!triesLeft) {
+        throw err;
+      }
+      return wait(delay).then(() => fetchRetry(url, delay * 2, triesLeft, fetchOptions));
+    }
+    return fetch(url, fetchOptions).catch(onError);
+  }
+
   async function writeRemoteFile(url, directory) {
     if (!directory) {
       return;
     }
-    let name = url.split("/").pop();
-    const writable = await getWritable(name, directory, true);
-    let response = await fetch(url);
-    // TODO: this doesn't like concurrency
-    await response.body.pipeTo(writable);
+    try {
+      let response = await fetchRetry(url, 125, 6);
+      let name = url.split("/").pop();
+      const writable = await getWritable(name, directory, true);
+      // TODO: this doesn't like concurrency
+      await response.body.pipeTo(writable);
+      return true;
+    } catch (err) {
+      console.error(`Failed fetching ${url}`, err);
+      return false;
+    }
   }
 
   async function getVPKDownloadUrls() {
@@ -840,7 +861,9 @@ async function app() {
         return downloads;
       }
       // Write preset file
-      await writeRemoteFile(presetUrl, customDirectory);
+      if (!await writeRemoteFile(presetUrl, customDirectory)) {
+        alert("Failed to download preset file. Please try again later.");
+      }
     } else {
       console.log("Using multi-download.");
       // Then push our preset download
@@ -854,7 +877,9 @@ async function app() {
     for (const selection of selectedAddons) {
       let addonUrl = getAddonUrl(selection);
       if (customDirectory) {
-        await writeRemoteFile(addonUrl, customDirectory);
+        if (!await writeRemoteFile(addonUrl, customDirectory)) {
+          alert("Failed to download preset file. Please try again later.");
+        }
       } else {
         downloads.push(
           Promise.resolve({
