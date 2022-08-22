@@ -576,8 +576,7 @@ async function app() {
     }
     getEl("game-folder-container").classList.remove("d-none");
     if (
-      !(await tryDBGet("hide-game-folder-warning")) &&
-      getEl("game-folder-warning")
+      !(await tryDBGet("hide-game-folder-warning")) && getEl("game-folder-warning")
     ) {
       getEl("game-folder-warning").classList.remove("d-none");
     }
@@ -613,8 +612,7 @@ async function app() {
       instructionEl.classList.remove("d-none");
     }
     if (
-      (await tryDBGet("hide-game-folder-warning")) &&
-      getEl("game-folder-warning")
+      (await tryDBGet("hide-game-folder-warning")) && getEl("game-folder-warning")
     ) {
       getEl("game-folder-warning").classList.add("d-none");
     }
@@ -2691,8 +2689,8 @@ async function app() {
     //getEl("subscribe-link").classList.remove("d-none");
   }
 
+  /*
   function registerServiceWorker() {
-    /*
     const updateSW = registerSW({
       immediate: true,
       onRegisterError(e) {
@@ -2704,9 +2702,10 @@ async function app() {
     });
 
     updateSW();
-    */
   }
+  */
 
+  /*
   if ("serviceWorker" in navigator) {
     let bFoundSW = false;
 
@@ -2725,8 +2724,7 @@ async function app() {
       }
     });
   }
-
-  
+  */
 
   window.addEventListener("online", handleConnectivityChange);
   window.addEventListener("offline", handleConnectivityChange);
