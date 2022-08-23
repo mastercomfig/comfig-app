@@ -101,7 +101,31 @@ export default function ItemsInner({ playerClass, items }) {
 
   const selectedCrosshairs = itemStore.crosshairs;
 
-  const [putCrosshair, delCrosshair] = useItemStore((state) => [state.putCrosshair, state.delCrosshair]);
+  const [
+    setCrosshair,
+    delCrosshair,
+    setNoMuzzleFlash,
+    delNoMuzzleFlash,
+    setBrassModel,
+    delBrassModel,
+    setTracer,
+    delTracer,
+    setExplosionEffect,
+    delExplosionEffect,
+  ] = useItemStore(
+    (state) => 
+    [
+      state.setCrosshair,
+      state.delCrosshair,
+      state.setNoMuzzleFlash,
+      state.delNoMuzzleFlash,
+      state.setBrassModel,
+      state.delBrassModel,
+      state.setTracer,
+      state.delTracer,
+      state.setExplosionEffect,
+      state.delExplosionEffect,
+  ]);
 
   return (
     <Tab.Container defaultActiveKey={firstKey}>
@@ -138,7 +162,7 @@ export default function ItemsInner({ playerClass, items }) {
                             if (value === defaultCrosshairs[item.classname]) {
                               delCrosshair(item.classname);
                             } else {
-                              putCrosshair(item.classname, value);
+                              setCrosshair(item.classname, value);
                             }
                           })}>
                             {Object.keys(crosshairs).map(x => <option key={`${playerClass}-${item.classname}-crosshair-${x}`} value={x}>{`${x}${x === defaultCrosshairs[item.classname] && itemClasses[0].classname !== "default" ? " (Default)" : ""}`}</option>)}
@@ -147,9 +171,6 @@ export default function ItemsInner({ playerClass, items }) {
                         <div className="col-sm-9">
                         </div>
                       </div>
-                      {item.SoundData && (
-                        <h3 className="pt-4">Sound</h3>
-                      )}
                       {item.MuzzleFlashParticleEffect && (
                         <h3 className="pt-4">Muzzle Flash</h3>
                       )}
