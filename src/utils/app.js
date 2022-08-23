@@ -326,6 +326,7 @@ async function app() {
   };
 
   const bindConfigLayers = {
+    gameoverrides: "game_overrides.cfg",
     scout: "scout.cfg",
     soldier: "soldier.cfg",
     pyro: "pyro.cfg",
@@ -335,7 +336,6 @@ async function app() {
     medic: "medic.cfg",
     sniper: "sniper.cfg",
     spy: "spy.cfg",
-    gameoverrides: "game_overrides.cfg",
   };
 
   let storedModules = {};
@@ -979,7 +979,7 @@ async function app() {
         }
         let bindObject;
         if (layerName) {
-          let bindObject = bindLayers[layerName];
+          bindObject = bindLayers[layerName];
           if (!bindObject) {
             bindLayers[layerName] = {};
             bindObject = bindLayers[layerName];
@@ -1030,7 +1030,7 @@ async function app() {
     for (const bindLayer of Object.keys(bindLayers)) {
       let fileName = bindConfigLayers[bindLayer];
       let contents = getBindsFromBindsObject(bindLayers[bindLayer]);
-      if (contents.length > 0) {
+      if (contents.length < 1) {
         continue;
       }
       if (!fileName) {
@@ -1107,11 +1107,16 @@ async function app() {
   }
 
   function getObjectFilePromise(file) {
-    return Promise.resolve({
-      url: URL.createObjectURL(file),
-      name: file.name,
-      isObject: true,
-    });
+    try {
+      return Promise.resolve({
+        url: URL.createObjectURL(file),
+        name: file.name,
+        isObject: true,
+      });
+    } catch (err) {
+       console.error(err);
+       return null;
+    }
   }
 
   async function getCustomDownloadUrls() {
@@ -1130,18 +1135,30 @@ async function app() {
     // Create the modules.cfg file
     let modulesFile = await newModulesFile();
     if (modulesFile) {
-      downloads.push(getObjectFilePromise(modulesFile));
+      let promise = getObjectFilePromise(modulesFile);
+      if (promise) {
+        downloads.push(promise);
+      }
     }
     // Create the autoexec.cfg file
     let autoexecFile = await newAutoexecFile();
     if (autoexecFile) {
-      downloads.push(getObjectFilePromise(autoexecFile));
+      let promise = getObjectFilePromise(autoexecFile);
+      if (promise) {
+        downloads.push(promise);
+      }
     }
     for (const fileName of Object.keys(configContentsRaw)) {
       let contents = configContentsRaw[fileName];
       if (contents.length > 0) {
         let file = await newFile(contents, fileName, appDirectory);
-        downloads.push(getObjectFilePromise(file));
+        if (!file) {
+          continue;
+        }
+        let promise = getObjectFilePromise(file);
+        if (promise) {
+          downloads.push(promise);
+        }
       }
     }
     return downloads;
@@ -2349,7 +2366,7 @@ async function app() {
       // input -> col -> row: if this row is the last in the list.
       if (!element.parentNode.parentNode.nextSibling) {
         // display remove button
-        element.parentNode.parentNode.childNodes[2].firstChild.classList.remove(
+        element.parentNode.parentNode.childNodes[3].firstChild.classList.remove(
           "d-none"
         );
         createBindingField();
@@ -2532,11 +2549,49 @@ async function app() {
       selectElement.classList.add("d-none");
     }
 
+    let row = document.createElement("div");
+    row.classList.add("row", "binding-field");
+
+    let layerCol = inputCol.cloneNode();
+    let selectLayer = selectElement.cloneNode();
+    // Make sure it's not cloned as invisible
+    selectLayer.classList.remove("d-none");
+    let index = 0;
+    let layer = bindOptions?.layer;
+    for (const key of Object.keys(bindConfigLayers)) {
+      let optionName;
+      let optionValue;
+      if (key == "gameoverrides") {
+        optionName = "Default layer";
+        optionValue = "";
+      } else {
+        optionName = capitalize(key);
+        optionValue = key;
+      }
+      let optionElement = document.createElement("option");
+      optionElement.value = key;
+      optionElement.innerText = optionName;
+      selectLayer.append(optionElement);
+      if (key === layer) {
+        selectLayer.selectedIndex = index;
+      }
+      index++;
+    }
+    layerCol.append(selectLayer);
+
+    selectLayer.addEventListener("input", (e) => {
+      let select = e.target;
+      let value = select.options[select.selectedIndex].value;
+      row.dataset.layer = value;
+    });
+
+    if (layer) {
+      row.dataset.layer = layer;
+    }
+
     let actionCol = inputCol.cloneNode();
     actionCol.append(selectElement);
     actionCol.append(inputGroup);
-    let row = document.createElement("div");
-    row.classList.add("row", "binding-field");
 
     let removeBtn = document.createElement("a");
     removeBtn.href = "#";
@@ -2552,12 +2607,12 @@ async function app() {
     let removeCol = document.createElement("div");
     removeCol.classList.add("col-1");
     removeCol.append(removeBtn);
-    row.append(inputCol, actionCol, removeCol);
+    row.append(inputCol, actionCol, layerCol, removeCol);
     bindsList.append(row);
 
     // When we add a new empty one, that means we added a new binding
     if (!bindOptions) {
-      // TODO: how to handle custom command?
+      // TODO: how to handle custom command being empty?
       updateCustomizationDownload();
     }
   }
@@ -2566,6 +2621,15 @@ async function app() {
     if (keybinds) {
       for (const [key, action] of Object.entries(keybinds)) {
         createBindingField({ key, action });
+      }
+    }
+  });
+  tryDBGet("bindLayers").then((bindLayers) => {
+    if (bindLayers) {
+      for (const [layer, keybinds] of Object.entries(bindLayers)) {
+        for (const [key, action] of Object.entries(keybinds)) {
+          createBindingField({ key, action, layer });
+        }
       }
     }
     createBindingField();
