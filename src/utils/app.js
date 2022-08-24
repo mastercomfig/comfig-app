@@ -1202,127 +1202,129 @@ async function app() {
         scriptsDirectory.removeEntry(key);
       }
     }
-    let {default: useItemStore} = await import("../store/items.js");
-    const itemsState = useItemStore.getState();
-    const crosshairs = itemsState.crosshairs;
-    const muzzleflashes = itemsState.muzzleflashes;
-    const brassmodels = itemsState.brassmodels;
-    const tracers = itemsState.tracers;
-    const explosioneffects = itemsState.explosioneffects;
-    let items = cloneDeep(globalThis.items);
-    delete items.default;
-    let itemsToDownload = new Set();
-    let crosshairPacks = globalThis.crosshairPacks;
-    if (crosshairs["default"]) {
-      let [crosshairFile, crosshairKey] = crosshairs["default"].split(".", 2);
-      let crosshairPack = crosshairPacks[crosshairFile];
-      let crosshairInfo = crosshairPack[crosshairKey];
-      for (const classname of Object.keys(items)) {
-        let item = items[classname];
-        let itemCrosshair = item.TextureData.crosshair;
-        itemCrosshair.file = crosshairFile;
-        itemCrosshair.x = crosshairInfo.pos[0];
-        itemCrosshair.y = crosshairInfo.pos[1];
-        itemCrosshair.width = crosshairInfo.size;
-        itemCrosshair.height = crosshairInfo.size;
-        itemsToDownload.add(classname);
-      }
-    } else {
-      for (const classname of Object.keys(crosshairs)) {
-        let item = items[classname];
-        let [crosshairFile, crosshairKey] = crosshairs[classname].split(".", 2);
-        let itemCrosshair = item.TextureData.crosshair;
+    if (globalThis.items) {
+      let {default: useItemStore} = await import("../store/items.js");
+      const itemsState = useItemStore.getState();
+      const crosshairs = itemsState.crosshairs;
+      const muzzleflashes = itemsState.muzzleflashes;
+      const brassmodels = itemsState.brassmodels;
+      const tracers = itemsState.tracers;
+      const explosioneffects = itemsState.explosioneffects;
+      let items = cloneDeep(globalThis.items);
+      delete items.default;
+      let itemsToDownload = new Set();
+      let crosshairPacks = globalThis.crosshairPacks;
+      if (crosshairs["default"]) {
+        let [crosshairFile, crosshairKey] = crosshairs["default"].split(".", 2);
         let crosshairPack = crosshairPacks[crosshairFile];
         let crosshairInfo = crosshairPack[crosshairKey];
-        itemCrosshair.file = crosshairFile;
-        itemCrosshair.x = crosshairInfo.pos[0];
-        itemCrosshair.y = crosshairInfo.pos[1];
-        itemCrosshair.width = crosshairInfo.size;
-        itemCrosshair.height = crosshairInfo.size;
-        itemsToDownload.add(classname);
-      }
-    }
-    if (muzzleflashes.has("default")) {
-      for (const classname of Object.keys(items)) {
-        let item = items[classname];
-        if (!item.MuzzleFlashParticleEffect) {
-          continue
+        for (const classname of Object.keys(items)) {
+          let item = items[classname];
+          let itemCrosshair = item.TextureData.crosshair;
+          itemCrosshair.file = crosshairFile;
+          itemCrosshair.x = crosshairInfo.pos[0];
+          itemCrosshair.y = crosshairInfo.pos[1];
+          itemCrosshair.width = crosshairInfo.size;
+          itemCrosshair.height = crosshairInfo.size;
+          itemsToDownload.add(classname);
         }
-        item.MuzzleFlashParticleEffect = "";
-        itemsToDownload.add(classname);
+      } else {
+        for (const classname of Object.keys(crosshairs)) {
+          let item = items[classname];
+          let [crosshairFile, crosshairKey] = crosshairs[classname].split(".", 2);
+          let itemCrosshair = item.TextureData.crosshair;
+          let crosshairPack = crosshairPacks[crosshairFile];
+          let crosshairInfo = crosshairPack[crosshairKey];
+          itemCrosshair.file = crosshairFile;
+          itemCrosshair.x = crosshairInfo.pos[0];
+          itemCrosshair.y = crosshairInfo.pos[1];
+          itemCrosshair.width = crosshairInfo.size;
+          itemCrosshair.height = crosshairInfo.size;
+          itemsToDownload.add(classname);
+        }
       }
-    } else {
-      for (const classname of Array.from(muzzleflashes)) {
-        let item = items[classname];
-        item.MuzzleFlashParticleEffect = "";
-        itemsToDownload.add(classname);
+      if (muzzleflashes.has("default")) {
+        for (const classname of Object.keys(items)) {
+          let item = items[classname];
+          if (!item.MuzzleFlashParticleEffect) {
+            continue
+          }
+          item.MuzzleFlashParticleEffect = "";
+          itemsToDownload.add(classname);
+        }
+      } else {
+        for (const classname of Array.from(muzzleflashes)) {
+          let item = items[classname];
+          item.MuzzleFlashParticleEffect = "";
+          itemsToDownload.add(classname);
+        }
       }
-    }
-    if (brassmodels.has("default")) {
-      for (const classname of Object.keys(items)) {
-        let item = items[classname];
-        if (!item.BrassModel) {
+      if (brassmodels.has("default")) {
+        for (const classname of Object.keys(items)) {
+          let item = items[classname];
+          if (!item.BrassModel) {
+            continue;
+          }
+          item.BrassModel = "";
+          itemsToDownload.add(classname);
+        }
+      } else {
+        for (const classname of Array.from(brassmodels)) {
+          let item = items[classname];
+          item.BrassModel = "";
+          itemsToDownload.add(classname);
+        }
+      }
+      if (tracers.has("default")) {
+        for (const classname of Object.keys(items)) {
+          let item = items[classname];
+          if (!item.TracerEffect) {
+            continue;
+          }
+          item.TracerEffect = "";
+          itemsToDownload.add(classname);
+        }
+      } else {
+        for (const classname of Array.from(tracers)) {
+          let item = items[classname];
+          item.TracerEffect = "";
+          itemsToDownload.add(classname);
+        }
+      }
+      if (explosioneffects["default"]) {
+        let effect = explosioneffects["default"];
+        for (const classname of Object.keys(items)) {
+          let item = items[classname];
+          if (!item.ExplosionEffect) {
+            continue;
+          }
+          item.ExplosionEffect = effect;
+          item.ExplosionPlayerEffect = effect;
+          item.ExplosionWaterEffect = effect;
+          itemsToDownload.add(classname);
+        }
+      } else {
+        for (const classname of Object.keys(explosioneffects)) {
+          let item = items[classname];
+          let effect = explosioneffects[classname];
+          item.ExplosionEffect = effect;
+          item.ExplosionPlayerEffect = effect;
+          item.ExplosionWaterEffect = effect;
+          itemsToDownload.add(classname);
+        }
+      }
+      for (const classname of Array.from(itemsToDownload)) {
+        let fileName = `${classname}.txt`;
+        let item = {WeaponData: items[classname]};
+        let contents = stringify(item, {pretty: true});
+        let file = await newFile(contents, fileName, scriptsDirectory);
+        if (!file) {
           continue;
         }
-        item.BrassModel = "";
-        itemsToDownload.add(classname);
-      }
-    } else {
-      for (const classname of Array.from(brassmodels)) {
-        let item = items[classname];
-        item.BrassModel = "";
-        itemsToDownload.add(classname);
-      }
-    }
-    if (tracers.has("default")) {
-      for (const classname of Object.keys(items)) {
-        let item = items[classname];
-        if (!item.TracerEffect) {
-          continue;
+        let promise = getObjectFilePromise(file);
+        if (promise) {
+          downloads.push(promise);
         }
-        item.TracerEffect = "";
-        itemsToDownload.add(classname);
-      }
-    } else {
-      for (const classname of Array.from(tracers)) {
-        let item = items[classname];
-        item.TracerEffect = "";
-        itemsToDownload.add(classname);
-      }
-    }
-    if (explosioneffects["default"]) {
-      let effect = explosioneffects["default"];
-      for (const classname of Object.keys(items)) {
-        let item = items[classname];
-        if (!item.ExplosionEffect) {
-          continue;
-        }
-        item.ExplosionEffect = effect;
-        item.ExplosionPlayerEffect = effect;
-        item.ExplosionWaterEffect = effect;
-        itemsToDownload.add(classname);
-      }
-    } else {
-      for (const classname of Object.keys(explosioneffects)) {
-        let item = items[classname];
-        let effect = explosioneffects[classname];
-        item.ExplosionEffect = effect;
-        item.ExplosionPlayerEffect = effect;
-        item.ExplosionWaterEffect = effect;
-        itemsToDownload.add(classname);
-      }
-    }
-    for (const classname of Array.from(itemsToDownload)) {
-      let fileName = `${classname}.txt`;
-      let item = {WeaponData: items[classname]};
-      let contents = stringify(item, {pretty: true});
-      let file = await newFile(contents, fileName, scriptsDirectory);
-      if (!file) {
-        continue;
-      }
-      let promise = getObjectFilePromise(file);
-      if (promise) {
-        downloads.push(promise);
       }
     }
     return downloads;
