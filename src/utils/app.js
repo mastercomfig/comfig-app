@@ -2,6 +2,8 @@ import { get, set, del } from "idb-keyval";
 //import { registerSW } from "virtual:pwa-register";
 import { Tab, ScrollSpy } from "bootstrap";
 import * as Sentry from "@sentry/browser";
+import cloneDeep from "lodash/cloneDeep";
+import { stringify } from "vdf-parser";
 
 let idbKeyval = {
   get,
@@ -559,6 +561,8 @@ async function app() {
   let customDirectory = null;
   let overridesDirectory = null;
   let appDirectory = null;
+  let comfigCustomDirectory = null;
+  let scriptsDirectory = null;
 
   let bindDirectInstall = true;
 
@@ -571,6 +575,8 @@ async function app() {
       customDirectory = null;
       overridesDirectory = null;
       appDirectory = null;
+      comfigCustomDirectory = null;
+      scriptsDirectory = null;
       updatePresetDownloadButton();
       return;
     }
@@ -717,6 +723,12 @@ async function app() {
       customDirectory = await tfDirectory.getDirectoryHandle("custom", {
         create: true,
       });
+      comfigCustomDirectory = await customDirectory.getDirectoryHandle("comfig-custom", {
+        create: true,
+      });
+      scriptsDirectory = await comfigCustomDirectory.getDirectoryHandle("scripts", {
+        create: true,
+    });
       const cfgDirectory = await tfDirectory.getDirectoryHandle("cfg", {
         create: true,
       });
@@ -1159,6 +1171,136 @@ async function app() {
         if (promise) {
           downloads.push(promise);
         }
+      }
+    }
+    let {default: useItemStore} = await import("../store/items.js");
+    const itemsState = useItemStore.getState();
+    console.log(itemsState);
+    const crosshairs = itemsState.crosshairs;
+    const muzzleflashes = itemsState.muzzleflashes;
+    const brassmodels = itemsState.brassmodels;
+    const tracers = itemsState.tracers;
+    const explosioneffects = itemsState.explosioneffects;
+    let items = cloneDeep(globalThis.items);
+    delete items.default;
+    let itemsToDownload = new Set();
+    let crosshairPacks = globalThis.crosshairPacks;
+    if (crosshairs["default"]) {
+      console.log(crosshairs["default"]);
+      let [crosshairFile, crosshairKey] = crosshairs["default"].split(".", 2);
+      let crosshairPack = crosshairPacks[crosshairFile];
+      let crosshairInfo = crosshairPack[crosshairKey];
+      console.log(crosshairFile);
+      console.log(crosshairKey);
+      console.log(crosshairPack);
+      console.log(crosshairInfo);
+      for (const classname of Object.keys(items)) {
+        let item = items[classname];
+        let itemCrosshair = item.TextureData.crosshair;
+        itemCrosshair.file = crosshairFile;
+        itemCrosshair.x = crosshairInfo.pos[0];
+        itemCrosshair.y = crosshairInfo.pos[1];
+        itemCrosshair.width = crosshairInfo.size;
+        itemCrosshair.height = crosshairInfo.size;
+        itemsToDownload.add(classname);
+      }
+    } else {
+      for (const classname of Object.keys(crosshairs)) {
+        let item = items[classname];
+        let [crosshairFile, crosshairKey] = crosshairs[classname].split(".", 1);
+        let itemCrosshair = item.TextureData.crosshair;
+        let crosshairPack = crosshairPacks[crosshairFile];
+        let crosshairInfo = crosshairPack[crosshairKey];
+        itemCrosshair.file = crosshairFile;
+        itemCrosshair.x = crosshairInfo.pos[0];
+        itemCrosshair.y = crosshairInfo.pos[1];
+        itemCrosshair.width = crosshairInfo.size;
+        itemCrosshair.height = crosshairInfo.size;
+        itemsToDownload.add(classname);
+      }
+    }
+    if (muzzleflashes.has("default")) {
+      for (const classname of Object.keys(items)) {
+        let item = items[classname];
+        if (!item.MuzzleFlashParticleEffect) {
+          continue
+        }
+        item.MuzzleFlashParticleEffect = "";
+        itemsToDownload.add(classname);
+      }
+    } else {
+      for (const classname of Array.from(muzzleflashes)) {
+        let item = items[classname];
+        item.MuzzleFlashParticleEffect = "";
+        itemsToDownload.add(classname);
+      }
+    }
+    if (brassmodels.has("default")) {
+      for (const classname of Object.keys(items)) {
+        let item = items[classname];
+        if (!item.BrassModel) {
+          continue;
+        }
+        item.BrassModel = "";
+        itemsToDownload.add(classname);
+      }
+    } else {
+      for (const classname of Array.from(brassmodels)) {
+        let item = items[classname];
+        item.BrassModel = "";
+        itemsToDownload.add(classname);
+      }
+    }
+    if (tracers.has("default")) {
+      for (const classname of Object.keys(items)) {
+        let item = items[classname];
+        if (!item.TracerEffect) {
+          continue;
+        }
+        item.TracerEffect = "";
+        itemsToDownload.add(classname);
+      }
+    } else {
+      for (const classname of Array.from(tracers)) {
+        let item = items[classname];
+        item.TracerEffect = "";
+        itemsToDownload.add(classname);
+      }
+    }
+    if (explosioneffects["default"]) {
+      let effect = explosioneffects["default"];
+      for (const classname of Object.keys(items)) {
+        let item = items[classname];
+        if (!item.ExplosionEffect) {
+          continue;
+        }
+        item.ExplosionEffect = effect;
+        item.ExplosionPlayerEffect = effect;
+        item.ExplosionWaterEffect = effect;
+        itemsToDownload.add(classname);
+      }
+    } else {
+      for (const classname of Object.keys(explosioneffects)) {
+        let item = items[classname];
+        let effect = explosioneffects[classname];
+        item.ExplosionEffect = effect;
+        item.ExplosionPlayerEffect = effect;
+        item.ExplosionWaterEffect = effect;
+        itemsToDownload.add(classname);
+      }
+    }
+    for (const classname of Array.from(itemsToDownload)) {
+      let fileName = `${classname}.txt`;
+      let item = {WeaponData: items[classname]};
+      console.log(item);
+      let contents = stringify(item, {pretty: true});
+      let file = await newFile(contents, fileName, scriptsDirectory);
+      if (!file) {
+        continue;
+      }
+      let promise = getObjectFilePromise(file);
+      if (promise) {
+        downloads.push(promise);
       }
     }
     return downloads;
@@ -1608,7 +1750,7 @@ async function app() {
   }
 
   // TODO: we can just use select for now, but for usability, this should be implemented in the future
-  function handleModuleInputGroup(name, values) {}
+  function handleModuleInputButtonGroup(name, values) {}
 
   // Creates a range slider
   function handleModuleInputSlider(name, values) {
@@ -1676,7 +1818,7 @@ async function app() {
       case "switch":
         return handleModuleInputSwitch;
       case "group":
-        return handleModuleInputGroup;
+        return handleModuleInputButtonGroup;
       case "slider":
         return handleModuleInputSlider;
       default:

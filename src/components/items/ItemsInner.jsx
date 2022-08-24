@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Tab, Row, Col, Nav, FormSelect, FormCheck } from 'react-bootstrap';
 import useItemStore from '../../store/items';
-import useHydration from '../../utils/useHydration';
 
 function calculateItemSlots(playerClass, items) {
   let slots = {};
@@ -45,44 +44,37 @@ function calculateItemSlots(playerClass, items) {
 }
 
 function calculateCrosshairs(items) {
-  let cardLookup = [];
   let crosshairs = {};
   let itemClasses = Object.values(items);
   let isDefault = itemClasses.length === 1 && itemClasses[0].classname === "default";
   if (isDefault) {
-    crosshairs = {"Per Weapon": null};
+    crosshairs = {"default.default": {name: "Per Weapon"}};
   }
 
   for (const packName of Object.keys(crosshairPacks)) {
-    const packIndex = cardLookup.length;
-    cardLookup.push(packName);
     const pack = crosshairPacks[packName];
     for (const x of Object.keys(pack)) {
       let crosshair = pack[x];
-      crosshairs[crosshair.name] = {
-        crosshair,
-        packIndex
-      }
+      crosshairs[`${packName}.${x}`] = crosshair;
     }
   }
 
   let defaultCrosshairs = {};
 
   if (isDefault) {
-    defaultCrosshairs = {default: "Per Weapon"};
+    defaultCrosshairs = {default: "default.default"};
   } else {
     for (const item of itemClasses) {
       if (!item.TextureData) {
         continue;
       }
       let crosshair = item.TextureData.crosshair;
-      const crosshairPack = crosshairPacks[crosshair.file];
-      const crosshairObj = crosshairPack[`_${crosshair.x}_${crosshair.y}`];
-      defaultCrosshairs[item.classname] = crosshairObj.name;
+      const crosshairKey = `_${crosshair.x}_${crosshair.y}`;
+      defaultCrosshairs[item.classname] = `${crosshair.file}.${crosshairKey}`;
     }
   }
 
-  return [cardLookup, crosshairs, defaultCrosshairs];
+  return [crosshairs, defaultCrosshairs];
 }
 
 let explosionEffects = {
@@ -98,7 +90,7 @@ export default function ItemsInner({ playerClass, items }) {
 
   let [slots, slotNames, firstKey] = useMemo(() => calculateItemSlots(playerClass, items), [playerClass, items]);
 
-  let [cardLookup, crosshairs, defaultCrosshairs] = useMemo(() => calculateCrosshairs(items), []);
+  let [crosshairs, defaultCrosshairs] = useMemo(() => calculateCrosshairs(items), []);
 
   let [itemStore, setItemStore] = useState({});
 
@@ -178,7 +170,7 @@ export default function ItemsInner({ playerClass, items }) {
                               setCrosshair(item.classname, value);
                             }
                           })}>
-                            {Object.keys(crosshairs).map(x => <option key={`${playerClass}-${item.classname}-crosshair-${x}`} value={x}>{`${x}${x === defaultCrosshairs[item.classname] && itemClasses[0].classname !== "default" ? " (Default)" : ""}`}</option>)}
+                            {Object.keys(crosshairs).map(x => <option key={`${playerClass}-${item.classname}-crosshair-${x}`} value={x}>{`${crosshairs[x].name}${x === defaultCrosshairs[item.classname] && itemClasses[0].classname !== "default" ? " (Default)" : ""}`}</option>)}
                           </FormSelect>}
                         </div>
                         <div className="col-sm-9">

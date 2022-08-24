@@ -1,5 +1,6 @@
 import { Tabs, Tab, SSRProvider } from 'react-bootstrap';
 import ItemsInner from './ItemsInner.jsx';
+import Global from '../Global.jsx';
 
 export default function Items({ items }) {
 
@@ -11,6 +12,7 @@ export default function Items({ items }) {
   return (
   <div className="items-root">
     <SSRProvider>
+      <Global items={items} />
       <Tabs defaultActiveKey="default">
         <Tab eventKey="default" title="Default">
           <ItemsInner playerClass="default" items={{default: items["default"]}}  />
