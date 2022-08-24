@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Button, Tab, Row, Col, Nav, FormSelect } from 'react-bootstrap';
+import { Tab, Row, Col, Nav, FormSelect, FormCheck } from 'react-bootstrap';
 import useItemStore from '../../store/items';
 import useHydration from '../../utils/useHydration';
 
@@ -85,6 +85,15 @@ function calculateCrosshairs(items) {
   return [cardLookup, crosshairs, defaultCrosshairs];
 }
 
+let explosionEffects = {
+  "Default": "default",
+  "Sapper Destroyed": "ExplosionCore_sapperdestroyed",
+  "Minigun Muzzle Flash": "muzzle_minigun_starflash01",
+  "Pyro Pool Explosion": "eotl_pyro_pool_explosion_flash",
+  "Electrocuted Red": "electrocuted_red_flash",
+  "Electrocuted Blue": "electrocuted_blue_flash",
+};
+
 export default function ItemsInner({ playerClass, items }) {
 
   let [slots, slotNames, firstKey] = useMemo(() => calculateItemSlots(playerClass, items), [playerClass, items]);
@@ -100,12 +109,16 @@ export default function ItemsInner({ playerClass, items }) {
   const itemClasses = Object.values(items);
 
   const selectedCrosshairs = itemStore.crosshairs;
+  const selectedMuzzleFlashes = itemStore.muzzleflashes;
+  const selectedBrassModels = itemStore.brassmodels;
+  const selectedTracers = itemStore.tracers;
+  const selectedExplosion = itemStore.explosioneffects;
 
   const [
     setCrosshair,
     delCrosshair,
-    setNoMuzzleFlash,
-    delNoMuzzleFlash,
+    setMuzzleFlash,
+    delMuzzleFlash,
     setBrassModel,
     delBrassModel,
     setTracer,
@@ -117,8 +130,8 @@ export default function ItemsInner({ playerClass, items }) {
     [
       state.setCrosshair,
       state.delCrosshair,
-      state.setNoMuzzleFlash,
-      state.delNoMuzzleFlash,
+      state.setMuzzleFlash,
+      state.delMuzzleFlash,
       state.setBrassModel,
       state.delBrassModel,
       state.setTracer,
@@ -171,17 +184,59 @@ export default function ItemsInner({ playerClass, items }) {
                         <div className="col-sm-9">
                         </div>
                       </div>
-                      {item.MuzzleFlashParticleEffect && (
-                        <h3 className="pt-4">Muzzle Flash</h3>
+                      {(item.MuzzleFlashParticleEffect || item.BrassModel || item.TracerEffect) && <h3 className="pt-4">Firing Effects</h3>}
+                      {item.MuzzleFlashParticleEffect && selectedMuzzleFlashes && (
+                        <FormCheck type="switch" label="Muzzle Flash" defaultChecked={!selectedMuzzleFlashes.has(item.classname)} onChange={((e) => {
+                          let check = e.target.checked;
+                          if (!check) {
+                            setMuzzleFlash(item.classname);
+                          } else {
+                            delMuzzleFlash(item.classname);
+                          }
+                        })}></FormCheck>
                       )}
-                      {item.BrassModel && (
-                        <h3 className="pt-4">Shell Ejection</h3>
+                      {item.BrassModel && selectedBrassModels && (
+                        <FormCheck type="switch" label="Shell Ejection" defaultChecked={!selectedBrassModels.has(item.classname)} onChange={((e) => {
+                          let check = e.target.checked;
+                          if (!check) {
+                            setBrassModel(item.classname);
+                          } else {
+                            delBrassModel(item.classname);
+                          }
+                        })}></FormCheck>
                       )}
-                      {item.TracerEffect && (
-                        <h3 className="pt-4">Tracer</h3>
+                      {item.TracerEffect && selectedTracers && (
+                        <FormCheck type="switch" label="Tracer" defaultChecked={!selectedTracers.has(item.classname)} onChange={((e) => {
+                          let check = e.target.checked;
+                          if (!check) {
+                            setTracer(item.classname);
+                          } else {
+                            delTracer(item.classname);
+                          }
+                        })}></FormCheck>
                       )}
-                      {item.ExplosionEffect && (
-                        <h3 className="pt-4">Explosion Effect</h3>
+                      {item.ExplosionEffect && item.classname !== "tf_weapon_particle_cannon" && (
+                        <>
+                          <h3 className="pt-4">Explosion Effect</h3>
+                          <div className="row d-flex align-items-center">
+                            <div className="col-3">
+                              {selectedExplosion && <FormSelect className="bg-dark text-light" defaultValue={selectedCrosshairs?.[item.classname] ?? "default"} autoComplete="off" onChange={((e) => {
+                                let select = e.target;
+                                let option = select.options[select.selectedIndex];
+                                let value = option.value;
+                                if (value === "default") {
+                                  delExplosionEffect(item.classname);
+                                } else {
+                                  setExplosionEffect(item.classname, value);
+                                }
+                              })}>
+                                {Object.keys(explosionEffects).map(x => <option key={`${playerClass}-${item.classname}-explosion-${explosionEffects[x]}`} value={x}>{explosionEffects[x] === "default" && itemClasses[0].classname === "default" ? "Per Weapon" : x}</option>)}
+                              </FormSelect>}
+                            </div>
+                            <div className="col-sm-9">
+                            </div>
+                          </div>
+                        </>
                       )}
                     </div>
                   </Tab.Pane>

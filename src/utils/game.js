@@ -497,7 +497,7 @@ let items = {
     WeaponType: "",
     classname: "default",
     printname: "Default",
-    MuzzleFlashParticleEffect: "",
+    MuzzleFlashParticleEffect: "null",
     BrassModel: "null",
     TracerEffect: "null",
     ExplosionEffect: "null",
