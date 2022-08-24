@@ -803,7 +803,7 @@ async function app() {
       const writable = await getWritable(name, directory);
       await writable.write(contents);
       await writable.close();
-      return 1;
+      return 0;
     } else {
       const file = new File([contents], name, {
         type: "application/octet-stream",
@@ -1151,7 +1151,7 @@ async function app() {
     // Create the modules.cfg file
     let modulesFile = await newModulesFile();
     if (modulesFile !== null) {
-      if (modulesFile !== 1) {
+      if (modulesFile) {
         let promise = getObjectFilePromise(modulesFile);
         if (promise) {
           downloads.push(promise);
@@ -1177,7 +1177,7 @@ async function app() {
     }
     // Create the autoexec.cfg file
     let autoexecFile = await newAutoexecFile();
-    if (autoexecFile && autoexecFile !== 1) {
+    if (autoexecFile) {
       let promise = getObjectFilePromise(autoexecFile);
       if (promise) {
         downloads.push(promise);
@@ -1187,7 +1187,7 @@ async function app() {
       let contents = configContentsRaw[fileName];
       if (contents.length > 0) {
         let file = await newFile(contents, fileName, appDirectory);
-        if (!file || file === 1) {
+        if (!file) {
           continue;
         }
         let promise = getObjectFilePromise(file);
@@ -1317,7 +1317,7 @@ async function app() {
       let item = {WeaponData: items[classname]};
       let contents = stringify(item, {pretty: true});
       let file = await newFile(contents, fileName, scriptsDirectory);
-      if (!file || file === 1) {
+      if (!file) {
         continue;
       }
       let promise = getObjectFilePromise(file);
