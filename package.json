@@ -23,6 +23,7 @@
     "highlight.js": "^11.6.0",
     "idb-keyval": "^6.2.0",
     "lodash": "^4.17.21",
+    "native-file-system-adapter": "^2.0.4",
     "postcss": "^8.4.16",
     "postcss-import": "^14.1.0",
     "postcss-load-config": "^4.0.1",

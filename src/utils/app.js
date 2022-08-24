@@ -137,6 +137,10 @@ async function app() {
   }
 
   async function saveModules() {
+    const bHasModules = Object.keys(selectedModules).length > 0;
+    if (bHasModules) {
+      await tryDBSet("hasModules", true);
+    }
     await tryDBSet("modules", selectedModules);
   }
 
@@ -799,7 +803,7 @@ async function app() {
       const writable = await getWritable(name, directory);
       await writable.write(contents);
       await writable.close();
-      return null;
+      return 1;
     } else {
       const file = new File([contents], name, {
         type: "application/octet-stream",
@@ -1146,15 +1150,34 @@ async function app() {
     await updateBinds();
     // Create the modules.cfg file
     let modulesFile = await newModulesFile();
-    if (modulesFile) {
-      let promise = getObjectFilePromise(modulesFile);
-      if (promise) {
-        downloads.push(promise);
+    if (modulesFile !== null) {
+      if (modulesFile !== 1) {
+        let promise = getObjectFilePromise(modulesFile);
+        if (promise) {
+          downloads.push(promise);
+        }
+      }      
+    } else if (overridesDirectory) {
+      // TODO: we should instead read in the existing modules.cfg and set selections
+      // Avoid deleting a user's modules if they have not used the modules.cfg customizer
+      let hasModules = await tryDBGet("hasModules");
+      if (hasModules) {
+        // Delete modules file if empty
+        try {
+          overridesDirectory.removeEntry("modules.cfg");
+        } catch (err) {
+        }
+      }
+    }
+    // Clear out old app directory
+    if (appDirectory) {
+      for await (const key of appDirectory.keys()) {
+        appDirectory.removeEntry(key);
       }
     }
     // Create the autoexec.cfg file
     let autoexecFile = await newAutoexecFile();
-    if (autoexecFile) {
+    if (autoexecFile && autoexecFile !== 1) {
       let promise = getObjectFilePromise(autoexecFile);
       if (promise) {
         downloads.push(promise);
@@ -1164,7 +1187,7 @@ async function app() {
       let contents = configContentsRaw[fileName];
       if (contents.length > 0) {
         let file = await newFile(contents, fileName, appDirectory);
-        if (!file) {
+        if (!file || file === 1) {
           continue;
         }
         let promise = getObjectFilePromise(file);
@@ -1173,9 +1196,14 @@ async function app() {
         }
       }
     }
+    // Clear out old scripts directory
+    if (scriptsDirectory) {
+      for await (const key of scriptsDirectory.keys()) {
+        scriptsDirectory.removeEntry(key);
+      }
+    }
     let {default: useItemStore} = await import("../store/items.js");
     const itemsState = useItemStore.getState();
-    console.log(itemsState);
     const crosshairs = itemsState.crosshairs;
     const muzzleflashes = itemsState.muzzleflashes;
     const brassmodels = itemsState.brassmodels;
@@ -1186,14 +1214,9 @@ async function app() {
     let itemsToDownload = new Set();
     let crosshairPacks = globalThis.crosshairPacks;
     if (crosshairs["default"]) {
-      console.log(crosshairs["default"]);
       let [crosshairFile, crosshairKey] = crosshairs["default"].split(".", 2);
       let crosshairPack = crosshairPacks[crosshairFile];
       let crosshairInfo = crosshairPack[crosshairKey];
-      console.log(crosshairFile);
-      console.log(crosshairKey);
-      console.log(crosshairPack);
-      console.log(crosshairInfo);
       for (const classname of Object.keys(items)) {
         let item = items[classname];
         let itemCrosshair = item.TextureData.crosshair;
@@ -1207,7 +1230,7 @@ async function app() {
     } else {
       for (const classname of Object.keys(crosshairs)) {
         let item = items[classname];
-        let [crosshairFile, crosshairKey] = crosshairs[classname].split(".", 1);
+        let [crosshairFile, crosshairKey] = crosshairs[classname].split(".", 2);
         let itemCrosshair = item.TextureData.crosshair;
         let crosshairPack = crosshairPacks[crosshairFile];
         let crosshairInfo = crosshairPack[crosshairKey];
@@ -1292,10 +1315,9 @@ async function app() {
     for (const classname of Array.from(itemsToDownload)) {
       let fileName = `${classname}.txt`;
       let item = {WeaponData: items[classname]};
-      console.log(item);
       let contents = stringify(item, {pretty: true});
       let file = await newFile(contents, fileName, scriptsDirectory);
-      if (!file) {
+      if (!file || file === 1) {
         continue;
       }
       let promise = getObjectFilePromise(file);

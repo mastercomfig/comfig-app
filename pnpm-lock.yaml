@@ -14,6 +14,7 @@ specifiers:
   highlight.js: ^11.6.0
   idb-keyval: ^6.2.0
   lodash: ^4.17.21
+  native-file-system-adapter: ^2.0.4
   postcss: ^8.4.16
   postcss-import: ^14.1.0
   postcss-load-config: ^4.0.1
@@ -49,6 +50,7 @@ devDependencies:
   highlight.js: 11.6.0
   idb-keyval: 6.2.0
   lodash: 4.17.21
+  native-file-system-adapter: 2.0.4
   postcss: 8.4.16
   postcss-import: 14.1.0_postcss@8.4.16
   postcss-load-config: 4.0.1_postcss@8.4.16
@@ -4619,6 +4621,16 @@ packages:
     resolution: {integrity: sha512-MqBkQh/OHTS2egovRtLk45wEyNXwF+cokD+1YPf9u5VfJiRdAiRwB2froX5Co9Rh20xs4siNPm8naNotSD6RBw==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
+    dev: true
+
+  /native-file-system-adapter/2.0.4:
+    resolution: {integrity: sha512-i8quiR5KVpwyuKT7Z91+c/DgDjyrEOb+eMsS+aBWxpmUChAK1vs8751gOxO0cNg2p5JGrqOazCF/8RZBgsYLXw==}
+    engines: {node: '>=14.8.0'}
+    dependencies:
+      fetch-blob: 3.2.0
+      node-domexception: 1.0.0
+    optionalDependencies:
+      web-streams-polyfill: 3.2.1
     dev: true
 
   /nlcst-to-string/2.0.4:

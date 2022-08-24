@@ -38,8 +38,6 @@ function calculateItemSlots(playerClass, items) {
 
   const firstKey = `${playerClass}-${slots[slotNames[0]][0].classname}`;
 
-  //console.log(slots[slotNames[0]][0]);
-
   return [slots, slotNames, firstKey];
 }
 
