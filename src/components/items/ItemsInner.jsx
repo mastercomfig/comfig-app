@@ -205,7 +205,7 @@ export default function ItemsInner({ playerClass, items }) {
                                 let select = e.target;
                                 let option = select.options[select.selectedIndex];
                                 let value = option.value;
-                                if (value === "default") {
+                                if (value === "Default") {
                                   delExplosionEffect(item.classname);
                                 } else {
                                   setExplosionEffect(item.classname, value);
