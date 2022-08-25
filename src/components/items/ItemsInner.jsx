@@ -201,7 +201,7 @@ export default function ItemsInner({ playerClass, items }) {
                           <h3 className="pt-4">Explosion Effect</h3>
                           <div className="row d-flex align-items-center">
                             <div className="col-3">
-                              {selectedExplosion && <FormSelect className="bg-dark text-light" defaultValue={selectedCrosshairs?.[item.classname] ?? "default"} autoComplete="off" onChange={((e) => {
+                              {selectedExplosion && <FormSelect className="bg-dark text-light" defaultValue={selectedExplosion?.[item.classname] ?? "default"} autoComplete="off" onChange={((e) => {
                                 let select = e.target;
                                 let option = select.options[select.selectedIndex];
                                 let value = option.value;
@@ -211,7 +211,7 @@ export default function ItemsInner({ playerClass, items }) {
                                   setExplosionEffect(item.classname, value);
                                 }
                               })}>
-                                {Object.keys(explosionEffects).map(x => <option key={`${playerClass}-${item.classname}-explosion-${explosionEffects[x]}`} value={explosionEffects[x]}>{explosionEffects[x] === "default" && itemClasses[0].classname === "default" ? "Per Weapon" : x}</option>)}
+                                {Object.keys(explosionEffects).map(x => <option key={`${playerClass}-${item.classname}-explosion-${explosionEffects[x]}`} value={x}>{explosionEffects[x] === "default" && itemClasses[0].classname === "default" ? "Per Weapon" : x}</option>)}
                               </FormSelect>}
                             </div>
                             <div className="col-sm-9">

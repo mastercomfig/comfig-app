@@ -1264,10 +1264,7 @@ async function app() {
       }
       if (selectedExplosionEffects["default"]) {
         let effect = selectedExplosionEffects["default"];
-        let val = selectedExplosionEffects[effect];
-        if (val) {
-          effect = val;
-        }
+        effect = explosionEffects[effect];
         for (const classname of Object.keys(items)) {
           let item = items[classname];
           if (!item.ExplosionEffect) {
@@ -1282,10 +1279,7 @@ async function app() {
         for (const classname of Object.keys(selectedExplosionEffects)) {
           let item = items[classname];
           let effect = selectedExplosionEffects[classname];
-          let val = selectedExplosionEffects[effect];
-        if (val) {
-          effect = val;
-        }
+          effect = explosionEffects[effect];
           item.ExplosionEffect = effect;
           item.ExplosionPlayerEffect = effect;
           item.ExplosionWaterEffect = effect;
