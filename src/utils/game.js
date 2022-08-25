@@ -466,6 +466,15 @@ const slotToIndex = [
   "Utility",
 ];
 
+const explosionEffects = {
+  "Default": "default",
+  "Sapper Destroyed": "ExplosionCore_sapperdestroyed",
+  "Minigun Muzzle Flash": "muzzle_minigun_starflash01",
+  "Pyro Pool Explosion": "eotl_pyro_pool_explosion_flash",
+  "Electrocuted Red": "electrocuted_red_flash",
+  "Electrocuted Blue": "electrocuted_blue_flash",
+};
+
 function getNormalizedSlotName(item) {
   if (customItemSlot[item.classname]) {
     return customItemSlot[item.classname];
@@ -559,6 +568,7 @@ globalThis.stockItems = stockItems;
 globalThis.getLocalization = getLocalization;
 globalThis.getItemName = getItemName;
 globalThis.getNormalizedSlotName = getNormalizedSlotName;
+globalThis.explosionEffects = explosionEffects;
 
 export default {
   languageCache,

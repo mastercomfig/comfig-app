@@ -1180,7 +1180,7 @@ async function app() {
       const muzzleflashes = itemsState.muzzleflashes;
       const brassmodels = itemsState.brassmodels;
       const tracers = itemsState.tracers;
-      const explosioneffects = itemsState.explosioneffects;
+      const selectedExplosionEffects = itemsState.explosioneffects;
       let items = cloneDeep(globalThis.items);
       delete items.default;
       let itemsToDownload = new Set();
@@ -1262,8 +1262,12 @@ async function app() {
           itemsToDownload.add(classname);
         }
       }
-      if (explosioneffects["default"]) {
-        let effect = explosioneffects["default"];
+      if (selectedExplosionEffects["default"]) {
+        let effect = selectedExplosionEffects["default"];
+        let val = selectedExplosionEffects[effect];
+        if (val) {
+          effect = val;
+        }
         for (const classname of Object.keys(items)) {
           let item = items[classname];
           if (!item.ExplosionEffect) {
@@ -1275,9 +1279,13 @@ async function app() {
           itemsToDownload.add(classname);
         }
       } else {
-        for (const classname of Object.keys(explosioneffects)) {
+        for (const classname of Object.keys(selectedExplosionEffects)) {
           let item = items[classname];
-          let effect = explosioneffects[classname];
+          let effect = selectedExplosionEffects[classname];
+          let val = selectedExplosionEffects[effect];
+        if (val) {
+          effect = val;
+        }
           item.ExplosionEffect = effect;
           item.ExplosionPlayerEffect = effect;
           item.ExplosionWaterEffect = effect;
