@@ -75,15 +75,6 @@ function calculateCrosshairs(items) {
   return [crosshairs, defaultCrosshairs];
 }
 
-let explosionEffects = {
-  "Default": "default",
-  "Sapper Destroyed": "ExplosionCore_sapperdestroyed",
-  "Minigun Muzzle Flash": "muzzle_minigun_starflash01",
-  "Pyro Pool Explosion": "eotl_pyro_pool_explosion_flash",
-  "Electrocuted Red": "electrocuted_red_flash",
-  "Electrocuted Blue": "electrocuted_blue_flash",
-};
-
 export default function ItemsInner({ playerClass, items }) {
 
   let [slots, slotNames, firstKey] = useMemo(() => calculateItemSlots(playerClass, items), [playerClass, items]);
@@ -220,7 +211,7 @@ export default function ItemsInner({ playerClass, items }) {
                                   setExplosionEffect(item.classname, value);
                                 }
                               })}>
-                                {Object.keys(explosionEffects).map(x => <option key={`${playerClass}-${item.classname}-explosion-${explosionEffects[x]}`} value={x}>{explosionEffects[x] === "default" && itemClasses[0].classname === "default" ? "Per Weapon" : x}</option>)}
+                                {Object.keys(explosionEffects).map(x => <option key={`${playerClass}-${item.classname}-explosion-${explosionEffects[x]}`} value={explosionEffects[x]}>{explosionEffects[x] === "default" && itemClasses[0].classname === "default" ? "Per Weapon" : x}</option>)}
                               </FormSelect>}
                             </div>
                             <div className="col-sm-9">
