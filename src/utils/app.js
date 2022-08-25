@@ -725,7 +725,7 @@ async function app() {
         create: true,
       });
       overridesDirectory = await cfgDirectory.getDirectoryHandle(
-        getOverridesFolder(),
+        "overrides",
         {
           create: true,
         }
@@ -760,14 +760,6 @@ async function app() {
         }
       }
       console.error(`Failed deleting ${name}`, err);
-    }
-  }
-
-  function getOverridesFolder() {
-    if (requireVersion(9, 8)) {
-      return "overrides";
-    } else {
-      return "user";
     }
   }
 
@@ -1364,11 +1356,6 @@ async function app() {
     }
   }
 
-  function updateInstructions() {
-    let overridesFolder = getEl("overrides-folder");
-    overridesFolder.innerText = getOverridesFolder();
-  }
-
   function setUserVersion(userVer) {
     if (userVer === "Dev build") {
       userVer = "dev";
@@ -1410,7 +1397,6 @@ async function app() {
         sendApiRequest(tag);
         updateDocsLinks(userVersion);
       }
-      updateInstructions();
     }
   }
 

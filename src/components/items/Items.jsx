@@ -3,11 +3,6 @@ import ItemsInner from './ItemsInner.jsx';
 import Global from '../Global.jsx';
 
 export default function Items({ items }) {
-
-  if (import.meta.env.PROD) {
-    return <></>
-  }
-
   const playerClasses = Object.keys(itemUsedBy);
   return (
   <div className="items-root">
