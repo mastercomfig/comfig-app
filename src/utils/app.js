@@ -4,6 +4,7 @@ import { Tab, ScrollSpy } from "bootstrap";
 import * as Sentry from "@sentry/browser";
 import cloneDeep from "lodash/cloneDeep";
 import { stringify } from "vdf-parser";
+import { BlobReader, BlobWriter, ZipWriter } from "@zip.js/zip.js";
 
 let idbKeyval = {
   get,
@@ -382,7 +383,7 @@ async function app() {
     // Do the download once clicked
     let urls = await fnGatherUrls();
     // Only download if we have a download
-    if (urls.length > 1) {
+    if (urls.length > 0) {
       await downloadUrls(urls, id, fnGatherUrls);
     } else {
       // We've gotten to the last in the download stack, so we're done
@@ -481,12 +482,10 @@ async function app() {
       url = urlOptions.default;
     }
     url = url.format(userVersion, id);
-    if (customDirectory && !notDirect) {
-      url = url.replace(
-        "https://github.com/mastercomfig/mastercomfig/releases",
-        "https://mastercomfig.mcoms.workers.dev/download"
-      );
-    }
+    url = url.replace(
+      "https://github.com/mastercomfig/mastercomfig/releases",
+      "https://mastercomfig.mcoms.workers.dev/download"
+    );
     return url;
   }
 
@@ -503,45 +502,34 @@ async function app() {
 
   async function downloadUrls(urls, id, fnGatherUrls) {
     console.log("Downloading URLs:", urls);
-    // Take the top URL promise and resolve it.
-    urls[0].then((result) => {
-      // If not empty, make the browser download it.
-      if (result.url !== "") {
-        if (result.isObject) {
-          let link = document.createElement("a");
-          link.href = result.url;
-          link.download = result.name;
-          document.body.append(link);
-          link.dispatchEvent(
-            new MouseEvent("click", {
-              bubbles: true,
-              cancelable: true,
-              view: window,
-            })
-          );
-          link.remove();
-          pendingObjectURLs.push(result.url);
-        } else {
-          window.location = result.url;
-        }
+    let zipWriter = new ZipWriter(new BlobWriter("application/zip"), { bufferedWrite: true });
+    for (const url of urls) {
+      zipWriter.add(url.path, new BlobReader(url.blob));
+    }
+    const blobURL = URL.createObjectURL(await zipWriter.close());
+    zipWriter = null;
+    let link = document.createElement("a");
+    link.href = blobURL;
+    link.download = "mastercomfig.zip";
+    document.body.append(link);
+    link.dispatchEvent(
+      new MouseEvent("click", {
+        bubbles: true,
+        cancelable: true,
+        view: window,
+      })
+    );
+    link.remove();
+    pendingObjectURLs.push(blobURL);
+    // We're done
+    bindDownloadClick(id, fnGatherUrls);
+    // Once it's long past our time to download, remove the object URLs
+    setTimeout(() => {
+      for (const objectURL of pendingObjectURLs) {
+        URL.revokeObjectURL(objectURL);
       }
-      if (urls.length > 1) {
-        setTimeout(() => {
-          // Queue up the rest of the download promise stack
-          return downloadUrls(urls.slice(1), id, fnGatherUrls);
-        }, 2000);
-      } else {
-        // We've gotten to the last in the download stack, so we're done
-        bindDownloadClick(id, fnGatherUrls);
-        // Once it's long past our time to download, remove the object URLs
-        setTimeout(() => {
-          for (const objectURL of pendingObjectURLs) {
-            URL.revokeObjectURL(objectURL);
-          }
-          pendingObjectURLs = [];
-        }, 120000);
-      }
-    });
+      pendingObjectURLs = [];
+    }, 120000);
   }
 
   async function verifyPermission(fileHandle, readWrite) {
@@ -818,7 +806,7 @@ async function app() {
 
   function fetchRetry(url, delay, tries, fetchOptions = {}) {
     function onError(err) {
-      triesLeft = tries - 1;
+      let triesLeft = tries - 1;
       if (!triesLeft) {
         throw err;
       }
@@ -828,16 +816,16 @@ async function app() {
   }
 
   async function writeRemoteFile(url, directory) {
-    if (!directory) {
-      return;
-    }
     try {
       let response = await fetchRetry(url, 125, 6);
       let name = url.split("/").pop();
-      const writable = await getWritable(name, directory, true);
-      // TODO: this doesn't like concurrency
-      await response.body.pipeTo(writable);
-      return true;
+      if (directory) {
+        const writable = await getWritable(name, directory, true);
+        // TODO: this doesn't like concurrency
+        await response.body.pipeTo(writable);
+        return true;
+      }
+      return {name, blob: await response.blob()};
     } catch (err) {
       console.error(`Failed fetching ${url}`, err);
       return false;
@@ -849,11 +837,7 @@ async function app() {
     if (!await accessDirectory()) {
       return [];
     }
-    let downloads = [
-      Promise.resolve({
-        url: "",
-      }),
-    ];
+    let downloads = [];
     let presetUrl = getPresetUrl();
     if (customDirectory) {
       console.log("Using Direct Install.")
@@ -879,32 +863,31 @@ async function app() {
         alert("Failed to download preset file. Please try again later.");
       }
     } else {
-      console.log("Using multi-download.");
-      // Then push our preset download
-      downloads.push(
-        Promise.resolve({
-          url: presetUrl,
-        })
-      );
+      console.log("Using ZIP download.");
+      let presetResult = await writeRemoteFile(presetUrl, customDirectory);
+      if (presetResult) {
+        presetResult.path = `tf/custom/${presetResult.name}`;
+        // Then push our preset download
+        downloads.push(presetResult);
+      }
     }
     // Then push all our addon downloads
     for (const selection of selectedAddons) {
       let addonUrl = getAddonUrl(selection);
+      let addonResult = await writeRemoteFile(addonUrl, customDirectory);
       if (customDirectory) {
-        if (!await writeRemoteFile(addonUrl, customDirectory)) {
+        if (!addonResult) {
           alert("Failed to download preset file. Please try again later.");
         }
-      } else {
-        downloads.push(
-          Promise.resolve({
-            url: addonUrl,
-          })
-        );
+      } else if (addonResult) {
+        addonResult.path = `tf/custom/${addonResult.name}`;
+        downloads.push(addonResult);
       }
     }
-    // Also handle customizations when we are using Direct Install
-    if (customDirectory) {
-      await getCustomDownloadUrls();
+    // Also handle customizations
+    let customURLs = await getCustomDownloadUrls();
+    if (!customDirectory) {
+      downloads = downloads.concat(customURLs);
     }
     // We downloaded this version, so track it!
     await tryDBSet("lastVersion", version);
@@ -1140,22 +1123,17 @@ async function app() {
     await saveModules();
     // We need permissions for the directory
     await accessDirectory();
-    // First push an empty download because browsers like that for some reason.
-    let downloads = [
-      Promise.resolve({
-        url: "",
-      }),
-    ];
+    let downloads = [];
     // Update binds
     await updateBinds();
     // Create the modules.cfg file
     let modulesFile = await newModulesFile();
     if (modulesFile !== null) {
       if (modulesFile) {
-        let promise = getObjectFilePromise(modulesFile);
-        if (promise) {
-          downloads.push(promise);
-        }
+        downloads.push({
+          path: "tf/cfg/overrides/modules.cfg",
+          blob: modulesFile
+        });
       }      
     } else if (overridesDirectory) {
       // TODO: we should instead read in the existing modules.cfg and set selections
@@ -1178,10 +1156,10 @@ async function app() {
     // Create the autoexec.cfg file
     let autoexecFile = await newAutoexecFile();
     if (autoexecFile) {
-      let promise = getObjectFilePromise(autoexecFile);
-      if (promise) {
-        downloads.push(promise);
-      }
+      downloads.push({
+        path: "tf/cfg/app/autoexec.cfg",
+        blob: autoexecFile
+      });
     }
     for (const fileName of Object.keys(configContentsRaw)) {
       let contents = configContentsRaw[fileName];
@@ -1190,10 +1168,10 @@ async function app() {
         if (!file) {
           continue;
         }
-        let promise = getObjectFilePromise(file);
-        if (promise) {
-          downloads.push(promise);
-        }
+        downloads.push({
+          path: `tf/cfg/app/${fileName}`,
+          blob: file
+        });
       }
     }
     // Clear out old scripts directory
@@ -1321,36 +1299,13 @@ async function app() {
         if (!file) {
           continue;
         }
-        let promise = getObjectFilePromise(file);
-        if (promise) {
-          downloads.push(promise);
-        }
+        downloads.push({
+          path: `tf/custom/comfig-custom/scripts/${fileName}`,
+          blob: file
+        });
       }
     }
     return downloads;
-  }
-
-  function updateCustomizationDownload() {
-    let element = getEl("custom-dl");
-    const bHasModules = Object.keys(selectedModules).length > 0;
-    const bHasOverrides = Object.keys(selectedOverrides).length > 0;
-    const bHasBinds = document.querySelectorAll(".binding-field").length > 1; // last one is empty
-    const bHasSelection = bHasModules || bHasOverrides || bHasBinds;
-    if (bHasSelection) {
-      element.classList.remove("disabled", "text-light");
-      element.style.cursor = "pointer";
-      element.innerHTML = element.innerHTML.replace(
-        "No customizations to download",
-        "Download customizations"
-      );
-    } else {
-      element.classList.add("disabled", "text-light");
-      element.style.cursor = "not-allowed";
-      element.innerHTML = element.innerHTML.replace(
-        "Download customizations",
-        "No customizations to download"
-      );
-    }
   }
 
   // update addon state based on checked
@@ -1463,7 +1418,7 @@ async function app() {
     let presetInfo = presets[selectedPreset];
     if (!downloading) {
       let icon = "cloud-download";
-      let text = `Download mastercomfig base (${presetInfo.name} preset and addons)`;
+      let text = `Download mastercomfig (${presetInfo.name} preset, addons and customizations)`;
       if (gameDirectory) {
         text = `Install mastercomfig (${presetInfo.name} preset, addons and customizations)`;
         icon = "download";
@@ -1638,7 +1593,6 @@ async function app() {
       selectedModules[name] = value;
       updateUndoLink(name, false);
     }
-    updateCustomizationDownload();
   }
 
   function getDefaultValueFromName(values, name) {
@@ -2089,9 +2043,6 @@ async function app() {
     if (isCustomizeVisible()) {
       initScrollSpy(customizationsCol);
     }
-
-    // Update after travesing all modules
-    updateCustomizationDownload();
   }
 
   function addVersion(ver, dropdown, badge, disabled) {
@@ -2319,14 +2270,6 @@ async function app() {
   bindDownloadClick("vpk-dl", async () => {
     return await getVPKDownloadUrls();
   });
-
-  // Bind the customizations button with our multi-downloader
-  bindDownloadClick("custom-dl", async () => {
-    return await getCustomDownloadUrls();
-  });
-
-  // After binding, we need to update the text
-  updateCustomizationDownload();
 
   // For all defined addons, check if we have it stored
   for (const id of addons) {
@@ -2764,7 +2707,6 @@ async function app() {
     removeBtn.onclick = (e) => {
       e.preventDefault();
       row.remove();
-      updateCustomizationDownload();
     };
     removeBtn.classList.add("fa", "fa-close", "fa-fw");
     if (!bindOptions) {
@@ -2775,12 +2717,6 @@ async function app() {
     removeCol.append(removeBtn);
     row.append(inputCol, actionCol, layerCol, removeCol);
     bindsList.append(row);
-
-    // When we add a new empty one, that means we added a new binding
-    if (!bindOptions) {
-      // TODO: how to handle custom command being empty?
-      updateCustomizationDownload();
-    }
   }
 
   tryDBGet("keybinds").then((keybinds) => {

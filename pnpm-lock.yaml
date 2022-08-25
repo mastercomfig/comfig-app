@@ -6,6 +6,7 @@ specifiers:
   '@fortawesome/fontawesome-free': ^6.1.2
   '@popperjs/core': ^2.11.6
   '@sentry/browser': ^7.11.1
+  '@zip.js/zip.js': ^2.6.18
   astro: ^1.0.8
   autoprefixer: ^10.4.8
   bootstrap: 5.2.0
@@ -42,6 +43,7 @@ devDependencies:
   '@fortawesome/fontawesome-free': 6.1.2
   '@popperjs/core': 2.11.6
   '@sentry/browser': 7.11.1
+  '@zip.js/zip.js': 2.6.18
   astro: 1.0.8_sass@1.54.5
   autoprefixer: 10.4.8_postcss@8.4.16
   bootstrap: 5.2.0_@popperjs+core@2.11.6
@@ -2310,6 +2312,11 @@ packages:
       vscode-languageserver-types: 3.17.2
       vscode-nls: 5.1.0
       vscode-uri: 2.1.2
+    dev: true
+
+  /@zip.js/zip.js/2.6.18:
+    resolution: {integrity: sha512-KltaGn75SN6vRu+Us07kfwahd3fc110cwIf3Bd1FBDiwNmGmnGH52bwaMzZdBoPHtnKTziYOmcZ1N6JQKfUH6Q==}
+    engines: {deno: '>=1.0.0', node: '>=16.5.0'}
     dev: true
 
   /acorn-jsx/5.3.2_acorn@8.8.0:
