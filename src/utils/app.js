@@ -1097,6 +1097,7 @@ async function app() {
     return null;
   }
 
+  // TODO: repurpose this for the new object
   function getObjectFilePromise(file) {
     try {
       return Promise.resolve({
