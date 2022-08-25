@@ -15,6 +15,7 @@
     "@fortawesome/fontawesome-free": "^6.1.2",
     "@popperjs/core": "^2.11.6",
     "@sentry/browser": "^7.11.1",
+    "@zip.js/zip.js": "^2.6.18",
     "astro": "^1.0.8",
     "autoprefixer": "^10.4.8",
     "bootstrap": "5.2.0",
