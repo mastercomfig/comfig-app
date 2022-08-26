@@ -501,7 +501,6 @@ async function app() {
   let pendingObjectURLs = [];
 
   async function downloadUrls(urls, id, fnGatherUrls) {
-    console.log("Downloading URLs:", urls);
     let zipWriter = new ZipWriter(new BlobWriter("application/zip"), { bufferedWrite: true });
     for (const url of urls) {
       zipWriter.add(url.path, new BlobReader(url.blob));

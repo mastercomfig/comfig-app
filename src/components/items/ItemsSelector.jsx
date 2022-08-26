@@ -16,12 +16,7 @@ export default function ItemsSelector({
   previewClass,
   previewImgClass
 }) {
-  let [selected, setSelected] = useState(defaultValue);
-
-  if (type === "crosshair" && isDefaultWeapon) {
-    console.log(selected);
-    console.log(defaultValue);
-  }
+  let [selected, setSelected] = useState(selection ?? defaultValue);
 
   return (
     <div className="row">
