@@ -18,13 +18,13 @@ const crosshairPacks = {
       pos: ["64", "64"],
       name: "Large Circle",
       size: "64",
-      preview: "ring_large.svg",
+      preview: "circle_large.svg",
     },
     _32_32: {
       pos: ["32", "32"],
       name: "Circle",
       size: "32",
-      preview: "ring.svg",
+      preview: "circle.svg",
     },
     _64_0: {
       pos: ["64", "0"],
