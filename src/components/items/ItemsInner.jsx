@@ -161,7 +161,7 @@ export default function ItemsInner({ playerClass, items }) {
                           setItem={setCrosshair}
                           isDefaultWeapon={itemClasses[0].classname === "default"}
                           type="crosshair"
-                          previewPath="img/app/crosshairs/preview/"
+                          previewPath="/img/app/crosshairs/preview/"
                           previews={crosshairPreviews}
                           previewClass="crosshair-preview text-center"
                           previewImgClass="crosshair-preview-img"
@@ -211,7 +211,7 @@ export default function ItemsInner({ playerClass, items }) {
                                 setItem={setExplosionEffect}
                                 isDefaultWeapon={itemClasses[0].classname === "default"}
                                 type="explosion"
-                                previewPath="img/app/explosions/"
+                                previewPath="/img/app/explosions/"
                                 previews={explosionPreviews}
                                 previewImgClass="explosion-preview-img"
                             />)}
