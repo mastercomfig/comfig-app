@@ -183,7 +183,7 @@ b {
 // Download links
 a.download-link.disabled {
   opacity: 0.65;
-  color: #f8f9fas !important;
+  color: #f8f9fa !important;
 }
 
 .download-link {
@@ -210,16 +210,6 @@ a.download-link.disabled {
 }
 
 // Customize
-.customization-info {
-  background: rgba(255, 255, 255, 0.1);
-  padding: 1rem;
-}
-
-.customization-info .fa-info-circle {
-  padding: 0.5rem;
-  background: #009688;
-}
-
 #customize-toggler.active span {
   transform: rotate(180deg);
 }
@@ -303,7 +293,7 @@ a.addon-card {
 
 a.addon-card.active,
 a.addon-card:hover {
-  color: #f8f9fas !important;
+  color: #f8f9fa !important;
 }
 
 // Other downloads
@@ -325,6 +315,28 @@ a.addon-card:hover {
   max-height: 30vh;
   width: 100%;
   overflow-y: auto;
+}
+
+// Item selection
+.crosshair-preview {
+  height: 100px;
+  background: url('img/app/crosshairs/vtfcrosspreview.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+.crosshair-preview-img {
+  height: 100%;
+  width: auto;
+}
+
+.explosion-preview-img {
+  height: auto;
+  width: 100%;
+}
+
+.preview-container {
+  padding: 0
 }
 
 // Keyboard

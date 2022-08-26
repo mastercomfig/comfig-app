@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
-import { Tab, Row, Col, Nav, FormSelect, FormCheck } from 'react-bootstrap';
+import { Tab, Row, Col, Nav, FormCheck } from 'react-bootstrap';
 import useItemStore from '../../store/items';
+import ItemsSelector from './ItemsSelector';
 
 function calculateItemSlots(playerClass, items) {
   let slots = {};
@@ -43,17 +44,19 @@ function calculateItemSlots(playerClass, items) {
 
 function calculateCrosshairs(items) {
   let crosshairs = {};
+  let crosshairPreviews = {};
   let itemClasses = Object.values(items);
   let isDefault = itemClasses.length === 1 && itemClasses[0].classname === "default";
   if (isDefault) {
-    crosshairs = {"default.default": {name: "Per Weapon"}};
+    crosshairs = {"default.default": "Default"};
   }
 
   for (const packName of Object.keys(crosshairPacks)) {
     const pack = crosshairPacks[packName];
     for (const x of Object.keys(pack)) {
       let crosshair = pack[x];
-      crosshairs[`${packName}.${x}`] = crosshair;
+      crosshairs[`${packName}.${x}`] = crosshair.name;
+      crosshairPreviews[`${packName}.${x}`] = crosshair.preview;
     }
   }
 
@@ -72,14 +75,14 @@ function calculateCrosshairs(items) {
     }
   }
 
-  return [crosshairs, defaultCrosshairs];
+  return [crosshairs, defaultCrosshairs, crosshairPreviews];
 }
 
 export default function ItemsInner({ playerClass, items }) {
 
   let [slots, slotNames, firstKey] = useMemo(() => calculateItemSlots(playerClass, items), [playerClass, items]);
 
-  let [crosshairs, defaultCrosshairs] = useMemo(() => calculateCrosshairs(items), []);
+  let [crosshairs, defaultCrosshairs, crosshairPreviews] = useMemo(() => calculateCrosshairs(items), []);
 
   let [itemStore, setItemStore] = useState({});
 
@@ -147,24 +150,22 @@ export default function ItemsInner({ playerClass, items }) {
                   <Tab.Pane key={`${playerClass}-${item.classname}-pane`} eventKey={`${playerClass}-${item.classname}`}>
                     <div className="container py-4">
                       <h3>Crosshairs</h3>
-                      <div className="row d-flex align-items-center">
-                        <div className="col-3">
-                          {selectedCrosshairs && <FormSelect className="bg-dark text-light" defaultValue={selectedCrosshairs?.[item.classname] ?? defaultCrosshairs[item.classname]} autoComplete="off" onChange={((e) => {
-                            let select = e.target;
-                            let option = select.options[select.selectedIndex];
-                            let value = option.value;
-                            if (value === defaultCrosshairs[item.classname]) {
-                              delCrosshair(item.classname);
-                            } else {
-                              setCrosshair(item.classname, value);
-                            }
-                          })}>
-                            {Object.keys(crosshairs).map(x => <option key={`${playerClass}-${item.classname}-crosshair-${x}`} value={x}>{`${crosshairs[x].name}${x === defaultCrosshairs[item.classname] && itemClasses[0].classname !== "default" ? " (Default)" : ""}`}</option>)}
-                          </FormSelect>}
-                        </div>
-                        <div className="col-sm-9">
-                        </div>
-                      </div>
+                      {selectedCrosshairs 
+                      && (<ItemsSelector
+                          playerClass={playerClass}
+                          selection={selectedCrosshairs?.[item.classname]}
+                          options={crosshairs}
+                          defaultValue={defaultCrosshairs[item.classname]}
+                          classname={item.classname}
+                          delItem={delCrosshair}
+                          setItem={setCrosshair}
+                          isDefaultWeapon={itemClasses[0].classname === "default"}
+                          type="crosshair"
+                          previewPath="img/app/crosshairs/preview/"
+                          previews={crosshairPreviews}
+                          previewClass="crosshair-preview text-center"
+                          previewImgClass="crosshair-preview-img"
+                      />)}
                       {(item.MuzzleFlashParticleEffect || item.BrassModel || item.TracerEffect) && <h3 className="pt-4">Firing Effects</h3>}
                       {item.MuzzleFlashParticleEffect && selectedMuzzleFlashes && (
                         <FormCheck type="switch" label="Muzzle Flash" defaultChecked={!selectedMuzzleFlashes.has(item.classname)} onChange={((e) => {
@@ -199,24 +200,21 @@ export default function ItemsInner({ playerClass, items }) {
                       {item.ExplosionEffect && item.classname !== "tf_weapon_particle_cannon" && (
                         <>
                           <h3 className="pt-4">Explosion Effect</h3>
-                          <div className="row d-flex align-items-center">
-                            <div className="col-3">
-                              {selectedExplosion && <FormSelect className="bg-dark text-light" defaultValue={selectedExplosion?.[item.classname] ?? "default"} autoComplete="off" onChange={((e) => {
-                                let select = e.target;
-                                let option = select.options[select.selectedIndex];
-                                let value = option.value;
-                                if (value === "Default") {
-                                  delExplosionEffect(item.classname);
-                                } else {
-                                  setExplosionEffect(item.classname, value);
-                                }
-                              })}>
-                                {Object.keys(explosionEffects).map(x => <option key={`${playerClass}-${item.classname}-explosion-${explosionEffects[x]}`} value={x}>{explosionEffects[x] === "default" && itemClasses[0].classname === "default" ? "Per Weapon" : x}</option>)}
-                              </FormSelect>}
-                            </div>
-                            <div className="col-sm-9">
-                            </div>
-                          </div>
+                          {selectedExplosion 
+                            && (<ItemsSelector
+                                playerClass={playerClass}
+                                selection={selectedExplosion?.[item.classname]}
+                                options={explosionEffects}
+                                defaultValue="default"
+                                classname={item.classname}
+                                delItem={delExplosionEffect}
+                                setItem={setExplosionEffect}
+                                isDefaultWeapon={itemClasses[0].classname === "default"}
+                                type="explosion"
+                                previewPath="img/app/explosions/"
+                                previews={explosionPreviews}
+                                previewImgClass="explosion-preview-img"
+                            />)}
                         </>
                       )}
                     </div>
