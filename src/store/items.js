@@ -27,7 +27,17 @@ const useStore = create(
         return state;
       }),
     }),
-    idbStorage("items", ["crosshairs", "muzzleflashes", "brassmodels", "tracers", "explosioneffects"])
+    idbStorage("items", 2, (persistedState, version) => {
+      // Explosion effects were wrong order
+      if (version === 0) {
+        for (const [key, val] of Object.entries(persistedState.explosioneffects)) {
+          persistedState.explosioneffects[val] = key;
+          delete persistedState.explosioneffects[key];
+        }
+      }
+      return persistedState;
+    },
+    ["crosshairs", "muzzleflashes", "brassmodels", "tracers", "explosioneffects"])
   )
 );
 

@@ -1353,7 +1353,6 @@ async function app() {
       addonHandler[id]?.disabled?.();
     }
     // Make sure the UI reflects the selected state
-    getEl(id + "-dl").style.display = checked ? "initial" : "none";
     getEl(id).classList.toggle("active", checked);
   }
 
@@ -1373,10 +1372,6 @@ async function app() {
       userVer = latestVersion;
     }
     version = userVer;
-    getEl("preset-dl").href = getPresetUrl(true);
-    for (const id of addons) {
-      getEl(id + "-dl").href = getAddonUrl(id, true);
-    }
     getEl("version").innerText = userVer;
     let url;
     if (releaseUrl.hasOwnProperty(userVersion)) {
@@ -1449,10 +1444,6 @@ async function app() {
     getEl("preset-description").innerHTML = presetInfo.description;
     getEl("vpk-dl").removeAttribute("href"); // we don't need the static download anymore
     updatePresetDownloadButton();
-    getEl("preset-dl").href = getPresetUrl(true);
-    getEl(
-      "preset-dl"
-    ).innerHTML = `<span class="fas fa-cloud-download fa-fw"></span> Download ${presetInfo.name} preset `; // update preset text
     // if not loading from DB, set recommended addons
     if (!fromDB) {
       // reset all recommendable addons

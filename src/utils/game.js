@@ -18,7 +18,7 @@ const crosshairPacks = {
       pos: ["64", "64"],
       name: "Large Circle",
       size: "64",
-      preview: "ring.svg",
+      preview: "ring_large.svg",
     },
     _32_32: {
       pos: ["32", "32"],
@@ -467,12 +467,21 @@ const slotToIndex = [
 ];
 
 const explosionEffects = {
-  "Default": "default",
-  "Sapper Destroyed": "ExplosionCore_sapperdestroyed",
-  "Minigun Muzzle Flash": "muzzle_minigun_starflash01",
-  "Pyro Pool Explosion": "eotl_pyro_pool_explosion_flash",
-  "Electrocuted Red": "electrocuted_red_flash",
-  "Electrocuted Blue": "electrocuted_blue_flash",
+  "default": "Default",
+  "ExplosionCore_sapperdestroyed": "Sapper Destroyed",
+  "muzzle_minigun_starflash01": "Minigun Muzzle Flash",
+  "eotl_pyro_pool_explosion_flash": "Pyro Pool Explosion",
+  "electrocuted_red_flash": "Electrocuted Red",
+  "electrocuted_blue_flash": "Electrocuted Blue",
+};
+
+const explosionPreviews = {
+  "default": "default.jpg",
+  "ExplosionCore_sapperdestroyed": "explosions_original.jpg",
+  "muzzle_minigun_starflash01": "explosions_muzzle_flash.jpg",
+  "eotl_pyro_pool_explosion_flash": "explosions_pyro_pool.jpg",
+  "electrocuted_red_flash": "explosions_2colours.jpg",
+  "electrocuted_blue_flash": "explosions_2colours.jpg",
 };
 
 function getNormalizedSlotName(item) {
@@ -569,6 +578,7 @@ globalThis.getLocalization = getLocalization;
 globalThis.getItemName = getItemName;
 globalThis.getNormalizedSlotName = getNormalizedSlotName;
 globalThis.explosionEffects = explosionEffects;
+globalThis.explosionPreviews = explosionPreviews;
 
 export default {
   languageCache,
