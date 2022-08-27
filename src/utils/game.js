@@ -552,7 +552,7 @@ async function initGameData() {
   }
 }
 
-let stockItems = {
+const stockItems = {
   default: [],
   scout: ["tf_weapon_scattergun", "tf_weapon_pistol_scout", "tf_weapon_bat"],
   soldier: ["tf_weapon_rocketlauncher", "tf_weapon_shotgun_soldier", "tf_weapon_shovel"],
@@ -565,6 +565,8 @@ let stockItems = {
   spy: ["tf_weapon_revolver", "tf_weapon_knife", "tf_weapon_sapper"],
   "All-Class": []
 };
+
+const skipExplosionEffect = new Set(["tf_weapon_particle_cannon", "tf_weapon_grapplinghook", "tf_weapon_compound_bow", "tf_weapon_crossbow", "tf_weapon_shotgun_building_rescue", "tf_weapon_rocketlauncher_fireball", "tf_weapon_flaregun", "tf_weapon_flaregun_revenge"]);
 
 globalThis.classes = classes;
 globalThis.crosshairPacks = crosshairPacks;
@@ -579,6 +581,7 @@ globalThis.getItemName = getItemName;
 globalThis.getNormalizedSlotName = getNormalizedSlotName;
 globalThis.explosionEffects = explosionEffects;
 globalThis.explosionPreviews = explosionPreviews;
+globalThis.skipExplosionEffect = skipExplosionEffect;
 
 export default {
   languageCache,

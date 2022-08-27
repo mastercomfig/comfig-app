@@ -1265,8 +1265,7 @@ async function app() {
         let effect = selectedExplosionEffects["default"];
         effect = explosionEffects[effect];
         for (const classname of Object.keys(items)) {
-          // Keep Cow Mangler on the old one, since it's unused and the default particle needs to be precached
-          if (classname === "tf_weapon_particle_cannon") {
+          if (skipExplosionEffect.has(classname)) {
             continue;
           }
           let item = items[classname];
