@@ -27,11 +27,18 @@ const useStore = create(
         return state;
       }),
     }),
-    idbStorage("items", 2, (persistedState, version) => {
+    idbStorage("items", 3, (persistedState, version) => {
       // Explosion effects were wrong order
       if (version === 0) {
         for (const [key, val] of Object.entries(persistedState.explosioneffects)) {
           persistedState.explosioneffects[val] = key;
+          delete persistedState.explosioneffects[key];
+        }
+      }
+      // Incorrect migration
+      if (version < 3) {
+        for (const [key, val] of Object.entries(persistedState.explosioneffects)) {
+          persistedState.explosioneffects[val] = explosionEffects[key];
           delete persistedState.explosioneffects[key];
         }
       }
