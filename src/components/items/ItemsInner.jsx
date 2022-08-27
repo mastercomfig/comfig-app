@@ -167,7 +167,7 @@ export default function ItemsInner({ playerClass, items }) {
                           previewImgClass="crosshair-preview-img"
                       />)}
                       {(item.MuzzleFlashParticleEffect || item.BrassModel || item.TracerEffect) && <h3 className="pt-4">Firing Effects</h3>}
-                      {item.MuzzleFlashParticleEffect && selectedMuzzleFlashes && item.classname !== "tf_weapon_compound_bow" && (
+                      {item.MuzzleFlashParticleEffect && selectedMuzzleFlashes && !skipMuzzleFlash.has(item.classname) && (
                         <FormCheck type="switch" label="Muzzle Flash" defaultChecked={!selectedMuzzleFlashes.has(item.classname)} onChange={((e) => {
                           let check = e.target.checked;
                           if (!check) {

@@ -1215,6 +1215,9 @@ async function app() {
       }
       if (muzzleflashes.has("default")) {
         for (const classname of Object.keys(items)) {
+          if (skipMuzzleFlash.has(classname)) {
+            continue;
+          }
           let item = items[classname];
           if (!item.MuzzleFlashParticleEffect) {
             continue
@@ -1224,6 +1227,9 @@ async function app() {
         }
       } else {
         for (const classname of Array.from(muzzleflashes)) {
+          if (skipMuzzleFlash.has(classname)) {
+            continue;
+          }
           let item = items[classname];
           item.MuzzleFlashParticleEffect = "";
           itemsToDownload.add(classname);
@@ -1278,6 +1284,9 @@ async function app() {
         }
       } else {
         for (const classname of Object.keys(selectedExplosionEffects)) {
+          if (skipExplosionEffect.has(classname)) {
+            continue;
+          }
           let item = items[classname];
           let effect = selectedExplosionEffects[classname];
           item.ExplosionEffect = effect;
