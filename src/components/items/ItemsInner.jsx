@@ -197,7 +197,7 @@ export default function ItemsInner({ playerClass, items }) {
                           }
                         })}></FormCheck>
                       )}
-                      {item.ExplosionEffect && item.classname !== "tf_weapon_particle_cannon" && (
+                      {item.ExplosionEffect && !skipExplosionEffect.has(item.classname) && (
                         <>
                           <h3 className="pt-4">Explosion Effect</h3>
                           {selectedExplosion 
