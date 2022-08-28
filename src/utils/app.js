@@ -1253,6 +1253,9 @@ async function app() {
       }
       if (tracers.has("default")) {
         for (const classname of Object.keys(items)) {
+          if (skipTracer.has(classname)) {
+            continue;
+          }
           let item = items[classname];
           if (!item.TracerEffect) {
             continue;
@@ -1262,6 +1265,9 @@ async function app() {
         }
       } else {
         for (const classname of Array.from(tracers)) {
+          if (skipTracer.has(classname)) {
+            continue;
+          }
           let item = items[classname];
           item.TracerEffect = "";
           itemsToDownload.add(classname);

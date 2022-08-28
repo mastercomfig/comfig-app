@@ -570,6 +570,8 @@ const skipExplosionEffect = new Set(["tf_weapon_particle_cannon", "tf_weapon_gra
 
 const skipMuzzleFlash = new Set(["tf_weapon_drg_pomson", "tf_weapon_mechanical_arm", "tf_weapon_rocketlauncher_fireball"]);
 
+const skipTracer = new Set(["tf_weapon_minigun"]);
+
 globalThis.classes = classes;
 globalThis.crosshairPacks = crosshairPacks;
 globalThis.itemUsedBy = itemUsedBy;
@@ -585,6 +587,7 @@ globalThis.explosionEffects = explosionEffects;
 globalThis.explosionPreviews = explosionPreviews;
 globalThis.skipExplosionEffect = skipExplosionEffect;
 globalThis.skipMuzzleFlash = skipMuzzleFlash;
+globalThis.skipTracer = skipTracer;
 
 export default {
   languageCache,

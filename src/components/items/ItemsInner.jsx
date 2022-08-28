@@ -187,7 +187,7 @@ export default function ItemsInner({ playerClass, items }) {
                           }
                         })}></FormCheck>
                       )}
-                      {item.TracerEffect && selectedTracers && (
+                      {item.TracerEffect && selectedTracers && !skipTracer.has(item.classname) && (
                         <FormCheck type="switch" label="Tracer" defaultChecked={!selectedTracers.has(item.classname)} onChange={((e) => {
                           let check = e.target.checked;
                           if (!check) {
