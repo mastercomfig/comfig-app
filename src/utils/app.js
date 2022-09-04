@@ -860,17 +860,17 @@ async function app() {
         presetResult.path = `tf/custom/${presetResult.name}`;
         // Then push our preset download
         downloads.push(presetResult);
+      } else {
+        alert("Failed to download preset file. Please try again later.");
       }
     }
     // Then push all our addon downloads
     for (const selection of selectedAddons) {
       let addonUrl = getAddonUrl(selection);
       let addonResult = await writeRemoteFile(addonUrl, customDirectory);
-      if (customDirectory) {
-        if (!addonResult) {
-          alert("Failed to download preset file. Please try again later.");
-        }
-      } else if (addonResult) {
+      if (!addonResult) {
+        alert(`Failed to download ${selection} addon file. Please try again later.`);
+      } else if (!customDirectory) {
         addonResult.path = `tf/custom/${addonResult.name}`;
         downloads.push(addonResult);
       }
