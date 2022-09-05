@@ -133,6 +133,9 @@ export default defineConfig({
         "~bootstrap": url.fileURLToPath(
           new URL("./node_modules/bootstrap", import.meta.url)
         ),
+        "~bootswatch": url.fileURLToPath(
+          new URL("./node_modules/bootswatch", import.meta.url)
+        ),
       },
     },
   },

@@ -293,6 +293,7 @@ a.addon-card {
 
 a.addon-card.active,
 a.addon-card:hover {
+  --bs-card-bg: #212529;
   color: #f8f9fa !important;
 }
 

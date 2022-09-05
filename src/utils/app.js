@@ -554,6 +554,7 @@ async function app() {
   let appDirectory = null;
   let comfigCustomDirectory = null;
   let scriptsDirectory = null;
+  let materialsDirectory = null;
 
   let bindDirectInstall = true;
 
@@ -568,6 +569,7 @@ async function app() {
       appDirectory = null;
       comfigCustomDirectory = null;
       scriptsDirectory = null;
+      materialsDirectory = null;
       updatePresetDownloadButton();
       return;
     }
@@ -615,18 +617,18 @@ async function app() {
     }
   }
 
-  let bannedDirectories = ["tf", "custom", "cfg", "user", "overrides", "app"];
-  let silentBannedDirectories = [""];
+  let bannedDirectories = new Set(["tf", "custom", "cfg", "user", "overrides", "app"]);
+  let silentBannedDirectories = new Set([""]);
 
   function checkDirectory(directoryHandle) {
     const name = directoryHandle.name;
-    let fail = bannedDirectories.includes(name);
+    let fail = bannedDirectories.has(name);
     if (fail) {
       alert(
         `${name} is not a valid folder. To install to your game, please select the top-level "Team Fortress 2" folder.`
       );
     } else {
-      fail = silentBannedDirectories.includes(name);
+      fail = silentBannedDirectories.has(name);
     }
     return !fail;
   }
@@ -719,7 +721,19 @@ async function app() {
       });
       scriptsDirectory = await comfigCustomDirectory.getDirectoryHandle("scripts", {
         create: true,
-    });
+      });
+      const materialsRootDirectory = await comfigCustomDirectory.getDirectoryHandle("materials", {
+        create: true,
+      });
+      const vguiDirectory = await materialsRootDirectory.getDirectoryHandle("vgui", {
+        create: true,
+      });
+      const replayDirectory = await vguiDirectory.getDirectoryHandle("replay", {
+        create: true,
+      });
+      materialsDirectory = await replayDirectory.getDirectoryHandle("thumbnails", {
+        create: true,
+      });
       const cfgDirectory = await tfDirectory.getDirectoryHandle("cfg", {
         create: true,
       });
@@ -1183,19 +1197,27 @@ async function app() {
       let items = cloneDeep(globalThis.items);
       delete items.default;
       let itemsToDownload = new Set();
+      let crosshairsToDownload = new Set();
+      const crosshairTargetBase = "vgui/replay/thumbnails/";
+      const crosshairTarget = `tf/custom/comfig-custom/materials/${crosshairTargetBase}`;
       let crosshairPacks = globalThis.crosshairPacks;
       if (crosshairs["default"]) {
         let [crosshairFile, crosshairKey] = crosshairs["default"].split(".", 2);
         let crosshairPack = crosshairPacks[crosshairFile];
-        let crosshairInfo = crosshairPack[crosshairKey];
+        let crosshairInfo = crosshairPack[crosshairKey] ?? crosshairPack;
         for (const classname of Object.keys(items)) {
           let item = items[classname];
           let itemCrosshair = item.TextureData.crosshair;
-          itemCrosshair.file = crosshairFile;
-          itemCrosshair.x = crosshairInfo.pos[0];
-          itemCrosshair.y = crosshairInfo.pos[1];
-          itemCrosshair.width = crosshairInfo.size;
-          itemCrosshair.height = crosshairInfo.size;
+          if (crosshairFile.indexOf("/") !== -1) {
+            itemCrosshair.file = `${crosshairTargetBase}${crosshairFile}`;
+            crosshairsToDownload.add(crosshairFile);
+          } else {
+            itemCrosshair.file = crosshairFile;
+          }
+          itemCrosshair.x = crosshairInfo.pos?.[0] ?? "0";
+          itemCrosshair.y = crosshairInfo.pos?.[1] ?? "0";
+          itemCrosshair.width = crosshairInfo.size ?? "64";
+          itemCrosshair.height = crosshairInfo.size ?? "64";
           itemsToDownload.add(classname);
         }
       } else {
@@ -1205,11 +1227,16 @@ async function app() {
           let itemCrosshair = item.TextureData.crosshair;
           let crosshairPack = crosshairPacks[crosshairFile];
           let crosshairInfo = crosshairPack[crosshairKey];
-          itemCrosshair.file = crosshairFile;
-          itemCrosshair.x = crosshairInfo.pos[0];
-          itemCrosshair.y = crosshairInfo.pos[1];
-          itemCrosshair.width = crosshairInfo.size;
-          itemCrosshair.height = crosshairInfo.size;
+          if (crosshairFile.indexOf("/") !== -1) {
+            itemCrosshair.file = `${crosshairTargetBase}${crosshairFile}`;
+            crosshairsToDownload.add(crosshairFile);
+          } else {
+            itemCrosshair.file = crosshairFile;
+          }
+          itemCrosshair.x = crosshairInfo.pos?.[0] ?? "0";
+          itemCrosshair.y = crosshairInfo.pos?.[1] ?? "0";
+          itemCrosshair.width = crosshairInfo.size ?? "64";
+          itemCrosshair.height = crosshairInfo.size ?? "64";
           itemsToDownload.add(classname);
         }
       }
@@ -1313,6 +1340,21 @@ async function app() {
           path: `tf/custom/comfig-custom/scripts/${fileName}`,
           blob: file
         });
+      }
+      const crosshairExtensions = [".vtf", ".vmt"];
+      let crosshairSrcBase = `/img/app/crosshairs/assets/`;
+      for (const crosshairFile of Array.from(crosshairsToDownload)) {
+        for (const ext of crosshairExtensions) {
+          let src = `${crosshairSrcBase}${crosshairFile}${ext}`;
+          let crosshairResult = await writeRemoteFile(src, materialsDirectory);
+          if (!crosshairResult) {
+            alert("Failed to download preset file. Please try again later.");
+          } else if (!materialsDirectory) {
+            let dst = `${crosshairTarget}${crosshairFile}${ext}`;
+            crosshairResult.path = dst;
+            downloads.push(crosshairResult);
+          }
+        }
       }
     }
     return downloads;

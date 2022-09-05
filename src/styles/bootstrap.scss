@@ -6,6 +6,7 @@
 // Options
 $enable-rounded: false;
 $enable-negative-margins: true;
+$enable-gradients: false;
 
 // Colors
 $teal: #009688;
@@ -13,13 +14,20 @@ $backdrop: #212121;
 $primary: $teal;
 $secondary: #b2dfdb;
 $light: #f8f9fa;
+$dark: rgb(33, 37, 41);
 
 // Form
+$input-padding-y: .375rem;
+$input-padding-x: .5rem;
+$input-padding-y-sm: .25rem;
+$input-padding-x-sm: .25rem;
 $input-border-color: rgb(108, 117, 125);
 $form-select-indicator-color: $light;
 
 // Alert
 $alert-border-radius: 0; // work around 5.2 bug
+
+@import "~bootswatch/dist/materia/variables";
 
 // 3. Include remainder of required Bootstrap stylesheets
 @import "~bootstrap/scss/variables";
@@ -49,8 +57,15 @@ $progress-bar-color: $dark;
 $progress-bg: $backdrop;
 // Card
 $card-bg: $gray-900;
+// Input
+$input-bg: $body-bg;
 // Form Select
 $form-select-color: $white;
+$form-select-border-color: lighten($input-bg, 5%);
+$form-select-border-width: 1px;
+$form-select-border-radius: $input-border-radius;
+$form-select-border-radius-sm: $input-border-radius-sm;
+$form-select-border-radius-lg: $input-border-radius-lg;
 
 
 // 5. Include remainder of required parts
@@ -97,3 +112,9 @@ $form-select-color: $white;
 
 // 7. Optionally include utilities API last to generate classes based on the Sass map in `_utilities.scss`
 @import "~bootstrap/scss/utilities/api";
+
+// Workaround for Vite bug
+$web-font-path: "";
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap");
+
+//@import "~bootswatch/dist/materia/bootswatch";
