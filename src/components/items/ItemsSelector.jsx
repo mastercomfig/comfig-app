@@ -136,6 +136,9 @@ export default function ItemsSelector({
   let selectOptions = {};
 
   for (const x of Object.keys(options)) {
+    if (!isDefaultWeapon && x === "default") {
+      continue;
+    }
     selectOptions[x] = {
       value: x,
       label: x === defaultValue && isDefaultWeapon ? "Per Weapon" : `${options[x]}${
@@ -154,6 +157,9 @@ export default function ItemsSelector({
       }
       let groupOptions = groups[group];
       for (const groupOption of groupOptions) {
+        if (!isDefaultWeapon && groupOption === "default") {
+          continue;
+        }
         const pack = crosshairPacks[groupOption];
         if (!pack) {
           continue;
