@@ -13,6 +13,12 @@ const classes = [
 ];
 
 const crosshairPacks = {
+  "default": {
+    "default": {
+      name: "Default",
+      preview: null,
+    }
+  },
   "sprites/crosshairs": {
     _64_64: {
       pos: ["64", "64"],
@@ -429,7 +435,7 @@ const crosshairPacks = {
 };
 
 const crosshairPackGroups = {
-  "Valve": ["sprites/crosshairs"],
+  "Valve": ["default", "sprites/crosshairs"],
   "Leth": ["crosshair1", "crosshair1OL", "crosshair2", "crosshair2OL", "crosshair3", "crosshair3OL", "crosshair5", "crosshair5OL", "crosshair5circle", "crossshair5circleOL", "crosshair6", "crosshair6OL", "crosshair6circle", "crosshair6circleOL", "crosshair7", "crosshair7OL", "bigcrosshair7", "bigcrosshair7OL", "smallcrosshair7", "smallcrosshair7OL", "smallcrosshair7circle", "smallcrosshair7circleOL", "smallcrosshair7OL", "fatcross", "fatcrossOL", "fatcrosscircle", "fatcrosscircleOL", "mediccrossbig", "opencross", "opencrossOL", "seeker", "seekerOL", "sniperbig", "sniperbigOL", "snipercircle", "snipercircleOL", "sniperOL", "thalashseeker", "yzwings"],
   "Tob": ["tob_rocketcross", "tob_wingscross", "tob_wingsdot"],
   "wavesui": ["xhairshadowdefault", "xhairshadowdots", "xhairshadowplus", "xhairshadowpluss", "xhairshadowrocketsthick"],
