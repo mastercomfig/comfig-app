@@ -8,7 +8,7 @@ export default function Items({ items }) {
   <div className="items-root">
     <SSRProvider>
       <Global items={items} />
-      <Tabs defaultActiveKey="default">
+      <Tabs defaultActiveKey="default" transition={false}>
         <Tab eventKey="default" title="Default">
           <ItemsInner playerClass="default" items={{default: items["default"]}}  />
         </Tab>

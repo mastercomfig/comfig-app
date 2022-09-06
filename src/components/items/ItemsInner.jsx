@@ -44,7 +44,7 @@ function calculateItemSlots(playerClass, items) {
 
 function calculateCrosshairs(items) {
   let crosshairs = {};
-  let crosshairPreviews = {};
+  let crosshairPreviews = {"Valve.default.default": null};
   let itemClasses = Object.values(items);
   let isDefault = itemClasses.length === 1 && itemClasses[0].classname === "default";
   if (isDefault) {
@@ -182,9 +182,10 @@ export default function ItemsInner({ playerClass, items }) {
                           previews={crosshairPreviews}
                           previewClass="crosshair-preview d-flex"
                           previewImgClass="crosshair-preview-img"
-                          useGroups={true}
+                          useAdvancedSelect={true}
+                          groups={crosshairPackGroups}
                       />)}
-                      {(item.MuzzleFlashParticleEffect || item.BrassModel || item.TracerEffect) && <h3 className="pt-4">Firing Effects</h3>}
+                      {(item.MuzzleFlashParticleEffect && !skipMuzzleFlash.has(item.classname) || item.BrassModel || item.TracerEffect && !skipTracer.has(item.classname)) && <h3 className="pt-4">Firing Effects</h3>}
                       {item.MuzzleFlashParticleEffect && selectedMuzzleFlashes && !skipMuzzleFlash.has(item.classname) && (
                         <FormCheck type="switch" label="Muzzle Flash" defaultChecked={!selectedMuzzleFlashes.has(item.classname)} onChange={((e) => {
                           let check = e.target.checked;

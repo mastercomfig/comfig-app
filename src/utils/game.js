@@ -63,12 +63,12 @@ const crosshairPacks = {
   },
   "crosshair2": {
     _0_0: {
-      name: "Lower Crosshair Dot"
+      name: "Half Crosshair Dot"
     }
   },
   "crosshair2OL": {
     _0_0: {
-      name: "Lower Crosshair Dot (Outlined)"
+      name: "Half Crosshair Dot (Outlined)"
     }
   },
   "crosshair3": {
@@ -249,6 +249,181 @@ const crosshairPacks = {
   "yzwings": {
     _0_0: {
       name: "yz50's Wings"
+    }
+  },
+  "tob_rocketcross": {
+    _0_0: {
+      name: "Circle Cross"
+    }
+  },
+  "tob_wingscross": {
+    _0_0: {
+      name: "Wings Cross"
+    }
+  },
+  "tob_wingsdot": {
+    _0_0: {
+      name: "Wings Dot"
+    }
+  },
+  "xhairshadowdefault": {
+    _0_0: {
+      name: "Shadowed Brackets"
+    }
+  },
+  "xhairshadowdots": {
+    _0_0: {
+      name: "Shadowed Dots"
+    }
+  },
+  "xhairshadowplus": {
+    _0_0: {
+      name: "Shadowed Plus"
+    }
+  },
+  "xhairshadowpluss": {
+    _0_0: {
+      name: "Shadowed Small Plus"
+    }
+  },
+  "cpma_11": {
+    _0_0: {
+      name: "CPMA 11"
+    }
+  },
+  "cpma_12": {
+    _0_0: {
+      name: "CPMA 12"
+    }
+  },
+  "cpma_13": {
+    _0_0: {
+      name: "CPMA 13"
+    }
+  },
+  "cpma_14": {
+    _0_0: {
+      name: "CPMA 15"
+    }
+  },
+  "cpma_15": {
+    _0_0: {
+      name: "CPMA 15"
+    }
+  },
+  "cpma_16": {
+    _0_0: {
+      name: "CPMA 16"
+    }
+  },
+  "cpma_17": {
+    _0_0: {
+      name: "CPMA 17"
+    }
+  },
+  "cpma_18": {
+    _0_0: {
+      name: "CPMA 18"
+    }
+  },
+  "cpma_19": {
+    _0_0: {
+      name: "CPMA 19"
+    }
+  },
+  "ql_1": {
+    _0_0: {
+      name: "Quake 1"
+    }
+  },
+  "ql_2": {
+    _0_0: {
+      name: "Quake 2"
+    }
+  },
+  "ql_3": {
+    _0_0: {
+      name: "Quake 3"
+    }
+  },
+  "ql_4": {
+    _0_0: {
+      name: "Quake 4"
+    }
+  },
+  "ql_5": {
+    _0_0: {
+      name: "Quake 5"
+    }
+  },
+  "ql_6": {
+    _0_0: {
+      name: "Quake 6"
+    }
+  },
+  "ql_7": {
+    _0_0: {
+      name: "Quake 7"
+    }
+  },
+  "ql_8": {
+    _0_0: {
+      name: "Quake 8"
+    }
+  },
+  "ql_9": {
+    _0_0: {
+      name: "Quake 9"
+    }
+  },
+  "ql_10": {
+    _0_0: {
+      name: "Quake 10"
+    }
+  },
+  "ql_11": {
+    _0_0: {
+      name: "Quake 11"
+    }
+  },
+  "ql_12": {
+    _0_0: {
+      name: "Quake 12"
+    }
+  },
+  "ql_13": {
+    _0_0: {
+      name: "Quake 13"
+    }
+  },
+  "ql_14": {
+    _0_0: {
+      name: "Quake 14"
+    }
+  },
+  "ql_15": {
+    _0_0: {
+      name: "Quake 15"
+    }
+  },
+  "ql_16": {
+    _0_0: {
+      name: "Quake 16"
+    }
+  },
+  "ql_17": {
+    _0_0: {
+      name: "Quake 17"
+    }
+  },
+  "ql_18": {
+    _0_0: {
+      name: "Quake 18"
+    }
+  },
+  "ql_19": {
+    _0_0: {
+      name: "Quake 19"
     }
   },
 };

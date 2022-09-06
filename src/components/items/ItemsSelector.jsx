@@ -3,6 +3,15 @@ import { FormSelect } from "react-bootstrap";
 import { components } from "react-select";
 import Select from "react-select";
 
+function onMenuOpen() {
+  setTimeout(() => {
+    const selectedEl = document.getElementsByClassName("MyDropdown__option--is-selected")[0];
+    if (selectedEl) {
+      selectedEl.scrollIntoView({behavior: 'smooth', block: 'nearest', inline: 'start'});
+    }
+  }, 15);
+};
+
 // React select https://github.com/JedWatson/react-select/issues/2345#issuecomment-843674624
 function getSelectStyles(multi, size='') {
 	const suffix = size ? `-${size}` : '';
@@ -94,6 +103,17 @@ function getSelectTheme(theme) {
 	}
 }
 
+function getPreviewImage(selected, previews, previewPath, previewImgClass) {
+  let selectedInfo = selected.split(".", 3);
+  let selectedName;
+  if (selectedInfo.length === 3) {
+    selectedName = selectedInfo[1];
+  } else {
+    selectedName = selectedInfo;
+  }
+  return previews && previews[selected] !== null && (<img className={previewImgClass} src={`${previewPath}${previews[selected] ?? (selectedName + ".png")}`}></img>);
+}
+
 export default function ItemsSelector({
   playerClass,
   selection,
@@ -108,17 +128,10 @@ export default function ItemsSelector({
   previews,
   previewClass,
   previewImgClass,
-  useGroups
+  useAdvancedSelect,
+  groups,
 }) {
   let [selected, setSelected] = useState(selection ?? defaultValue);
-
-  let selectedInfo = selected.split(".", 3);
-  let selectedName;
-  if (selectedInfo.length === 3) {
-    selectedName = selectedInfo[1];
-  } else {
-    selectedName = selectedInfo;
-  }
 
   let selectOptions = {};
 
@@ -131,13 +144,43 @@ export default function ItemsSelector({
     };
   }
 
+  let groupedSelectOptions = null;
+  if (groups) {
+    groupedSelectOptions = {};
+    for (const group of Object.keys(groups)) {
+      groupedSelectOptions[group] = {
+        label: group,
+        options: []
+      }
+      let groupOptions = groups[group];
+      for (const groupOption of groupOptions) {
+        const pack = crosshairPacks[groupOption];
+        if (!pack) {
+          continue;
+        }
+        for (const x of Object.keys(pack)) {
+          groupedSelectOptions[group].options.push(selectOptions[`${group}.${groupOption}.${x}`]);
+        }
+      }
+    }
+  }
+
   return (
     <div className="row">
-      <div className="col-3">
-        {(useGroups && (<Select
+      <div className="col-4">
+        {(useAdvancedSelect && (<Select
           components={{ DropdownIndicator, IndicatorSeparator }}
           theme={getSelectTheme}
           styles={getSelectStyles(false)}
+          onMenuOpen={onMenuOpen}
+          className ={"MyDropdown"}
+          classNamePrefix={"MyDropdown"}
+          formatOptionLabel={({ value, label }) => (
+            <div style={{ display: "flex", alignItems: 'center' }}>
+              {getPreviewImage(value, previews, previewPath, previewImgClass)}
+              <div style={{ marginLeft: "0.5rem" }}>{label}</div>
+            </div>
+          )}
           defaultValue={selectOptions[selection ?? defaultValue]}
           autoComplete="off"
           onChange={(option) => {
@@ -149,7 +192,7 @@ export default function ItemsSelector({
               setItem(classname, value);
             }
           }}
-          options={Object.values(selectOptions)}/>)) || (<FormSelect
+          options={Object.values(groupedSelectOptions ?? selectOptions)}/>)) || (<FormSelect
           className="bg-dark text-light"
           defaultValue={selection ?? defaultValue}
           autoComplete="off"
@@ -175,8 +218,8 @@ export default function ItemsSelector({
           ))}
         </FormSelect>)}
       </div>
-      {(selected !== defaultValue || !isDefaultWeapon) && (<div className={`col-9 preview-container ${previewClass}`}>
-        {previews && previews[selected] !== null && (<img className={previewImgClass} src={`${previewPath}${previews[selected] ?? (selectedName + ".png")}`}></img>)}
+      {(selected !== defaultValue || !isDefaultWeapon) && (<div className={`col-8 preview-container ${previewClass}`}>
+        {getPreviewImage(selected, previews, previewPath, previewImgClass)}
       </div>)}
     </div>
   );
