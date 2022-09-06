@@ -17,8 +17,8 @@ import "highlight.js/styles/atom-one-dark.css";
   </PreloadHead>
   <ImportHead>
     <script>
-      import { Modal } from "bootstrap";
-      import '../utils/index.js';
+      import "bootstrap/js/src/modal.js";
+      import "../utils/index.js";
     </script>
 
   </ImportHead>
@@ -132,8 +132,7 @@ import "highlight.js/styles/atom-one-dark.css";
             srcTwo="/img/koth_sawmill_quality.jpg" altTwo="koth_sawmill ultra"
           />
           <br>
-          <button type="button" class="btn btn-secondary btn-sm d-none d-md-block" data-bs-toggle="modal"
-            data-bs-target="#compareModal">
+          <button type="button" class="btn btn-secondary btn-sm d-none d-md-block" data-bs-toggle="modal" data-bs-target="#compareModal">
             View larger
           </button>
           <br>
@@ -231,7 +230,7 @@ tf_item_inspect_model_spin_rate 30 // Rate at which items spin in the inspect vi
       <div class="modal-content">
         <div class="modal-header text-light">
           <h5 class="modal-title" id="compareModalLabel">Comparison</h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <ImageSlider client:load

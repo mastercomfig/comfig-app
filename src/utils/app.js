@@ -1202,13 +1202,13 @@ async function app() {
       const crosshairTarget = `tf/custom/comfig-custom/materials/${crosshairTargetBase}`;
       let crosshairPacks = globalThis.crosshairPacks;
       if (crosshairs["default"]) {
-        let [crosshairFile, crosshairKey] = crosshairs["default"].split(".", 2);
+        let [crosshairGroup, crosshairFile, crosshairKey] = crosshairs["default"].split(".", 3);
         let crosshairPack = crosshairPacks[crosshairFile];
         let crosshairInfo = crosshairPack[crosshairKey] ?? crosshairPack;
         for (const classname of Object.keys(items)) {
           let item = items[classname];
           let itemCrosshair = item.TextureData.crosshair;
-          if (crosshairFile.indexOf("/") !== -1) {
+          if (crosshairFile.indexOf("/") === -1) {
             itemCrosshair.file = `${crosshairTargetBase}${crosshairFile}`;
             crosshairsToDownload.add(crosshairFile);
           } else {
@@ -1223,11 +1223,11 @@ async function app() {
       } else {
         for (const classname of Object.keys(crosshairs)) {
           let item = items[classname];
-          let [crosshairFile, crosshairKey] = crosshairs[classname].split(".", 2);
+          let [crosshairGroup, crosshairFile, crosshairKey] = crosshairs[classname].split(".", 3);
           let itemCrosshair = item.TextureData.crosshair;
           let crosshairPack = crosshairPacks[crosshairFile];
           let crosshairInfo = crosshairPack[crosshairKey];
-          if (crosshairFile.indexOf("/") !== -1) {
+          if (crosshairFile.indexOf("/") === -1) {
             itemCrosshair.file = `${crosshairTargetBase}${crosshairFile}`;
             crosshairsToDownload.add(crosshairFile);
           } else {

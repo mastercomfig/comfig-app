@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { Tab, Row, Col, Nav, FormCheck } from 'react-bootstrap';
 import useItemStore from '../../store/items';
 import ItemsSelector from './ItemsSelector';
@@ -48,22 +48,27 @@ function calculateCrosshairs(items) {
   let itemClasses = Object.values(items);
   let isDefault = itemClasses.length === 1 && itemClasses[0].classname === "default";
   if (isDefault) {
-    crosshairs = {"default.default": "Default"};
+    crosshairs = {"Valve.default.default": "Default"};
   }
 
-  for (const packName of Object.keys(crosshairPacks)) {
-    const pack = crosshairPacks[packName];
-    for (const x of Object.keys(pack)) {
-      let crosshair = pack[x];
-      crosshairs[`${packName}.${x}`] = crosshair.name;
-      crosshairPreviews[`${packName}.${x}`] = crosshair.preview;
+  for (const packGroup of Object.keys(crosshairPackGroups)) {
+    for (const packName of crosshairPackGroups[packGroup]) {
+      const pack = crosshairPacks[packName];
+      if (!pack) {
+        continue;
+      }
+      for (const x of Object.keys(pack)) {
+        let crosshair = pack[x];
+        crosshairs[`${packGroup}.${packName}.${x}`] = crosshair.name;
+        crosshairPreviews[`${packGroup}.${packName}.${x}`] = crosshair.preview;
+      }
     }
   }
 
   let defaultCrosshairs = {};
 
   if (isDefault) {
-    defaultCrosshairs = {default: "default.default"};
+    defaultCrosshairs = {default: "Valve.default.default"};
   } else {
     for (const item of itemClasses) {
       if (!item.TextureData) {
@@ -71,7 +76,7 @@ function calculateCrosshairs(items) {
       }
       let crosshair = item.TextureData.crosshair;
       const crosshairKey = `_${crosshair.x}_${crosshair.y}`;
-      defaultCrosshairs[item.classname] = `${crosshair.file}.${crosshairKey}`;
+      defaultCrosshairs[item.classname] = `Valve.${crosshair.file}.${crosshairKey}`;
     }
   }
 
@@ -86,9 +91,21 @@ export default function ItemsInner({ playerClass, items }) {
 
   let [itemStore, setItemStore] = useState({});
 
-  useItemStore.persist.onFinishHydration((state) => {
-    setItemStore(state);
-  });
+  useEffect(() => {
+    let unsubFinishHydration = null;
+
+    if (useItemStore.persist.hasHydrated()) {
+      setItemStore(useItemStore.getState());
+    } else {
+      unsubFinishHydration = useItemStore.persist.onFinishHydration((state) => setItemStore(state));
+    }
+
+    return () => {
+      if (unsubFinishHydration) {
+        unsubFinishHydration();
+      }
+    }
+  }, [])
 
   const itemClasses = Object.values(items);
 
@@ -163,8 +180,9 @@ export default function ItemsInner({ playerClass, items }) {
                           type="crosshair"
                           previewPath="/img/app/crosshairs/preview/"
                           previews={crosshairPreviews}
-                          previewClass="crosshair-preview text-center"
+                          previewClass="crosshair-preview d-flex"
                           previewImgClass="crosshair-preview-img"
+                          useGroups={true}
                       />)}
                       {(item.MuzzleFlashParticleEffect || item.BrassModel || item.TracerEffect) && <h3 className="pt-4">Firing Effects</h3>}
                       {item.MuzzleFlashParticleEffect && selectedMuzzleFlashes && !skipMuzzleFlash.has(item.classname) && (

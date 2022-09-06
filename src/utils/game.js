@@ -42,18 +42,215 @@ const crosshairPacks = {
       pos: ["0", "0"],
       name: "Brackets",
       size: "32",
-      preview: "default.svg",
+      preview: "brackets.svg",
     },
     _0_48: {
       pos: ["0", "48"],
       name: "None",
       size: "24",
+      preview: null,
     },
   },
   "crosshair1": {
     _0_0: {
+      name: "Crosshair Dot"
     }
-  }
+  },
+  "crosshair1OL": {
+    _0_0: {
+      name: "Crosshair Dot (Outlined)"
+    }
+  },
+  "crosshair2": {
+    _0_0: {
+      name: "Lower Crosshair Dot"
+    }
+  },
+  "crosshair2OL": {
+    _0_0: {
+      name: "Lower Crosshair Dot (Outlined)"
+    }
+  },
+  "crosshair3": {
+    _0_0: {
+      name: "Solid Circle"
+    }
+  },
+  "crosshair3OL": {
+    _0_0: {
+      name: "Solid Circle (Outlined)"
+    }
+  },
+  "crosshair5": {
+    _0_0: {
+      name: "Dot"
+    }
+  },
+  "crosshair5OL": {
+    _0_0: {
+      name: "Dot (Outlined)"
+    }
+  },
+  "crosshair6": {
+    _0_0: {
+      name: "Crosshair Gap"
+    }
+  },
+  "crosshair6OL": {
+    _0_0: {
+      name: "Crosshair Gap (Outlined)"
+    }
+  },
+  "crosshair6circle": {
+    _0_0: {
+      name: "Crosshair Gap (Circled)"
+    }
+  },
+  "crosshair6circleOL": {
+    _0_0: {
+      name: "Crosshair Gap (Circled, Outlined)"
+    }
+  },
+  "crosshair7": {
+    _0_0: {
+      name: "Plus"
+    }
+  },
+  "crosshair7OL": {
+    _0_0: {
+      name: "Plus (Outlined)"
+    }
+  },
+  "bigcrosshair7": {
+    _0_0: {
+      name: "Large Plus"
+    }
+  },
+  "bigcrosshair7OL": {
+    _0_0: {
+      name: "Large Plus (Outlined)"
+    }
+  },
+  "smallcrosshair7": {
+    _0_0: {
+      name: "Small Plus"
+    }
+  },
+  "smallcrosshair7OL": {
+    _0_0: {
+      name: "Small Plus (Outlined)"
+    }
+  },
+  "fatcross": {
+    _0_0: {
+      name: "Thick Plus"
+    }
+  },
+  "fatcrossOL": {
+    _0_0: {
+      name: "Thick Plus (Outlined)"
+    }
+  },
+  "fatcross": {
+    _0_0: {
+      name: "Thick Plus"
+    }
+  },
+  "fatcrossOL": {
+    _0_0: {
+      name: "Thick Plus (Outlined)"
+    }
+  },
+  "fatcross": {
+    _0_0: {
+      name: "Thick Plus"
+    }
+  },
+  "fatcrossOL": {
+    _0_0: {
+      name: "Thick Plus (Outlined)"
+    }
+  },
+  "fatcross": {
+    _0_0: {
+      name: "Thick Plus"
+    }
+  },
+  "fatcrossOL": {
+    _0_0: {
+      name: "Thick Plus (Outlined)"
+    }
+  },
+  "fatcrosscircle": {
+    _0_0: {
+      name: "Thick Plus (Circled)"
+    }
+  },
+  "fatcrosscircleOL": {
+    _0_0: {
+      name: "Thick Plus (Circled, Outlined)"
+    }
+  },
+  "mediccrossbig": {
+    _0_0: {
+      name: "Large Medic Cross"
+    }
+  },
+  "opencross": {
+    _0_0: {
+      name: "Open Plus"
+    }
+  },
+  "opencrossOL": {
+    _0_0: {
+      name: "Open Plus (Outlined)"
+    }
+  },
+  "seeker": {
+    _0_0: {
+      name: "Seeker"
+    }
+  },
+  "seekerOL": {
+    _0_0: {
+      name: "Seeker (Outlined)"
+    }
+  },
+  "sniperbig": {
+    _0_0: {
+      name: "Large Sniper"
+    }
+  },
+  "sniperbigOL": {
+    _0_0: {
+      name: "Large Sniper (Outlined)"
+    }
+  },
+  "snipercircle": {
+    _0_0: {
+      name: "Sniper (Circled)"
+    }
+  },
+  "snipercircleOL": {
+    _0_0: {
+      name: "Large Sniper (Circled, Outlined)"
+    }
+  },
+  "sniperOL": {
+    _0_0: {
+      name: "Sniper (Outlined)"
+    }
+  },
+  "thalashseeker": {
+    _0_0: {
+      name: "Thalash's Seeker"
+    }
+  },
+  "yzwings": {
+    _0_0: {
+      name: "yz50's Wings"
+    }
+  },
 };
 
 const crosshairPackGroups = {
@@ -587,6 +784,7 @@ const skipTracer = new Set(["tf_weapon_minigun"]);
 
 globalThis.classes = classes;
 globalThis.crosshairPacks = crosshairPacks;
+globalThis.crosshairPackGroups = crosshairPackGroups;
 globalThis.itemUsedBy = itemUsedBy;
 globalThis.slotToIndex = slotToIndex;
 globalThis.customItemSlot = customItemSlot;

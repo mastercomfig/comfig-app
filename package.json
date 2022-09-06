@@ -34,6 +34,7 @@
     "react-bootstrap": "^2.5.0",
     "react-compare-slider": "^2.2.0",
     "react-dom": "^18.2.0",
+    "react-select": "^5.4.0",
     "sass": "^1.54.8",
     "serialize-javascript": "^6.0.0",
     "shorthash": "^0.0.2",
