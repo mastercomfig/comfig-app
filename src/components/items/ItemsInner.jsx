@@ -92,18 +92,14 @@ export default function ItemsInner({ playerClass, items }) {
   let [itemStore, setItemStore] = useState({});
 
   useEffect(() => {
-    let unsubFinishHydration = null;
 
     if (useItemStore.persist.hasHydrated()) {
       setItemStore(useItemStore.getState());
-    } else {
-      unsubFinishHydration = useItemStore.persist.onFinishHydration((state) => setItemStore(state));
     }
+    let unsubFinishHydration = useItemStore.persist.onFinishHydration((state) => setItemStore(state));
 
     return () => {
-      if (unsubFinishHydration) {
-        unsubFinishHydration();
-      }
+      unsubFinishHydration();
     }
   }, [])
 
