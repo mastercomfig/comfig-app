@@ -51,7 +51,7 @@ const useStore = create(
       // Adding crosshair pack groups
       if (version < 4) {
         for (const [key, val] of Object.entries(persistedState.crosshairs)) {
-          persistedState.crosshairs[key] = `Valve.${crosshairs[val]}`;
+          persistedState.crosshairs[key] = `Valve.${val}`;
         }
       }
       return persistedState;

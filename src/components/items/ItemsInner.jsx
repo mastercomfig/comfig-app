@@ -92,20 +92,20 @@ export default function ItemsInner({ playerClass, items }) {
   let [itemStore, setItemStore] = useState({});
 
   useEffect(() => {
-    if (itemStore.crosshairs) {
-      return;
-    }
+    let unsubFinishHydration = null;
+
     if (useItemStore.persist.hasHydrated()) {
       setItemStore(useItemStore.getState());
+    } else {
+      unsubFinishHydration = useItemStore.persist.onFinishHydration((state) => setItemStore(state));
     }
-    useItemStore.persist.onFinishHydration((state) => setItemStore(state));
-  }, []);
 
-  if (useItemStore.persist.hasHydrated()) {
-    setItemStore(useItemStore.getState());
-  } else {
-    useItemStore.persist.onFinishHydration((state) => setItemStore(state));
-  }
+    return () => {
+      if (unsubFinishHydration) {
+        unsubFinishHydration();
+      }
+    }
+  }, []);
 
   const itemClasses = Object.values(items);
 
