@@ -1153,37 +1153,16 @@ async function app() {
         }
       }
     }
-    // Clear out old app directory
-    if (appDirectory) {
-      for await (const key of appDirectory.keys()) {
-        appDirectory.removeEntry(key);
-      }
-    }
-    // Create the autoexec.cfg file
-    let autoexecFile = await newAutoexecFile();
-    if (autoexecFile) {
-      downloads.push({
-        path: "tf/cfg/app/autoexec.cfg",
-        blob: autoexecFile
-      });
-    }
-    for (const fileName of Object.keys(configContentsRaw)) {
-      let contents = configContentsRaw[fileName];
-      if (contents.length > 0) {
-        let file = await newFile(contents, fileName, appDirectory);
-        if (!file) {
-          continue;
-        }
-        downloads.push({
-          path: `tf/cfg/app/${fileName}`,
-          blob: file
-        });
-      }
-    }
     // Clear out old scripts directory
     if (scriptsDirectory) {
       for await (const key of scriptsDirectory.keys()) {
         scriptsDirectory.removeEntry(key);
+      }
+    }
+    // Clear out old materials directory
+    if (materialsDirectory) {
+      for await (const key of materialsDirectory.keys()) {
+        materialsDirectory.removeEntry(key);
       }
     }
     if (globalThis.items) {
@@ -1201,6 +1180,10 @@ async function app() {
       const crosshairTargetBase = "vgui/replay/thumbnails/";
       const crosshairTarget = `tf/custom/comfig-custom/materials/${crosshairTargetBase}`;
       let crosshairPacks = globalThis.crosshairPacks;
+      // If there's weapon crosshairs, we need to clear a set crosshair foile
+      if (Object.keys(crosshairs).length > 0) {
+        configContents["autoexec.cfg"] += "cl_crosshair_file\"\""
+      }
       if (crosshairs["default"]) {
         let [crosshairGroup, crosshairFile, crosshairKey] = crosshairs["default"].split(".", 3);
         let crosshairPack = crosshairPacks[crosshairFile];
@@ -1355,6 +1338,33 @@ async function app() {
             downloads.push(crosshairResult);
           }
         }
+      }
+    }
+    // Clear out old app directory
+    if (appDirectory) {
+      for await (const key of appDirectory.keys()) {
+        appDirectory.removeEntry(key);
+      }
+    }
+    // Create the autoexec.cfg file
+    let autoexecFile = await newAutoexecFile();
+    if (autoexecFile) {
+      downloads.push({
+        path: "tf/cfg/app/autoexec.cfg",
+        blob: autoexecFile
+      });
+    }
+    for (const fileName of Object.keys(configContentsRaw)) {
+      let contents = configContentsRaw[fileName];
+      if (contents.length > 0) {
+        let file = await newFile(contents, fileName, appDirectory);
+        if (!file) {
+          continue;
+        }
+        downloads.push({
+          path: `tf/cfg/app/${fileName}`,
+          blob: file
+        });
       }
     }
     return downloads;
