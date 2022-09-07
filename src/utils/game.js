@@ -147,14 +147,14 @@ const crosshairPacks = {
       name: "Small Plus (Outlined)"
     }
   },
-  "fatcross": {
+  "smallcrosshair7circle": {
     _0_0: {
-      name: "Thick Plus"
+      name: "Small Plus (Circled)"
     }
   },
-  "fatcrossOL": {
+  "smallcrosshair7circleOL": {
     _0_0: {
-      name: "Thick Plus (Outlined)"
+      name: "Small Plus (Circled, Outlined)"
     }
   },
   "fatcross": {
@@ -436,7 +436,7 @@ const crosshairPacks = {
 
 const crosshairPackGroups = {
   "Valve": ["default", "sprites/crosshairs"],
-  "Leth": ["crosshair1", "crosshair1OL", "crosshair2", "crosshair2OL", "crosshair3", "crosshair3OL", "crosshair5", "crosshair5OL", "crosshair5circle", "crossshair5circleOL", "crosshair6", "crosshair6OL", "crosshair6circle", "crosshair6circleOL", "crosshair7", "crosshair7OL", "bigcrosshair7", "bigcrosshair7OL", "smallcrosshair7", "smallcrosshair7OL", "smallcrosshair7circle", "smallcrosshair7circleOL", "smallcrosshair7OL", "fatcross", "fatcrossOL", "fatcrosscircle", "fatcrosscircleOL", "mediccrossbig", "opencross", "opencrossOL", "seeker", "seekerOL", "sniperbig", "sniperbigOL", "snipercircle", "snipercircleOL", "sniperOL", "thalashseeker", "yzwings"],
+  "Leth": ["crosshair1", "crosshair1OL", "crosshair2", "crosshair2OL", "crosshair3", "crosshair3OL", "crosshair5", "crosshair5OL", "crosshair5circle", "crossshair5circleOL", "crosshair6", "crosshair6OL", "crosshair6circle", "crosshair6circleOL", "crosshair7", "crosshair7OL", "bigcrosshair7", "bigcrosshair7OL", "smallcrosshair7", "smallcrosshair7OL", "smallcrosshair7circle", "smallcrosshair7circleOL", "fatcross", "fatcrossOL", "fatcrosscircle", "fatcrosscircleOL", "mediccrossbig", "opencross", "opencrossOL", "seeker", "seekerOL", "sniperbig", "sniperbigOL", "snipercircle", "snipercircleOL", "sniperOL", "thalashseeker", "yzwings"],
   "Tob": ["tob_rocketcross", "tob_wingscross", "tob_wingsdot"],
   "wavesui": ["xhairshadowdefault", "xhairshadowdots", "xhairshadowplus", "xhairshadowpluss", "xhairshadowrocketsthick"],
   "CPMA": ["cpma_11", "cpma_12", "cpma_13", "cpma_14", "cpma_15", "cpma_16", "cpma_17", "cpma_18", "cpma_19"],

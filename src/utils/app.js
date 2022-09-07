@@ -2678,7 +2678,7 @@ async function app() {
       "text-light",
       "bg-dark"
     );
-    textInput.placeholder = "Command to run";
+    textInput.placeholder = "Type a console command to run";
     textInput.ariaLabel = "Custom command to run";
     inputGroup.append(textInput);
     let undoButton = document.createElement("button");
