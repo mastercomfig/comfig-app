@@ -103,6 +103,7 @@ function getSelectTheme(theme) {
 	}
 }
 
+// TODO: https://stackoverflow.com/questions/29280817/is-there-any-way-to-colorize-a-white-png-image-with-css-only
 function getPreviewImage(selected, previews, previewPath, previewImgClass, previewImgStyle) {
   let selectedInfo = selected.split(".", 3);
   let selectedName;
