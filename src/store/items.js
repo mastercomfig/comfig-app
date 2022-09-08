@@ -6,6 +6,7 @@ const useStore = create(
   persist(
     set => ({
       crosshairs: {},
+      crosshairColors: {},
       muzzleflashes: new Set(),
       brassmodels: new Set(),
       tracers: new Set(),
@@ -14,6 +15,11 @@ const useStore = create(
       setCrosshair: (k, v) => set((state) => ({ crosshairs: {...state.crosshairs, [k]: v} })),
       delCrosshair: (k) => set((state) => {
         delete state.crosshairs[k];
+        return state;
+      }),
+      setCrosshairColor: (k, v) => set((state) => ({ crosshairColors: {...state.crosshairColors, [k]: v} })),
+      delCrosshairColor: (k) => set((state) => {
+        delete state.crosshairColors[k];
         return state;
       }),
       setMuzzleFlash: (k) => set((state) => { state.muzzleflashes.add(k); return state; }),
@@ -56,7 +62,7 @@ const useStore = create(
       }
       return persistedState;
     },
-    ["crosshairs", "muzzleflashes", "brassmodels", "tracers", "explosioneffects", "playerexplosioneffects"])
+    ["crosshairs", "crosshairColors", "muzzleflashes", "brassmodels", "tracers", "explosioneffects", "playerexplosioneffects"])
   )
 );
 

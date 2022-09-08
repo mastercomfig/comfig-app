@@ -2,6 +2,7 @@ import { useMemo, useState, useEffect } from 'react';
 import { Tab, Row, Col, Nav, FormCheck } from 'react-bootstrap';
 import useItemStore from '../../store/items';
 import ItemsSelector from './ItemsSelector';
+import { ChromePicker } from 'react-color';
 
 function calculateItemSlots(playerClass, items) {
   let slots = {};
@@ -110,14 +111,21 @@ export default function ItemsInner({ playerClass, items }) {
   const itemClasses = Object.values(items);
 
   const selectedCrosshairs = itemStore.crosshairs;
+  const selectedCrosshairColor = itemStore.crosshairColors?.[playerClass];
   const selectedMuzzleFlashes = itemStore.muzzleflashes;
   const selectedBrassModels = itemStore.brassmodels;
   const selectedTracers = itemStore.tracers;
   const selectedExplosion = itemStore.explosioneffects;
 
+  const [liveCrosshairColor, setLiveCrosshairColor] = useState(undefined);
+
+  const currentCrosshairColor = liveCrosshairColor ?? selectedCrosshairColor ?? {r: 200, g: 200, b: 200, a: 1};
+
   const [
     setCrosshair,
     delCrosshair,
+    setCrosshairColor,
+    delCrosshairColor,
     setMuzzleFlash,
     delMuzzleFlash,
     setBrassModel,
@@ -131,6 +139,8 @@ export default function ItemsInner({ playerClass, items }) {
     [
       state.setCrosshair,
       state.delCrosshair,
+      state.setCrosshairColor,
+      state.delCrosshairColor,
       state.setMuzzleFlash,
       state.delMuzzleFlash,
       state.setBrassModel,
@@ -185,6 +195,16 @@ export default function ItemsInner({ playerClass, items }) {
                           useAdvancedSelect={true}
                           groups={crosshairPackGroups}
                       />)}
+                      <h4>Crosshair Settings ({itemClasses[0].classname === "default" ? "All Classes" : "Per Class"})</h4>
+                      <ChromePicker
+                        color={currentCrosshairColor}
+                        onChange={(color) => {
+                          setLiveCrosshairColor(color.rgb);
+                        }}
+                        onChangeComplete={(color) => {
+                          setCrosshairColor(playerClass, color.rgb);
+                        }}
+                      />
                       {(item.MuzzleFlashParticleEffect && !skipMuzzleFlash.has(item.classname) || item.BrassModel || item.TracerEffect && !skipTracer.has(item.classname)) && <h3 className="pt-4">Firing Effects</h3>}
                       {item.MuzzleFlashParticleEffect && selectedMuzzleFlashes && !skipMuzzleFlash.has(item.classname) && (
                         <FormCheck type="switch" label="Muzzle Flash" defaultChecked={!selectedMuzzleFlashes.has(item.classname)} onChange={((e) => {

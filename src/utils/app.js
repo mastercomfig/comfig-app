@@ -1169,6 +1169,7 @@ async function app() {
       let {default: useItemStore} = await import("../store/items.js");
       const itemsState = useItemStore.getState();
       const crosshairs = itemsState.crosshairs;
+      const crosshairColors = itemsState.crosshairColors;
       const muzzleflashes = itemsState.muzzleflashes;
       const brassmodels = itemsState.brassmodels;
       const tracers = itemsState.tracers;
@@ -1180,9 +1181,13 @@ async function app() {
       const crosshairTargetBase = "vgui/replay/thumbnails/";
       const crosshairTarget = `tf/custom/comfig-custom/materials/${crosshairTargetBase}`;
       let crosshairPacks = globalThis.crosshairPacks;
-      // If there's weapon crosshairs, we need to clear a set crosshair foile
+      // If there's weapon crosshairs, we need to clear a set crosshair file
       if (Object.keys(crosshairs).length > 0) {
         configContents["autoexec.cfg"] += "cl_crosshair_file\"\""
+      }
+      // If any color is set, we need to use color mode 5
+      if (Object.keys(crosshairColors).length > 0) {
+        configContents["autoexec.cfg"] += "cl_crosshaircolor 5"
       }
       if (crosshairs["default"]) {
         let [crosshairGroup, crosshairFile, crosshairKey] = crosshairs["default"].split(".", 3);

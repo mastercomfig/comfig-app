@@ -103,7 +103,7 @@ function getSelectTheme(theme) {
 	}
 }
 
-function getPreviewImage(selected, previews, previewPath, previewImgClass) {
+function getPreviewImage(selected, previews, previewPath, previewImgClass, previewImgStyle) {
   let selectedInfo = selected.split(".", 3);
   let selectedName;
   if (selectedInfo.length === 3) {
@@ -111,7 +111,7 @@ function getPreviewImage(selected, previews, previewPath, previewImgClass) {
   } else {
     selectedName = selectedInfo;
   }
-  return previews && previews[selected] !== null && (<img className={previewImgClass} src={`${previewPath}${previews[selected] ?? (selectedName + ".png")}`}></img>);
+  return previews && previews[selected] !== null && (<img className={previewImgClass} style={previewImgStyle} src={`${previewPath}${previews[selected] ?? (selectedName + ".png")}`}></img>);
 }
 
 export default function ItemsSelector({
@@ -128,6 +128,7 @@ export default function ItemsSelector({
   previews,
   previewClass,
   previewImgClass,
+  previewImgStyle,
   useAdvancedSelect,
   groups,
 }) {
@@ -183,7 +184,7 @@ export default function ItemsSelector({
           classNamePrefix={"MyDropdown"}
           formatOptionLabel={({ value, label }) => (
             <div style={{ display: "flex", alignItems: 'center' }}>
-              {getPreviewImage(value, previews, previewPath, previewImgClass)}
+              {getPreviewImage(value, previews, previewPath, previewImgClass, previewImgStyle)}
               <div style={{ marginLeft: "0.5rem" }}>{label}</div>
             </div>
           )}
@@ -225,7 +226,7 @@ export default function ItemsSelector({
         </FormSelect>)}
       </div>
       {(selected !== defaultValue || !isDefaultWeapon) && (<div className={`col-8 preview-container ${previewClass}`}>
-        {getPreviewImage(selected, previews, previewPath, previewImgClass)}
+        {getPreviewImage(selected, previews, previewPath, previewImgClass, previewImgStyle)}
       </div>)}
     </div>
   );
