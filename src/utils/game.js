@@ -292,6 +292,66 @@ const crosshairPacks = {
       name: "Shadowed Small Plus"
     }
   },
+  "cpma_1": {
+    _0_0: {
+      name: "CPMA 1",
+      size: "32"
+    }
+  },
+  "cpma_2": {
+    _0_0: {
+      name: "CPMA 2",
+      size: "32"
+    }
+  },
+  "cpma_2": {
+    _0_0: {
+      name: "CPMA 2",
+      size: "32"
+    }
+  },
+  "cpma_3": {
+    _0_0: {
+      name: "CPMA 3",
+      size: "32"
+    }
+  },
+  "cpma_4": {
+    _0_0: {
+      name: "CPMA 4",
+      size: "32"
+    }
+  },
+  "cpma_6": {
+    _0_0: {
+      name: "CPMA 6",
+      size: "32"
+    }
+  },
+  "cpma_7": {
+    _0_0: {
+      name: "CPMA 7",
+      size: "32"
+    }
+  },
+  "cpma_8": {
+    _0_0: {
+      name: "CPMA 8",
+      size: "32"
+    }
+  },
+  "cpma_9": {
+    _0_0: {
+      name: "CPMA 9",
+      size: "32"
+    }
+  },
+  "cpma_10": {
+    _0_0: {
+      name: "CPMA 10",
+      size: "32"
+    }
+  },
   "cpma_11": {
     _0_0: {
       name: "CPMA 11"
@@ -364,7 +424,8 @@ const crosshairPacks = {
   },
   "ql_6": {
     _0_0: {
-      name: "Quake 6"
+      name: "Quake 6",
+      size: "32"
     }
   },
   "ql_7": {
