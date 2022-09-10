@@ -38,6 +38,12 @@ const crosshairPacks = {
       size: "32",
       preview: "sniper.png",
     },
+    "_64_-1": {
+      pos: ["64", "-1"],
+      name: "Sniper Center Fix",
+      size: "32",
+      preview: "sniper.png",
+    },
     _0_64: {
       pos: ["0", "64"],
       name: "Medic Cross",
@@ -500,7 +506,7 @@ const crosshairPackGroups = {
   "Leth": ["crosshair1", "crosshair1OL", "crosshair2", "crosshair2OL", "crosshair3", "crosshair3OL", "crosshair5", "crosshair5OL", "crosshair5circle", "crossshair5circleOL", "crosshair6", "crosshair6OL", "crosshair6circle", "crosshair6circleOL", "crosshair7", "crosshair7OL", "bigcrosshair7", "bigcrosshair7OL", "smallcrosshair7", "smallcrosshair7OL", "smallcrosshair7circle", "smallcrosshair7circleOL", "fatcross", "fatcrossOL", "fatcrosscircle", "fatcrosscircleOL", "mediccrossbig", "opencross", "opencrossOL", "seeker", "seekerOL", "sniperbig", "sniperbigOL", "snipercircle", "snipercircleOL", "sniperOL", "thalashseeker", "yzwings"],
   "Tob": ["tob_rocketcross", "tob_wingscross", "tob_wingsdot"],
   "wavesui": ["xhairshadowdefault", "xhairshadowdots", "xhairshadowplus", "xhairshadowpluss", "xhairshadowrocketsthick"],
-  "CPMA": ["cpma_11", "cpma_12", "cpma_13", "cpma_14", "cpma_15", "cpma_16", "cpma_17", "cpma_18", "cpma_19"],
+  "CPMA": ["cpma_1", "cpma_2", "cpma_3", "cpma_4", "cpma_5", "cpma_6", "cpma_7", "cpma_8", "cpma_9", "cpma_10", "cpma_11", "cpma_12", "cpma_13", "cpma_14", "cpma_15", "cpma_16", "cpma_17", "cpma_18", "cpma_19"],
   "Quake": ["ql_1", "ql_2", "ql_3", "ql_4", "ql_5", "ql_6", "ql_7", "ql_8", "ql_9", "ql_10", "ql_11", "ql_12", "ql_13", "ql_14", "ql_15", "ql_16", "ql_17", "ql_18", "ql_19"]
 }
 
