@@ -38,6 +38,15 @@ a, .nav-link {
   text-decoration: none;
 }
 
+.download-progress {
+  --bs-progress-height: 1px;
+  margin-bottom: 1em;
+}
+
+#download-progress-status {
+  margin-left: 1em;
+}
+
 .alert a {
   color: #0d6efd
 }

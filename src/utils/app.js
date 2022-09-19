@@ -511,6 +511,7 @@ async function app() {
     link.href = blobURL;
     link.download = "mastercomfig.zip";
     document.body.append(link);
+    updateDownloadProgress(100, "Done!");
     link.dispatchEvent(
       new MouseEvent("click", {
         bubbles: true,
@@ -837,12 +838,21 @@ async function app() {
     }
   }
 
+  function updateDownloadProgress(progress, status) {
+    getEl("download-progress-status").innerText = status;
+    let progressBar = getEl("download-progress-bar");
+    progressBar.style.width = `${progress}%`;
+    progressBar.setAttribute("aria-valuenow", progress);
+  }
+
   async function getVPKDownloadUrls() {
     // We need permissions for the directory
     if (!await accessDirectory()) {
       return [];
     }
     let downloads = [];
+    getEl("download-progress-bar").classList.remove("d-none");
+    updateDownloadProgress(0, "Downloading preset...");
     let presetUrl = getPresetUrl();
     if (customDirectory) {
       console.log("Using Direct Install.")
@@ -878,6 +888,7 @@ async function app() {
         alert("Failed to download preset file. Please try again later.");
       }
     }
+    updateDownloadProgress(25, "Downloading addons...");
     // Then push all our addon downloads
     for (const selection of selectedAddons) {
       let addonUrl = getAddonUrl(selection);
@@ -1125,6 +1136,7 @@ async function app() {
   }
 
   async function getCustomDownloadUrls() {
+    updateDownloadProgress(50, "Downloading modules...");
     // We downloaded the custom settings, so the user wants it!
     await saveModules();
     // We need permissions for the directory
@@ -1165,6 +1177,7 @@ async function app() {
         materialsDirectory.removeEntry(key);
       }
     }
+    updateDownloadProgress(70, "Downloading weapon customizations...");
     if (globalThis.items) {
       let {default: useItemStore} = await import("../store/items.js");
       const itemsState = useItemStore.getState();
@@ -1340,6 +1353,7 @@ async function app() {
         }
       }
     }
+    updateDownloadProgress(90, "Downloading custom configs...");
     // Clear out old app directory
     if (appDirectory) {
       for await (const key of appDirectory.keys()) {
