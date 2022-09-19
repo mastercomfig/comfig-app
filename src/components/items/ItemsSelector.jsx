@@ -7,7 +7,7 @@ function onMenuOpen() {
   setTimeout(() => {
     const selectedEl = document.getElementsByClassName("MyDropdown__option--is-selected")[0];
     if (selectedEl) {
-      selectedEl.scrollIntoView({behavior: 'smooth', block: 'nearest', inline: 'start'});
+      selectedEl.scrollIntoView({behavior: 'auto', block: 'nearest', inline: 'start'});
     }
   }, 15);
 };

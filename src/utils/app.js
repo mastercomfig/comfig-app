@@ -2556,7 +2556,7 @@ async function app() {
     "Move Right": "+moveright",
     Jump: "+jump",
     Duck: "+duck",
-    "Show scoreboard": "+scores",
+    "Show scoreboard": "+score",
     Drop: "dropitem",
     "Call MEDIC!": "+helpme",
     "Push to Talk": "+voicerecord",
