@@ -416,7 +416,10 @@ const npmVersion = process.env.npm_package_version;
             </div>
             <p class="lead"><b><a href="https://github.com/mastercomfig/mastercomfig/releases/latest" class="btn btn-primary" id="vpk-dl"
                   style="cursor: pointer"><span class="fas fa-cloud-download fa-fw"></span>
-                  Download from GitHub</a></b></p>
+                  Download from GitHub</a></b><span id="download-progress-status"></span></p>
+                  <div class="progress download-progress">
+                    <div id="download-progress-bar" class="progress-bar d-none" aria-label="Download progress" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
                   <p class="instructions-text">Open the ZIP, and extract the <code>tf</code> folder to your <code>Team Fortress 2</code> folder.</p>
             <hr>
             <div>
