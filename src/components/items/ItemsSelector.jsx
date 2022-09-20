@@ -54,10 +54,12 @@ function getSelectStyles(multi, size='') {
 		option: (provided, state) => ({
       ...provided,
       border: "0",
+      zIndex: 3,
     }),
 		menu: ({marginTop, ...provided}, state) => ({
 			...provided,
 			backgroundColor: "#212529",
+      zIndex: 3,
 		}),
 		multiValue: (provided, state) => ({
 			...provided,

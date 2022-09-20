@@ -1194,13 +1194,36 @@ async function app() {
       const crosshairTargetBase = "vgui/replay/thumbnails/";
       const crosshairTarget = `tf/custom/comfig-custom/materials/${crosshairTargetBase}`;
       let crosshairPacks = globalThis.crosshairPacks;
+      const crosshairColorCount = Object.keys(crosshairColors).length;
+      if (crosshairColorCount > 0) {
+        function addColor(target, color) {
+          configContents[target] += `cl_crosshair_red ${Math.round(color.r)};`;
+          configContents[target] += `cl_crosshair_green ${Math.round(color.g)};`;
+          configContents[target] += `cl_crosshair_blue ${Math.round(color.b)};`;
+          configContents[target] += `cl_crosshairalpha ${Math.round((color.a ?? 1) * 255)}\n`;
+        }
+        // If any color is set, we need to use color mode 5
+        configContents["autoexec.cfg"] += "cl_crosshaircolor 5\n";
+        let defaultColor = crosshairColors["default"];
+        let defaultFile = "game_overrides.cfg";
+        // If only specified a default color, use autoexec
+        if (crosshairColorCount == 1 && defaultColor)
+        {
+          defaultFile = "autoexec.cfg";
+        }
+        defaultColor = defaultColor ?? {r: 200, g: 200, b: 200, a: 0.784};
+        addColor(defaultFile, defaultColor);
+        for (const playerClass of Object.keys(crosshairColors))
+        {
+          if (playerClass == "default") {
+            continue;
+          }
+          addColor(bindConfigLayers[playerClass], crosshairColors[playerClass]);
+        }
+      }
       // If there's weapon crosshairs, we need to clear a set crosshair file
       if (Object.keys(crosshairs).length > 0) {
-        configContents["autoexec.cfg"] += "cl_crosshair_file\"\""
-      }
-      // If any color is set, we need to use color mode 5
-      if (Object.keys(crosshairColors).length > 0) {
-        configContents["autoexec.cfg"] += "cl_crosshaircolor 5"
+        configContents["autoexec.cfg"] += "cl_crosshair_file\"\"\n"
       }
       if (crosshairs["default"]) {
         let [crosshairGroup, crosshairFile, crosshairKey] = crosshairs["default"].split(".", 3);
