@@ -2,7 +2,8 @@ import { useMemo, useState, useEffect } from 'react';
 import { Tab, Row, Col, Nav, FormCheck } from 'react-bootstrap';
 import useItemStore from '../../store/items';
 import ItemsSelector from './ItemsSelector';
-import { ChromePicker } from 'react-color';
+import Color from 'react-color';
+const { ChromePicker } = Color;
 
 function calculateItemSlots(playerClass, items) {
   let slots = {};
