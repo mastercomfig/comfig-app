@@ -3,8 +3,19 @@ import { Button, Tab, Row, Col, Nav, FormCheck } from 'react-bootstrap';
 import useItemStore from '../../store/items';
 import ItemsSelector from './ItemsSelector';
 import pkg from 'react-color/lib/Chrome';
-const ChromePicker = pkg.default;
+const ChromePicker = pkg.default ?? pkg;
 
+const dataUrl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAMUlEQVQ4T2NkYGAQYcAP3uCTZhw1gGGYhAGBZIA/nYDCgBDAm9BGDWAAJyRCgLaBCAAgXwixzAS0pgAAAABJRU5ErkJggg==";
+
+export class ServerCanvas {
+    constructor() {
+        this.toDataURL = () => dataUrl;
+        this.getContext = () => ({
+            fillRect: () => {},
+            translate: () => {}
+        });
+    }
+}
 
 function calculateItemSlots(playerClass, items) {
   let slots = {};
@@ -199,6 +210,7 @@ export default function ItemsInner({ playerClass, items }) {
                       />)}
                       <h4 className="pt-2">Crosshair Settings ({(itemClasses[0].classname === "default" || itemClasses[0].classname === "All-Class") ? "All Classes" : "Per Class"})</h4>
                       <ChromePicker
+                        renderers={{canvas: ServerCanvas}}
                         color={currentCrosshairColor}
                         onChange={(color) => {
                           setLiveCrosshairColor(color.rgb);
