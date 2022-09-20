@@ -389,6 +389,7 @@ async function app() {
       // We've gotten to the last in the download stack, so we're done
       bindDownloadClick(id, fnGatherUrls);
     }
+    updateDownloadProgress(100, "Done!");
   }
 
   function handleConnectivityChange(e) {
@@ -511,7 +512,6 @@ async function app() {
     link.href = blobURL;
     link.download = "mastercomfig.zip";
     document.body.append(link);
-    updateDownloadProgress(100, "Done!");
     link.dispatchEvent(
       new MouseEvent("click", {
         bubbles: true,
