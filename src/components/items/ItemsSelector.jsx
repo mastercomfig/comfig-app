@@ -134,6 +134,7 @@ export default function ItemsSelector({
   previewImgStyle,
   useAdvancedSelect,
   groups,
+  children
 }) {
   let [selected, setSelected] = useState(selection ?? defaultValue);
 
@@ -227,9 +228,12 @@ export default function ItemsSelector({
             }`}</option>
           ))}
         </FormSelect>)}
+        {children}
       </div>
-      {(selected !== defaultValue || !isDefaultWeapon) && (<div className={`col-8 preview-container ${previewClass}`}>
-        {getPreviewImage(selected, previews, previewPath, previewImgClass, previewImgStyle)}
+      {(selected !== defaultValue || !isDefaultWeapon) && (<div className="col-8">
+        <div className={`col-8 preview-container ${previewClass}`}>
+          {getPreviewImage(selected, previews, previewPath, previewImgClass, previewImgStyle)}
+        </div>
       </div>)}
     </div>
   );

@@ -1183,6 +1183,7 @@ async function app() {
       const itemsState = useItemStore.getState();
       const crosshairs = itemsState.crosshairs;
       const crosshairColors = itemsState.crosshairColors;
+      const crosshairScales = itemsState.crosshairScales;
       const muzzleflashes = itemsState.muzzleflashes;
       const brassmodels = itemsState.brassmodels;
       const tracers = itemsState.tracers;
@@ -1219,6 +1220,28 @@ async function app() {
             continue;
           }
           addColor(bindConfigLayers[playerClass], crosshairColors[playerClass]);
+        }
+      }
+      const crosshairScaleCount = Object.keys(crosshairScales).length;
+      if (crosshairScaleCount > 0) {
+        function addScale(target, scale) {
+          configContents[target] += `cl_crosshair_scale ${scale}\n`;
+        }
+        let defaultScale = crosshairScales["default"];
+        let defaultFile = "game_overrides.cfg";
+        // If only specified a default scale, use autoexec
+        if (crosshairScaleCount == 1 && defaultScale)
+        {
+          defaultFile = "autoexec.cfg";
+        }
+        defaultScale = defaultScale ?? 32;
+        addScale(defaultFile, defaultScale);
+        for (const playerClass of Object.keys(crosshairScales))
+        {
+          if (playerClass == "default") {
+            continue;
+          }
+          addScale(bindConfigLayers[playerClass], crosshairScales[playerClass]);
         }
       }
       // If there's weapon crosshairs, we need to clear a set crosshair file
