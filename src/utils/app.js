@@ -1002,7 +1002,11 @@ async function app() {
         } else {
           bindObject = selectedBinds;
         }
-        bindObject[keyInput] = bindCommand;
+        if (bindObject[keyInput]) {
+          bindObject[keyInput] += `;${bindCommand}`;
+        } else {
+          bindObject[keyInput] = bindCommand;
+        }
       }
     }
     let hasCustomLayers = false;
@@ -1092,7 +1096,7 @@ async function app() {
       let binding = bindsObject[key];
       let bindingStr;
       // Should we quote arg, or raw arg?
-      if (typeof binding === "string" && binding.indexOf(" ") !== -1) {
+      if (typeof binding === "string" && binding.indexOf(" ") !== -1 && binding.indexOf(";") !== -1) {
         bindingStr = `"${binding}"`;
       } else {
         bindingStr = ` ${binding}`;
