@@ -984,10 +984,18 @@ async function app() {
             // Force quoting later on
             bindCommand = " ";
           }
-          actionBindObject[keyInput] = bindCommand;
+          if (actionBindObject[keyInput]) {
+            actionBindObject[keyInput].push(bindCommand);
+          } else {
+            actionBindObject[keyInput] = [bindCommand];
+          }
           bindCommand = bindCommand.replaceAll('"', "");
         } else {
-          actionBindObject[keyInput] = actionSelect;
+          if (actionBindObject[keyInput]) {
+            actionBindObject[keyInput].push(actionSelect);
+          } else {
+            actionBindObject[keyInput] = [actionSelect];
+          }
           bindCommand = actionOverrides[actionSelect]
             ? actionOverrides[actionSelect]
             : actionMappings[actionSelect];
@@ -1096,7 +1104,7 @@ async function app() {
       let binding = bindsObject[key];
       let bindingStr;
       // Should we quote arg, or raw arg?
-      if (typeof binding === "string" && binding.indexOf(" ") !== -1 && binding.indexOf(";") !== -1) {
+      if (typeof binding === "string" && (binding.indexOf(" ") !== -1 || binding.indexOf(";") !== -1)) {
         bindingStr = `"${binding}"`;
       } else {
         bindingStr = ` ${binding}`;
@@ -2838,8 +2846,14 @@ async function app() {
 
   tryDBGet("keybinds").then((keybinds) => {
     if (keybinds) {
-      for (const [key, action] of Object.entries(keybinds)) {
-        createBindingField({ key, action });
+      for (const [key, actions] of Object.entries(keybinds)) {
+        if (Array.isArray(actions)) {
+          for (const action of actions) {
+            createBindingField({ key, action });
+          }
+        } else {
+          createBindingField({ key, action: actions });
+        }
       }
     }
   });
