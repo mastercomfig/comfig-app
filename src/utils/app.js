@@ -1104,7 +1104,7 @@ async function app() {
       let binding = bindsObject[key];
       let bindingStr;
       // Should we quote arg, or raw arg?
-      const isMultiCommand = binding.indexOf(";") !== -1);
+      const isMultiCommand = binding.indexOf(";") !== -1;
       if (typeof binding === "string" && (binding.indexOf(" ") !== -1 || isMultiCommand)) {
         // Handle multi-command binds
         if (isMultiCommand) {
