@@ -7,6 +7,7 @@ const useStore = create(
     set => ({
       crosshairs: {},
       crosshairColors: {},
+      crosshairScales: {},
       muzzleflashes: new Set(),
       brassmodels: new Set(),
       tracers: new Set(),
@@ -20,6 +21,14 @@ const useStore = create(
       setCrosshairColor: (k, v) => set((state) => ({ crosshairColors: {...state.crosshairColors, [k]: v} })),
       delCrosshairColor: (k) => set((state) => {
         delete state.crosshairColors[k];
+        return state;
+      }),
+      setCrosshairScale: (k, v) => {
+        console.log(k, v);
+        set((state) => ({ crosshairScales: {...state.crosshairScales, [k]: v} }));
+      },
+      delCrosshairScale: (k) => set((state) => {
+        delete state.crosshairScales[k];
         return state;
       }),
       setMuzzleFlash: (k) => set((state) => { state.muzzleflashes.add(k); return state; }),
@@ -39,7 +48,7 @@ const useStore = create(
         return state;
       }),
     }),
-    idbStorage("items", 4, (persistedState, version) => {
+    idbStorage("items", 5, (persistedState, version) => {
       // Explosion effects were wrong order
       if (version === 0) {
         for (const [key, val] of Object.entries(persistedState.explosioneffects)) {
@@ -62,7 +71,7 @@ const useStore = create(
       }
       return persistedState;
     },
-    ["crosshairs", "crosshairColors", "muzzleflashes", "brassmodels", "tracers", "explosioneffects", "playerexplosioneffects"])
+    ["crosshairs", "crosshairColors", "crosshairScales", "muzzleflashes", "brassmodels", "tracers", "explosioneffects", "playerexplosioneffects"])
   )
 );
 

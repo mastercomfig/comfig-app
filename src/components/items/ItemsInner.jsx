@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect } from 'react';
-import { Button, Tab, Row, Col, Nav, FormCheck } from 'react-bootstrap';
+import { Button, Tab, Row, Col, Nav, FormCheck, Form } from 'react-bootstrap';
 import useItemStore from '../../store/items';
 import ItemsSelector from './ItemsSelector';
 import pkg from 'react-color/lib/Chrome';
@@ -125,20 +125,26 @@ export default function ItemsInner({ playerClass, items }) {
 
   const selectedCrosshairs = itemStore.crosshairs;
   const selectedCrosshairColor = itemStore.crosshairColors?.[playerClass];
+  const selectedCrosshairScale = itemStore.crosshairScales?.[playerClass];
   const selectedMuzzleFlashes = itemStore.muzzleflashes;
   const selectedBrassModels = itemStore.brassmodels;
   const selectedTracers = itemStore.tracers;
   const selectedExplosion = itemStore.explosioneffects;
 
   const [liveCrosshairColor, setLiveCrosshairColor] = useState(undefined);
+  const [liveCrosshairScale, setLiveCrosshairScale] = useState(undefined);
 
   const currentCrosshairColor = liveCrosshairColor ?? selectedCrosshairColor ?? {r: 200, g: 200, b: 200, a: 0.784};
+  const defaultCrosshairScale = selectedCrosshairScale ?? 32;
+  const currentCrosshairScale = liveCrosshairScale ?? defaultCrosshairScale;
 
   const [
     setCrosshair,
     delCrosshair,
     setCrosshairColor,
     delCrosshairColor,
+    setCrosshairScale,
+    delCrosshairScale,
     setMuzzleFlash,
     delMuzzleFlash,
     setBrassModel,
@@ -154,6 +160,8 @@ export default function ItemsInner({ playerClass, items }) {
       state.delCrosshair,
       state.setCrosshairColor,
       state.delCrosshairColor,
+      state.setCrosshairScale,
+      state.delCrosshairScale,
       state.setMuzzleFlash,
       state.delMuzzleFlash,
       state.setBrassModel,
@@ -207,22 +215,31 @@ export default function ItemsInner({ playerClass, items }) {
                           previewImgClass="crosshair-preview-img"
                           useAdvancedSelect={true}
                           groups={crosshairPackGroups}
-                      />)}
-                      <h4 className="pt-2">Crosshair Settings ({(itemClasses[0].classname === "default" || itemClasses[0].classname === "All-Class") ? "All Classes" : "Per Class"})</h4>
-                      <ChromePicker
-                        renderers={{canvas: ServerCanvas}}
-                        color={currentCrosshairColor}
-                        onChange={(color) => {
-                          setLiveCrosshairColor(color.rgb);
-                        }}
-                        onChangeComplete={(color) => {
-                          setCrosshairColor(playerClass === "All-Class" ? "default" : playerClass, color.rgb);
-                        }}
-                      />
-                      <Button variant="secondary" size="sm" onClick={() => {
-                        delCrosshairColor(playerClass === "All-Class" ? "default" : playerClass);
-                        setLiveCrosshairColor({r: 200, g: 200, b: 200, a: 0.784});
-                      }}><span className="fa fa-undo fa-fw"></span>Reset color</Button>
+                      >
+                        <h4 className="pt-2 mb-0">Crosshair Settings</h4>
+                        <h6 className="mb-2"><strong><small>{(itemClasses[0].classname === "default" || playerClass === "All-Class") ? "ALL CLASSES" : "PER CLASS"}</small></strong></h6>
+                        <h6>Crosshair Scale: {currentCrosshairScale}</h6>
+                        <Form.Range defaultValue={defaultCrosshairScale} min="16" max="64" step="1" onChange={(e) => setLiveCrosshairScale(e.target.value)} onBlur={(e) => {
+                          setCrosshairScale(playerClass, e.target.value);
+                          console.log(playerClass, e.target.value);
+                        }}/>
+                        <h6>Crosshair Color</h6>
+                        <ChromePicker
+                          className="w-100"
+                          renderers={{canvas: ServerCanvas}}
+                          color={currentCrosshairColor}
+                          onChange={(color) => {
+                            setLiveCrosshairColor(color.rgb);
+                          }}
+                          onChangeComplete={(color) => {
+                            setCrosshairColor(playerClass === "All-Class" ? "default" : playerClass, color.rgb);
+                          }}
+                        />
+                        <Button className="w-100" variant="danger" size="sm" onClick={() => {
+                          delCrosshairColor(playerClass === "All-Class" ? "default" : playerClass);
+                          setLiveCrosshairColor({r: 200, g: 200, b: 200, a: 0.784});
+                        }}><span className="fa fa-undo fa-fw"></span> <strong>RESET COLOR</strong></Button>
+                      </ItemsSelector>)}
                       {(item.MuzzleFlashParticleEffect && !skipMuzzleFlash.has(item.classname) || item.BrassModel || item.TracerEffect && !skipTracer.has(item.classname)) && <h3 className="pt-4">Firing Effects</h3>}
                       {item.MuzzleFlashParticleEffect && selectedMuzzleFlashes && !skipMuzzleFlash.has(item.classname) && (
                         <FormCheck type="switch" label="Muzzle Flash" defaultChecked={!selectedMuzzleFlashes.has(item.classname)} onChange={((e) => {
