@@ -1110,7 +1110,7 @@ async function app() {
         if (isMultiCommand) {
           // If we have keydown commands, we need keydown/keyup aliases
           if (binding.indexOf("+") !== -1) {
-            const aliasName = `a_${key}`;
+            const aliasName = `@${key}`;
             contents += `alias +${aliasName}"${binding}"\n`;
             const keyUpBinding = binding.replaceAll("+", "-");
             contents += `alias -${aliasName}"${keyUpBinding}"\n`;
