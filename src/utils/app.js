@@ -1104,8 +1104,22 @@ async function app() {
       let binding = bindsObject[key];
       let bindingStr;
       // Should we quote arg, or raw arg?
-      if (typeof binding === "string" && (binding.indexOf(" ") !== -1 || binding.indexOf(";") !== -1)) {
-        bindingStr = `"${binding}"`;
+      const isMultiCommand = binding.indexOf(";") !== -1);
+      if (typeof binding === "string" && (binding.indexOf(" ") !== -1 || isMultiCommand)) {
+        // Handle multi-command binds
+        if (isMultiCommand) {
+          // If we have keydown commands, we need keydown/keyup aliases
+          if (binding.indexOf("+") !== -1) {
+            const aliasName = `a_${key}`;
+            contents += `alias +${aliasName}"${binding}"\n`;
+            const keyUpBinding = binding.replaceAll("+", "-");
+            contents += `alias -${aliasName}"${keyUpBinding}"\n`;
+            bindingStr = ` +${aliasName}`;
+          } else {
+            // We can just quote like normal
+            bindingStr = `"${binding}"`;
+          }
+        }
       } else {
         bindingStr = ` ${binding}`;
       }
