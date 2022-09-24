@@ -109,26 +109,25 @@ function getVersions(data) {
 
 function getVersionedKey(key, version) {
   if (!version) {
-    version = "1"
+    version = 2
   }
   return key + "-" + version
 }
 
-const rv = ["https://api.github.com/repos/mastercomfig/mastercomfig/releases/latest", reqGHAPIHeaders, getVersionedKey("mastercomfig-version", 1), getVersion]
-const rv2 = ["https://api.github.com/repos/mastercomfig/mastercomfig/releases", reqGHAPIHeaders, getVersionedKey("mastercomfig-version", 2), getVersions]
+const rv = ["https://api.github.com/repos/mastercomfig/mastercomfig/releases", reqGHAPIHeaders, getVersionedKey("mastercomfig-version"), getVersions]
 const rm = ["https://raw.githubusercontent.com/mastercomfig/mastercomfig/release/data/modules.json", reqGHRawHeaders, "mastercomfig-modules", stringify]
 const rp = ["https://raw.githubusercontent.com/mastercomfig/mastercomfig/release/data/preset_modules.json", reqGHRawHeaders, "mastercomfig-preset-modules", stringify]
 
 async function forceUpdate(version) {
-    let updated = await updateData([version === "2" ? rv2 : rv, rm, rp])
-    let resBody = (version === "2" ? "{\"v\":" + updated[0] + "," : "{\"v\":\"" + updated[0] + "\","  ) +
+    let updated = await updateData([rv, rm, rp])
+    let resBody = "{\"v\":" + updated[0] + "," +
                     "\"m\":" + updated[1] + "," +
                     "\"p\":" + updated[2] + "}"
     await storeData(getVersionedKey("mastercomfig-api-response", version), resBody)
 }
 
 addEventListener('scheduled', event => {
-  event.waitUntil(forceUpdate("1"))
+  event.waitUntil(forceUpdate(2))
 })
 
 async function storeData(key, value) {
@@ -161,7 +160,7 @@ async function updateData(requests) {
     // Parse response
     let pg = []
     responses.forEach((r) => {
-        if (r) {
+        if (r && r.ok) {
             pg.push(gatherResponse(r))
         } else {
             pg.push(noop())
@@ -204,16 +203,9 @@ function constructDataResponse(updated, version, v, m, p) {
   if (updated[2]) {
     p = updated[2]
   }
-  let resBody = "";
-  if (version === "2") {
-    resBody = "{\"v\":" + v + "," +
+  let resBody = "{\"v\":" + v + "," +
                   "\"m\":" + m + "," +
                   "\"p\":" + p + "}"
-  } else {
-    resBody = "{\"v\":\"" + v + "\"," +
-                  "\"m\":" + m + "," +
-                  "\"p\":" + p + "}"
-  }
   return resBody;
 }
 
@@ -244,7 +236,8 @@ const downloadSlashLength = downloadLength + 1;
 
 async function handleRequest(request) {
   const url = new URL(request.url)
-  let version = url.searchParams.get("v")
+  //let version = url.searchParams.get("v") ?? 2;
+  let version = 2;
   let tag = url.searchParams.get("t");
   if (tag && (tag.includes("..") || tag.includes("/") || tag === ".")) {
     tag = null;
@@ -282,11 +275,11 @@ async function handleRequest(request) {
   }
   // Get custom tag
   if (tag) {
-    let v = await MASTERCOMFIG.get(getVersionedKey("mastercomfig-version", "2"))
+    let v = await MASTERCOMFIG.get(getVersionedKey("mastercomfig-version", version))
     let modules = [`https://raw.githubusercontent.com/mastercomfig/mastercomfig/${tag}/data/modules.json`, reqGHRawHeaders, null, stringify];
     let presets = [`https://raw.githubusercontent.com/mastercomfig/mastercomfig/${tag}/data/preset_modules.json`, reqGHRawHeaders, null, stringify];
-    let updated = await updateData([v ? null : rv2, modules, presets])
-    let resBody = constructDataResponse(updated, "2", v)
+    let updated = await updateData([v ? null : rv, modules, presets])
+    let resBody = constructDataResponse(updated, version, v)
     return new Response(resBody, resHeaders)
   }
   // Attempt cached
@@ -296,7 +289,7 @@ async function handleRequest(request) {
     let v = await MASTERCOMFIG.get(getVersionedKey("mastercomfig-version", version))
     let m = await MASTERCOMFIG.get("mastercomfig-modules")
     let p = await MASTERCOMFIG.get("mastercomfig-preset-modules")
-    let updated = await updateData([v ? null : (version === "2" ? rv2 : rv), m ? null : rm, p ? null : rp])
+    let updated = await updateData([v ? null : rv, m ? null : rm, p ? null : rp])
     resBody = constructDataResponse(updated, version, v, m, p)
     await storeData(getVersionedKey("mastercomfig-api-response", version), resBody)
   }
