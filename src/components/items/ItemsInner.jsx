@@ -220,7 +220,7 @@ export default function ItemsInner({ playerClass, items }) {
                         <h6 className="mb-2"><strong><small>{(itemClasses[0].classname === "default" || playerClass === "All-Class") ? "ALL CLASSES" : "PER CLASS"}</small></strong></h6>
                         <h6>Crosshair Scale: {currentCrosshairScale}</h6>
                         <Form.Range defaultValue={defaultCrosshairScale} min="16" max="64" step="1" onChange={(e) => setLiveCrosshairScale(e.target.value)} onBlur={(e) => {
-                          setCrosshairScale(playerClass, e.target.value);
+                          setCrosshairScale(playerClass === "All-Class" ? "default" : playerClass, e.target.value);
                           console.log(playerClass, e.target.value);
                         }}/>
                         <h6>Crosshair Color</h6>
