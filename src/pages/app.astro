@@ -11,7 +11,7 @@ import Footer from '../components/Footer.astro';
 import gm from '../utils/game.js';
 import "simple-keyboard/build/css/index.css";
 
-const appResponse = await fetch("https://mastercomfig.mcoms.workers.dev/?v=2");
+const appResponse = await fetch("https://api.mastercomfig.com/");
 const appData = await appResponse.json();
 await gm.initGameData();
 const clientLanguageCache = {};

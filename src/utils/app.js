@@ -485,7 +485,7 @@ async function app() {
     url = url.format(userVersion, id);
     url = url.replace(
       "https://github.com/mastercomfig/mastercomfig/releases",
-      "https://mastercomfig.mcoms.workers.dev/download"
+      "https://api.mastercomfig.com/download"
     );
     return url;
   }
@@ -1549,7 +1549,7 @@ async function app() {
           updateDocsLinks("page");
         }
       } else {
-        let tag = `https://mastercomfig.mcoms.workers.dev/?t=${userVersion}`;
+        let tag = `https://api.mastercomfig.com/?t=${userVersion}`;
         sendApiRequest(tag);
         updateDocsLinks(userVersion);
       }
