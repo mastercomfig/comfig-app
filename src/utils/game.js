@@ -1001,10 +1001,6 @@ async function initGameData() {
   for (const item of tfItems) {
     const data = item.WeaponData;
     if (!blockedItems.includes(data.classname)) {
-      // TODO: more robust fix
-      if (data.classname === "tf_weapon_flaregun_revenge") {
-        data.SoundData.reload = data.SoundData.reload[0];
-      }
       items[data.classname] = data;
     }
   }
