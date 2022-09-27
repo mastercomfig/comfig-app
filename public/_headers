@@ -6,73 +6,73 @@
   Content-Security-Policy: script-src 'unsafe-inline' 'self' blob: https://static.cloudflareinsights.com https://browser-update.org; frame-ancestors 'none';
   Cache-Control: public, no-cache
 
-/assets/*
+/assets*
   ! Cache-Control
 
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
 
-/chunks/*
+/chunks*
   ! Cache-Control
 
 /chunks/*
   Cache-Control: public, max-age=31536000, immutable
 
-/client*
+/clien*
   ! Cache-Control
 
 /client*
   Cache-Control: public, max-age=31536000, immutable
 
-/Global*
+/Globa*
   ! Cache-Control
 
 /Global*
   Cache-Control: public, max-age=31536000, immutable
 
-/hoisted*
+/hoiste*
   ! Cache-Control
 
 /hoisted*
   Cache-Control: public, max-age=31536000, immutable
 
-/ImageSlider*
+/ImageSlide*
   ! Cache-Control
 
 /ImageSlider*
   Cache-Control: public, max-age=31536000, immutable
 
-/Items*
+/Item*
   ! Cache-Control
 
 /Items*
   Cache-Control: public, max-age=31536000, immutable
 
-/*.png
+/*.pn:p
   ! Cache-Control
 
 /*.png
   Cache-Control: public, max-age=2419200, stale-while-revalidate=86400
 
-/*.jpg
+/*.jp:p
   ! Cache-Control
 
 /*.jpg
   Cache-Control: public, max-age=2419200, stale-while-revalidate=86400
 
-/*.ico
+/*.ic:p
   ! Cache-Control
 
 /*.ico
   Cache-Control: public, max-age=2419200, stale-while-revalidate=86400
 
-/*.webp
+/*.web:p
   ! Cache-Control
 
 /*.webp
   Cache-Control: public, max-age=2419200, stale-while-revalidate=86400
 
-/*.vtf
+/*.vt:p
   ! Cache-Control
 
 /*.vtf
