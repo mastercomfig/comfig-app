@@ -8,48 +8,72 @@
 
 /assets/*
   ! Cache-Control
+
+/assets/*
   Cache-Control: public, max-age=31536000, immutable
 
 /chunks/*
   ! Cache-Control
+
+/chunks/*
   Cache-Control: public, max-age=31536000, immutable
 
 /client*
   ! Cache-Control
+
+/client*
   Cache-Control: public, max-age=31536000, immutable
 
 /Global*
   ! Cache-Control
+
+/Global*
   Cache-Control: public, max-age=31536000, immutable
 
 /hoisted*
   ! Cache-Control
+
+/hoisted*
   Cache-Control: public, max-age=31536000, immutable
 
 /ImageSlider*
   ! Cache-Control
+
+/ImageSlider*
   Cache-Control: public, max-age=31536000, immutable
 
 /Items*
   ! Cache-Control
+
+/Items*
   Cache-Control: public, max-age=31536000, immutable
 
 /*.png
   ! Cache-Control
+
+/*.png
   Cache-Control: public, max-age=2419200, stale-while-revalidate=86400
 
 /*.jpg
   ! Cache-Control
+
+/*.jpg
   Cache-Control: public, max-age=2419200, stale-while-revalidate=86400
 
 /*.ico
   ! Cache-Control
+
+/*.ico
   Cache-Control: public, max-age=2419200, stale-while-revalidate=86400
 
 /*.webp
   ! Cache-Control
+
+/*.webp
   Cache-Control: public, max-age=2419200, stale-while-revalidate=86400
 
 /*.vtf
   ! Cache-Control
+
+/*.vtf
   Cache-Control: public, max-age=2419200, stale-while-revalidate=86400
