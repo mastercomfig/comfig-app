@@ -10,6 +10,22 @@ async function gatherResponse(response) {
   return await response.json()
 }
 
+// Cloudflare supports the GET, POST, HEAD, and OPTIONS methods from any origin,
+// and allow any header on requests. These headers must be present
+// on all responses to all CORS preflight requests. In practice, this means
+// all responses to OPTIONS requests.
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET,HEAD,POST,OPTIONS',
+  'Access-Control-Max-Age': '86400',
+};
+
+const optionsRes = {
+  headers: {
+    Allow: 'GET, HEAD, POST, OPTIONS',
+  },
+};
+
 const reqHeaders = {
   headers: {
     'User-Agent': 'mastercomfig-worker',
@@ -71,8 +87,12 @@ const resAssetHeadersSuccess = {
   }
 }
 
+const deniedOptions = {
+  status: 405,
+}
+
 const cacheOpt = {
-    expirationTtl: 86400
+  expirationTtl: 86400
 }
 
 function stringify(data) {
@@ -234,64 +254,101 @@ const validNames = new Set([
 const downloadLength = "/download".length;
 const downloadSlashLength = downloadLength + 1;
 
+function handleOptions(request) {
+  // Make sure the necessary headers are present
+  // for this to be a valid pre-flight request
+  const headers = request.headers;
+  if (
+    headers.get('Origin') !== null &&
+    headers.get('Access-Control-Request-Method') !== null &&
+    headers.get('Access-Control-Request-Headers') !== null
+  ) {
+    // Handle CORS pre-flight request.
+    // If you want to check or reject the requested method + headers
+    // you can do that here.
+    const respHeaders = {
+      ...corsHeaders,
+      // Allow all future content Request headers to go back to browser
+      // such as Authorization (Bearer) or X-Client-Name-Version
+      'Access-Control-Allow-Headers': request.headers.get('Access-Control-Request-Headers'),
+    };
+
+    return new Response(null, {
+      headers: respHeaders,
+    });
+  } else {
+    // Handle standard OPTIONS request.
+    // If you want to allow other HTTP Methods, you can do that here.
+    return new Response(null, optionsRes);
+  }
+}
+
 async function handleRequest(request) {
-  const url = new URL(request.url)
-  //let version = url.searchParams.get("v") ?? 2;
-  let version = 2;
-  let tag = url.searchParams.get("t");
-  if (tag && (tag.includes("..") || tag.includes("/") || tag === ".")) {
-    tag = null;
+  if (request.method === "OPTIONS") {
+    return handleOptions(request);
   }
-  if (url.pathname === webhookPathname) {
-    await forceUpdate(version)
-  }
-  if (url.pathname.startsWith("/download")) {
-    downloadUrl = url.pathname.substring(downloadLength)
-    let isDevDownload = downloadUrl.startsWith("/download/dev/")
-    let validDownload = isDevDownload || downloadUrl.startsWith("/latest/download/")
-    if (!validDownload && downloadUrl.startsWith("/download/")) {
-      let versionString = downloadUrl.substring(downloadSlashLength)
-      let slashPos = versionString.indexOf("/")
-      if (slashPos !== -1) {
-        versionString = versionString.substring(0, slashPos)
-        let v = await MASTERCOMFIG.get(getVersionedKey("mastercomfig-version", 2))
-        let versions = JSON.parse(v)
-        validDownload = versions.includes(versionString)
-      }
+  if (request.method === "GET") {
+    const url = new URL(request.url)
+    //let version = url.searchParams.get("v") ?? 2;
+    let version = 2;
+    let tag = url.searchParams.get("t");
+    if (tag && (tag.includes("..") || tag.includes("/") || tag === ".")) {
+      tag = null;
     }
-    if (validDownload) {
-      if (!url.pathname.includes("..")) {
-        let name = downloadUrl.split('/').pop()
-        if (validNames.has(name)) {
-          let response = await fetch("https://github.com/mastercomfig/mastercomfig/releases" + downloadUrl, reqGHReleaseHeaders)
-          const resHeaders = response.ok ? resAssetHeadersSuccess : resAssetHeaders
-          return new Response(response.body, {
-            status: response.status,
-            ...resHeaders
-          })
+    if (url.pathname === webhookPathname) {
+      await forceUpdate(version)
+    }
+    if (url.pathname.startsWith("/download")) {
+      downloadUrl = url.pathname.substring(downloadLength)
+      let isDevDownload = downloadUrl.startsWith("/download/dev/")
+      let validDownload = isDevDownload || downloadUrl.startsWith("/latest/download/")
+      if (!validDownload && downloadUrl.startsWith("/download/")) {
+        let versionString = downloadUrl.substring(downloadSlashLength)
+        let slashPos = versionString.indexOf("/")
+        if (slashPos !== -1) {
+          versionString = versionString.substring(0, slashPos)
+          let v = await MASTERCOMFIG.get(getVersionedKey("mastercomfig-version", 2))
+          let versions = JSON.parse(v)
+          validDownload = versions.includes(versionString)
+        }
+      }
+      if (validDownload) {
+        if (!url.pathname.includes("..")) {
+          let name = downloadUrl.split('/').pop()
+          if (validNames.has(name)) {
+            let response = await fetch("https://github.com/mastercomfig/mastercomfig/releases" + downloadUrl, reqGHReleaseHeaders)
+            const resHeaders = response.ok ? resAssetHeadersSuccess : resAssetHeaders
+            let { readable, writable } = new TransformStream()
+            response.body.pipeTo(writable)
+            return new Response(readable, {
+              status: response.status,
+              ...resHeaders
+            })
+          }
         }
       }
     }
-  }
-  // Get custom tag
-  if (tag) {
-    let v = await MASTERCOMFIG.get(getVersionedKey("mastercomfig-version", version))
-    let modules = [`https://raw.githubusercontent.com/mastercomfig/mastercomfig/${tag}/data/modules.json`, reqGHRawHeaders, null, stringify];
-    let presets = [`https://raw.githubusercontent.com/mastercomfig/mastercomfig/${tag}/data/preset_modules.json`, reqGHRawHeaders, null, stringify];
-    let updated = await updateData([v ? null : rv, modules, presets])
-    let resBody = constructDataResponse(updated, version, v)
+    // Get custom tag
+    if (tag) {
+      let v = await MASTERCOMFIG.get(getVersionedKey("mastercomfig-version", version))
+      let modules = [`https://raw.githubusercontent.com/mastercomfig/mastercomfig/${tag}/data/modules.json`, reqGHRawHeaders, null, stringify];
+      let presets = [`https://raw.githubusercontent.com/mastercomfig/mastercomfig/${tag}/data/preset_modules.json`, reqGHRawHeaders, null, stringify];
+      let updated = await updateData([v ? null : rv, modules, presets])
+      let resBody = constructDataResponse(updated, version, v)
+      return new Response(resBody, resHeaders)
+    }
+    // Attempt cached
+    let resBody = await MASTERCOMFIG.get(getVersionedKey("mastercomfig-api-response", version))
+    resBody = null
+    if (!resBody) {
+      let v = await MASTERCOMFIG.get(getVersionedKey("mastercomfig-version", version))
+      let m = await MASTERCOMFIG.get("mastercomfig-modules")
+      let p = await MASTERCOMFIG.get("mastercomfig-preset-modules")
+      let updated = await updateData([v ? null : rv, m ? null : rm, p ? null : rp])
+      resBody = constructDataResponse(updated, version, v, m, p)
+      await storeData(getVersionedKey("mastercomfig-api-response", version), resBody)
+    }
     return new Response(resBody, resHeaders)
   }
-  // Attempt cached
-  let resBody = await MASTERCOMFIG.get(getVersionedKey("mastercomfig-api-response", version))
-  resBody = null
-  if (!resBody) {
-    let v = await MASTERCOMFIG.get(getVersionedKey("mastercomfig-version", version))
-    let m = await MASTERCOMFIG.get("mastercomfig-modules")
-    let p = await MASTERCOMFIG.get("mastercomfig-preset-modules")
-    let updated = await updateData([v ? null : rv, m ? null : rm, p ? null : rp])
-    resBody = constructDataResponse(updated, version, v, m, p)
-    await storeData(getVersionedKey("mastercomfig-api-response", version), resBody)
-  }
-  return new Response(resBody, resHeaders)
+  return new Response(null, deniedOptions);
 }
