@@ -124,6 +124,10 @@ section {
   --bs-progress-height: 1.25rem;
 }
 
+.btn-outline-secondary {
+  border: $dark 1px solid;
+}
+
 // Base
 html {
   scroll-padding-top: 89px;
