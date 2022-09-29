@@ -77,3 +77,9 @@
 
 /*.vtf
   Cache-Control: public, max-age=2419200, stale-while-revalidate=86400
+
+/*.sv:p
+  ! Cache-Control
+
+/*.svg
+  Cache-Control: public, max-age=2419200, stale-while-revalidate=86400
