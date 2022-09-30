@@ -519,7 +519,7 @@ async function app() {
       try {
         let zipWriter = new ZipWriter(new BlobWriter("application/zip"), { bufferedWrite: true });
         let wroteFile = false;
-        await Promise.all(urls.map((url) => url.blob
+        await Promise.all(urls.map((url) => Promise.resolve(url.blob)
           .then((blob) => {
             zipWriter.add(url.path, new BlobReader(blob));
             wroteFile = true;
@@ -1211,7 +1211,7 @@ async function app() {
           path: "tf/cfg/overrides/modules.cfg",
           blob: modulesFile
         });
-      }      
+      }
     } else if (overridesDirectory) {
       // TODO: we should instead read in the existing modules.cfg and set selections
       // Avoid deleting a user's modules if they have not used the modules.cfg customizer
