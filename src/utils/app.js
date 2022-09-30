@@ -1422,6 +1422,9 @@ async function app() {
           }
           let item = items[classname];
           let effect = selectedExplosionEffects[classname];
+          if (!item.ExplosionEffect) {
+            continue;
+          }
           item.ExplosionEffect = effect;
           item.ExplosionPlayerEffect = effect;
           item.ExplosionWaterEffect = effect;

@@ -3,8 +3,9 @@ import ItemsInner from './ItemsInner.jsx';
 import Global from '../Global.jsx';
 
 export default function Items({ items }) {
-  if (typeof itemUsedBy === 'undefined') {
+  if (typeof itemUsedBy === 'undefined' || typeof languageCache === 'undefined') {
     window.location.reload();
+    return;
   }
   const playerClasses = Object.keys(itemUsedBy);
   return (
