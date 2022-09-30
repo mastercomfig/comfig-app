@@ -826,7 +826,7 @@ async function app() {
       return null;
     }
     if (directory) {
-      return getWritable(name, directory).then((writable) => writable.write(contents).then((writable) => writable.close()));
+      return getWritable(name, directory).then((writable) => writable.write(contents).then(() => writable.close()));
     } else {
       const file = new File([contents], name, {
         type: "application/octet-stream",
