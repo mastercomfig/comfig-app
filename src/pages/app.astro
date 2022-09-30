@@ -74,7 +74,7 @@ const npmVersion = process.env.npm_package_version;
       import * as Sentry from "@sentry/browser";
       Sentry.init({
         dsn: "https://42c25ee2fb084eb5a832ee92d97057d5@o182209.ingest.sentry.io/6265934",
-        release: `mastercomfig/mastercomfig@${npmVersion}`,
+        release: `mastercomfig@${npmVersion}`,
       });
 
       import { Alert, Collapse, Dropdown, Tab } from "bootstrap";
@@ -97,9 +97,9 @@ const npmVersion = process.env.npm_package_version;
       }
     </script>
   </MainHead>
-  <Global client:load languageCache={clientLanguageCache} latestData={appData} />
 </head>
 <Body>
+  <Global client:load languageCache={clientLanguageCache} latestData={appData} />
   <nav class="navbar navbar-expand-sm sticky-top navbar-dark bg-teal">
     <div class="container">
       <span class="navbar-brand"><img src="/img/mastercomfig_logo_transparent_i.svg" alt=""
