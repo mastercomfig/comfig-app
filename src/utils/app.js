@@ -505,7 +505,7 @@ async function app() {
     let downloadFailures = [];
     if (customDirectory) {
       try {
-        await Promise.all(urls.map((url) => url.pipe.catch(() => downloadFailures.push(url))));
+        await Promise.all(urls.map((url) => url.blob.catch(() => downloadFailures.push(url))));
         if (downloadFailures.length) {
           throw new Error("Download failures detected");
         } else {
@@ -821,15 +821,12 @@ async function app() {
     return writable;
   }
 
-  async function newFile(contents, name, directory) {
+  function newFile(contents, name, directory) {
     if (contents.length < 1) {
       return null;
     }
     if (directory) {
-      const writable = await getWritable(name, directory);
-      await writable.write(contents);
-      await writable.close();
-      return 0;
+      return getWritable(name, directory).then((writable) => writable.write(contents).then((writable) => writable.close()));
     } else {
       const file = new File([contents], name, {
         type: "application/octet-stream",
@@ -866,7 +863,7 @@ async function app() {
       let name = url.split("/").pop();
       if (directory) {
         const writable = await getWritable(name, directory, true);
-        return {name, pipe: response.then((r) => r.body.pipeTo(writable))};
+        return {name, blob: response.then((r) => r.body.pipeTo(writable))};
       }
       return {name, blob: response.then((r) => r.blob())};
     } catch (err) {
@@ -963,7 +960,7 @@ async function app() {
       delete configContentsRaw["modules.cfg"];
     }
     if (contents.length > 0) {
-      return await newFile(contents, "modules.cfg", overridesDirectory);
+      return newFile(contents, "modules.cfg", overridesDirectory);
     }
     return null;
   }
@@ -1175,7 +1172,7 @@ async function app() {
       delete configContentsRaw["autoexec.cfg"];
     }
     if (contents.length > 0) {
-      return await newFile(contents, "autoexec.cfg", appDirectory);
+      return newFile(contents, "autoexec.cfg", appDirectory);
     }
     return null;
   }
@@ -1203,15 +1200,13 @@ async function app() {
     // Update binds
     await updateBinds();
     // Create the modules.cfg file
-    let modulesFile = await newModulesFile();
-    if (modulesFile !== null) {
-      if (modulesFile) {
-        downloads.push({
-          name: "modules.cfg",
-          path: "tf/cfg/overrides/modules.cfg",
-          blob: modulesFile
-        });
-      }
+    let modulesFile = newModulesFile();
+    if (modulesFile) {
+      downloads.push({
+        name: "modules.cfg",
+        path: "tf/cfg/overrides/modules.cfg",
+        blob: modulesFile
+      });
     } else if (overridesDirectory) {
       // TODO: we should instead read in the existing modules.cfg and set selections
       // Avoid deleting a user's modules if they have not used the modules.cfg customizer
@@ -1437,7 +1432,7 @@ async function app() {
         let fileName = `${classname}.txt`;
         let item = {WeaponData: items[classname]};
         let contents = stringify(item, {pretty: true});
-        let file = await newFile(contents, fileName, scriptsDirectory);
+        let file = newFile(contents, fileName, scriptsDirectory);
         if (!file) {
           continue;
         }
@@ -1472,7 +1467,7 @@ async function app() {
       }
     }
     // Create the autoexec.cfg file
-    let autoexecFile = await newAutoexecFile();
+    let autoexecFile = newAutoexecFile();
     if (autoexecFile) {
       downloads.push({
         name: "autoexec.cfg",
@@ -1483,7 +1478,7 @@ async function app() {
     for (const fileName of Object.keys(configContentsRaw)) {
       let contents = configContentsRaw[fileName];
       if (contents.length > 0) {
-        let file = await newFile(contents, fileName, appDirectory);
+        let file = newFile(contents, fileName, appDirectory);
         if (!file) {
           continue;
         }
