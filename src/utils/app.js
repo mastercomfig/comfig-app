@@ -506,7 +506,7 @@ async function app() {
     if (customDirectory) {
       try {
         await Promise.all(urls.map((url) => url.pipe.catch(() => downloadFailures.push(url))));
-        if (downloadFailures) {
+        if (downloadFailures.length) {
           throw new Error("Download failures detected");
         } else {
           updateDownloadProgress(100, "Done!");
@@ -543,7 +543,7 @@ async function app() {
           link.remove();
           pendingObjectURLs.push(blobURL);
         }
-        if (downloadFailures) {
+        if (downloadFailures.length) {
           throw new Error("Download failures detected");
         } else {
           updateDownloadProgress(100, "Done!");
