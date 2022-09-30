@@ -389,7 +389,6 @@ async function app() {
       // We've gotten to the last in the download stack, so we're done
       bindDownloadClick(id, fnGatherUrls);
     }
-    updateDownloadProgress(100, "Done!");
   }
 
   function handleConnectivityChange(e) {
@@ -502,25 +501,56 @@ async function app() {
   let pendingObjectURLs = [];
 
   async function downloadUrls(urls, id, fnGatherUrls) {
-    let zipWriter = new ZipWriter(new BlobWriter("application/zip"), { bufferedWrite: true });
-    for (const url of urls) {
-      zipWriter.add(url.path, new BlobReader(url.blob));
+    updateDownloadProgress(10, "Downloading files...");
+    let downloadFailures = [];
+    if (customDirectory) {
+      try {
+        await Promise.all(urls.map((url) => url.pipe.catch(() => downloadFailures.push(url))));
+        if (downloadFailures) {
+          throw new Error("Download failures detected");
+        } else {
+          updateDownloadProgress(100, "Done!");
+        }
+      } catch {
+        updateDownloadProgress(0, (downloadFailures.length > 3 ? `Failed to download ${downloadFailures.length} files` : `Failed to download ${downloadFailures.map((url) => url.name).join(", ")}`) + ". Please try again later.");
+      }
+    } else {
+      try {
+        let zipWriter = new ZipWriter(new BlobWriter("application/zip"), { bufferedWrite: true });
+        let wroteFile = false;
+        await Promise.all(urls.map((url) => url.blob
+          .then((blob) => {
+            zipWriter.add(url.path, new BlobReader(blob));
+            wroteFile = true;
+          })
+          .catch(() => downloadFailures.push(url))
+        ));
+        if (wroteFile) {
+          const blobURL = URL.createObjectURL(await zipWriter.close());
+          zipWriter = null;
+          let link = document.createElement("a");
+          link.href = blobURL;
+          link.download = "mastercomfig.zip";
+          document.body.append(link);
+          link.dispatchEvent(
+            new MouseEvent("click", {
+              bubbles: true,
+              cancelable: true,
+              view: window,
+            })
+          );
+          link.remove();
+          pendingObjectURLs.push(blobURL);
+        }
+        if (downloadFailures) {
+          throw new Error("Download failures detected");
+        } else {
+          updateDownloadProgress(100, "Done!");
+        }
+      } catch {
+        updateDownloadProgress(0, (downloadFailures.length > 3 ? `Failed to download ${downloadFailures.length} files` : `Failed to download ${downloadFailures.map((url) => url.name).join(", ")}`) + ". Please try again later.`");
+      }
     }
-    const blobURL = URL.createObjectURL(await zipWriter.close());
-    zipWriter = null;
-    let link = document.createElement("a");
-    link.href = blobURL;
-    link.download = "mastercomfig.zip";
-    document.body.append(link);
-    link.dispatchEvent(
-      new MouseEvent("click", {
-        bubbles: true,
-        cancelable: true,
-        view: window,
-      })
-    );
-    link.remove();
-    pendingObjectURLs.push(blobURL);
     // We're done
     bindDownloadClick(id, fnGatherUrls);
     // Once it's long past our time to download, remove the object URLs
@@ -810,6 +840,13 @@ async function app() {
     return new Promise((resolve) => setTimeout(resolve, delay));
   }
 
+  function checkFetch(response) {
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+    return response;
+  }
+
   function fetchRetry(url, delay, tries, fetchOptions = {}) {
     function onError(err) {
       let triesLeft = tries - 1;
@@ -818,20 +855,18 @@ async function app() {
       }
       return wait(delay).then(() => fetchRetry(url, delay * 2, triesLeft, fetchOptions));
     }
-    return fetch(url, fetchOptions).catch(onError);
+    return fetch(url, fetchOptions).then(checkFetch).catch(onError);
   }
 
   async function writeRemoteFile(url, directory) {
     try {
-      let response = await fetchRetry(url, 125, 6);
+      let response = fetchRetry(url, 125, 6);
       let name = url.split("/").pop();
       if (directory) {
         const writable = await getWritable(name, directory, true);
-        // TODO: this doesn't like concurrency
-        await response.body.pipeTo(writable);
-        return true;
+        return {name, pipe: response.then((r) => r.body.pipeTo(writable))};
       }
-      return {name, blob: await response.blob()};
+      return {name, blob: response.then((r) => r.blob())};
     } catch (err) {
       console.error(`Failed fetching ${url}`, err);
       return false;
@@ -852,7 +887,7 @@ async function app() {
     }
     let downloads = [];
     getEl("download-progress-bar").classList.remove("d-none");
-    updateDownloadProgress(0, "Downloading preset...");
+    updateDownloadProgress(0, "Gathering selections...");
     let presetUrl = getPresetUrl();
     if (customDirectory) {
       console.log("Using Direct Install.")
@@ -873,31 +908,27 @@ async function app() {
         alert("Files are in use. Please close TF2 before updating mastercomfig.");
         return downloads;
       }
-      // Write preset file
-      if (!await writeRemoteFile(presetUrl, customDirectory)) {
-        alert("Failed to download preset file. Please try again later.");
-      }
     } else {
       console.log("Using ZIP download.");
-      let presetResult = await writeRemoteFile(presetUrl, customDirectory);
-      if (presetResult) {
-        presetResult.path = `tf/custom/${presetResult.name}`;
-        // Then push our preset download
-        downloads.push(presetResult);
-      } else {
-        alert("Failed to download preset file. Please try again later.");
-      }
     }
-    updateDownloadProgress(25, "Downloading addons...");
+    // Write preset file
+    let presetResult = await writeRemoteFile(presetUrl, customDirectory);
+    if (presetResult) {
+      presetResult.path = `tf/custom/${presetResult.name}`;
+      // Then push our preset download
+      downloads.push(presetResult);
+    } else {
+      alert("Failed to download preset file. Please try again later.");
+    }
     // Then push all our addon downloads
     for (const selection of selectedAddons) {
       let addonUrl = getAddonUrl(selection);
       let addonResult = await writeRemoteFile(addonUrl, customDirectory);
-      if (!addonResult) {
-        alert(`Failed to download ${selection} addon file. Please try again later.`);
-      } else if (!customDirectory) {
+      if (addonResult) {
         addonResult.path = `tf/custom/${addonResult.name}`;
         downloads.push(addonResult);
+      } else {
+        alert(`Failed to download ${selection} addon file. Please try again later.`);
       }
     }
     // Also handle customizations
@@ -1162,7 +1193,6 @@ async function app() {
   }
 
   async function getCustomDownloadUrls() {
-    updateDownloadProgress(50, "Downloading modules...");
     // We downloaded the custom settings, so the user wants it!
     await saveModules();
     // We need permissions for the directory
@@ -1175,6 +1205,7 @@ async function app() {
     if (modulesFile !== null) {
       if (modulesFile) {
         downloads.push({
+          name: "modules.cfg",
           path: "tf/cfg/overrides/modules.cfg",
           blob: modulesFile
         });
@@ -1203,7 +1234,6 @@ async function app() {
         materialsDirectory.removeEntry(key);
       }
     }
-    updateDownloadProgress(70, "Downloading weapon customizations...");
     if (globalThis.items) {
       let {default: useItemStore} = await import("../store/items.js");
       const itemsState = useItemStore.getState();
@@ -1410,27 +1440,29 @@ async function app() {
           continue;
         }
         downloads.push({
+          name: fileName,
           path: `tf/custom/comfig-custom/scripts/${fileName}`,
           blob: file
         });
       }
       const crosshairExtensions = [".vtf", ".vmt"];
       let crosshairSrcBase = `/img/app/crosshairs/assets/`;
+      let hasAlerted = false;
       for (const crosshairFile of Array.from(crosshairsToDownload)) {
         for (const ext of crosshairExtensions) {
           let src = `${crosshairSrcBase}${crosshairFile}${ext}`;
           let crosshairResult = await writeRemoteFile(src, materialsDirectory);
-          if (!crosshairResult) {
-            alert("Failed to download preset file. Please try again later.");
-          } else if (!materialsDirectory) {
+          if (crosshairResult) {
             let dst = `${crosshairTarget}${crosshairFile}${ext}`;
             crosshairResult.path = dst;
             downloads.push(crosshairResult);
+          } else if (!hasAlerted) {
+            hasAlerted = true;
+            alert("Failed to download crosshair file. Please try again later.");
           }
         }
       }
     }
-    updateDownloadProgress(90, "Downloading custom configs...");
     // Clear out old app directory
     if (appDirectory) {
       for await (const key of appDirectory.keys()) {
@@ -1441,6 +1473,7 @@ async function app() {
     let autoexecFile = await newAutoexecFile();
     if (autoexecFile) {
       downloads.push({
+        name: "autoexec.cfg",
         path: "tf/cfg/app/autoexec.cfg",
         blob: autoexecFile
       });
@@ -1453,6 +1486,7 @@ async function app() {
           continue;
         }
         downloads.push({
+          name: fileName,
           path: `tf/cfg/app/${fileName}`,
           blob: file
         });
