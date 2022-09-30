@@ -3,6 +3,9 @@ import ItemsInner from './ItemsInner.jsx';
 import Global from '../Global.jsx';
 
 export default function Items({ items }) {
+  if (typeof itemUsedBy === 'undefined') {
+    window.location.reload();
+  }
   const playerClasses = Object.keys(itemUsedBy);
   return (
   <div className="items-root">
