@@ -501,7 +501,7 @@ async function app() {
   let pendingObjectURLs = [];
 
   async function downloadUrls(urls, id, fnGatherUrls) {
-    updateDownloadProgress(10, "Downloading files...");
+    updateDownloadProgress(20, "Downloading files...");
     let downloadFailures = [];
     if (customDirectory) {
       try {
@@ -511,7 +511,8 @@ async function app() {
         } else {
           updateDownloadProgress(100, "Done!");
         }
-      } catch {
+      } catch (err) {
+        console.error(err);
         updateDownloadProgress(0, (downloadFailures.length > 3 ? `Failed to download ${downloadFailures.length} files` : `Failed to download ${downloadFailures.map((url) => url.name).join(", ")}`) + ". Please try again later.");
       }
     } else {
@@ -547,7 +548,8 @@ async function app() {
         } else {
           updateDownloadProgress(100, "Done!");
         }
-      } catch {
+      } catch (err) {
+        console.error(err);
         updateDownloadProgress(0, (downloadFailures.length > 3 ? `Failed to download ${downloadFailures.length} files` : `Failed to download ${downloadFailures.map((url) => url.name).join(", ")}`) + ". Please try again later.`");
       }
     }
@@ -887,7 +889,7 @@ async function app() {
     }
     let downloads = [];
     getEl("download-progress-bar").classList.remove("d-none");
-    updateDownloadProgress(0, "Gathering selections...");
+    updateDownloadProgress(0, "Generating files...");
     let presetUrl = getPresetUrl();
     if (customDirectory) {
       console.log("Using Direct Install.")
