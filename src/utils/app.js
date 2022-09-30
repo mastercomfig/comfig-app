@@ -2185,8 +2185,7 @@ async function app() {
       "position-absolute",
       "bottom-0",
       "btn",
-      "btn-secondary",
-      "btn-sm"
+      "btn-secondary"
     );
     resetButton.style.marginBottom = "0.5rem";
     resetButton.addEventListener("click", async (e) => {
