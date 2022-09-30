@@ -550,7 +550,7 @@ async function app() {
         }
       } catch (err) {
         console.error(err);
-        updateDownloadProgress(0, (downloadFailures.length > 3 ? `Failed to download ${downloadFailures.length} files` : `Failed to download ${downloadFailures.map((url) => url.name).join(", ")}`) + ". Please try again later.`");
+        updateDownloadProgress(0, (downloadFailures.length > 3 ? `Failed to download ${downloadFailures.length} files` : `Failed to download ${downloadFailures.map((url) => url.name).join(", ")}`) + ". Please try again later.");
       }
     }
     // We're done
