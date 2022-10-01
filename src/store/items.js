@@ -24,7 +24,6 @@ const useStore = create(
         return state;
       }),
       setCrosshairScale: (k, v) => {
-        console.log(k, v);
         set((state) => ({ crosshairScales: {...state.crosshairScales, [k]: v} }));
       },
       delCrosshairScale: (k) => set((state) => {
