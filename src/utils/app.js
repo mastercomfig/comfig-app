@@ -944,7 +944,7 @@ async function app() {
     return downloads;
   }
 
-  async function newModulesFile() {
+  function newModulesFile() {
     let contents = "";
     for (const moduleName of Object.keys(selectedModules)) {
       let moduleValue = selectedModules[moduleName];
@@ -1158,7 +1158,7 @@ async function app() {
     return contents;
   }
 
-  async function newAutoexecFile() {
+  function newAutoexecFile() {
     let contents = "";
     // Binds
     contents += getBindsFromBindsObject(selectedBinds);
