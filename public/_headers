@@ -60,7 +60,7 @@
 /*.jpg
   Cache-Control: public, max-age=2419200, stale-while-revalidate=86400
 
-/*.ic:p
+/*.ic:o
   ! Cache-Control
 
 /*.ico
@@ -72,13 +72,19 @@
 /*.webp
   Cache-Control: public, max-age=2419200, stale-while-revalidate=86400
 
-/*.vt:p
+/*.vt:f
   ! Cache-Control
 
 /*.vtf
   Cache-Control: public, max-age=2419200, stale-while-revalidate=86400
 
-/*.sv:p
+/*.vm:t
+  ! Cache-Control
+
+/*.vmt
+  Cache-Control: public, max-age=2419200, stale-while-revalidate=86400
+
+/*.sv:g
   ! Cache-Control
 
 /*.svg
