@@ -971,7 +971,7 @@ async function app() {
   async function updateBinds() {
     const bindFields = document.querySelectorAll(".binding-field");
 
-    // Override actions
+    // Populate our action overrides with the custom action mappings that modifiers have registered.
     let actionOverrides = {};
     for (const namespace of Object.keys(customActionMappings)) {
       for (const action of Object.keys(customActionMappings[namespace])) {
@@ -984,41 +984,54 @@ async function app() {
     let actionLayerBinds = {};
     selectedBinds = {};
     bindLayers = { gameoverrides: {} };
+    // Go through our user created bind fields UI
     for (const bindField of bindFields) {
+      // The key name
       let keyInput = bindField.childNodes[0].firstChild.value;
+      // The action input
       let actionSelect = bindField.childNodes[1].firstChild.value;
+      // The layer input
       let layerName = bindField.dataset.layer;
+      if (layerName === "gameoverrides") {
+        layerName = "";
+      }
+      // If the key and action are not empty
       if (keyInput && actionSelect) {
+        // Empty action, skip it
         if (actionSelect === EMPTY_ACTION_VALUE) {
           continue;
         }
         let bindCommand = "";
+        // Either binding it to a layer, or the main default layer. These are action binds, used for serialization.
         let actionBindObject;
+        // If the layer exists, then we're binding to a layer
         if (layerName) {
+          // Get the layer. If the layer doesn't exist, create it
           actionBindObject = actionLayerBinds[layerName];
           if (!actionBindObject) {
+            // Make a layer object, which maps keys to actions.
             actionLayerBinds[layerName] = {};
+            // Assign our action bind object (key -> action)
             actionBindObject = actionLayerBinds[layerName];
           }
         } else {
+          // Assign our action bind object (key -> action)
           actionBindObject = actionBinds;
         }
+        // If this is a custom command, we can just grab the command input
         if (actionSelect === CUSTOM_ACTION_VALUE) {
           bindCommand = bindField.childNodes[1].lastChild.firstChild.value;
           // Empty command, skip
-          /* TODO: we can't do this for now because we bind a download with any existing keybind (not non-empty command)
           if (!bindCommand) {
             continue;
-          } */
-          if (!bindCommand) {
-            // Force quoting later on
-            bindCommand = " ";
           }
+          // Just put the bind command in the action bind directly
           if (actionBindObject[keyInput]) {
             actionBindObject[keyInput].push(bindCommand);
           } else {
             actionBindObject[keyInput] = [bindCommand];
           }
+          // Ok now, replace all the quotes from the user with blank
           bindCommand = bindCommand.replaceAll('"', "");
         } else {
           if (actionBindObject[keyInput]) {
@@ -1026,11 +1039,14 @@ async function app() {
           } else {
             actionBindObject[keyInput] = [actionSelect];
           }
+          // Ok now, resolve the action ID to a bind command, checking for overrides if they exist
           bindCommand = actionOverrides[actionSelect]
             ? actionOverrides[actionSelect]
             : actionMappings[actionSelect];
         }
+        // Now we create the actual key -> bind command mapping.
         let bindObject;
+        // Check if the layer is here, we've been over this already!
         if (layerName) {
           bindObject = bindLayers[layerName];
           if (!bindObject) {
@@ -1040,6 +1056,7 @@ async function app() {
         } else {
           bindObject = selectedBinds;
         }
+        // Now, we are building a string here.
         if (bindObject[keyInput]) {
           bindObject[keyInput] += `;${bindCommand}`;
         } else {
@@ -1129,12 +1146,13 @@ async function app() {
   }
 
   function getBindsFromBindsObject(bindsObject) {
+    console.log(bindsObject);
     let contents = "";
     for (const key of Object.keys(bindsObject)) {
       let binding = bindsObject[key];
       let bindingStr;
       // Should we quote arg, or raw arg?
-      const isMultiCommand = binding.indexOf(";") !== -1;
+      let isMultiCommand = binding.indexOf(";") !== -1;
       if (typeof binding === "string" && (binding.indexOf(" ") !== -1 || isMultiCommand)) {
         // Handle multi-command binds
         if (isMultiCommand) {
@@ -1146,9 +1164,12 @@ async function app() {
             contents += `alias -${aliasName}"${keyUpBinding}"\n`;
             bindingStr = ` +${aliasName}`;
           } else {
-            // We can just quote like normal
-            bindingStr = `"${binding}"`;
+            isMultiCommand = false;
           }
+        }
+        if (!isMultiCommand) {
+          // We can just quote like normal
+          bindingStr = `"${binding}"`;
         }
       } else {
         bindingStr = ` ${binding}`;
@@ -2866,13 +2887,10 @@ async function app() {
     let layer = bindOptions?.layer;
     for (const key of Object.keys(bindConfigLayers)) {
       let optionName;
-      let optionValue;
       if (key == "gameoverrides") {
         optionName = "Default layer";
-        optionValue = "";
       } else {
         optionName = capitalize(key);
-        optionValue = key;
       }
       let optionElement = document.createElement("option");
       optionElement.value = key;
@@ -2932,8 +2950,14 @@ async function app() {
   tryDBGet("bindLayers").then((bindLayers) => {
     if (bindLayers) {
       for (const [layer, keybinds] of Object.entries(bindLayers)) {
-        for (const [key, action] of Object.entries(keybinds)) {
-          createBindingField({ key, action, layer });
+        for (const [key, actions] of Object.entries(keybinds)) {
+          if (Array.isArray(actions)) {
+            for (const action of actions) {
+              createBindingField({ key, action, layer });
+            }
+          } else {
+            createBindingField({ key, action: actions, layer });
+          }
         }
       }
     }
