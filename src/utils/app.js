@@ -1146,7 +1146,6 @@ async function app() {
   }
 
   function getBindsFromBindsObject(bindsObject) {
-    console.log(bindsObject);
     let contents = "";
     for (const key of Object.keys(bindsObject)) {
       let binding = bindsObject[key];
