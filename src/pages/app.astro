@@ -79,6 +79,13 @@ const npmVersion = process.env.npm_package_version;
 
       import { Alert, Collapse, Dropdown, Tab } from "bootstrap";
       import '../utils/game.js';
+
+      if (typeof TransformStream == "undefined") {
+        const script = document.createElement("script");
+        script.src = "https://cdn.jsdelivr.net/npm/web-streams-polyfill@3.2.1/dist/polyfill.es2018.min.js";
+        document.body.appendChild(script);
+      }
+
       import '../utils/app.js';
     </script>
   </ImportHead>
