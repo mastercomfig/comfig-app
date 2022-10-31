@@ -1022,7 +1022,7 @@ const stockItems = {
 
 const skipExplosionEffect = new Set(["tf_weapon_particle_cannon", "tf_weapon_grapplinghook", "tf_weapon_compound_bow", "tf_weapon_crossbow", "tf_weapon_shotgun_building_rescue", "tf_weapon_rocketlauncher_fireball", "tf_weapon_flaregun", "tf_weapon_flaregun_revenge"]);
 
-const skipMuzzleFlash = new Set(["tf_weapon_drg_pomson", "tf_weapon_mechanical_arm", "tf_weapon_rocketlauncher_fireball"]);
+const skipMuzzleFlash = new Set(["tf_weapon_drg_pomson", "tf_weapon_mechanical_arm", "tf_weapon_rocketlauncher_fireball", "tf_weapon_minigun"]);
 
 const skipTracer = new Set(["tf_weapon_minigun"]);
 
