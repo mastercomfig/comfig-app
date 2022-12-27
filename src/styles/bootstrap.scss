@@ -119,9 +119,8 @@ $form-select-border-radius-lg: $input-border-radius-lg;
 // 7. Optionally include utilities API last to generate classes based on the Sass map in `_utilities.scss`
 @import "~bootstrap/scss/utilities/api";
 
-// Workaround for Vite bug
+// Defer web font load
 $web-font-path: "";
-@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap");
 
 @import "./materia";
 
