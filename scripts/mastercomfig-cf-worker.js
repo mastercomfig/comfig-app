@@ -59,7 +59,7 @@ const reqGHReleaseHeaders = {
 const resCommonHeaders = {
   headers: {
     'Cache-Control': 'max-age=86400',
-    'Access-Control-Allow-Origin': 'https://mastercomfig.com'
+    'Access-Control-Allow-Origin': '*'
   }
 }
 
