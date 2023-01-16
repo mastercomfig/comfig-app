@@ -931,6 +931,7 @@ const explosionEffects = {
   "eotl_pyro_pool_explosion_flash": "Pyro Pool Explosion",
   "electrocuted_red_flash": "Electrocuted Red",
   "electrocuted_blue_flash": "Electrocuted Blue",
+  "duck_collect_trail_special_red": "Invisible",
 };
 
 const explosionPreviews = {
@@ -940,6 +941,7 @@ const explosionPreviews = {
   "eotl_pyro_pool_explosion_flash": "explosions_pyro_pool.jpg",
   "electrocuted_red_flash": "explosions_2colours.jpg",
   "electrocuted_blue_flash": "explosions_2colours.jpg",
+  "duck_collect_trail_special_red": "",
 };
 
 function getNormalizedSlotName(item) {
