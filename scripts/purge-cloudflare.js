@@ -13,7 +13,7 @@ function purgeOnCloudflare(files) {
   const files1 = files.map(f => `https://mastercomfig.com/${f}`);
   const files2 = files.map(f => `https://comfig.app/${f}`);
   const data = JSON.stringify({
-    files: files1 + files2,
+    files: files1.concat(files2),
   });
   const options = {
       hostname: "api.cloudflare.com",
