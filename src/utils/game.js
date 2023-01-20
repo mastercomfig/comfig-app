@@ -935,13 +935,13 @@ const explosionEffects = {
 };
 
 const explosionPreviews = {
-  "default": "default.jpg",
-  "ExplosionCore_sapperdestroyed": "explosions_original.jpg",
-  "muzzle_minigun_starflash01": "explosions_muzzle_flash.jpg",
-  "eotl_pyro_pool_explosion_flash": "explosions_pyro_pool.jpg",
-  "electrocuted_red_flash": "explosions_2colours.jpg",
-  "electrocuted_blue_flash": "explosions_2colours.jpg",
-  "duck_collect_trail_special_red": "",
+  "default": "default.webp",
+  "ExplosionCore_sapperdestroyed": "ExplosionCore_sapperdestroyed.webp",
+  "muzzle_minigun_starflash01": "muzzle_minigun_starflash01.webp",
+  "eotl_pyro_pool_explosion_flash": "eotl_pyro_pool_explosion_flash.webp",
+  "electrocuted_red_flash": "electrocuted_red_flash.webp",
+  "electrocuted_blue_flash": "electrocuted_blue_flash.webp",
+  "duck_collect_trail_special_red": "duck_collect_trail_special_red.webp",
 };
 
 function getNormalizedSlotName(item) {
