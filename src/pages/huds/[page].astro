@@ -44,6 +44,7 @@ const currentPage = page.currentPage ?? 1;
       color: #b2dfdb;
       box-shadow: none;
       border: none;
+      z-index: 2;
      }
 
      .btn-outline-secondary:hover {
@@ -62,7 +63,7 @@ const currentPage = page.currentPage ?? 1;
                 <h5 class="card-title">{hud.name}</h5>
                 <h6 class="card-subtitle mb-2 text-muted">{hud.author}</h6>
                 <a href={`/huds/page/${hud.id}`} class="card-link stretched-link">View HUD</a>
-                <a href={hud.downloadUrl} class="btn-outline-secondary ms-3 mb-2 position-relative z-3"><span class="fas fa-download fa-fw"></span></a>
+                <a href={hud.downloadUrl} class="btn btn-outline-secondary ms-3 mb-2 position-relative"><span class="fas fa-download fa-fw"></span></a>
                 <br>
                 <span class="text-muted">
                   Last updated <strong>{hud.publishDate.toLocaleDateString('en-us', { year: "numeric", month: "short", day: "numeric"})}</strong>
