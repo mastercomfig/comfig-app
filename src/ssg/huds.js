@@ -100,8 +100,14 @@ const getHuds = async () => {
       }
 
       // Query the commit
-      const commit = await ghApi(`repos/${ghRepo}/git/commits/${hudData.hash}`);
-      hudData.publishDate = new Date(commit.author.date);
+      try {
+        const commit = await ghApi(`repos/${ghRepo}/git/commits/${hudData.hash}`);
+        hudData.publishDate = new Date(commit.author.date);
+      } catch (e) {
+        console.log(`Failed to fetch commit ${hudData.hash} for ${hudId} (${ghRepo})`);
+        hudData.publishDate = new Date(null);
+        throw e;
+      }
 
       // Remap resources to full URLs
       hudData.resourceUrls = hudData.resources.map((name) => getHudResource(hudId, name));
