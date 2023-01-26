@@ -45,7 +45,7 @@ const { hud } = Astro.props;
         {hud.resourceUrls.map((resource, index) => 
           <div class={`carousel-item ${index == 0 ? "active" : ""}`}>
             {
-              (hud.resourceUrls.startsWith("https://youtube.com/") && (
+              (resource.startsWith("https://youtube.com/") && (
                 <iframe width="100%" height="100%" src={resource} title={`${hud.resources[index]}`} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
               )) || (<img src={resource} class="d-block w-100" loading="lazy" alt={`${hud.resources[index]}`} />)
             }
