@@ -34,6 +34,9 @@ const getHudDb = async () => {
 
 const getHudResource = (id, name) => {
   if (name.startsWith("https://youtu.be/")) {
+    return name.replace("https://youtu.be", "https://youtube.com/embed");
+  }
+  if (name.startsWith("https://")) {
     return name;
   }
   return `https://raw.githubusercontent.com/mastercomfig/hud-db/main/hud-resources/${id}/${name}.webp`
@@ -93,8 +96,8 @@ const getHuds = async () => {
       hudData.publishDate = new Date(commit.author.date);
 
       // Remap resources to full URLs
-      hudData.resources = hudData.resources.map((name) => getHudResource(hudId, name));
-      hudData.bannerUrl = hudData.resources[0];
+      hudData.resourceUrls = hudData.resources.map((name) => getHudResource(hudId, name));
+      hudData.bannerUrl = hudData.resourceUrls[0];
 
       return [hudId, hudData];
     }));

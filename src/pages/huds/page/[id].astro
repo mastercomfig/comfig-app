@@ -42,9 +42,13 @@ const { hud } = Astro.props;
     <h1 class="display-1 mt-3">{hud.name} <span class="text-muted display-4">by {hud.author}</span></h1>
     <div id="hudScreenshots" class="carousel slide">
       <div class="carousel-inner">
-        {hud.resources.map((resource, index) => 
+        {hud.resourceUrls.map((resource, index) => 
           <div class={`carousel-item ${index == 0 ? "active" : ""}`}>
-            <img src={resource} class="d-block w-100">
+            {
+              (hud.resourceUrls.startsWith("https://youtube.com/") && (
+                <iframe width="100%" height="100%" src={resource} title={`${hud.resources[index]}`} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+              )) || (<img src={resource} class="d-block w-100" loading="lazy" alt={`${hud.resources[index]}`} />)
+            }
           </div>)
         }
       </div>
