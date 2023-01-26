@@ -31,6 +31,12 @@ const { hud } = Astro.props;
   <ImportHead>
     <script>
       import { Carousel } from "bootstrap";
+
+      const carouselEl = document.getElementById('hudScreenshots');
+      const carousel = new Carousel(carouselEl, {
+        interval: 2000,
+        touch: false
+      });
     </script>
   </ImportHead>
   <MainHead title={`${hud.name} | comfig huds`} description={`${hud.name} on comfig huds, modern Team Fortress 2 HUD directory.`}>
