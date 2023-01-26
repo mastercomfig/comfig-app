@@ -63,7 +63,9 @@ const getHuds = async () => {
 
       // Query markdown
       const markdownData = await fetch(`https://raw.githubusercontent.com/mastercomfig/hud-db/main/hud-pages/${hudId}.md`);
-      hudData.content = await markdownData.text();
+      if (markdownData.ok) {
+        hudData.content = await markdownData.text();
+      }
       
       // Just the user/repo
       const ghRepo = hudData.repo.replace("https://github.com/", "");
@@ -71,9 +73,15 @@ const getHuds = async () => {
       // Query the info.vdf in the repo to get the UI version
       const infoVdf = await fetch(`https://raw.githubusercontent.com/${ghRepo}/${hudData.hash}/info.vdf`);
       if (infoVdf.ok) {
-        const infoVdfJson = parse(await infoVdf.text());
-        const tfUiVersion = parseInt(Object.entries(infoVdfJson)[0][1].ui_version, 10);
-        hudData.outdated = tfUiVersion !== CURRENT_HUD_VERSION;
+        try {
+          const infoVdfJson = parse(await infoVdf.text());
+          const tfUiVersion = parseInt(Object.entries(infoVdfJson)[0][1].ui_version, 10);
+          hudData.outdated = tfUiVersion !== CURRENT_HUD_VERSION;
+        } catch (e) {
+          // info.vdf exists but is invalid
+          console.log(`Invalid info.vdf for ${hudId} (${ghRepo})`);
+          hudData.outdated = true;
+        }
       } else if (infoVdf.status == 404) {
         // info.vdf doesn't exist at all, this is a very old HUD
         hudData.outdated = true;

@@ -68,7 +68,7 @@ const { hud } = Astro.props;
       </button>
     </div>
     <a href={hud.downloadUrl} class="btn btn-secondary w-100 my-3"><span class="fas fa-download fa-fw"></span> Download</a>
-    <Markdown content={hud.content} />
+    {hud.content && (<Markdown content={hud.content} />)}
     <hr>
   </div>
   <Footer>
