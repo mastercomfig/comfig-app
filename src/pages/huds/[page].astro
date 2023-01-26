@@ -31,6 +31,13 @@ const currentPage = page.currentPage ?? 1;
   <MainHead title="comfig huds | mastercomfig" description="A modern Team Fortress 2 HUD directory.">
     <></>
   </MainHead>
+  <style>
+    .card-img-top { 
+      height: 14.5rem;
+      background-position: center;
+      background-size: contain;
+     }
+  </style>
 </head>
 <Body>
   <div class="container">
@@ -38,7 +45,7 @@ const currentPage = page.currentPage ?? 1;
       {page.data.map((hud) =>
           <div class="col-12 col-md-4 mt-5">
             <div class="card">
-              <img src={hud.bannerUrl} class="card-img-top" alt={hud.name}>
+              <div class="card-img-top" style={`background: url('${hud.bannerUrl}')`}></div>
               <div class="card-body">
                 <h5 class="card-title">{hud.name}</h5>
                 <h6 class="card-subtitle mb-2 text-muted">{hud.author}</h6>
