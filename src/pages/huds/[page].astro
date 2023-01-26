@@ -1,0 +1,79 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import BaseHead from '../../components/head/BaseHead.astro';
+import PreloadHead from '../../components/head/PreloadHead.astro';
+import ImportHead from '../../components/head/ImportHead.astro';
+import MainHead from '../../components/head/MainHead.astro';
+import Body from '../../components/Body.astro';
+import Footer from '../../components/Footer.astro';
+
+import { fetchHuds } from '../../ssg/huds';
+
+export async function getStaticPaths({ paginate }) {
+  let pages = paginate(await fetchHuds(), {
+    pageSize: 9,
+  });
+  return pages;
+}
+
+const { page } = Astro.props;
+console.log(page.data)
+const currentPage = page.currentPage ?? 1;
+---
+<Layout>
+<head>
+  <BaseHead />
+  <PreloadHead>
+    <></>
+  </PreloadHead>
+  <ImportHead>
+    <></>
+  </ImportHead>
+  <MainHead title="comfig huds | mastercomfig">
+    <></>
+  </MainHead>
+</head>
+<Body>
+  <div class="container">
+    <div class="row">
+      {page.data.map((hud) =>
+          <div class="col-4 mt-5">
+            <div class="card">
+              <img src={hud.bannerUrl} class="card-img-top" alt={hud.name}>
+              <div class="card-body">
+                <h5 class="card-title">{hud.name}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">{hud.author}</h6>
+                <div class="btn-group mb-2" role="group" aria-label="HUD info and download">
+                  <a href={`/huds/page/${hud.id}`} class="card-link">View HUD</a>
+                  <a href={hud.downloadUrl} class="card-link"><span class="fas fa-download fa-fw"></span></a>
+                </div>
+                <br>
+                <span class="text-muted">
+                  Last updated <strong>{hud.publishDate.toLocaleDateString('en-us', { year: "numeric", month: "short", day: "numeric"})}</strong>
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
+    </div>
+    {
+      (page.url.prev || page.url.next) && (
+        <div class="mt-2">
+          <div class="mx-auto" style="max-width: fit-content">
+            <a href={page.url.prev} class={`btn btn-secondary ${!page.url.prev ? 'invisible' : ''}`}>
+                <span class="fas fa-arrow-left fa-fw"></span>
+            </a>
+            <a href={page.url.next} class={`btn btn-secondary ${!page.url.next ? 'invisible' : ''}`}>
+                <span class="fas fa-arrow-right fa-fw"></span>
+            </a>
+          </div>
+        </div>
+      )
+    }
+    <hr>
+  </div>
+  <Footer>
+    <></>
+  </Footer>
+</Body>
+</Layout>
