@@ -17,7 +17,6 @@ export async function getStaticPaths({ paginate }) {
 }
 
 const { page } = Astro.props;
-console.log(page.data)
 const currentPage = page.currentPage ?? 1;
 ---
 <Layout>
