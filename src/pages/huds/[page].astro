@@ -39,6 +39,16 @@ const currentPage = page.currentPage ?? 1;
       background-repeat: no-repeat;
       background-color: #151515;
      }
+
+     .btn-outline-secondary {
+      color: #b2dfdb;
+      box-shadow: none;
+      border: none;
+     }
+
+     .btn-outline-secondary:hover {
+      color: var(--bs-btn-hover-color);
+     }
   </style>
 </head>
 <Body>
@@ -51,10 +61,8 @@ const currentPage = page.currentPage ?? 1;
               <div class="card-body">
                 <h5 class="card-title">{hud.name}</h5>
                 <h6 class="card-subtitle mb-2 text-muted">{hud.author}</h6>
-                <div class="btn-group mb-2" role="group" aria-label="HUD info and download">
-                  <a href={`/huds/page/${hud.id}`} class="card-link">View HUD</a>
-                  <a href={hud.downloadUrl} class="card-link"><span class="fas fa-download fa-fw"></span></a>
-                </div>
+                <a href={`/huds/page/${hud.id}`} class="card-link stretched-link">View HUD</a>
+                <a href={hud.downloadUrl} class="btn-outline-secondary ms-3 mb-2 position-relative z-3"><span class="fas fa-download fa-fw"></span></a>
                 <br>
                 <span class="text-muted">
                   Last updated <strong>{hud.publishDate.toLocaleDateString('en-us', { year: "numeric", month: "short", day: "numeric"})}</strong>
