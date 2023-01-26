@@ -67,9 +67,14 @@ const getHuds = async () => {
 
       // Query the info.vdf in the repo to get the UI version
       const infoVdf = await fetch(`https://raw.githubusercontent.com/${ghRepo}/${hudData.hash}/info.vdf`);
-      const infoVdfJson = parse(await infoVdf.text());
-      const tfUiVersion = parseInt(Object.entries(infoVdfJson)[0][1].ui_version, 10);
-      hudData.outdated = tfUiVersion !== CURRENT_HUD_VERSION;
+      if (infoVdf.ok) {
+        const infoVdfJson = parse(await infoVdf.text());
+        const tfUiVersion = parseInt(Object.entries(infoVdfJson)[0][1].ui_version, 10);
+        hudData.outdated = tfUiVersion !== CURRENT_HUD_VERSION;
+      } else if (infoVdf.status == 404) {
+        // info.vdf doesn't exist at all, this is a very old HUD
+        hudData.outdated = true;
+      }
 
       // Add download link
       hudData.downloadUrl = `https://github.com/${ghRepo}/archive/${hudData.hash}.zip`
