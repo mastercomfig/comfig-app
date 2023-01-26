@@ -1,0 +1,69 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import BaseHead from '../../../components/head/BaseHead.astro';
+import PreloadHead from '../../../components/head/PreloadHead.astro';
+import ImportHead from '../../../components/head/ImportHead.astro';
+import MainHead from '../../../components/head/MainHead.astro';
+import Body from '../../../components/Body.astro';
+import Footer from '../../../components/Footer.astro';
+
+import { fetchHuds } from '../../../ssg/huds';
+
+import { Markdown } from 'astro-remote';
+
+export async function getStaticPaths() {
+  return (await fetchHuds()).map((hud) => ({
+    params: {
+      id: hud.id
+    },
+    props: { hud },
+  }));
+}
+
+const { hud } = Astro.props;
+---
+<Layout>
+<head>
+  <BaseHead />
+  <PreloadHead>
+    <></>
+  </PreloadHead>
+  <ImportHead>
+    <script>
+      import { Carousel } from "bootstrap";
+    </script>
+  </ImportHead>
+  <MainHead title={`${hud.name} | comfig huds`}>
+    <></>
+  </MainHead>
+</head>
+<Body>
+  <div class="container">
+    <h1 class="display-1">{hud.name} <span class="text-muted display-4">by {hud.author}</span></h1>
+    <div id="hudScreenshots" class="carousel slide">
+      <div class="carousel-inner">
+        {hud.resources.map((resource, index) => 
+          <div class={`carousel-item ${index == 0 ? "active" : ""}`}>
+            <img src={resource} class="d-block w-100">
+          </div>)
+        }
+        
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#hudScreenshots" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#hudScreenshots" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+    <a href={hud.downloadUrl} class="btn btn-secondary w-100 my-3"><span class="fas fa-download fa-fw"></span> Download</a>
+    <Markdown content={hud.content} />
+    <hr>
+  </div>
+  <Footer>
+    <></>
+  </Footer>
+</Body>
+</Layout>
