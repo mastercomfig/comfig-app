@@ -39,7 +39,7 @@ const { hud } = Astro.props;
 </head>
 <Body>
   <div class="container">
-    <h1 class="display-1">{hud.name} <span class="text-muted display-4">by {hud.author}</span></h1>
+    <h1 class="display-1 mt-3">{hud.name} <span class="text-muted display-4">by {hud.author}</span></h1>
     <div id="hudScreenshots" class="carousel slide">
       <div class="carousel-inner">
         {hud.resources.map((resource, index) => 
