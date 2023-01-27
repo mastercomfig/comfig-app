@@ -89,7 +89,8 @@ const getHuds = async () => {
       }
 
       // Add download link
-      hudData.downloadUrl = `https://github.com/${ghRepo}/archive/${hudData.hash}.zip`
+      //hudData.downloadUrl = `https://github.com/${ghRepo}/archive/${hudData.hash}.zip`
+      hudData.downloadUrl = `https://codeload.github.com/${ghRepo}/legacy.zip/${hudData.hash}`
 
       // Query the tag
       const branchTags = await fetch(`https://github.com/${ghRepo}/branch_commits/${hudData.hash}`);
