@@ -58,7 +58,8 @@ const getHuds = async () => {
       const hudData = JSON.parse(await data.text());
 
       // Get HUD ID from json basename
-      const hudId = hud.path.split('/').reverse()[0].substr(0, hud.path.lastIndexOf('.'));
+      const fileName = hud.path.split('/').reverse()[0];
+      const hudId = fileName.substr(0, fileName.lastIndexOf('.'));
       hudData.id = hudId;
 
       // Query markdown
