@@ -42,6 +42,19 @@ const getHudResource = (id, name) => {
   return `https://raw.githubusercontent.com/mastercomfig/hud-db/main/hud-resources/${id}/${name}.webp`
 }
 
+async function fetchWithTimeout(resource, options = {}) {
+  const { timeout = 10000 } = options;
+  
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeout);
+  const response = await fetch(resource, {
+    ...options,
+    signal: controller.signal  
+  });
+  clearTimeout(id);
+  return response;
+}
+
 let hudMap = null;
 let hudChildren = new Map();
 
@@ -64,28 +77,37 @@ const getHuds = async () => {
       hudData.id = hudId;
 
       // Query markdown
-      const markdownData = await fetch(`https://raw.githubusercontent.com/mastercomfig/hud-db/main/hud-pages/${hudId}.md`);
-      if (markdownData.ok) {
-        hudData.content = await markdownData.text();
+      try {
+        const markdownData = await fetchWithTimeout(`https://raw.githubusercontent.com/mastercomfig/hud-db/main/hud-pages/${hudId}.md`);
+        if (markdownData.ok) {
+          hudData.content = await markdownData.text();
+        }
+      } catch {
+        // Ignore
       }
-      
+
       // Just the user/repo
       const ghRepo = hudData.repo.replace("https://github.com/", "");
 
       // Query the info.vdf in the repo to get the UI version
-      const infoVdf = await fetch(`https://raw.githubusercontent.com/${ghRepo}/${hudData.hash}/info.vdf`);
-      if (infoVdf.ok) {
-        try {
-          const infoVdfJson = parse(await infoVdf.text());
-          const tfUiVersion = parseInt(Object.entries(infoVdfJson)[0][1].ui_version, 10);
-          hudData.outdated = tfUiVersion !== CURRENT_HUD_VERSION;
-        } catch (e) {
-          // info.vdf exists but is invalid
-          console.log(`Invalid info.vdf for ${hudId} (${ghRepo})`);
+      try {
+        const infoVdf = await fetchWithTimeout(`https://raw.githubusercontent.com/${ghRepo}/${hudData.hash}/info.vdf`);
+        if (infoVdf.ok) {
+          try {
+            const infoVdfJson = parse(await infoVdf.text());
+            const tfUiVersion = parseInt(Object.entries(infoVdfJson)[0][1].ui_version, 10);
+            hudData.outdated = tfUiVersion !== CURRENT_HUD_VERSION;
+          } catch (e) {
+            // info.vdf exists but is invalid
+            console.log(`Invalid info.vdf for ${hudId} (${ghRepo})`);
+            hudData.outdated = true;
+          }
+        } else if (infoVdf.status == 404) {
+          // info.vdf doesn't exist at all, this is a very old HUD
           hudData.outdated = true;
         }
-      } else if (infoVdf.status == 404) {
-        // info.vdf doesn't exist at all, this is a very old HUD
+      } catch {
+        // info.vdf timed out, assume it's outdated since GitHub sometimes stalls on 404s
         hudData.outdated = true;
       }
 
