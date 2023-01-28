@@ -122,7 +122,7 @@ const { hud } = Astro.props;
       {hud.content && (<div class="col-md-9"><Markdown content={hud.content} /></div>)}
     </div>
     {hud.variants && (
-      <h1>Variants</h1>
+      <br><h1>Variants</h1>
       <div class="row">
         {hud.resourceUrls.map((variant) =>
           <div class="col-12 col-md-2 col-lg-4">

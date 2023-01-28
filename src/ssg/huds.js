@@ -119,9 +119,9 @@ const getHuds = async () => {
       // Build child map
       if (hudData.parent) {
         if (!hudChildren.has(hudData.parent)) {
-          hudChildren.set(hudData.parent, []);
+          hudChildren.set(hudData.parent, [hudId]);
         } else {
-          hudChildren.get(hudData.parent).push(hudData);
+          hudChildren.get(hudData.parent).push(hudId);
         }
       }
 
@@ -132,10 +132,11 @@ const getHuds = async () => {
 
   // Add children to parents
   for (const [parent, children] of hudChildren.entries()) {
-    hudMap.get(parent).variants = children;
-    const variants = [parent].concat(children);
+    hudMap.get(parent).variants = children.map((child) => hudMap.get(child));
+    const variants = [parent];
     for (const child of children) {
-      child.variants = variants;
+      const siblings = children.filter((sibling) => sibling !== child);
+      hudMap.get(child).variants = variants.concat(siblings);
     }
   }
 
