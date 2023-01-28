@@ -133,7 +133,7 @@ const getHuds = async () => {
   // Add children to parents
   for (const [parent, children] of hudChildren.entries()) {
     hudMap.get(parent).variants = children;
-    variants = [parent].concat(children);
+    const variants = [parent].concat(children);
     for (const child of children) {
       child.variants = variants;
     }
