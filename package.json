@@ -30,6 +30,7 @@
     "idb-keyval": "^6.2.0",
     "jsdom": "^21.1.0",
     "lodash": "^4.17.21",
+    "minisearch": "^6.0.0",
     "native-file-system-adapter": "^2.0.4",
     "postcss": "^8.4.21",
     "postcss-import": "^15.1.0",

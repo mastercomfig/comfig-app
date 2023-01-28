@@ -21,6 +21,7 @@ specifiers:
   idb-keyval: ^6.2.0
   jsdom: ^21.1.0
   lodash: ^4.17.21
+  minisearch: ^6.0.0
   native-file-system-adapter: ^2.0.4
   postcss: ^8.4.21
   postcss-import: ^15.1.0
@@ -66,6 +67,7 @@ devDependencies:
   idb-keyval: 6.2.0
   jsdom: 21.1.0_canvas@2.11.0
   lodash: 4.17.21
+  minisearch: 6.0.0
   native-file-system-adapter: 2.0.4
   postcss: 8.4.21
   postcss-import: 15.1.0_postcss@8.4.21
@@ -5382,6 +5384,10 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       yallist: 4.0.0
+    dev: true
+
+  /minisearch/6.0.0:
+    resolution: {integrity: sha512-N7yUgtH5T9iQfdmzI8Dnke8TK+grccrWUsdiwvalGv04hJggOUI/EpWIEQj3v8t7XSi/kSfQ7GdLAS540+GxpQ==}
     dev: true
 
   /minizlib/2.1.2:

@@ -43,6 +43,7 @@ const getHudResource = (id, name) => {
 }
 
 let hudMap = null;
+let hudChildren = new Map();
 
 // TODO: Sync with tf_ui_version
 const CURRENT_HUD_VERSION = 3;
@@ -115,9 +116,27 @@ const getHuds = async () => {
       hudData.resourceUrls = hudData.resources.map((name) => getHudResource(hudId, name));
       hudData.bannerUrl = hudData.resourceUrls[0];
 
+      // Build child map
+      if (hudData.parent) {
+        if (!hudChildren.has(hudData.parent)) {
+          hudChildren.set(hudData.parent, []);
+        } else {
+          hudChildren.get(hudData.parent).push(hudData);
+        }
+      }
+
       return [hudId, hudData];
     }));
     hudMap = new Map(hudEntries);
+  }
+
+  // Add children to parents
+  for (const [parent, children] of hudChildren.entries()) {
+    hudMap.get(parent).variants = children;
+    variants = [parent].concat(children);
+    for (const child of children) {
+      child.variants = variants;
+    }
   }
 
   return hudMap;
@@ -128,7 +147,7 @@ const load = async function () {
 
   const results = Array.from(huds.values())
     .sort((a, b) => b.publishDate.valueOf() - a.publishDate.valueOf())
-    .filter((hud) => !hud.outdated);
+    .filter((hud) => !hud.parent); // No children shown on the page
 
   return results;
 };
