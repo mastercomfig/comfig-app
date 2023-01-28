@@ -32,8 +32,8 @@ const { hud, expanded = false } = Astro.props;
       {hud.prerelease && (<small class="d-inline-block position-relative text-warning" style="z-index: 2" data-bs-toggle="tooltip" data-bs-title="Preview release"><span class="fas fa-flask fa-fw"></span></small>)}
     </h5>
     <h6 class="card-subtitle mb-2 text-muted">{hud.author}</h6>
-    <a href={`/huds/page/${hud.id}/`} class="card-link stretched-link">View HUD</a>
-    {expanded && (<a href={hud.downloadUrl} class={`btn btn-outline-secondary ms-3 position-relative ${hud.outdated ? "d-none" : ""}`}><span class="fas fa-download fa-fw"></span></a>
+    <a href={`/huds/page/${hud.id}/`} class="card-link stretched-link d-inline-block py-2 my-1">View HUD</a>
+    {expanded && (<a href={hud.downloadUrl} class={`btn btn-outline-secondary ms-3 py-2 my-1 position-relative ${hud.outdated ? "d-none" : ""}`}><span class="fas fa-download fa-fw"></span></a>
     <br>
     <span class="text-muted">
       Last updated <strong>{hud.publishDate.toLocaleDateString('en-us', { year: "numeric", month: "short", day: "numeric"})}</strong>
