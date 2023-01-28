@@ -158,7 +158,7 @@ const getHuds = async () => {
     const variants = [parent];
     for (const child of children) {
       const siblings = children.filter((sibling) => sibling !== child);
-      hudMap.get(child).variants = variants.concat(siblings);
+      hudMap.get(child).variants = variants.concat(siblings).map((variant) => hudMap.get(variant));
     }
   }
 
