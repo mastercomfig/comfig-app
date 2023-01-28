@@ -6,6 +6,7 @@ import ImportHead from '../../../components/head/ImportHead.astro';
 import MainHead from '../../../components/head/MainHead.astro';
 import Body from '../../../components/Body.astro';
 import Footer from '../../../components/Footer.astro';
+import HudListItem from '../../../components/huds/HudListItem.astro';
 
 import { fetchHuds } from '../../../ssg/huds';
 
@@ -62,7 +63,7 @@ const { hud } = Astro.props;
     {(hud.resources.length > 1 && (
       <div id="hudScreenshots" class="carousel slide">
         <div class="carousel-inner">
-          {hud.resourceUrls.map((resource, index) => 
+          {hud.resourceUrls.map((resource, index) =>
             <div class={`carousel-item ${index == 0 ? "active" : ""}`}>
               {
                 (resource.startsWith("https://youtube.com/") && (
@@ -120,6 +121,15 @@ const { hud } = Astro.props;
       </div>
       {hud.content && (<div class="col-md-9"><Markdown content={hud.content} /></div>)}
     </div>
+    {hud.variants && (
+      <h1>Variants</h1>
+      <div class="row">
+        {hud.resourceUrls.map((variant) =>
+          <div class="col-12 col-md-2 col-lg-4">
+            <HudListItem hud={variant}></HudListItem>
+          </div>)}
+      </div>
+    )}
     <hr>
   </div>
   <Footer>

@@ -16,7 +16,7 @@ export default function Items({ items }) {
         <Tab eventKey="default" title="Default">
           <ItemsInner playerClass="default" items={{default: items["default"]}}  />
         </Tab>
-        {playerClasses.map(playerClass => 
+        {playerClasses.map(playerClass =>
           <Tab key={`${playerClass}-tab`} eventKey={playerClass} title={playerClass[0].toUpperCase() + playerClass.slice(1)}>
             <ItemsInner playerClass={playerClass} items={Object.fromEntries(itemUsedBy[playerClass].map(i => [i, items[i]]))} />
           </Tab>
