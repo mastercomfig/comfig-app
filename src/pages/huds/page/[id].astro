@@ -83,12 +83,15 @@ const { hud } = Astro.props;
         </button>
       </div>
     )) || (<img class="img-fluid" src={hud.resourceUrls[0]} />)}
-    <a href={hud.downloadUrl} class="btn btn-secondary w-100 my-3"><span class="fas fa-download fa-fw"></span> Download</a>
+    {!hud.outdated && (<a href={hud.downloadUrl} class="btn btn-secondary w-100 my-3"><span class="fas fa-download fa-fw"></span> Download</a>)}
     <div class="row flex-md-row-reverse align-items-stretch">
       <div class={hud.content ? "col-md-3 d-md-flex flex-md-column" : ""}>
         <ul class="list-group list-group-flush">
           <li class="list-group-item">
             <span class={`fas ${hud.prerelease ? "fa-flask text-warning" : "fa-circle-check text-success"} fa-fw`}></span> <strong>Release status:</strong> {hud.prerelease ? "Preview" : "Stable"}
+          </li>
+          <li class="list-group-item">
+            <span class={`fas ${hud.outdated ? "fa-circle-exclamation text-danger" : "fa-circle-check text-success"} fa-fw`}></span> <strong>Compatibility:</strong> {hud.outdated ? "Outdated/Incompatible" : "Up to date"}
           </li>
           <a href={`${hud.repo}/tree/${hud.hash}`} class="list-group-item d-flex justify-content-between align-items-center">
             <span><span class="fab fa-github fa-fw"></span> GitHub</span>

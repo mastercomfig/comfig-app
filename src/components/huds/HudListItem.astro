@@ -27,12 +27,12 @@ const { hud, expanded = false } = Astro.props;
   <div class="card-img-top" style={`background-image: url('${hud.bannerUrl}')`}></div>
   <div class="card-body">
     <h5 class="card-title">{hud.name}
-      {hud.outdated && (<small class="d-inline-block position-relative text-danger" style="z-index: 2" data-bs-toggle="tooltip" data-bs-title="Outdated"><span class="fas fa-circle-exclamation fa-fw"></span></small>)}
+      {hud.outdated && (<small class="d-inline-block position-relative text-danger" style="z-index: 2" data-bs-toggle="tooltip" data-bs-title="Outdated/Incompatible"><span class="fas fa-circle-exclamation fa-fw"></span></small>)}
       {hud.prerelease && (<small class="d-inline-block position-relative text-warning" style="z-index: 2" data-bs-toggle="tooltip" data-bs-title="Preview release"><span class="fas fa-flask fa-fw"></span></small>)}
     </h5>
     <h6 class="card-subtitle mb-2 text-muted">{hud.author}</h6>
     <a href={`/huds/page/${hud.id}/`} class="card-link stretched-link">View HUD</a>
-    {expanded && (<a href={hud.downloadUrl} class="btn btn-outline-secondary ms-3 mb-2 position-relative"><span class="fas fa-download fa-fw"></span></a>
+    {expanded && (<a href={hud.downloadUrl} class={`btn btn-outline-secondary ms-3 mb-2 position-relative ${hud.outdated ? "d-none" : ""}`}><span class="fas fa-download fa-fw"></span></a>
     <br>
     <span class="text-muted">
       Last updated <strong>{hud.publishDate.toLocaleDateString('en-us', { year: "numeric", month: "short", day: "numeric"})}</strong>
