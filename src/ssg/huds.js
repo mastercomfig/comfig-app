@@ -165,23 +165,16 @@ const getHuds = async () => {
   return hudMap;
 }
 
-const load = async function () {
+export const fetchHuds = async function (all) {
   const huds = await getHuds();
+
+  if (all) {
+    return Array.from(huds.values());
+  }
 
   const results = Array.from(huds.values())
     .sort((a, b) => b.publishDate.valueOf() - a.publishDate.valueOf())
     .filter((hud) => !hud.parent); // No children shown on the page
 
   return results;
-};
-
-let _hudPages = null;
-
-/** */
-export const fetchHuds = async () => {
-  if (!_hudPages) {
-    _hudPages = await load();
-  }
-
-  return _hudPages;
 };

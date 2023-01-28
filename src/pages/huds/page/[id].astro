@@ -13,7 +13,7 @@ import { fetchHuds } from '../../../ssg/huds';
 import { Markdown } from 'astro-remote';
 
 export async function getStaticPaths() {
-  return (await fetchHuds()).map((hud) => ({
+  return (await fetchHuds(true)).map((hud) => ({
     params: {
       id: hud.id
     },
