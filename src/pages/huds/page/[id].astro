@@ -35,10 +35,7 @@ const { hud } = Astro.props;
 
       const carouselEl = document.getElementById('hudScreenshots');
       if (carouselEl) {
-        const carousel = new Carousel(carouselEl, {
-          interval: 2000,
-          touch: false
-        });
+        const carousel = new Carousel(carouselEl);
       }
     </script>
     <script>
@@ -68,6 +65,11 @@ const { hud } = Astro.props;
     <h1 class="display-1 mt-3">{hud.name} <span class="text-muted display-4">by {hud.author}</span></h1>
     {(hud.resources.length > 1 && (
       <div id="hudScreenshots" class="carousel slide">
+        <div class="carousel-indicators">
+          {hud.resources.map((resource, index) =>
+            <button type="button" data-bs-target="#hudScreenshots" data-bs-slide-to={index} class={index == 0 ? "active" : ""} aria-current="true" aria-label={`Slide ${index + 1} ${resource}`}></button>
+          )}
+        </div>
         <div class="carousel-inner">
           {hud.resourceUrls.map((resource, index) =>
             <div class={`carousel-item ${index == 0 ? "active" : ""}`}>

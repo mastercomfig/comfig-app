@@ -1,5 +1,5 @@
 ---
-const { hud, expanded = false } = Astro.props;
+const { hud, expanded = false, carousel = false } = Astro.props;
 ---
 
 <style>
@@ -25,7 +25,22 @@ const { hud, expanded = false } = Astro.props;
 </style>
 
 <div class="card">
-  <div class="card-img-top" style={`background-image: url('${hud.bannerUrl}')`}></div>
+  {(carousel && (
+    <div class="card-img-top">
+      <div class="carousel slide carousel-fade">
+        <div class="carousel-inner">
+          {hud.resourceUrls.map((resource, index) =>
+            <div class={`carousel-item ${index == 0 ? "active" : ""}`} data-bs-interval={index == 0 ? "900" : ""}>
+              {
+                (resource.startsWith("https://youtube.com/") && (
+                  <iframe width="100%" height="100%" src={resource} title={`${hud.resources[index]}`} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                )) || (<img src={resource} class="d-block w-100" loading="lazy" alt={`${hud.resources[index]}`} />)
+              }
+            </div>)
+          }
+        </div>
+      </div>
+    </div>)) || (<div class="card-img-top" style={`background-image: url('${hud.bannerUrl}')`}></div>)}
   <div class="card-body">
     <h5 class="card-title">{hud.name}
       {hud.outdated && (<small class="d-inline-block position-relative text-danger" style="z-index: 2" data-bs-toggle="tooltip" data-bs-title="Outdated/Incompatible"><span class="fas fa-circle-exclamation fa-fw"></span></small>)}
