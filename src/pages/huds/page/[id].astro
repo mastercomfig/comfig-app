@@ -7,6 +7,7 @@ import MainHead from '../../../components/head/MainHead.astro';
 import Body from '../../../components/Body.astro';
 import Footer from '../../../components/Footer.astro';
 import HudListItem from '../../../components/huds/HudListItem.astro';
+import HudNav from '../../../components/huds/HudNav.astro';
 
 import { fetchHuds } from '../../../ssg/huds';
 
@@ -61,6 +62,7 @@ const { hud } = Astro.props;
   </style>
 </head>
 <Body>
+  <HudNav />
   <div class="container">
     <h1 class="display-1 mt-3">{hud.name} <span class="text-muted display-4">by {hud.author}</span></h1>
     {(hud.resources.length > 1 && (
