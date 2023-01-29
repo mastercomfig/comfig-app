@@ -28,6 +28,24 @@ const currentPage = page.currentPage ?? 1;
   </PreloadHead>
   <ImportHead>
     <script>
+      import { Carousel } from "bootstrap";
+
+      const carouselTriggerList = document.querySelectorAll('.carousel');
+      const carouselList = [...carouselTriggerList].map(carouselTriggerEl => new Carousel(carouselTriggerEl, {
+        interval: 350,
+        touch: false,
+      }));
+      for (let i = 0; i < carouselList.length; i++) {
+        const carouselEl = carouselTriggerList[i];
+        const carousel = carouselList[i];
+        carouselEl.parentNode.parentNode.parentNode.addEventListener("mouseenter", () => carousel.cycle());
+        carouselEl.parentNode.parentNode.parentNode.addEventListener("mouseleave", () => {
+          carousel.pause();
+          carousel.to(0);
+        });
+      }
+    </script>
+    <script>
       import { Tooltip } from "bootstrap";
 
       const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
@@ -43,7 +61,7 @@ const currentPage = page.currentPage ?? 1;
     <div class="row">
       {page.data.map((hud) =>
           <div class="col-12 col-md-2 col-lg-4 mt-5">
-            <HudListItem hud={hud} expanded={true}></HudListItem>
+            <HudListItem hud={hud} expanded={true} carousel={true}></HudListItem>
           </div>
         )}
     </div>
