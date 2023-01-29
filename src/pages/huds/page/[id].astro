@@ -101,14 +101,14 @@ const { hud } = Astro.props;
           <li class="list-group-item">
             <span class={`fas ${hud.outdated ? "fa-circle-exclamation text-danger" : "fa-circle-check text-success"} fa-fw`}></span> <strong>Compatibility:</strong> {hud.outdated ? "Outdated/Incompatible" : "Up to date"}
           </li>
+          {hud.social?.album && (<a href={hud.social.album} class="list-group-item d-flex justify-content-between align-items-center">
+            <span><span class="fas fa-images fa-fw"></span> Screenshot Album</span>
+            <span class="fas fa-square-arrow-up-right fa-fw"></span>
+          </a>)}
           <a href={`${hud.repo}/tree/${hud.hash}`} class="list-group-item d-flex justify-content-between align-items-center">
             <span><span class="fab fa-github fa-fw"></span> GitHub</span>
             <span class="fas fa-square-arrow-up-right fa-fw"></span>
           </a>
-          {hud.social?.album && (<a href={hud.social.album} class="list-group-item d-flex justify-content-between align-items-center">
-            <span><span class="fab fa-images fa-fw"></span> Screenshot Album</span>
-            <span class="fas fa-square-arrow-up-right fa-fw"></span>
-          </a>)}
           {hud.social?.discord && (<a href={`https://discord.gg/${hud.social.discord}`} class="list-group-item d-flex justify-content-between align-items-center">
             <span><span class="fab fa-discord fa-fw"></span> Discord</span>
             <span class="fas fa-square-arrow-up-right fa-fw"></span>
