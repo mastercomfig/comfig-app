@@ -24,6 +24,7 @@
     "bootstrap": "^5.2.3",
     "bootswatch": "^5.2.3",
     "canvas": "^2.11.0",
+    "debounce": "^1.2.1",
     "firebase": "^9.16.0",
     "glob": "^8.1.0",
     "highlight.js": "^11.7.0",

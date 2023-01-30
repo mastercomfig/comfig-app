@@ -5,6 +5,7 @@
   .navbar {
     --bs-navbar-padding-x: 1rem;
     --bs-navbar-padding-y: 0.4rem;
+    z-index: 5;
   }
   .form-control {
     background: rgba(37, 108, 102, 0.4);
@@ -21,12 +22,26 @@
   .form-control:focus::placeholder {
     color: rgba(220, 220, 220, 0.9);
   }
+  #search-results {
+    min-height: 40vh;
+    max-height: 70vh;
+    width: 60%;
+    overflow-y: auto;
+    transform: translate(-50.5%, 0);
+    z-index: 4;
+  }
 </style>
 
 <script>
-  // Use these for trait filtering
-  const traits = ["os", "gamemode", "res"];
-  const traitMatcher = new Set(traits);
+  import MiniSearch from "minisearch";
+  import { debounce } from "debounce";
+
+import { useIsomorphicLayoutEffect } from "react-compare-slider/dist/utils";
+
+  const fields = ["name", "author", "content", "flags", "tags", "os", "gamemode", "res"];
+  const queryFields = new Set(["name", "author"]);
+  const filterFields = new Set(["flags", "tags", "os", "gamemode", "res"]);
+
   function buildExpressionTree(q) {
     let terms = q.split(" ");
     // Trim whitespace
@@ -38,44 +53,199 @@
     // Remove duplicates
     terms = Array.from(new Set(terms));
     let query = "";
-    const filters = new Map();
-    for (const trait of traits) {
-      filters.set(trait, []);
-    }
-    filters.set("author", []);
-    let filterCount = 0;
+    const fieldQueries = new Map();
+    const fieldFilters = new Map();
     for (const term of terms) {
       if (term.indexOf(":") === -1) {
         // Recombine the search query
         query += `${term} `;
       } else {
-        filterCount++;
+        let [field, value] = term.split(":", 2);
+        if (field === "has") {
+          // Special case for has: flag
+          field = "flags";
+        }
+        if (queryFields.has(field)) {
+          const fieldQuery = fieldQueries.get(field) || [];
+          fieldQuery.push(value);
+          fieldQueries.set(field, fieldQuery);
+        } else if (filterFields.has(field)) {
+          const values = value.split(",");
+          const fieldFilter = fieldFilters.get(field) || [];
+          fieldFilter.push(values);
+          fieldFilters.set(field, fieldFilter);
+        }
       }
     }
     // Trim last term's whitespace
     query = query.trimEnd();
-    const filterObj = {
-      combineWith: "AND",
-      queries: []
+    // Initialize base query
+    let queryVal;
+    if (fieldQueries.size > 0) {
+      let filterObj = {
+        combineWith: "AND",
+        queries: []
+      };
+      for (const [field, values] of fieldQueries) {
+        filterObj.queries.push({
+          field: field,
+          queries: values,
+          combineWith: "OR",
+        });
+      }
+      queryVal = {
+        combineWith: "AND",
+        queries: [query, filterObj],
+      };
+    } else {
+      queryVal = query;
+    }
+    // Handle match filtering
+    let options;
+    if (fieldFilters.size > 0) {
+      options = {
+        filter: (result) => {
+          let success = true;
+          for (const [field, filterCompList] of fieldFilters) {
+            const fieldVal = new Set(result[field]);
+            let fieldSuccess = false;
+            for (const filterComp of filterCompList) {
+              let filterSuccess = true;
+              for (const filterVal of filterComp) {
+                // AND - field values within the same filter must all match
+                if (!fieldVal.has(filterVal)) {
+                  filterSuccess = false;
+                  break;
+                }
+              }
+              // OR - separate field filters of the same field mean the user wants to match any of the filters
+              if (filterSuccess) {
+                fieldSuccess = true;
+                break;
+              }
+            }
+            // AND - each different field matcher must succeed
+            if (!fieldSuccess) {
+              success = false;
+              break;
+            }
+          }
+          return success;
+        }
+      }
+    } else {
+      options = {};
+    }
+    options.boost = {
+      name: 1.2,
     };
-    const searchQueries = filterCount > 0 ? [query, filterObj] : [query];
-    const searchObj = {
-      combineWith: "AND",
-      queries: searchQueries,
-    };
-
+    options.prefix = true;
+    return [queryVal, options];
   }
+
+  const documents = await fetch("/huds/search.json").then((res) => res.json());
+  const miniSearch = new MiniSearch({
+    fields: fields,
+    storeFields: [...fields, "bannerUrl"],
+  });
+  miniSearch.addAll(documents);
+
+  const searchResults = document.getElementById("search-results");
+
+  const emptySearch = '<p class="lead">Type to search for HUDs!</p>';
+  const noResults = '<p class="lead">No results found.</p>';
+  
+  function searchInternal(query) {
+    if (query.length === 0) {
+      searchResults.innerHTML = emptySearch;
+      return;
+    }
+    // TODO: advanced queries
+    const [queryVal, options] = buildExpressionTree(query);
+    if (queryVal.length === 0) {
+      searchResults.innerHTML = emptySearch;
+      return;
+    }
+    //const results = miniSearch.search(queryVal, options);
+    const results = miniSearch.search(queryVal, {
+      boost: {
+        name: 1.2,
+      },
+      prefix: true,
+    });
+    if (results.length === 0) {
+      searchResults.innerHTML = noResults;
+      return;
+    }
+    searchResults.innerHTML = "";
+    for (const result of results) {
+      const resultDiv = document.createElement("div");
+      resultDiv.classList.add("card", "mb-2");
+      const resultRow = document.createElement("div");
+      resultRow.classList.add("row", "g-0");
+      const resultImgCol = document.createElement("div");
+      resultImgCol.classList.add("col-md-4");
+      const resultImg = document.createElement("img");
+      resultImg.classList.add("img-fluid", "rounded-start");
+      resultImg.src = result.bannerUrl;
+      resultImgCol.appendChild(resultImg);
+      resultRow.appendChild(resultImgCol);
+      const resultBodyCol = document.createElement("div");
+      resultBodyCol.classList.add("col-md-8");
+      resultRow.appendChild(resultBodyCol);
+      const resultBody = document.createElement("div");
+      resultBody.classList.add("card-body");
+      const resultTitle = document.createElement("h5");
+      resultTitle.classList.add("card-title");
+      const resultLink = document.createElement("a");
+      resultLink.classList.add("stretched-link");
+      resultLink.href = `/huds/page/${result.id}`;
+      resultLink.innerText = result.name;
+      resultTitle.appendChild(resultLink);
+      const resultAuthor = document.createElement("h6");
+      resultAuthor.classList.add("card-subtitle", "mb-2", "text-muted");
+      resultAuthor.innerText = result.author;
+      resultBody.appendChild(resultTitle);
+      resultBody.appendChild(resultAuthor);
+      resultBodyCol.appendChild(resultBody);
+      resultDiv.appendChild(resultRow);
+      searchResults.appendChild(resultDiv);
+    }
+  }
+
+  // TODO: 145ms may be too low, investigate to adjust
+  const search = debounce(searchInternal, 145);
+
+  const searchInput = document.getElementById("search-input");
+  searchInput.addEventListener("input", (event) => {
+    const query = event.target.value;
+    search(query);
+  });
+  let isFocused = false;
+  searchInput.addEventListener("focus", () => {
+    searchResults.classList.remove("d-none");
+    isFocused = true;
+  });
+  // Only remove search results if not clicking the search results
+  searchInput.addEventListener("blur", () => {
+    isFocused = false;
+  });
+  window.addEventListener("click", (event) => {
+    if (!isFocused && !searchResults.contains(event.target)) {
+      searchResults.classList.add("d-none");
+    }
+  });
 </script>
 
 <div class="container">
-  <nav class="navbar navbar-expand navbar-sm navbar-dark bg-teal">
+  <nav class="navbar navbar-expand navbar-dark bg-teal">
     <div class="d-lg-flex w-100 justify-content-between">
       <span class="navbar-brand">
         <a href="/huds/1" class="navbar-brand"><img src="/img/mastercomfig_logo_transparent_i.svg" alt="" class="d-inline-block align-text-center" width="24" height="24"> comfig huds</a>
       </span>
-      <div class="d-none position-absolute top-50 start-50 translate-middle w-50" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-      </div>  
+      <div class="d-flex position-absolute top-50 start-50 translate-middle w-50" role="search">
+        <input id="search-input" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+      </div>
       <div id="navbarNav">
         <ul class="navbar-nav">
           <li class="nav-item" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="HUDs Discord">
@@ -88,4 +258,9 @@
       </div>
     </div>
   </nav>
+  <div class="position-relative">
+    <div id="search-results" class="d-none position-absolute top-0 start-50 bg-dark p-3">
+      <p class="lead">Type to search for HUDs!</p>
+    </div>
+  </div>
 </div>
