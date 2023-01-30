@@ -33,6 +33,7 @@ specifiers:
   react-compare-slider: ^2.2.0
   react-dom: ^18.2.0
   react-select: ^5.7.0
+  remove-markdown: ^0.5.0
   sass: ^1.57.1
   serialize-javascript: ^6.0.1
   shorthash: ^0.0.2
@@ -79,6 +80,7 @@ devDependencies:
   react-compare-slider: 2.2.0_biqbaboplfbrettd7655fr4n2y
   react-dom: 18.2.0_react@18.2.0
   react-select: 5.7.0_57czaiyk6rdr5iy5tfs5pior4u
+  remove-markdown: 0.5.0
   sass: 1.57.1
   serialize-javascript: 6.0.1
   shorthash: 0.0.2
@@ -6242,6 +6244,10 @@ packages:
       retext: 8.1.0
       retext-smartypants: 5.2.0
       unist-util-visit: 4.1.2
+    dev: true
+
+  /remove-markdown/0.5.0:
+    resolution: {integrity: sha512-x917M80K97K5IN1L8lUvFehsfhR8cYjGQ/yAMRI9E7JIKivtl5Emo5iD13DhMr+VojzMCiYk8V2byNPwT/oapg==}
     dev: true
 
   /require-directory/2.1.1:
