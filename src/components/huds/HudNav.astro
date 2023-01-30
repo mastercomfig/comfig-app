@@ -41,6 +41,12 @@
   }
 </style>
 
+<style is:global>
+  .search-result-img-container { 
+    aspect-ratio: 16 / 9;
+  }
+</style>
+
 <script>
   import MiniSearch from "minisearch";
   import { debounce } from "debounce";
@@ -144,7 +150,7 @@
       options = {};
     }
     options.boost = {
-      name: 1.2,
+      name: 5,
     };
     options.prefix = true;
     return [queryVal, options];
@@ -162,25 +168,20 @@
   const emptySearch = '<p class="lead m-0">Type to search for HUDs!</p>';
   const noResults = '<p class="lead m-0">No results found.</p>';
   
+  let currentInput = "";
   function searchInternal(query) {
+    currentInput = query;
     if (query.length === 0) {
       searchResults.innerHTML = emptySearch;
       return;
     }
     // TODO: advanced queries
     const [queryVal, options] = buildExpressionTree(query);
-    console.log(queryVal);
     if (queryVal.length === 0) {
       searchResults.innerHTML = emptySearch;
       return;
     }
-    //const results = miniSearch.search(queryVal, options);
-    const results = miniSearch.search(queryVal, {
-      boost: {
-        name: 1.2,
-      },
-      prefix: true,
-    });
+    const results = miniSearch.search(queryVal, options);
     if (results.length === 0) {
       searchResults.innerHTML = noResults;
       return;
@@ -192,9 +193,10 @@
       const resultRow = document.createElement("div");
       resultRow.classList.add("row", "g-0");
       const resultImgCol = document.createElement("div");
-      resultImgCol.classList.add("col-md-4");
+      resultImgCol.classList.add("col-md-4", "search-result-img-container");
       const resultImg = document.createElement("img");
-      resultImg.classList.add("img-fluid");
+      resultImg.classList.add("w-100", "h-100", "object-fit-contain");
+      resultImg.style.objectFit = "contain";
       resultImg.src = result.bannerUrl;
       resultImgCol.appendChild(resultImg);
       resultRow.appendChild(resultImgCol);
@@ -231,7 +233,12 @@
   });
   let isFocused = false;
   let clickedOut = true;
-  searchInput.addEventListener("focus", () => {
+  searchInput.addEventListener("focus", (event) => {
+    const query = event.target.value;
+    if (query !== currentInput) {
+      search(query);
+      search.flush();
+    }
     searchResults.classList.remove("d-none");
     isFocused = true;
     clickedOut = false;
@@ -242,7 +249,7 @@
   });
   window.addEventListener("click", (event) => {
     if (!isFocused && !searchResults.contains(event.target)) {
-      searchResults.classList.add("d-none");
+      //searchResults.classList.add("d-none");
       if (!clickedOut && !isFocused) {
         event.preventDefault();
         clickedOut = true;
