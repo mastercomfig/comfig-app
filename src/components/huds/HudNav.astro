@@ -30,9 +30,6 @@
     transform: translate(-50.5%, 0);
     z-index: 4;
   }
-  #search-results p {
-    margin: 0;
-  }
 </style>
 
 <script>
@@ -155,8 +152,8 @@ import { useIsomorphicLayoutEffect } from "react-compare-slider/dist/utils";
 
   const searchResults = document.getElementById("search-results");
 
-  const emptySearch = '<p class="lead">Type to search for HUDs!</p>';
-  const noResults = '<p class="lead">No results found.</p>';
+  const emptySearch = '<p class="lead m-0">Type to search for HUDs!</p>';
+  const noResults = '<p class="lead m-0">No results found.</p>';
   
   function searchInternal(query) {
     if (query.length === 0) {
@@ -263,7 +260,7 @@ import { useIsomorphicLayoutEffect } from "react-compare-slider/dist/utils";
   </nav>
   <div class="position-relative">
     <div id="search-results" class="d-none position-absolute top-0 start-50 bg-dark p-3">
-      <p class="lead">Type to search for HUDs!</p>
+      <p class="lead m-0">Type to search for HUDs!</p>
     </div>
   </div>
 </div>
