@@ -196,8 +196,8 @@
       const resultImgCol = document.createElement("div");
       resultImgCol.classList.add("col-md-4", "search-result-img-container");
       const resultImg = document.createElement("img");
-      resultImg.classList.add("w-100", "h-100", "object-fit-contain");
-      resultImg.style.objectFit = "contain";
+      resultImg.classList.add("w-100", "h-100", "object-fit-cover");
+      resultImg.style.objectFit = "cover";
       resultImg.src = result.bannerUrl;
       resultImgCol.appendChild(resultImg);
       resultRow.appendChild(resultImgCol);
@@ -250,7 +250,7 @@
   });
   window.addEventListener("click", (event) => {
     if (!isFocused && !searchResults.contains(event.target)) {
-      //searchResults.classList.add("d-none");
+      searchResults.classList.add("d-none");
       if (!clickedOut && !isFocused) {
         event.preventDefault();
         clickedOut = true;
