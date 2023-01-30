@@ -15,6 +15,7 @@ specifiers:
   bootstrap: ^5.2.3
   bootswatch: ^5.2.3
   canvas: ^2.11.0
+  debounce: ^1.2.1
   firebase: ^9.16.0
   glob: ^8.1.0
   highlight.js: ^11.7.0
@@ -62,6 +63,7 @@ devDependencies:
   bootstrap: 5.2.3_@popperjs+core@2.11.6
   bootswatch: 5.2.3
   canvas: 2.11.0
+  debounce: 1.2.1
   firebase: 9.16.0
   glob: 8.1.0
   highlight.js: 11.7.0
@@ -3216,6 +3218,10 @@ packages:
       abab: 2.0.6
       whatwg-mimetype: 3.0.0
       whatwg-url: 11.0.0
+    dev: true
+
+  /debounce/1.2.1:
+    resolution: {integrity: sha512-XRRe6Glud4rd/ZGQfiV1ruXSfbvfJedlV9Y6zOlP+2K04vBYiJEte6stfFkCP03aMnY5tsipamumUjL14fofug==}
     dev: true
 
   /debug/4.3.4:
