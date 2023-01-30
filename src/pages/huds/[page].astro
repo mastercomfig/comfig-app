@@ -13,7 +13,7 @@ import { fetchHuds } from '../../ssg/huds';
 
 export async function getStaticPaths({ paginate }) {
   let pages = paginate(await fetchHuds(), {
-    pageSize: 9,
+    pageSize: 12,
   });
   return pages;
 }
@@ -62,7 +62,7 @@ const currentPage = page.currentPage ?? 1;
   <div class="container">
     <div class="row">
       {page.data.map((hud) =>
-          <div class="col-12 col-md-2 col-lg-4 mt-5">
+          <div class="col-12 col-md-6 col-lg-4 mt-5">
             <HudListItem hud={hud} expanded={true} carousel={true}></HudListItem>
           </div>
         )}
