@@ -22,21 +22,28 @@
   .form-control:focus::placeholder {
     color: rgba(220, 220, 220, 0.9);
   }
+  .form-control::selection {
+    background: rgba(0, 206, 187, 0.5);
+  }
   #search-results {
     max-height: 90vh;
     box-shadow: 0 0 1rem 1rem rgba(0, 0, 0, 0.5);
-    width: 60%;
+    width: 100%;
     overflow-y: auto;
-    transform: translate(-50.5%, 0);
+    transform: translate(-50%, 0);
     z-index: 4;
+  }
+  @media (min-width: 992px) {
+    #search-results {
+      width: 49.5%;
+      transform: translate(-50.7%, 0);
+    }
   }
 </style>
 
 <script>
   import MiniSearch from "minisearch";
   import { debounce } from "debounce";
-
-import { useIsomorphicLayoutEffect } from "react-compare-slider/dist/utils";
 
   const fields = ["name", "author", "content", "flags", "tags", "os", "gamemode", "res"];
   const queryFields = new Set(["name", "author"]);
@@ -88,15 +95,15 @@ import { useIsomorphicLayoutEffect } from "react-compare-slider/dist/utils";
       };
       for (const [field, values] of fieldQueries) {
         filterObj.queries.push({
-          field: field,
+          fields: [field],
           queries: values,
           combineWith: "OR",
         });
       }
-      queryVal = {
+      queryVal = query.length > 0 ? {
         combineWith: "AND",
         queries: [query, filterObj],
-      };
+      } : filterObj;
     } else {
       queryVal = query;
     }
@@ -162,6 +169,7 @@ import { useIsomorphicLayoutEffect } from "react-compare-slider/dist/utils";
     }
     // TODO: advanced queries
     const [queryVal, options] = buildExpressionTree(query);
+    console.log(queryVal);
     if (queryVal.length === 0) {
       searchResults.innerHTML = emptySearch;
       return;
@@ -222,9 +230,11 @@ import { useIsomorphicLayoutEffect } from "react-compare-slider/dist/utils";
     search(query);
   });
   let isFocused = false;
+  let clickedOut = true;
   searchInput.addEventListener("focus", () => {
     searchResults.classList.remove("d-none");
     isFocused = true;
+    clickedOut = false;
   });
   // Only remove search results if not clicking the search results
   searchInput.addEventListener("blur", () => {
@@ -233,15 +243,19 @@ import { useIsomorphicLayoutEffect } from "react-compare-slider/dist/utils";
   window.addEventListener("click", (event) => {
     if (!isFocused && !searchResults.contains(event.target)) {
       searchResults.classList.add("d-none");
+      if (!clickedOut && !isFocused) {
+        event.preventDefault();
+        clickedOut = true;
+      }
     }
   });
 </script>
 
 <div class="container">
   <nav class="navbar navbar-expand navbar-dark bg-teal">
-    <div class="d-lg-flex w-100 justify-content-between">
+    <div class="d-flex w-100 justify-content-between">
       <span class="navbar-brand">
-        <a href="/huds/1" class="navbar-brand"><img src="/img/mastercomfig_logo_transparent_i.svg" alt="" class="d-inline-block align-text-center" width="24" height="24"> comfig huds</a>
+        <a href="/huds/1" class="navbar-brand p-0 m-0"><img src="/img/mastercomfig_logo_transparent_i.svg" alt="" class="d-inline-block align-text-center" width="24" height="24"> <span class="d-none d-md-inline">comfig huds</span></a>
       </span>
       <div class="d-flex position-absolute top-50 start-50 translate-middle w-50" role="search">
         <input id="search-input" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
