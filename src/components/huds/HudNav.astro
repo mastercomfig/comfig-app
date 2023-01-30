@@ -23,12 +23,15 @@
     color: rgba(220, 220, 220, 0.9);
   }
   #search-results {
-    min-height: 40vh;
-    max-height: 70vh;
+    max-height: 90vh;
+    box-shadow: 0 0 1rem 1rem rgba(0, 0, 0, 0.5);
     width: 60%;
     overflow-y: auto;
     transform: translate(-50.5%, 0);
     z-index: 4;
+  }
+  #search-results p {
+    margin: 0;
   }
 </style>
 
@@ -186,7 +189,7 @@ import { useIsomorphicLayoutEffect } from "react-compare-slider/dist/utils";
       const resultImgCol = document.createElement("div");
       resultImgCol.classList.add("col-md-4");
       const resultImg = document.createElement("img");
-      resultImg.classList.add("img-fluid", "rounded-start");
+      resultImg.classList.add("img-fluid");
       resultImg.src = result.bannerUrl;
       resultImgCol.appendChild(resultImg);
       resultRow.appendChild(resultImgCol);
