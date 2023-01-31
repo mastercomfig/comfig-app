@@ -166,7 +166,17 @@
 
   const searchResults = document.getElementById("search-results");
 
-  const emptySearch = '<p class="lead m-0">Type to search for HUDs!</p>';
+  const emptySearch = '<p class="lead mt-0 mb-2">Type to search for HUDs!</p>\
+      <h6 class="mb-1">Advanced syntax</h6>\
+      <span><code>author:username</code> - search by author name</span><br>\
+      <span><code>name:username</code> - search HUD name</span><br>\
+      <span><code>tags:minimal</code> - search by tags</span><br>\
+      <span><code>has:streamer-mode</code> - search by feature</span><br>\
+      <span><code>os:windows</code> - search by HUD operating system</span><br>\
+      <span><code>gamemode:pl</code> - search by gamemode UI</span><br>\
+      <span><code>res:16/9</code> - search by resolution</span><br>\
+      <span><code>position:center</code> - search by ammo/health positioning</span><br>\
+      <p class="mt-1 mb-0 fw-semibold">UI for advanced search coming soon!</p>';
   const noResults = '<p class="lead m-0">No results found.</p>';
   
   let currentInput = "";
@@ -290,7 +300,17 @@
   </nav>
   <div class="position-relative">
     <div id="search-results" class="d-none position-absolute top-0 start-50 bg-dark p-3">
-      <p class="lead m-0">Type to search for HUDs!</p>
+      <p class="lead mt-0 mb-2">Type to search for HUDs!</p>
+      <h6 class="mb-1">Advanced search</h6>
+      <span><code>author:username</code> - search by author name</span><br>
+      <span><code>name:username</code> - search HUD name</span><br>
+      <span><code>tags:minimal</code> - search by tags</span><br>
+      <span><code>has:streamer-mode</code> - search by feature</span><br>
+      <span><code>os:windows</code> - search by HUD operating system</span><br>
+      <span><code>gamemode:pl</code> - search by gamemode UI</span><br>
+      <span><code>res:16/9</code> - search by resolution</span><br>
+      <span><code>position:center</code> - search by ammo/health positioning</span><br>
+      <p class="mt-1 mb-0 fw-semibold">UI for advanced search coming soon!</p>
     </div>
   </div>
 </div>
