@@ -51,9 +51,9 @@
   import MiniSearch from "minisearch";
   import { debounce } from "debounce";
 
-  const fields = ["name", "author", "content", "flags", "tags", "os", "gamemode", "res"];
+  const fields = ["name", "author", "content", "flags", "tags", "os", "gamemode", "res", "position"];
   const queryFields = new Set(["name", "author"]);
-  const filterFields = new Set(["flags", "tags", "os", "gamemode", "res"]);
+  const filterFields = new Set(["flags", "tags", "os", "gamemode", "res", "position"]);
 
   function buildExpressionTree(q) {
     let terms = q.split(" ");
@@ -178,12 +178,17 @@
     }
     // TODO: advanced queries
     const [queryVal, options] = buildExpressionTree(query);
-    if (queryVal.length === 0) {
-      searchResults.innerHTML = emptySearch;
-      return;
+    let bUseFilters = false;
+    if (!queryVal || queryVal.length === 0) {
+      if (options.filter) {
+        bUseFilters = true;
+      } else {
+        searchResults.innerHTML = emptySearch;
+        return;
+      }
     }
-    const results = miniSearch.search(queryVal, options);
-    if (results.length === 0) {
+    const results = bUseFilters ? documents.filter(options.filter) : miniSearch.search(queryVal, options);
+    if (!results || results.length === 0) {
       searchResults.innerHTML = noResults;
       return;
     }

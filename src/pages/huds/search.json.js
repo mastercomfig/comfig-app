@@ -13,7 +13,7 @@ export const get = async function get() {
       tags: hud.tags || [],
       bannerUrl: hud.bannerUrl,
     };
-    const traits = ["os", "gamemode", "res"];
+    const traits = ["os", "gamemode", "res", "position"];
     if (hud.traits) {
       for (const [trait, traitVal] of Object.entries(hud.traits)) {
         data[trait] = traitVal;
