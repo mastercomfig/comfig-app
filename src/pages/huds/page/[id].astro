@@ -22,6 +22,52 @@ export async function getStaticPaths() {
   }));
 }
 
+const osToIcon = {
+  windows: "windows",
+  mac: "apple",
+  linux: "linux",
+}
+
+const gamemodeToName = {
+  tournament: "Tournament",
+  comp: "Competitive",
+  arena: "Arena",
+  ad: "Attack/Defend",
+  ctf: "Capture the Flag",
+  cp: "Control Point",
+  halloween: "Halloween",
+  koth: "King of the Hill",
+  mannpower: "Mannpower",
+  mvm: "Mann vs. Machine",
+  pass: "Pass Time",
+  pl: "Payload",
+  plr: "Payload Race",
+  pd: "Player Destruction",
+  rd: "Robot Destruction",
+  sd: "Special Delivery",
+  tc: "Territorial Control"
+}
+
+const gamemodeToIcon = {
+  tournament: "people-group",
+  comp: "ranking-star",
+  arena: "skull-crossbones",
+  ad: "shield-halved",
+  ctf: "briefcase",
+  cp: "ring",
+  halloween: "ghost",
+  koth: "scale-unbalanced-flip",
+  mannpower: "crown",
+  mvm: "robot",
+  pass: "futbol",
+  pl: "timeline",
+  plr: "shuffle",
+  pd: "wine-bottle",
+  rd: "microchip",
+  sd: "rocket",
+  tc: "map-location-dot"
+}
+
 const { hud } = Astro.props;
 ---
 <Layout>
@@ -56,7 +102,7 @@ const { hud } = Astro.props;
     .list-group {
       --bs-list-group-bg: #151515;
       --bs-list-group-color: #f2f2f2;
-      background: #0d0d0d;
+      background: #0d0d0d1c;
       flex: 1;
     }
   </style>
@@ -72,13 +118,13 @@ const { hud } = Astro.props;
             <button type="button" data-bs-target="#hudScreenshots" data-bs-slide-to={index} class={index == 0 ? "active" : ""} aria-current="true" aria-label={`Slide ${index + 1} ${resource}`}></button>
           )}
         </div>
-        <div class="carousel-inner">
+        <div class="carousel-inner h-100">
           {hud.resourceUrls.map((resource, index) =>
-            <div class={`carousel-item ${index == 0 ? "active" : ""}`}>
+            <div class={`carousel-item h-100 ${index == 0 ? "active" : ""}`}>
               {
                 (resource.startsWith("https://youtube.com/") && (
                   <iframe width="100%" height="100%" src={resource} title={`${hud.resources[index]}`} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                )) || (<img src={resource} class="d-block w-100" loading="lazy" alt={`${hud.resources[index]}`} />)
+                )) || (<img src={resource} class="d-block w-100 position-relative translate-middle-y top-50" loading="lazy" alt={`${hud.resources[index]}`} />)
               }
             </div>)
           }
@@ -97,12 +143,6 @@ const { hud } = Astro.props;
     <div class="row flex-md-row-reverse align-items-stretch">
       <div class={hud.content ? "col-md-3 d-md-flex flex-md-column" : ""}>
         <ul class="list-group list-group-flush">
-          <li class="list-group-item">
-            <span class={`fas ${hud.prerelease ? "fa-flask text-warning" : "fa-circle-check text-success"} fa-fw`}></span> <strong>Release status:</strong> {hud.prerelease ? "Preview" : "Stable"}
-          </li>
-          <li class="list-group-item">
-            <span class={`fas ${hud.outdated ? "fa-circle-exclamation text-danger" : "fa-circle-check text-success"} fa-fw`}></span> <strong>Compatibility:</strong> {hud.outdated ? "Outdated/Incompatible" : "Up to date"}
-          </li>
           {hud.social?.album && (<a href={hud.social.album} class="list-group-item d-flex justify-content-between align-items-center">
             <span><span class="fas fa-images fa-fw"></span> Screenshot Album</span>
             <span class="fas fa-square-arrow-up-right fa-fw"></span>
@@ -127,15 +167,50 @@ const { hud } = Astro.props;
             <span><span class="fab fa-twitter fa-fw"></span> Twitter</span>
             <span class="fas fa-square-arrow-up-right fa-fw"></span>
           </a>)}
+          <li class="list-group-item">
+            <span class={`fas ${hud.prerelease ? "fa-flask text-warning" : "fa-circle-check text-success"} fa-fw`}></span> <strong>Release status:</strong> {hud.prerelease ? "Preview" : "Stable"}
+          </li>
+          <li class="list-group-item">
+            <span class={`fas ${hud.outdated ? "fa-circle-exclamation text-danger" : "fa-circle-check text-success"} fa-fw`}></span> <strong>Compatibility:</strong> {hud.outdated ? "Outdated/Incompatible" : "Up to date"}
+          </li>
           {hud.contributors && (<li class="list-group-item">
             <strong>Contributors:</strong> {hud.contributors.join(", ")}
+          </li>)}
+          {hud.traits?.os && (<li class="list-group-item">
+            <strong>OS:</strong> {hud.traits.os.map((os) => <span class={`fab fa-${osToIcon[os]} fa-fw`}></span>)}
+          </li>)}
+          {hud.traits?.res && (<li class="list-group-item">
+            <strong>Resolutions:</strong> {hud.traits.res.join(", ").replaceAll("/", ":")}
+          </li>)}
+          {hud.traits?.position && (<li class="list-group-item">
+            <strong>Position:</strong> {hud.traits.position.map((p) => p[0].toUpperCase() + p.substring(1)).join(", ")}
+          </li>)}
+          {hud.tags && (<li class="list-group-item">
+            <strong>Tags:</strong> {hud.tags.join(", ")}
           </li>)}
         </ul>
       </div>
       {hud.content && (<div class="col-md-9"><Markdown content={hud.content} /></div>)}
     </div>
+    {hud.traits?.gamemode && (
+      <hr><h3>Gamemodes</h3>
+      <div class="container">
+        <div class="card-group row">
+          {hud.traits.gamemode.map((gm) => 
+            <div class="col-6 col-md-3">
+              <div class="card mt-4">
+                <div class="card-body text-center">
+                  <div class="h1"><span class={`fas fa-${gamemodeToIcon[gm]} fa-fw`}></span></div>
+                  <h5 class="card-title mt-3">{gamemodeToName[gm]}</h5>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    )}
     {hud.variants && (
-      <br><h1>Variants</h1>
+      <hr><h1>Variants</h1>
       <div class="row">
         {hud.variants.map((variant) =>
           <div class="col-12 col-md-2 col-lg-4 mt-3">
