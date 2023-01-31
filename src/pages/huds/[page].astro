@@ -62,22 +62,28 @@ const currentPage = page.currentPage ?? 1;
   <div class="container">
     <div class="row">
       {page.data.map((hud) =>
-          <div class="col-12 col-md-6 col-lg-4 mt-5">
+          <div class="col-12 col-md-6 col-lg-4 mt-4">
             <HudListItem hud={hud} expanded={true} carousel={true}></HudListItem>
           </div>
         )}
     </div>
     {
       (page.url.prev || page.url.next) && (
-        <div class="mt-2">
-          <div class="mx-auto" style="max-width: fit-content">
+        <div class="mt-4 d-flex justify-content-between">
+          <a href="/huds/1" class={`btn btn-secondary ${page.currentPage === 1 ? 'invisible' : ''}`}>
+            <span class="fas fa-angles-left fa-fw"></span>
+          </a>
+          <div>
             <a href={page.url.prev} class={`btn btn-secondary ${!page.url.prev ? 'invisible' : ''}`}>
-                <span class="fas fa-arrow-left fa-fw"></span>
+                <span class="fas fa-angle-left fa-fw"></span>
             </a>
             <a href={page.url.next} class={`btn btn-secondary ${!page.url.next ? 'invisible' : ''}`}>
-                <span class="fas fa-arrow-right fa-fw"></span>
+                <span class="fas fa-angle-right fa-fw"></span>
             </a>
           </div>
+          <a href={`/huds/${page.lastPage}`} class={`btn btn-secondary ${page.currentPage === page.lastPage ? 'invisible' : ''}`}>
+            <span class="fas fa-angles-right fa-fw"></span>
+          </a>
         </div>
       )
     }
