@@ -38,6 +38,12 @@
       width: 49.5%;
       transform: translate(-50.7%, 0);
     }
+    #search-input-container {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      left: 50%;
+      top: 50%;
+    }
   }
 </style>
 
@@ -54,6 +60,10 @@
   const fields = ["name", "author", "content", "flags", "tags", "os", "gamemode", "res", "position"];
   const queryFields = new Set(["name", "author"]);
   const filterFields = new Set(["flags", "tags", "os", "gamemode", "res", "position"]);
+  const boostConfig = {
+    name: 5,
+    author: 2,
+  }
 
   function buildExpressionTree(q) {
     let terms = q.split(" ");
@@ -68,6 +78,7 @@
     let query = "";
     const fieldQueries = new Map();
     const fieldFilters = new Map();
+    const boostFields = [...Object.keys(boostConfig)];
     for (const term of terms) {
       if (term.indexOf(":") === -1) {
         // Recombine the search query
@@ -95,11 +106,16 @@
     // Initialize base query
     let queryVal;
     if (fieldQueries.size > 0) {
+      // Clear the array
+      boostFields.length = 0;
       let filterObj = {
         combineWith: "AND",
         queries: []
       };
       for (const [field, values] of fieldQueries) {
+        if (boostConfig[field] !== undefined) {
+          boostFields.push(field);
+        }
         filterObj.queries.push({
           fields: [field],
           queries: values,
@@ -149,10 +165,11 @@
     } else {
       options = {};
     }
-    options.boost = {
-      name: 5,
-      author: 2,
-    };
+    let boost = {};
+    for (const field of boostFields) {
+      boost[field] = boostConfig[field];
+    }
+    options.boost = boost;
     options.prefix = true;
     return [queryVal, options];
   }
@@ -186,7 +203,6 @@
       searchResults.innerHTML = emptySearch;
       return;
     }
-    // TODO: advanced queries
     const [queryVal, options] = buildExpressionTree(query);
     let bUseFilters = false;
     if (!queryVal || queryVal.length === 0) {
@@ -274,13 +290,13 @@
   });
 </script>
 
-<div class="container">
+<div class="container-lg g-0 g-lg-4">
   <nav class="navbar navbar-expand navbar-dark bg-teal">
     <div class="d-flex w-100 justify-content-between">
       <span class="navbar-brand">
         <a href="/huds/1" class="navbar-brand p-0 m-0"><img src="/img/mastercomfig_logo_transparent_i.svg" alt="" class="d-inline-block align-text-center" width="24" height="24"> <span class="d-none d-md-inline">comfig huds</span></a>
       </span>
-      <div class="d-flex position-absolute top-50 start-50 translate-middle w-50" role="search">
+      <div class="d-md-flex w-50" id="search-input-container" role="search">
         <input id="search-input" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
       </div>
       <div id="navbarNav">

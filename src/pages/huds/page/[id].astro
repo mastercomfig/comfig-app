@@ -77,6 +77,11 @@ const { hud } = Astro.props;
     <></>
   </PreloadHead>
   <ImportHead>
+    <style>
+      .screen {
+        object-fit: contain;
+      }
+    </style>
     <script>
       import { Carousel } from "bootstrap";
 
@@ -124,7 +129,7 @@ const { hud } = Astro.props;
               {
                 (resource.startsWith("https://youtube.com/") && (
                   <iframe width="100%" height="100%" src={resource} title={`${hud.resources[index]}`} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                )) || (<img src={resource} class="d-block w-100 position-relative translate-middle-y top-50" loading="lazy" alt={`${hud.resources[index]}`} />)
+                )) || (<img src={resource} class="d-block w-100 position-relative translate-middle top-50 start-50" loading="lazy" alt={`${hud.resources[index]}`} />)
               }
             </div>)
           }
@@ -138,8 +143,8 @@ const { hud } = Astro.props;
           <span class="visually-hidden">Next</span>
         </button>
       </div>
-    )) || (<img class="img-fluid" src={hud.resourceUrls[0]} />)}
-    <a href={hud.downloadUrl} class="btn btn-secondary w-100 my-3"><span class="fas fa-download fa-fw"></span> Download</a>
+    )) || (<div class="w-100 ratio ratio-16x9"><img class="img-fluid screen" src={hud.resourceUrls[0]} /></div>)}
+    <a href={hud.downloadUrl} class="btn btn-secondary w-100 my-3"><span class="fas fa-download fa-fw"></span> Download {hud.versionName ? hud.versionName : ""} (<strong>{`${hud.publishDate.toLocaleDateString('en-us', { year: "numeric", month: "short", day: "numeric"})}`}</strong>)</a>
     <div class="row flex-md-row-reverse align-items-stretch">
       <div class={hud.content ? "col-md-3 d-md-flex flex-md-column" : ""}>
         <ul class="list-group list-group-flush">

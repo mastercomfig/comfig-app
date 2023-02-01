@@ -121,7 +121,7 @@ const getHuds = async () => {
       const tagList = dom.window.document.querySelector(".branches-tag-list");
       if (tagList) {
         // Get the oldest tag associated with this commit
-        hudData.versionName = tagList.lastChild.textContent;
+        hudData.versionName = tagList.children.item(tagList.children.length - 1).lastChild.textContent;
       }
 
       // Query the commit
