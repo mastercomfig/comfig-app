@@ -34,7 +34,7 @@ const { hud, expanded = false, carousel = false } = Astro.props;
               {
                 (resource.startsWith("https://youtube.com/") && (
                   <iframe width="100%" height="100%" src={resource} title={`${hud.resources[index]}`} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                )) || (<img src={resource} class="d-block w-100 position-relative translate-middle-y top-50" loading="lazy" alt={`${hud.resources[index]}`} />)
+                )) || (<img src={resource} class="d-block w-100 position-relative translate-middle top-50 start-50" loading="lazy" alt={`${hud.resources[index]}`} />)
               }
             </div>)
           }
