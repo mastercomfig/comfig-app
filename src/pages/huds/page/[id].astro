@@ -26,27 +26,29 @@ const osToIcon = {
   windows: "windows",
   mac: "apple",
   linux: "linux",
-}
+};
 
-const gamemodeToName = {
-  tournament: "Tournament",
-  comp: "Competitive",
-  arena: "Arena",
-  ad: "Attack/Defend",
-  ctf: "Capture the Flag",
-  cp: "Control Point",
-  halloween: "Halloween",
-  koth: "King of the Hill",
-  mannpower: "Mannpower",
-  mvm: "Mann vs. Machine",
-  pass: "Pass Time",
-  pl: "Payload",
-  plr: "Payload Race",
-  pd: "Player Destruction",
-  rd: "Robot Destruction",
-  sd: "Special Delivery",
-  tc: "Territorial Control"
-}
+const featureToIcon = {
+  fonts: "font",
+  menus: "table-columns",
+  scoreboards: "table-list",
+  crosshairs: "crosshairs",
+  minmode: "toggle-on",
+  "streamer-mode": "eye-low-vision",
+  materials: "swatchbook",
+  customization: "sliders",
+};
+
+const featureToName = {
+  fonts: "Custom Fonts",
+  menus: "Custom Menus",
+  scoreboards: "Extra Scoreboards",
+  crosshairs: "HUD Crosshairs",
+  minmode: "Minmode Toggle",
+  "streamer-mode": "Streamer Mode",
+  materials: "Custom Materials",
+  customization: "Easy Customization",
+};
 
 const gamemodeToIcon = {
   tournament: "people-group",
@@ -66,7 +68,31 @@ const gamemodeToIcon = {
   rd: "microchip",
   sd: "rocket",
   tc: "map-location-dot"
-}
+};
+
+const gamemodeToName = {
+  tournament: "Tournament",
+  comp: "Competitive",
+  arena: "Arena",
+  ad: "Attack/Defend",
+  ctf: "Capture the Flag",
+  cp: "Control Point",
+  halloween: "Halloween",
+  koth: "King of the Hill",
+  mannpower: "Mannpower",
+  mvm: "Mann vs. Machine",
+  pass: "PASS Time",
+  pl: "Payload",
+  plr: "Payload Race",
+  pd: "Player Destruction",
+  rd: "Robot Destruction",
+  sd: "Special Delivery",
+  tc: "Territorial Control"
+};
+
+const languageNames = new Intl.DisplayNames(['en'], {
+  type: 'language'
+});
 
 const { hud } = Astro.props;
 ---
@@ -80,6 +106,9 @@ const { hud } = Astro.props;
     <style>
       .screen {
         object-fit: contain;
+      }
+      .verified-gold {
+        color: #c5b358;
       }
     </style>
     <script>
@@ -144,11 +173,11 @@ const { hud } = Astro.props;
         </button>
       </div>
     )) || (<div class="w-100 ratio ratio-16x9"><img class="img-fluid screen" src={hud.resourceUrls[0]} /></div>)}
-    <a href={hud.downloadUrl} class="btn btn-secondary w-100 my-3"><span class="fas fa-download fa-fw"></span> Download {hud.versionName ? hud.versionName : ""} (<strong>{`${hud.publishDate.toLocaleDateString('en-us', { year: "numeric", month: "short", day: "numeric"})}`}</strong>)</a>
+    <a href={hud.downloadUrl} class="btn btn-secondary w-100 my-3"><span class="h3 fw-bold"><span class="fas fa-download fa-fw"></span> Download {hud.versionName ? hud.versionName : ""}</span> <br>Last updated <strong>{`${hud.publishDate.toLocaleDateString('en-us', { year: "numeric", month: "short", day: "numeric"})}`}</strong></a>
     <div class="row flex-md-row-reverse align-items-stretch">
       <div class={hud.content ? "col-md-3 d-md-flex flex-md-column" : ""}>
         <ul class="list-group list-group-flush">
-          {hud.social?.album && (<a href={hud.social.album} class="list-group-item d-flex justify-content-between align-items-center">
+          {hud.social.album && (<a href={hud.social.album} class="list-group-item d-flex justify-content-between align-items-center">
             <span><span class="fas fa-images fa-fw"></span> Screenshot Album</span>
             <span class="fas fa-square-arrow-up-right fa-fw"></span>
           </a>)}
@@ -156,19 +185,23 @@ const { hud } = Astro.props;
             <span><span class="fab fa-github fa-fw"></span> GitHub</span>
             <span class="fas fa-square-arrow-up-right fa-fw"></span>
           </a>
-          {hud.social?.discord && (<a href={`https://discord.gg/${hud.social.discord}`} class="list-group-item d-flex justify-content-between align-items-center">
+          <a href={`${hud.social.support}`} class="list-group-item d-flex justify-content-between align-items-center">
+            <span><span class="fas fa-circle-question fa-fw"></span> Help/Support</span>
+            <span class="fas fa-square-arrow-up-right fa-fw"></span>
+          </a>
+          {hud.social.discord && (<a href={`https://discord.gg/${hud.social.discord}`} class="list-group-item d-flex justify-content-between align-items-center">
             <span><span class="fab fa-discord fa-fw"></span> Discord</span>
             <span class="fas fa-square-arrow-up-right fa-fw"></span>
           </a>)}
-          {hud.social?.steam_group && (<a href={`https://steamcommunity.com/groups/${hud.social.steam_group}`} class="list-group-item d-flex justify-content-between align-items-center">
+          {hud.social.steam_group && (<a href={`https://steamcommunity.com/groups/${hud.social.steam_group}`} class="list-group-item d-flex justify-content-between align-items-center">
             <span><span class="fab fa-steam fa-fw"></span> Steam Group</span>
             <span class="fas fa-square-arrow-up-right fa-fw"></span>
           </a>)}
-          {hud.social?.steam_profile && (<a href={`https://steamcommunity.com/profiles/${hud.social.steam_profile}`} class="list-group-item d-flex justify-content-between align-items-center">
+          {hud.social.steam_profile && (<a href={`https://steamcommunity.com/profiles/${hud.social.steam_profile}`} class="list-group-item d-flex justify-content-between align-items-center">
             <span><span class="fab fa-steam fa-fw"></span> Author Steam</span>
             <span class="fas fa-square-arrow-up-right fa-fw"></span>
           </a>)}
-          {hud.social?.twitter && (<a href={`https://twitter.com/${hud.social.twitter}`} class="list-group-item d-flex justify-content-between align-items-center">
+          {hud.social.twitter && (<a href={`https://twitter.com/${hud.social.twitter}`} class="list-group-item d-flex justify-content-between align-items-center">
             <span><span class="fab fa-twitter fa-fw"></span> Twitter</span>
             <span class="fas fa-square-arrow-up-right fa-fw"></span>
           </a>)}
@@ -176,8 +209,11 @@ const { hud } = Astro.props;
             <span class={`fas ${hud.prerelease ? "fa-flask text-warning" : "fa-circle-check text-success"} fa-fw`}></span> <strong>Release status:</strong> {hud.prerelease ? "Preview" : "Stable"}
           </li>
           <li class="list-group-item">
-            <span class={`fas ${hud.outdated ? "fa-circle-exclamation text-danger" : "fa-circle-check text-success"} fa-fw`}></span> <strong>Compatibility:</strong> {hud.outdated ? "Outdated/Incompatible" : "Up to date"}
+            <span class={`fas ${hud.outdated ? "fa-circle-exclamation text-danger" : (hud.verified ? "fa-square-check verified-gold" : "fa-circle-check text-success")} fa-fw`}></span> <strong>Compatibility:</strong> {hud.outdated ? "Outdated/Incompatible" : (hud.verified ? "Verified" : "Up to date")}
           </li>
+          {hud.releaseDate && (<li class="list-group-item">
+            <strong>Release Date:</strong> {`${hud.releaseDate.toLocaleDateString('en-us', { year: "numeric", month: "short", day: "numeric"})}`}
+          </li>)}
           {hud.contributors && (<li class="list-group-item">
             <strong>Contributors:</strong> {hud.contributors.join(", ")}
           </li>)}
@@ -190,23 +226,43 @@ const { hud } = Astro.props;
           {hud.traits?.position && (<li class="list-group-item">
             <strong>Position:</strong> {hud.traits.position.map((p) => p[0].toUpperCase() + p.substring(1)).join(", ")}
           </li>)}
-          {hud.tags && (<li class="list-group-item">
-            <strong>Tags:</strong> {hud.tags.join(", ")}
+          {hud.traits?.lang && (<li class="list-group-item">
+            <strong>Languages:</strong> {hud.traits.lang.map((l) => languageNames.of(l)).join(", ")}
           </li>)}
         </ul>
       </div>
       {hud.content && (<div class="col-md-9"><Markdown content={hud.content} /></div>)}
     </div>
-    {hud.traits?.gamemode && (
-      <hr><h3>Gamemodes</h3>
+    {hud.tags && (
+      <small><strong>Tags:</strong> {hud.tags.join(", ")}</small>
+    )}
+    {hud.flags && (
+      <hr><h3>Features</h3>
       <div class="container">
         <div class="card-group row">
-          {hud.traits.gamemode.map((gm) => 
+          {hud.flags.map((f) => 
             <div class="col-6 col-md-3">
               <div class="card mt-4">
                 <div class="card-body text-center">
-                  <div class="h1"><span class={`fas fa-${gamemodeToIcon[gm]} fa-fw`}></span></div>
-                  <h5 class="card-title mt-3">{gamemodeToName[gm]}</h5>
+                  <div class="h1"><span class={`fas fa-${featureToIcon[f]} fa-fw`}></span></div>
+                  <h5 class="card-title mt-3">{featureToName[f]}</h5>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    )}
+    {hud.traits?.gamemode && (
+      <h3 class="mt-3">Gamemodes</h3>
+      <div class="container">
+        <div class="card-group row">
+          {hud.traits.gamemode.map((gm) => 
+            <div class="col-6 col-md-3 col-lg-2">
+              <div class="card mt-4">
+                <div class="card-body text-center">
+                  <div class="h2"><span class={`fas fa-${gamemodeToIcon[gm]} fa-fw`}></span></div>
+                  <h6 class="card-title mt-3">{gamemodeToName[gm]}</h6>
                 </div>
               </div>
             </div>
