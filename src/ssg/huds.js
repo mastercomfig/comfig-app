@@ -86,6 +86,20 @@ const getHuds = async () => {
         // Ignore
       }
 
+      // Release date
+      if (hudData.releaseDate) {
+        hudData.releaseDate = new Date(hudData.releaseDate);
+      }
+
+      // Add issues link for support if not present
+      if (!hudData.social) {
+        hudData.social = {};
+      }
+
+      if (!hudData.social.support) {
+        hudData.social.support = `${hudData.repo}/issues`;
+      }
+
       // Just the user/repo
       const ghRepo = hudData.repo.replace("https://github.com/", "");
 
