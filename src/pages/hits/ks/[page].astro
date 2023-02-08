@@ -1,0 +1,81 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import BaseHead from '../../../components/head/BaseHead.astro';
+import PreloadHead from '../../../components/head/PreloadHead.astro';
+import ImportHead from '../../../components/head/ImportHead.astro';
+import MainHead from '../../../components/head/MainHead.astro';
+import Body from '../../../components/Body.astro';
+import Footer from '../../../components/Footer.astro';
+import HudListItem from '../../../components/huds/HudListItem.astro';
+import HitsNav from '../../../components/hits/HitsNav.astro';
+
+import { getKillsounds } from '../../../ssg/hits';
+
+export async function getStaticPaths({ paginate }) {
+  let pages = paginate(await getKillsounds(), {
+    pageSize: 12,
+  });
+  return pages;
+}
+
+const { page } = Astro.props;
+const currentPage = page.currentPage ?? 1;
+---
+<Layout>
+<head>
+  <BaseHead />
+  <PreloadHead>
+    <></>
+  </PreloadHead>
+  <ImportHead>
+    <script>
+      import "../../../utils/hits.js";
+    </script>
+  </ImportHead>
+  <MainHead title="killsounds - comfig hits | mastercomfig" description="A modern Team Fortress 2 hitsounds directory.">
+    <></>
+  </MainHead>
+</head>
+<Body>
+  <HitsNav />
+  <div class="container">
+    <div class="row">
+      {page.data.map((s) =>
+          <div class="col-12 col-md-6 col-lg-4 mt-4">
+            <div class="card">
+              <div class="card-body">
+                <h3 class="card-title text-center">{s.name}</h3>
+                <a href={`https://hits.mastercomfig.com/${s.hash}.wav`} download="killsound.wav" class="btn btn-outline-secondary ms-3 py-2 my-1 position-relative"><span class="fas fa-download fa-fw"></span></a>
+                <div class="hs-container" data-hash={s.hash}></div>
+              </div>
+            </div>
+          </div>
+        )}
+    </div>
+    {
+      (page.url.prev || page.url.next) && (
+        <div class="mt-4 d-flex justify-content-between">
+          <a href="/hits/ks/1" class={`btn btn-secondary ${currentPage === 1 ? 'invisible' : ''}`}>
+            <span class="fas fa-angles-left fa-fw"></span>
+          </a>
+          <div>
+            <a href={page.url.prev} class={`btn btn-secondary ${!page.url.prev ? 'invisible' : ''}`}>
+                <span class="fas fa-angle-left fa-fw"></span>
+            </a>
+            <a href={page.url.next} class={`btn btn-secondary ${!page.url.next ? 'invisible' : ''}`}>
+                <span class="fas fa-angle-right fa-fw"></span>
+            </a>
+          </div>
+          <a href={`/hits/ks/${page.lastPage}`} class={`btn btn-secondary ${currentPage === page.lastPage ? 'invisible' : ''}`}>
+            <span class="fas fa-angles-right fa-fw"></span>
+          </a>
+        </div>
+      )
+    }
+    <hr>
+  </div>
+  <Footer>
+    <></>
+  </Footer>
+</Body>
+</Layout>

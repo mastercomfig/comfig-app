@@ -1,0 +1,162 @@
+---
+---
+
+<style>
+  .navbar {
+    --bs-navbar-padding-x: 1rem;
+    --bs-navbar-padding-y: 0.4rem;
+    z-index: 5;
+  }
+  .form-control {
+    background: rgba(37, 108, 102, 0.4);
+    color: #fff;
+  }
+  .form-control:focus {
+    border: 1px solid rgba(37, 108, 102, 0.4) !important;
+    box-shadow: 0 -0.5rem 0.5rem rgba(37, 108, 102, 0.4) !important;
+    color: #fff;
+  }
+  .form-control::placeholder {
+    color: rgba(220, 220, 220, 0.7);
+  }
+  .form-control:focus::placeholder {
+    color: rgba(220, 220, 220, 0.9);
+  }
+  .form-control::selection {
+    background: rgba(0, 206, 187, 0.5);
+  }
+  #search-results {
+    max-height: 90vh;
+    box-shadow: 0 0 1rem 1rem rgba(0, 0, 0, 0.5);
+    width: 100%;
+    overflow-y: auto;
+    transform: translate(-50%, 0);
+    z-index: 4;
+  }
+  @media (min-width: 992px) {
+    #search-results {
+      width: 49.5%;
+      transform: translate(-50.7%, 0);
+    }
+    #search-input-container {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      left: 50%;
+      top: 50%;
+    }
+  }
+</style>
+
+<style is:global>
+  .search-result-img-container { 
+    aspect-ratio: 16 / 9;
+  }
+</style>
+
+<script>
+  import MiniSearch from "minisearch";
+  import { debounce } from "debounce";
+  import hitsounds from "../../ssg/hitsounds.json";
+
+  const fields = ["id"];
+
+  const documents = hitsounds.hitsounds.concat(hitsounds.killsounds).map((hitsound) => {
+    return {
+      id: hitsound.name,
+      hash: hitsound.hash
+    }
+  });
+  const miniSearch = new MiniSearch({
+    fields,
+    storeFields: [...fields, "hash"],
+  });
+  miniSearch.addAll(documents);
+
+  const searchResults = document.getElementById("search-results");
+
+  const emptySearch = '<p class="lead m-0">Type to search for sounds!</p>';
+  const noResults = '<p class="lead m-0">No results found.</p>';
+  
+  let currentInput = "";
+  function searchInternal(query) {
+    currentInput = query;
+    if (!query || query.length === 0) {
+      searchResults.innerHTML = emptySearch;
+      return;
+    }
+    const results = miniSearch.search(query, {
+    prefix: true,
+  });
+    if (!results || results.length === 0) {
+      searchResults.innerHTML = noResults;
+      return;
+    }
+    searchResults.innerHTML = "";
+    for (const result of results) {
+      const resultDiv = document.createElement("div");
+      resultDiv.classList.add("card", "mb-2");
+      const resultBody = document.createElement("div");
+      resultBody.classList.add("card-body");
+      const resultTitle = document.createElement("h5");
+      resultTitle.classList.add("card-title");
+      resultTitle.innerText = result.id;
+      resultBody.appendChild(resultTitle);
+      resultDiv.appendChild(resultBody);
+      searchResults.appendChild(resultDiv);
+    }
+  }
+
+  // TODO: 145ms may be too low, investigate to adjust
+  const search = debounce(searchInternal, 145);
+
+  const searchInput = document.getElementById("search-input");
+  searchInput.addEventListener("input", (event) => {
+    const query = event.target.value;
+    search(query);
+  });
+  let isFocused = false;
+  let clickedOut = true;
+  searchInput.addEventListener("focus", (event) => {
+    const query = event.target.value;
+    if (query !== currentInput) {
+      search(query);
+      search.flush();
+    }
+    searchResults.classList.remove("d-none");
+    isFocused = true;
+    clickedOut = false;
+  });
+  // Only remove search results if not clicking the search results
+  searchInput.addEventListener("blur", () => {
+    isFocused = false;
+  });
+  window.addEventListener("click", (event) => {
+    if (!isFocused && !searchResults.contains(event.target)) {
+      searchResults.classList.add("d-none");
+      if (!clickedOut && !isFocused) {
+        event.preventDefault();
+        clickedOut = true;
+      }
+    }
+  });
+</script>
+
+<div class="container-lg g-0 g-lg-4">
+  <nav class="navbar navbar-expand navbar-dark bg-teal">
+    <div class="d-flex w-100 justify-content-between">
+      <span class="navbar-brand">
+        <a href="/hits/1" class="navbar-brand p-0 m-0"><img src="/img/mastercomfig_logo_transparent_i.svg" alt="" class="d-inline-block align-text-center" width="24" height="24"> <span class="d-none d-md-inline">comfig hits</span></a>
+      </span>
+      <div class="d-md-flex w-50" id="search-input-container" role="search">
+        <input id="search-input" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+      </div>
+      <div id="navbarNav">
+      </div>
+    </div>
+  </nav>
+  <div class="position-relative">
+    <div id="search-results" class="d-none position-absolute top-0 start-50 bg-dark p-3">
+      <p class="lead m-0">Type to search for sounds!</p>
+    </div>
+  </div>
+</div>

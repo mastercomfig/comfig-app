@@ -19,7 +19,9 @@ specifiers:
   firebase: ^9.16.0
   glob: ^8.1.0
   highlight.js: ^11.7.0
+  howler: ^2.2.3
   idb-keyval: ^6.2.0
+  ima-adpcm-decoder: ^1.0.0
   jsdom: ^21.1.0
   lodash: ^4.17.21
   minisearch: ^6.0.0
@@ -42,6 +44,8 @@ specifiers:
   vdf-parser: ^1.2.0
   vite: ^4.0.4
   vite-plugin-pwa: ^0.14.1
+  wavefile: ^11.0.0
+  wavesurfer.js: ^6.4.0
   workbox-core: ^6.5.4
   workbox-precaching: ^6.5.4
   workbox-routing: ^6.5.4
@@ -67,7 +71,9 @@ devDependencies:
   firebase: 9.16.0
   glob: 8.1.0
   highlight.js: 11.7.0
+  howler: 2.2.3
   idb-keyval: 6.2.0
+  ima-adpcm-decoder: 1.0.0
   jsdom: 21.1.0_canvas@2.11.0
   lodash: 4.17.21
   minisearch: 6.0.0
@@ -90,6 +96,8 @@ devDependencies:
   vdf-parser: 1.2.0
   vite: 4.0.4_sass@1.58.0
   vite-plugin-pwa: 0.14.1_aln3rhi4rqbizqxdkcc2hwlswu
+  wavefile: 11.0.0
+  wavesurfer.js: 6.4.0
   workbox-core: 6.5.4
   workbox-precaching: 6.5.4
   workbox-routing: 6.5.4
@@ -4125,6 +4133,10 @@ packages:
       react-is: 16.13.1
     dev: true
 
+  /howler/2.2.3:
+    resolution: {integrity: sha512-QM0FFkw0LRX1PR8pNzJVAY25JhIWvbKMBFM4gqk+QdV+kPXOhleWGCB6AiAF/goGjIHK2e/nIElplvjQwhr0jg==}
+    dev: true
+
   /html-encoding-sniffer/3.0.0:
     resolution: {integrity: sha512-oWv4T4yJ52iKrufjnyZPkrN0CH3QnrUqdB6In1g5Fe1mia8GmF36gnfNySxoZtxD5+NmYw1EElVXiBk93UeskA==}
     engines: {node: '>=12'}
@@ -4193,6 +4205,12 @@ packages:
 
   /ieee754/1.2.1:
     resolution: {integrity: sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==}
+    dev: true
+
+  /ima-adpcm-decoder/1.0.0:
+    resolution: {integrity: sha512-ence3aJreKKA9+cnFXtoVoqBI4GopXTsLOaexSdRlgTZJvfrX8B+yILPqxeh58DqQr9iOolEQSttiQ9Xwad1BQ==}
+    dependencies:
+      wavefile: 11.0.0
     dev: true
 
   /immutable/4.2.2:
@@ -6992,6 +7010,16 @@ packages:
     resolution: {integrity: sha512-rpJyN222KWIvHJ/F53XSZv0Zl/accqHR8et1kpaMTD/fLCRxtV8iX8czMzY7sVZupTI3zcUTg8eycS2kNF9l6w==}
     dependencies:
       loose-envify: 1.4.0
+    dev: true
+
+  /wavefile/11.0.0:
+    resolution: {integrity: sha512-/OBiAALgWU24IG7sC84cDO/KfFuvajWc5Uec0oV2zrpOOZZDgGdOwHwgEzOrwh8jkubBk7PtZfQBIcI1OaE5Ng==}
+    engines: {node: '>=8'}
+    hasBin: true
+    dev: true
+
+  /wavesurfer.js/6.4.0:
+    resolution: {integrity: sha512-+i9GkYdMTm998goOWvycWqCgxfbolnuGTPgrdGss7ZbQDuu+n6AHdnJwYnqxW8RZo5A2ck6ztzXbrXGuCi0m5g==}
     dev: true
 
   /wcwidth/1.0.1:

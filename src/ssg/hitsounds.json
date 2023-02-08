@@ -1,0 +1,14 @@
+{
+  "hitsounds": [
+    {
+      "name": "Quake Live Hitsound",
+      "hash": "34b53336c72140edf7dd77097b626cbd2bae9ec8bb526b19aad384f5046ccf7c1b52f407b85a3d14cbca20a834ced23d8fbc5314cf49fc95301c0b36c1969e34"
+    }
+  ],
+  "killsounds": [
+    {
+      "name": "Overwatch Killsound",
+      "hash": "5054ba9e40871f073e083ad40c0995039ceab51c596355fd62da1a575179a00581c6886a967a85d863e9770555dfd3950368fc91b5e80148ff2d67dd9fa54e52"
+    }
+  ]
+}
