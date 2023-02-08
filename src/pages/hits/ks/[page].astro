@@ -28,6 +28,11 @@ const currentPage = page.currentPage ?? 1;
     <></>
   </PreloadHead>
   <ImportHead>
+    <style>
+      .hs-dl {
+        --bs-btn-padding-y: 1.1rem;
+      }
+    </style>
     <script>
       import "../../../utils/hits.js";
     </script>
@@ -45,8 +50,47 @@ const currentPage = page.currentPage ?? 1;
             <div class="card">
               <div class="card-body">
                 <h3 class="card-title text-center">{s.name}</h3>
-                <a href={`https://hits.mastercomfig.com/${s.hash}.wav`} download="killsound.wav" class="btn btn-outline-secondary ms-3 py-2 my-1 position-relative"><span class="fas fa-download fa-fw"></span></a>
-                <div class="hs-container" data-hash={s.hash}></div>
+                <div class="row g-1">
+                  <div class="col-auto">
+                    <a href="#" id={`play-${s.hash}`} class="hs-play btn btn-outline-secondary position-relative h-100 hs-dl">
+                      <span class="fas fa-play fa-fw"></span>
+                    </a>
+                  </div>
+                  <div class="col">
+                    <div class="hs-container" data-hash={s.hash}></div>
+                  </div>
+                  <div class="col-auto">
+                    <a href={`https://hits.mastercomfig.com/${s.hash}.wav`} download="killsound.wav" class="btn btn-outline-secondary position-relative h-100 hs-dl">
+                      <span class="fas fa-download fa-fw"></span>
+                    </a>
+                  </div>
+                </div>
+                
+              </div>
+            </div>
+          </div>
+        )}
+        {page.data.map((s) =>
+          <div class="col-12 col-md-6 col-lg-4 mt-4">
+            <div class="card">
+              <div class="card-body">
+                <h3 class="card-title text-center">{s.name}</h3>
+                <div class="row g-1">
+                  <div class="col-auto">
+                    <a href="#" id={`play-${s.hash}_n`} class="hs-play btn btn-outline-secondary position-relative h-100 hs-dl">
+                      <span class="fas fa-play fa-fw"></span>
+                    </a>
+                  </div>
+                  <div class="col">
+                    <div class="hs-container" data-hash={`${s.hash}_n`}></div>
+                  </div>
+                  <div class="col-auto">
+                    <a href={`https://hits.mastercomfig.com/${s.hash}_n.wav`} download="killsound.wav" class="btn btn-outline-secondary position-relative h-100 hs-dl">
+                      <span class="fas fa-download fa-fw"></span>
+                    </a>
+                  </div>
+                </div>
+                
               </div>
             </div>
           </div>
