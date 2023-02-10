@@ -60,7 +60,17 @@
 
   const fields = ["id"];
 
+  const existingIds = new Map();
+
+
   const documents = hitsounds.hitsounds.concat(hitsounds.killsounds).map((hitsound) => {
+    if (existingIds.has(hitsound.name)) {
+      const curr = existingIds.get(hitsound.name);
+      existingIds.set(hitsound.name, curr + 1);
+      hitsound.name = hitsound.name + curr;
+    } else {
+      existingIds.set(hitsound.name, 1);
+    }
     return {
       id: hitsound.name,
       hash: hitsound.hash
@@ -145,9 +155,9 @@
   <nav class="navbar navbar-expand navbar-dark bg-teal">
     <div class="d-flex w-100 justify-content-between">
       <span class="navbar-brand">
-        <a href="/hits/1" class="navbar-brand p-0 m-0"><img src="/img/mastercomfig_logo_transparent_i.svg" alt="" class="d-inline-block align-text-center" width="24" height="24"> <span class="d-none d-md-inline">comfig hits</span></a>
+        <a href="1" class="navbar-brand p-0 m-0"><img src="/img/mastercomfig_logo_transparent_i.svg" alt="" class="d-inline-block align-text-center" width="24" height="24"> <span class="d-none d-md-inline">comfig hits</span></a>
       </span>
-      <div class="d-md-flex w-50" id="search-input-container" role="search">
+      <div class="d-md-flex w-50 invisible" id="search-input-container" role="search">
         <input id="search-input" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
       </div>
       <div id="navbarNav">

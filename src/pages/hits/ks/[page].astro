@@ -6,7 +6,6 @@ import ImportHead from '../../../components/head/ImportHead.astro';
 import MainHead from '../../../components/head/MainHead.astro';
 import Body from '../../../components/Body.astro';
 import Footer from '../../../components/Footer.astro';
-import HudListItem from '../../../components/huds/HudListItem.astro';
 import HitsNav from '../../../components/hits/HitsNav.astro';
 
 import { getKillsounds } from '../../../ssg/hits';
@@ -20,6 +19,8 @@ export async function getStaticPaths({ paginate }) {
 
 const { page } = Astro.props;
 const currentPage = page.currentPage ?? 1;
+
+import "../../../styles/hits.css";
 ---
 <Layout>
 <head>
@@ -28,11 +29,10 @@ const currentPage = page.currentPage ?? 1;
     <></>
   </PreloadHead>
   <ImportHead>
-    <style>
-      .hs-dl {
-        --bs-btn-padding-y: 1.1rem;
-      }
-    </style>
+    <script>
+      import fitty from "fitty";
+      fitty(".card-title")
+    </script>
     <script>
       import "../../../utils/hits.js";
     </script>
@@ -44,12 +44,19 @@ const currentPage = page.currentPage ?? 1;
 <Body>
   <HitsNav />
   <div class="container">
+    <br>
+    <nav class="nav nav-pills nav-fill">
+      <a class="nav-link" aria-current="page" href="/hits/hs/1"><span class="fas fa-bullseye fa-fw"></span> Hitsounds</a>
+      <a class="nav-link active" aria-current="page" href="/hits/ks/1"><span class="fas fa-skull-crossbones fa-fw"></span> Killsounds</a>
+    </nav>
     <div class="row">
       {page.data.map((s) =>
           <div class="col-12 col-md-6 col-lg-4 mt-4">
             <div class="card">
               <div class="card-body">
-                <h3 class="card-title text-center">{s.name}</h3>
+                <div class="title-container w-100">
+                  <h3 class="card-title text-center w-100">{s.name}</h3>
+                </div>
                 <div class="row g-1">
                   <div class="col-auto">
                     <a href="#" id={`play-${s.hash}`} class="hs-play btn btn-outline-secondary position-relative h-100 hs-dl">
@@ -57,7 +64,7 @@ const currentPage = page.currentPage ?? 1;
                     </a>
                   </div>
                   <div class="col">
-                    <div class="hs-container" data-hash={s.hash}></div>
+                    <div class="hs-container loading-bg" data-hash={s.hash}></div>
                   </div>
                   <div class="col-auto">
                     <a href={`https://hits.mastercomfig.com/${s.hash}.wav`} download="killsound.wav" class="btn btn-outline-secondary position-relative h-100 hs-dl">
@@ -65,32 +72,6 @@ const currentPage = page.currentPage ?? 1;
                     </a>
                   </div>
                 </div>
-                
-              </div>
-            </div>
-          </div>
-        )}
-        {page.data.map((s) =>
-          <div class="col-12 col-md-6 col-lg-4 mt-4">
-            <div class="card">
-              <div class="card-body">
-                <h3 class="card-title text-center">{s.name}</h3>
-                <div class="row g-1">
-                  <div class="col-auto">
-                    <a href="#" id={`play-${s.hash}_n`} class="hs-play btn btn-outline-secondary position-relative h-100 hs-dl">
-                      <span class="fas fa-play fa-fw"></span>
-                    </a>
-                  </div>
-                  <div class="col">
-                    <div class="hs-container" data-hash={`${s.hash}_n`}></div>
-                  </div>
-                  <div class="col-auto">
-                    <a href={`https://hits.mastercomfig.com/${s.hash}_n.wav`} download="killsound.wav" class="btn btn-outline-secondary position-relative h-100 hs-dl">
-                      <span class="fas fa-download fa-fw"></span>
-                    </a>
-                  </div>
-                </div>
-                
               </div>
             </div>
           </div>

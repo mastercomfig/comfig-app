@@ -17,11 +17,10 @@ specifiers:
   canvas: ^2.11.0
   debounce: ^1.2.1
   firebase: ^9.16.0
+  fitty: ^2.3.6
   glob: ^8.1.0
   highlight.js: ^11.7.0
-  howler: ^2.2.3
   idb-keyval: ^6.2.0
-  ima-adpcm-decoder: ^1.0.0
   jsdom: ^21.1.0
   lodash: ^4.17.21
   minisearch: ^6.0.0
@@ -69,11 +68,10 @@ devDependencies:
   canvas: 2.11.0
   debounce: 1.2.1
   firebase: 9.16.0
+  fitty: 2.3.6
   glob: 8.1.0
   highlight.js: 11.7.0
-  howler: 2.2.3
   idb-keyval: 6.2.0
-  ima-adpcm-decoder: 1.0.0
   jsdom: 21.1.0_canvas@2.11.0
   lodash: 4.17.21
   minisearch: 6.0.0
@@ -3795,6 +3793,10 @@ packages:
       - encoding
     dev: true
 
+  /fitty/2.3.6:
+    resolution: {integrity: sha512-ENp/+MqqYmXBGHC0dlltCX75+5zL5m0uiIGCgYdoThao99BrJpNYzEh3xrvhiy4b7O5X82CQT7dPTiB53H6stw==}
+    dev: true
+
   /for-each/0.3.3:
     resolution: {integrity: sha512-jqYfLp7mo9vIyQf8ykW2v7A+2N4QjeCeI5+Dz9XraiO1ign81wjiH7Fb9vSOWvQfNtmSa4H2RoQTrrXivdUZmw==}
     dependencies:
@@ -4133,10 +4135,6 @@ packages:
       react-is: 16.13.1
     dev: true
 
-  /howler/2.2.3:
-    resolution: {integrity: sha512-QM0FFkw0LRX1PR8pNzJVAY25JhIWvbKMBFM4gqk+QdV+kPXOhleWGCB6AiAF/goGjIHK2e/nIElplvjQwhr0jg==}
-    dev: true
-
   /html-encoding-sniffer/3.0.0:
     resolution: {integrity: sha512-oWv4T4yJ52iKrufjnyZPkrN0CH3QnrUqdB6In1g5Fe1mia8GmF36gnfNySxoZtxD5+NmYw1EElVXiBk93UeskA==}
     engines: {node: '>=12'}
@@ -4205,12 +4203,6 @@ packages:
 
   /ieee754/1.2.1:
     resolution: {integrity: sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==}
-    dev: true
-
-  /ima-adpcm-decoder/1.0.0:
-    resolution: {integrity: sha512-ence3aJreKKA9+cnFXtoVoqBI4GopXTsLOaexSdRlgTZJvfrX8B+yILPqxeh58DqQr9iOolEQSttiQ9Xwad1BQ==}
-    dependencies:
-      wavefile: 11.0.0
     dev: true
 
   /immutable/4.2.2:

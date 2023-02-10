@@ -123,6 +123,10 @@ function decodeMsAdpcm(adpcmData) {
 }
 
 function readWav(arr) {
+  if (arr.byteLength > 16777216) {
+    throw "File is too big";
+  }
+
   let offset = 0;
   const buf = new DataView(arr);
 
@@ -137,10 +141,6 @@ function readWav(arr) {
   if (format !== 0x57415645) throw "0x0008:0x000B != 57:41:56:45";
 
   let wavFormat, wavData;
-
-  if (buf.byteLength > 16777216) {
-    throw "File is too big";
-  }
 
   while (offset < buf.byteLength) {
     const name = buf.getUint32(offset, BE); offset += 4;
@@ -212,6 +212,9 @@ for (const player of players) {
     hideScrollbar: true,
     responsive: true,
   });
+  wave.on("ready", () => {
+    player.classList.remove("loading-bg")
+  });
   let buf;
   if (hash.endsWith("_n")) {
     buf = buffer;
@@ -232,10 +235,15 @@ for (const player of players) {
   const playLink = document.getElementById(`play-${hash}`);
   playLink.onclick = () => {
     const ratio = wave.getCurrentTime() / wave.getDuration();
+    console.log(ratio);
     if (ratio < 0.5) {
       wave.playPause();
     } else {
-      wave.play();
+      if (wave.isPlaying()) {
+        wave.seekTo(0);
+      } else {
+        wave.play();
+      }
     }
   }
 }

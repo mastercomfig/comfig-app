@@ -1,0 +1,17 @@
+.hs-dl {
+  --bs-btn-padding-y: 1.1rem;
+}
+.hs-container {
+  height: 64px;
+}
+.card-title {
+  height: 36px;
+  white-space: nowrap;
+  display: inline-block;
+}
+.title-container {
+  overflow: hidden;
+}
+.loading-bg {
+  background: #999;
+}
