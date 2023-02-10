@@ -197,8 +197,7 @@ function readWav(arr) {
   }
 }
 
-const players = document.querySelectorAll(".hs-container");
-for (const player of players) {
+async function createPlayer(player) {
   const ctx = new AudioContext();
   const hash = player.dataset.hash;
   const response = await fetch(`https://hits.mastercomfig.com/${hash}.wav`);
@@ -216,26 +215,17 @@ for (const player of players) {
     player.classList.remove("loading-bg")
   });
   let buf;
-  if (hash.endsWith("_n")) {
-    buf = buffer;
-  } else {
-    const wav = readWav(buffer);
-    const samples = decodeMsAdpcm(wav);
-    // TODO: manually encode wav file again
-    let wavFile = new WaveFile();
-    wavFile.fromScratch(wav.format.channels, wav.format.sampleRate, '16', samples);
-    buf = wavFile.toBuffer().buffer;
-  }
-  try {
-    const decodedBuffer = await ctx.decodeAudioData(buf);
-    wave.loadDecodedBuffer(decodedBuffer);
-  } catch (e) {
-    console.error(e);
-  }
+  const wav = readWav(buffer);
+  const samples = decodeMsAdpcm(wav);
+  // TODO: manually encode wav file again
+  let wavFile = new WaveFile();
+  wavFile.fromScratch(wav.format.channels, wav.format.sampleRate, '16', samples);
+  buf = wavFile.toBuffer().buffer;
+  const decodedBuffer = await ctx.decodeAudioData(buf);
+  wave.loadDecodedBuffer(decodedBuffer);
   const playLink = document.getElementById(`play-${hash}`);
   playLink.onclick = () => {
     const ratio = wave.getCurrentTime() / wave.getDuration();
-    console.log(ratio);
     if (ratio < 0.5) {
       wave.playPause();
     } else {
@@ -247,3 +237,7 @@ for (const player of players) {
     }
   }
 }
+
+const players = document.querySelectorAll(".hs-container");
+const playerPromises = Array.from(players).map(createPlayer);
+await Promise.all(playerPromises);
