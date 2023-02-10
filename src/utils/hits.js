@@ -224,7 +224,8 @@ async function createPlayer(player) {
   const decodedBuffer = await ctx.decodeAudioData(buf);
   wave.loadDecodedBuffer(decodedBuffer);
   const playLink = document.getElementById(`play-${hash}`);
-  playLink.onclick = () => {
+  playLink.onclick = (e) => {
+    e.preventDefault();
     const ratio = wave.getCurrentTime() / wave.getDuration();
     if (ratio < 0.5) {
       wave.playPause();
