@@ -58,12 +58,20 @@
   import { debounce } from "debounce";
   import hitsounds from "../../ssg/hitsounds.json";
 
-  const fields = ["id"];
+  const fields = ["id", "type"];
 
   const existingIds = new Map();
 
+  const hs = hitsounds.hitsounds.map(s => {
+    s.type = "hitsound";
+    return s;
+  });
+  const ks = hitsounds.killsounds.map(s => {
+    s.type = "killsound";
+    return s;
+  });
 
-  const documents = hitsounds.hitsounds.concat(hitsounds.killsounds).map((hitsound) => {
+  const documents = hs.concat(ks).map((hitsound) => {
     if (existingIds.has(hitsound.name)) {
       const curr = existingIds.get(hitsound.name);
       existingIds.set(hitsound.name, curr + 1);
@@ -73,6 +81,7 @@
     }
     return {
       id: hitsound.name,
+      type: hitsound.type,
       hash: hitsound.hash
     }
   });
@@ -109,8 +118,14 @@
       resultBody.classList.add("card-body");
       const resultTitle = document.createElement("h5");
       resultTitle.classList.add("card-title");
-      resultTitle.innerText = result.id;
+      resultTitle.innerHTML = `${result.id} <span class="fas fa-${result.type === "hitsound" ? "bullseye" : "skull-crossbones"} fa-fw"></span>`;
       resultBody.appendChild(resultTitle);
+      const resultLink = document.createElement("a");
+      resultLink.classList.add("stretched-link");
+      resultLink.href = `https://hits.mastercomfig.com/${result.hash}.wav`;
+      resultLink.download = `${result.type}.wav`;
+      resultLink.innerHTML = '<span class="fas fa-download fa-fw"></span>';
+      resultBody.appendChild(resultLink);
       resultDiv.appendChild(resultBody);
       searchResults.appendChild(resultDiv);
     }
@@ -157,7 +172,7 @@
       <span class="navbar-brand">
         <span class="navbar-brand p-0 m-0"><img src="/img/mastercomfig_logo_transparent_i.svg" alt="" class="d-inline-block align-text-center" width="24" height="24"> <span class="d-none d-md-inline">comfig hits</span></span>
       </span>
-      <div class="d-md-flex w-50 invisible" id="search-input-container" role="search">
+      <div class="d-md-flex w-50" id="search-input-container" role="search">
         <input id="search-input" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
       </div>
       <div id="navbarNav">

@@ -4,10 +4,10 @@
 .hs-container {
   height: 64px;
 }
-.card-title {
+.full-item .card-title {
   height: 36px;
-  white-space: nowrap;
   display: inline-block;
+  white-space: nowrap;
 }
 .title-container {
   overflow: hidden;
