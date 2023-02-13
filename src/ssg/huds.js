@@ -91,13 +91,13 @@ const getHuds = async () => {
         hudData.releaseDate = new Date(hudData.releaseDate);
       }
 
-      // Add issues link for support if not present
+      // Add issues link for issues if not present
       if (!hudData.social) {
         hudData.social = {};
       }
 
-      if (!hudData.social.support) {
-        hudData.social.support = `${hudData.repo}/issues`;
+      if (!hudData.social.issues) {
+        hudData.social.issues = `${hudData.repo}/issues`;
       }
 
       // Just the user/repo
