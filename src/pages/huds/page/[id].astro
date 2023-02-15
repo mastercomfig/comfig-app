@@ -110,6 +110,10 @@ const { hud } = Astro.props;
       .verified-gold {
         color: #c5b358;
       }
+      .support-pink {
+        background: #880e4f;
+        --bs-link-hover-color: #ff8ab3;
+      }
     </style>
     <script>
       import { Carousel } from "bootstrap";
@@ -189,7 +193,7 @@ const { hud } = Astro.props;
             <span><span class="fas fa-circle-question fa-fw"></span> Help/Requests</span>
             <span class="fas fa-square-arrow-up-right fa-fw"></span>
           </a>
-          {hud.social.support && (<a href={hud.social.support} class="list-group-item d-flex justify-content-between align-items-center">
+          {hud.social.support && (<a href={hud.social.support} class="list-group-item d-flex justify-content-between align-items-center support-pink">
             <span><span class="fas fa-hand-holding-heart fa-fw"></span> Support</span>
             <span class="fas fa-square-arrow-up-right fa-fw"></span>
           </a>)}
