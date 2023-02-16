@@ -70,7 +70,7 @@ const currentPage = page.currentPage ?? 1;
     {
       (page.url.prev || page.url.next) && (
         <div class="mt-4 d-flex justify-content-between">
-          <a href="/huds/1" class={`btn btn-secondary ${page.currentPage === 1 ? 'invisible' : ''}`}>
+          <a href="/huds/1" class={`btn btn-secondary ${currentPage === 1 ? 'invisible' : ''}`}>
             <span class="fas fa-angles-left fa-fw"></span>
           </a>
           <div>
@@ -81,7 +81,7 @@ const currentPage = page.currentPage ?? 1;
                 <span class="fas fa-angle-right fa-fw"></span>
             </a>
           </div>
-          <a href={`/huds/${page.lastPage}`} class={`btn btn-secondary ${page.currentPage === page.lastPage ? 'invisible' : ''}`}>
+          <a href={`/huds/${page.lastPage}`} class={`btn btn-secondary ${currentPage === page.lastPage ? 'invisible' : ''}`}>
             <span class="fas fa-angles-right fa-fw"></span>
           </a>
         </div>
