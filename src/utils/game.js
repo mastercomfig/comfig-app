@@ -522,8 +522,6 @@ async function getGameResourceFile(path) {
     `https://raw.githubusercontent.com/SteamDatabase/GameTracking-TF2/efd8e5d79c690b33675c41227c33754fbf3e5800/${path}`
   );
   let content = await response.text();
-  console.log(path);
-  console.log(content);
   content = parse(content);
   // kind of a hack, but works for now
   if (content.fWeaponData) {
