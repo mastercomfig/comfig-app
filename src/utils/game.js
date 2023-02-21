@@ -519,7 +519,7 @@ async function getGameResourceFile(path) {
     return resourceCache[path];
   }
   let response = await fetch(
-    `https://raw.githubusercontent.com/SteamDatabase/GameTracking-TF2/master/${path}`
+    `https://raw.githubusercontent.com/SteamDatabase/GameTracking-TF2/efd8e5d79c690b33675c41227c33754fbf3e5800/${path}`
   );
   let content = await response.text();
   content = parse(content);
@@ -547,7 +547,7 @@ async function getGameResourceDir(path) {
   }
 
   let response = await fetch(
-    `https://api.github.com/repos/SteamDatabase/GameTracking-TF2/contents/${path}`, {
+    `https://api.github.com/repos/SteamDatabase/GameTracking-TF2/contents/${path}?ref=efd8e5d79c690b33675c41227c33754fbf3e5800`, {
       headers,
     }
   );
