@@ -230,6 +230,14 @@ const { hud } = Astro.props;
             <span><span class="fab fa-twitter fa-fw"></span> Twitter</span>
             <span class="fas fa-square-arrow-up-right fa-fw"></span>
           </a>)}
+          {hud.social.youtube && (<a href={`https://www.youtube.com/${hud.social.youtube}`} class="list-group-item d-flex justify-content-between align-items-center">
+            <span><span class="fab fa-youtube fa-fw"></span> YouTube</span>
+            <span class="fas fa-square-arrow-up-right fa-fw"></span>
+          </a>)}
+          {hud.social.twitch && (<a href={`https://twitch.tv/${hud.social.twitch}`} class="list-group-item d-flex justify-content-between align-items-center">
+            <span><span class="fab fa-twitch fa-fw"></span> Twitch</span>
+            <span class="fas fa-square-arrow-up-right fa-fw"></span>
+          </a>)}
           <li class="list-group-item">
             <span class={`fas ${hud.prerelease ? "fa-flask text-warning" : "fa-circle-check text-success"} fa-fw`}></span> <strong>Release status:</strong> {hud.prerelease ? "Preview" : "Stable"}
           </li>
