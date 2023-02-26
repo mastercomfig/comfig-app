@@ -5,7 +5,7 @@ export interface Props {
     url?: string;
 }
 
-const { title = "mastercomfig", description = "A modern Team Fortress 2 performance and customization config.", url = "https://mastercomfig.com" } = Astro.props as Props;
+const { title = "mastercomfig", description = "A modern Team Fortress 2 performance and customization config.", url = "https://mastercomfig.com", image = "https://mastercomfig.com/img/mastercomfig_banner.png" } = Astro.props as Props;
 ---
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" href="/img/mastercomfig_logo.svg" type="image/svg+xml">
@@ -30,6 +30,6 @@ const { title = "mastercomfig", description = "A modern Team Fortress 2 performa
 <link rel="canonical" href={url}>
 <meta name="twitter:site" content="@mastercoms">
 <meta name="twitter:creator" content="@mastercoms">
-<meta property="og:image" content="https://mastercomfig.com/img/mastercomfig_banner.png">
-<meta itemprop="image" content="https://mastercomfig.com/img/mastercomfig_banner.png">
-<meta name="twitter:image" content="https://mastercomfig.com/img/mastercomfig_banner.png">
+<meta property="og:image" content={image}>
+<meta itemprop="image" content={image}>
+<meta name="twitter:image" content={image}>

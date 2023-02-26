@@ -114,6 +114,23 @@ const { hud } = Astro.props;
         background: #880e4f;
         --bs-link-hover-color: #ff8ab3;
       }
+      @keyframes introduceCarouselHidable {
+        0% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+      #hudScreenshots .carousel-hidable {
+        transition: opacity 0.5s;
+        animation: 1.5s introduceCarouselHidable;
+        opacity: 0;
+      }
+      #hudScreenshots:hover .carousel-hidable {
+        opacity: 1;
+        animation: 0;
+      }
     </style>
     <script>
       import { Carousel } from "bootstrap";
@@ -130,7 +147,7 @@ const { hud } = Astro.props;
       const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new Tooltip(tooltipTriggerEl));
     </script>
   </ImportHead>
-  <MainHead title={`${hud.name} | comfig huds`} description={`${hud.name} on comfig huds, a modern Team Fortress 2 HUD directory.`} url={`https://comfig.app/huds/page/${hud.id}`}>
+  <MainHead title={`${hud.name} | comfig huds`} description={`${hud.name} on comfig huds, a modern Team Fortress 2 HUD directory.`} url={`https://comfig.app/huds/page/${hud.id}`} image={hud.resourceUrls[0]}>
     <></>
   </MainHead>
   <style>
@@ -151,9 +168,9 @@ const { hud } = Astro.props;
     <h1 class="display-1 mt-3">{hud.name} <span class="text-muted display-4">by {hud.author}</span></h1>
     {(hud.resources.length > 1 && (
       <div id="hudScreenshots" class="carousel slide">
-        <div class="carousel-indicators">
+        <div class="carousel-indicators carousel-hidable">
           {hud.resources.map((resource, index) =>
-            <button type="button" data-bs-target="#hudScreenshots" data-bs-slide-to={index} class={index == 0 ? "active" : ""} aria-current="true" aria-label={`Slide ${index + 1} ${resource}`}></button>
+            <button type="button" data-bs-target="#hudScreenshots" data-bs-slide-to={index} class={`${index == 0 ? "active" : ""}`} aria-current="true" aria-label={`Slide ${index + 1} ${resource}`}></button>
           )}
         </div>
         <div class="carousel-inner h-100">
@@ -167,11 +184,11 @@ const { hud } = Astro.props;
             </div>)
           }
         </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#hudScreenshots" data-bs-slide="prev">
+        <button class="carousel-control-prev carousel-hidable" type="button" data-bs-target="#hudScreenshots" data-bs-slide="prev">
           <span class="carousel-control-prev-icon" aria-hidden="true"></span>
           <span class="visually-hidden">Previous</span>
         </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#hudScreenshots" data-bs-slide="next">
+        <button class="carousel-control-next carousel-hidable" type="button" data-bs-target="#hudScreenshots" data-bs-slide="next">
           <span class="carousel-control-next-icon" aria-hidden="true"></span>
           <span class="visually-hidden">Next</span>
         </button>
