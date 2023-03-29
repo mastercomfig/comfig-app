@@ -173,8 +173,8 @@ const { hud } = Astro.props;
         <span class="text-muted display-4">by {hud.author}</span>
       </h1>
       {
-        hud.resources.length > 1 ||
-          (true && (
+        (hud.resources.length > 1 || true) ||
+          (
             <div id="hudScreenshots" class="carousel slide">
               <div class="carousel-indicators carousel-hidable">
                 {hud.resources.map((resource, index) => (
@@ -233,12 +233,12 @@ const { hud } = Astro.props;
                 <span class="visually-hidden">Next</span>
               </button>
             </div>
-          )) || (
+          ) || (
             <div class="w-100 ratio ratio-16x9">
               <img
                 class="img-fluid object-fit-contain"
                 src={hud.resourceUrls[0]}
-                alt={`${hud.resources[index]}`}
+                alt={`${hud.resources[0]}`}
               />
             </div>
           )
