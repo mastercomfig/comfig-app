@@ -1,7 +1,6 @@
 // Materia 5.2.0
 // Bootswatch
 
-
 // Variables
 
 $web-font-path: "https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" !default;
@@ -28,13 +27,13 @@ $web-font-path: "https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;50
     background-size: 1000% 1000%;
     border: none;
     opacity: 0;
-    transition: background .5s, opacity 1s;
+    transition: background 0.5s, opacity 1s;
     @include gradient-radial($color 10%, transparent 10.01%);
   }
 
   &:active::before {
     background-size: 0 0;
-    opacity: .2;
+    opacity: 0.2;
     transition: none;
   }
 
@@ -46,11 +45,11 @@ $web-font-path: "https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;50
   }
 }
 
-@mixin btn($class,$bg,$color) {
+@mixin btn($class, $bg, $color) {
   .btn-#{$class} {
     &:focus {
       background-color: $bg;
-      box-shadow: 0 0 0 2px rgba(204, 204, 204, .5);
+      box-shadow: 0 0 0 2px rgba(204, 204, 204, 0.5);
     }
 
     &:hover,
@@ -59,7 +58,7 @@ $web-font-path: "https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;50
     }
 
     &:active {
-      box-shadow: 2px 2px 4px rgba(0, 0, 0, .4);
+      box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
     }
 
     @include ripple($color);
@@ -81,7 +80,7 @@ $web-font-path: "https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;50
 
 .navbar {
   border: none;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, .3);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 // Buttons
@@ -97,8 +96,9 @@ $web-font-path: "https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;50
 
 .btn {
   border: none;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, .4);
-  transition: color .4s, background-color .4s, border-color .4s, box-shadow .4s;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  transition: color 0.4s, background-color 0.4s, border-color 0.4s,
+    box-shadow 0.4s;
 
   &-link {
     color: $link-color;
@@ -126,13 +126,13 @@ $web-font-path: "https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;50
     &.disabled,
     &[disabled],
     fieldset[disabled] & {
-      color: rgba(0, 0, 0, .4);
-      background-color: rgba(0, 0, 0, .1);
+      color: rgba(0, 0, 0, 0.4);
+      background-color: rgba(0, 0, 0, 0.1);
       opacity: 1;
 
       &:hover,
       &:focus {
-        background-color: rgba(0, 0, 0, .1);
+        background-color: rgba(0, 0, 0, 0.1);
       }
     }
   }
@@ -166,7 +166,7 @@ $web-font-path: "https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;50
 
   .btn + .btn,
   .btn + .btn-group > .dropdown-toggle {
-    box-shadow: 1px 1px 4px rgba(0, 0, 0, .4);
+    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.4);
   }
 }
 
@@ -179,7 +179,7 @@ $web-font-path: "https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;50
 body,
 input,
 button {
-  letter-spacing: .1px;
+  letter-spacing: 0.1px;
 }
 
 p {
@@ -196,7 +196,7 @@ p {
   > tbody > tr,
   > tbody > tr > th,
   > tbody > tr > td {
-    transition: background-color .2s, color .2s;
+    transition: background-color 0.2s, color 0.2s;
   }
 }
 
@@ -221,8 +221,10 @@ p {
 
 select,
 select.form-control {
-  padding: .5rem 0;
-  background-image: escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 4'><path fill='#{$gray-600}' d='M8 0 4 4 0 0z'/></svg>"));
+  padding: 0.5rem 0;
+  background-image: escape-svg(
+    url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 4'><path fill='#{$gray-600}' d='M8 0 4 4 0 0z'/></svg>")
+  );
   background-repeat: no-repeat;
   background-position: right center;
   background-size: 8px 4px;
@@ -239,7 +241,9 @@ select.form-control {
   }
 
   &:focus {
-    background-image: escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 4'><path fill='#{$gray-900}' d='M8 0 4 4 0 0z'/></svg>"));
+    background-image: escape-svg(
+      url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 4'><path fill='#{$gray-900}' d='M8 0 4 4 0 0z'/></svg>")
+    );
   }
 
   &[multiple] {
@@ -254,7 +258,10 @@ select.form-control {
   border: 2px solid $gray-400;
 
   &:checked[type="radio"] {
-    background-image: escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='2' fill='#{$blue}' stroke='#{$white}'/></svg>")), var(--bs-gradient);
+    background-image: escape-svg(
+        url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='2' fill='#{$blue}' stroke='#{$white}'/></svg>")
+      ),
+      var(--bs-gradient);
     background-size: 1.8em;
   }
 }
@@ -262,7 +269,10 @@ select.form-control {
 .form-check:not(.form-switch) {
   .form-check-input {
     &:checked[type="checkbox"] {
-      background-image: escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path fill='none' stroke='#{$white}' stroke-width='2' d='m6 10 3 3 6-6'/></svg>")), var(--bs-gradient);
+      background-image: escape-svg(
+          url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path fill='none' stroke='#{$white}' stroke-width='2' d='m6 10 3 3 6-6'/></svg>")
+        ),
+        var(--bs-gradient);
       background-size: 1.6em;
     }
   }
@@ -329,7 +339,7 @@ select.form-control {
 .dropdown-menu {
   margin-top: 0;
   border: none;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, .3);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
 }
 
 // Indicators
@@ -351,7 +361,9 @@ select.form-control {
   @each $color, $value in $theme-colors {
     &-#{$color} {
       @if $enable-gradients {
-        background: $value linear-gradient(180deg, mix($body-bg, $value, 15%), $value) repeat-x;
+        background: $value
+          linear-gradient(180deg, mix($body-bg, $value, 15%), $value)
+          repeat-x;
       } @else {
         background-color: $value;
       }
@@ -388,7 +400,7 @@ select.form-control {
 // Containers
 
 .card {
-  box-shadow: 0 1px 4px rgba(0, 0, 0, .4);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
 
   &.border-primary,
   &.border-secondary,
@@ -416,21 +428,23 @@ select.form-control {
 }
 
 .modal-content {
-  border-radius: .2rem;
-  box-shadow: 0 6px 36px rgba(0, 0, 0, .3);
+  border-radius: 0.2rem;
+  box-shadow: 0 6px 36px rgba(0, 0, 0, 0.3);
 }
 
 .modal,
 .toast,
 .offcanvas {
   .btn-close {
-    background-image: escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='#{$black}'><path d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/></svg>"));
+    background-image: escape-svg(
+      url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='#{$black}'><path d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/></svg>")
+    );
   }
 }
 
 .popover {
   border: none;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, .3);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
 }
 
 .carousel {

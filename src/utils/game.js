@@ -13,11 +13,11 @@ const classes = [
 ];
 
 const crosshairPacks = {
-  "default": {
-    "default": {
+  default: {
+    default: {
       name: "Default",
       preview: null,
-    }
+    },
   },
   "sprites/crosshairs": {
     _64_64: {
@@ -63,452 +63,537 @@ const crosshairPacks = {
       preview: null,
     },
   },
-  "crosshair1": {
+  crosshair1: {
     _0_0: {
-      name: "Crosshair Dot"
-    }
+      name: "Crosshair Dot",
+    },
   },
-  "crosshair1OL": {
+  crosshair1OL: {
     _0_0: {
-      name: "Crosshair Dot (Outlined)"
-    }
+      name: "Crosshair Dot (Outlined)",
+    },
   },
-  "crosshair2": {
+  crosshair2: {
     _0_0: {
-      name: "Half Crosshair Dot"
-    }
+      name: "Half Crosshair Dot",
+    },
   },
-  "crosshair2OL": {
+  crosshair2OL: {
     _0_0: {
-      name: "Half Crosshair Dot (Outlined)"
-    }
+      name: "Half Crosshair Dot (Outlined)",
+    },
   },
-  "crosshair3": {
+  crosshair3: {
     _0_0: {
-      name: "Solid Circle"
-    }
+      name: "Solid Circle",
+    },
   },
-  "crosshair3OL": {
+  crosshair3OL: {
     _0_0: {
-      name: "Solid Circle (Outlined)"
-    }
+      name: "Solid Circle (Outlined)",
+    },
   },
-  "crosshair5": {
+  crosshair5: {
     _0_0: {
-      name: "Dot"
-    }
+      name: "Dot",
+    },
   },
-  "crosshair5OL": {
+  crosshair5OL: {
     _0_0: {
-      name: "Dot (Outlined)"
-    }
+      name: "Dot (Outlined)",
+    },
   },
-  "crosshair6": {
+  crosshair6: {
     _0_0: {
-      name: "Crosshair Gap"
-    }
+      name: "Crosshair Gap",
+    },
   },
-  "crosshair6OL": {
+  crosshair6OL: {
     _0_0: {
-      name: "Crosshair Gap (Outlined)"
-    }
+      name: "Crosshair Gap (Outlined)",
+    },
   },
-  "crosshair6circle": {
+  crosshair6circle: {
     _0_0: {
-      name: "Crosshair Gap (Circled)"
-    }
+      name: "Crosshair Gap (Circled)",
+    },
   },
-  "crosshair6circleOL": {
+  crosshair6circleOL: {
     _0_0: {
-      name: "Crosshair Gap (Circled, Outlined)"
-    }
+      name: "Crosshair Gap (Circled, Outlined)",
+    },
   },
-  "crosshair7": {
+  crosshair7: {
     _0_0: {
-      name: "Plus"
-    }
+      name: "Plus",
+    },
   },
-  "crosshair7OL": {
+  crosshair7OL: {
     _0_0: {
-      name: "Plus (Outlined)"
-    }
+      name: "Plus (Outlined)",
+    },
   },
-  "bigcrosshair7": {
+  bigcrosshair7: {
     _0_0: {
-      name: "Large Plus"
-    }
+      name: "Large Plus",
+    },
   },
-  "bigcrosshair7OL": {
+  bigcrosshair7OL: {
     _0_0: {
-      name: "Large Plus (Outlined)"
-    }
+      name: "Large Plus (Outlined)",
+    },
   },
-  "smallcrosshair7": {
+  smallcrosshair7: {
     _0_0: {
-      name: "Small Plus"
-    }
+      name: "Small Plus",
+    },
   },
-  "smallcrosshair7OL": {
+  smallcrosshair7OL: {
     _0_0: {
-      name: "Small Plus (Outlined)"
-    }
+      name: "Small Plus (Outlined)",
+    },
   },
-  "smallcrosshair7circle": {
+  smallcrosshair7circle: {
     _0_0: {
-      name: "Small Plus (Circled)"
-    }
+      name: "Small Plus (Circled)",
+    },
   },
-  "smallcrosshair7circleOL": {
+  smallcrosshair7circleOL: {
     _0_0: {
-      name: "Small Plus (Circled, Outlined)"
-    }
+      name: "Small Plus (Circled, Outlined)",
+    },
   },
-  "fatcross": {
+  fatcross: {
     _0_0: {
-      name: "Thick Plus"
-    }
+      name: "Thick Plus",
+    },
   },
-  "fatcrossOL": {
+  fatcrossOL: {
     _0_0: {
-      name: "Thick Plus (Outlined)"
-    }
+      name: "Thick Plus (Outlined)",
+    },
   },
-  "fatcross": {
+  fatcross: {
     _0_0: {
-      name: "Thick Plus"
-    }
+      name: "Thick Plus",
+    },
   },
-  "fatcrossOL": {
+  fatcrossOL: {
     _0_0: {
-      name: "Thick Plus (Outlined)"
-    }
+      name: "Thick Plus (Outlined)",
+    },
   },
-  "fatcross": {
+  fatcross: {
     _0_0: {
-      name: "Thick Plus"
-    }
+      name: "Thick Plus",
+    },
   },
-  "fatcrossOL": {
+  fatcrossOL: {
     _0_0: {
-      name: "Thick Plus (Outlined)"
-    }
+      name: "Thick Plus (Outlined)",
+    },
   },
-  "fatcrosscircle": {
+  fatcrosscircle: {
     _0_0: {
-      name: "Thick Plus (Circled)"
-    }
+      name: "Thick Plus (Circled)",
+    },
   },
-  "fatcrosscircleOL": {
+  fatcrosscircleOL: {
     _0_0: {
-      name: "Thick Plus (Circled, Outlined)"
-    }
+      name: "Thick Plus (Circled, Outlined)",
+    },
   },
-  "mediccrossbig": {
+  mediccrossbig: {
     _0_0: {
-      name: "Large Medic Cross"
-    }
+      name: "Large Medic Cross",
+    },
   },
-  "opencross": {
+  opencross: {
     _0_0: {
-      name: "Open Plus"
-    }
+      name: "Open Plus",
+    },
   },
-  "opencrossOL": {
+  opencrossOL: {
     _0_0: {
-      name: "Open Plus (Outlined)"
-    }
+      name: "Open Plus (Outlined)",
+    },
   },
-  "seeker": {
+  seeker: {
     _0_0: {
-      name: "Seeker"
-    }
+      name: "Seeker",
+    },
   },
-  "seekerOL": {
+  seekerOL: {
     _0_0: {
-      name: "Seeker (Outlined)"
-    }
+      name: "Seeker (Outlined)",
+    },
   },
-  "sniperbig": {
+  sniperbig: {
     _0_0: {
-      name: "Large Sniper"
-    }
+      name: "Large Sniper",
+    },
   },
-  "sniperbigOL": {
+  sniperbigOL: {
     _0_0: {
-      name: "Large Sniper (Outlined)"
-    }
+      name: "Large Sniper (Outlined)",
+    },
   },
-  "snipercircle": {
+  snipercircle: {
     _0_0: {
-      name: "Sniper (Circled)"
-    }
+      name: "Sniper (Circled)",
+    },
   },
-  "snipercircleOL": {
+  snipercircleOL: {
     _0_0: {
-      name: "Large Sniper (Circled, Outlined)"
-    }
+      name: "Large Sniper (Circled, Outlined)",
+    },
   },
-  "sniperOL": {
+  sniperOL: {
     _0_0: {
-      name: "Sniper (Outlined)"
-    }
+      name: "Sniper (Outlined)",
+    },
   },
-  "thalashseeker": {
+  thalashseeker: {
     _0_0: {
-      name: "Thalash's Seeker"
-    }
+      name: "Thalash's Seeker",
+    },
   },
-  "yzwings": {
+  yzwings: {
     _0_0: {
-      name: "yz50's Wings"
-    }
+      name: "yz50's Wings",
+    },
   },
-  "tob_rocketcross": {
+  tob_rocketcross: {
     _0_0: {
-      name: "Circle Cross"
-    }
+      name: "Circle Cross",
+    },
   },
-  "tob_wingscross": {
+  tob_wingscross: {
     _0_0: {
-      name: "Wings Cross"
-    }
+      name: "Wings Cross",
+    },
   },
-  "tob_wingsdot": {
+  tob_wingsdot: {
     _0_0: {
-      name: "Wings Dot"
-    }
+      name: "Wings Dot",
+    },
   },
-  "xhairshadowdefault": {
+  xhairshadowdefault: {
     _0_0: {
-      name: "Shadowed Brackets"
-    }
+      name: "Shadowed Brackets",
+    },
   },
-  "xhairshadowdots": {
+  xhairshadowdots: {
     _0_0: {
-      name: "Shadowed Dots"
-    }
+      name: "Shadowed Dots",
+    },
   },
-  "xhairshadowplus": {
+  xhairshadowplus: {
     _0_0: {
-      name: "Shadowed Plus"
-    }
+      name: "Shadowed Plus",
+    },
   },
-  "xhairshadowpluss": {
+  xhairshadowpluss: {
     _0_0: {
-      name: "Shadowed Small Plus"
-    }
+      name: "Shadowed Small Plus",
+    },
   },
-  "cpma_1": {
+  cpma_1: {
     _0_0: {
       name: "CPMA 1",
-      size: "32"
-    }
+      size: "32",
+    },
   },
-  "cpma_2": {
+  cpma_2: {
     _0_0: {
       name: "CPMA 2",
-      size: "32"
-    }
+      size: "32",
+    },
   },
-  "cpma_2": {
+  cpma_2: {
     _0_0: {
       name: "CPMA 2",
-      size: "32"
-    }
+      size: "32",
+    },
   },
-  "cpma_3": {
+  cpma_3: {
     _0_0: {
       name: "CPMA 3",
-      size: "32"
-    }
+      size: "32",
+    },
   },
-  "cpma_4": {
+  cpma_4: {
     _0_0: {
       name: "CPMA 4",
-      size: "32"
-    }
+      size: "32",
+    },
   },
-  "cpma_6": {
+  cpma_6: {
     _0_0: {
       name: "CPMA 6",
-      size: "32"
-    }
+      size: "32",
+    },
   },
-  "cpma_7": {
+  cpma_7: {
     _0_0: {
       name: "CPMA 7",
-      size: "32"
-    }
+      size: "32",
+    },
   },
-  "cpma_8": {
+  cpma_8: {
     _0_0: {
       name: "CPMA 8",
-      size: "32"
-    }
+      size: "32",
+    },
   },
-  "cpma_9": {
+  cpma_9: {
     _0_0: {
       name: "CPMA 9",
-      size: "32"
-    }
+      size: "32",
+    },
   },
-  "cpma_10": {
+  cpma_10: {
     _0_0: {
       name: "CPMA 10",
-      size: "32"
-    }
+      size: "32",
+    },
   },
-  "cpma_11": {
+  cpma_11: {
     _0_0: {
-      name: "CPMA 11"
-    }
+      name: "CPMA 11",
+    },
   },
-  "cpma_12": {
+  cpma_12: {
     _0_0: {
-      name: "CPMA 12"
-    }
+      name: "CPMA 12",
+    },
   },
-  "cpma_13": {
+  cpma_13: {
     _0_0: {
-      name: "CPMA 13"
-    }
+      name: "CPMA 13",
+    },
   },
-  "cpma_14": {
+  cpma_14: {
     _0_0: {
-      name: "CPMA 15"
-    }
+      name: "CPMA 15",
+    },
   },
-  "cpma_15": {
+  cpma_15: {
     _0_0: {
-      name: "CPMA 15"
-    }
+      name: "CPMA 15",
+    },
   },
-  "cpma_16": {
+  cpma_16: {
     _0_0: {
-      name: "CPMA 16"
-    }
+      name: "CPMA 16",
+    },
   },
-  "cpma_17": {
+  cpma_17: {
     _0_0: {
-      name: "CPMA 17"
-    }
+      name: "CPMA 17",
+    },
   },
-  "cpma_18": {
+  cpma_18: {
     _0_0: {
-      name: "CPMA 18"
-    }
+      name: "CPMA 18",
+    },
   },
-  "cpma_19": {
+  cpma_19: {
     _0_0: {
-      name: "CPMA 19"
-    }
+      name: "CPMA 19",
+    },
   },
-  "ql_1": {
+  ql_1: {
     _0_0: {
-      name: "Quake 1"
-    }
+      name: "Quake 1",
+    },
   },
-  "ql_2": {
+  ql_2: {
     _0_0: {
-      name: "Quake 2"
-    }
+      name: "Quake 2",
+    },
   },
-  "ql_3": {
+  ql_3: {
     _0_0: {
-      name: "Quake 3"
-    }
+      name: "Quake 3",
+    },
   },
-  "ql_4": {
+  ql_4: {
     _0_0: {
-      name: "Quake 4"
-    }
+      name: "Quake 4",
+    },
   },
-  "ql_5": {
+  ql_5: {
     _0_0: {
-      name: "Quake 5"
-    }
+      name: "Quake 5",
+    },
   },
-  "ql_6": {
+  ql_6: {
     _0_0: {
       name: "Quake 6",
-      size: "32"
-    }
+      size: "32",
+    },
   },
-  "ql_7": {
+  ql_7: {
     _0_0: {
-      name: "Quake 7"
-    }
+      name: "Quake 7",
+    },
   },
-  "ql_8": {
+  ql_8: {
     _0_0: {
-      name: "Quake 8"
-    }
+      name: "Quake 8",
+    },
   },
-  "ql_9": {
+  ql_9: {
     _0_0: {
-      name: "Quake 9"
-    }
+      name: "Quake 9",
+    },
   },
-  "ql_10": {
+  ql_10: {
     _0_0: {
-      name: "Quake 10"
-    }
+      name: "Quake 10",
+    },
   },
-  "ql_11": {
+  ql_11: {
     _0_0: {
-      name: "Quake 11"
-    }
+      name: "Quake 11",
+    },
   },
-  "ql_12": {
+  ql_12: {
     _0_0: {
-      name: "Quake 12"
-    }
+      name: "Quake 12",
+    },
   },
-  "ql_13": {
+  ql_13: {
     _0_0: {
-      name: "Quake 13"
-    }
+      name: "Quake 13",
+    },
   },
-  "ql_14": {
+  ql_14: {
     _0_0: {
-      name: "Quake 14"
-    }
+      name: "Quake 14",
+    },
   },
-  "ql_15": {
+  ql_15: {
     _0_0: {
-      name: "Quake 15"
-    }
+      name: "Quake 15",
+    },
   },
-  "ql_16": {
+  ql_16: {
     _0_0: {
-      name: "Quake 16"
-    }
+      name: "Quake 16",
+    },
   },
-  "ql_17": {
+  ql_17: {
     _0_0: {
-      name: "Quake 17"
-    }
+      name: "Quake 17",
+    },
   },
-  "ql_18": {
+  ql_18: {
     _0_0: {
-      name: "Quake 18"
-    }
+      name: "Quake 18",
+    },
   },
-  "ql_19": {
+  ql_19: {
     _0_0: {
-      name: "Quake 19"
-    }
+      name: "Quake 19",
+    },
   },
 };
 
 const crosshairPackGroups = {
-  "Valve": ["default", "sprites/crosshairs"],
-  "Leth": ["crosshair1", "crosshair1OL", "crosshair2", "crosshair2OL", "crosshair3", "crosshair3OL", "crosshair5", "crosshair5OL", "crosshair5circle", "crossshair5circleOL", "crosshair6", "crosshair6OL", "crosshair6circle", "crosshair6circleOL", "crosshair7", "crosshair7OL", "bigcrosshair7", "bigcrosshair7OL", "smallcrosshair7", "smallcrosshair7OL", "smallcrosshair7circle", "smallcrosshair7circleOL", "fatcross", "fatcrossOL", "fatcrosscircle", "fatcrosscircleOL", "mediccrossbig", "opencross", "opencrossOL", "seeker", "seekerOL", "sniperbig", "sniperbigOL", "snipercircle", "snipercircleOL", "sniperOL", "thalashseeker", "yzwings"],
-  "Tob": ["tob_rocketcross", "tob_wingscross", "tob_wingsdot"],
-  "wavesui": ["xhairshadowdefault", "xhairshadowdots", "xhairshadowplus", "xhairshadowpluss", "xhairshadowrocketsthick"],
-  "CPMA": ["cpma_1", "cpma_2", "cpma_3", "cpma_4", "cpma_5", "cpma_6", "cpma_7", "cpma_8", "cpma_9", "cpma_10", "cpma_11", "cpma_12", "cpma_13", "cpma_14", "cpma_15", "cpma_16", "cpma_17", "cpma_18", "cpma_19"],
-  "Quake": ["ql_1", "ql_2", "ql_3", "ql_4", "ql_5", "ql_6", "ql_7", "ql_8", "ql_9", "ql_10", "ql_11", "ql_12", "ql_13", "ql_14", "ql_15", "ql_16", "ql_17", "ql_18", "ql_19"]
-}
+  Valve: ["default", "sprites/crosshairs"],
+  Leth: [
+    "crosshair1",
+    "crosshair1OL",
+    "crosshair2",
+    "crosshair2OL",
+    "crosshair3",
+    "crosshair3OL",
+    "crosshair5",
+    "crosshair5OL",
+    "crosshair5circle",
+    "crossshair5circleOL",
+    "crosshair6",
+    "crosshair6OL",
+    "crosshair6circle",
+    "crosshair6circleOL",
+    "crosshair7",
+    "crosshair7OL",
+    "bigcrosshair7",
+    "bigcrosshair7OL",
+    "smallcrosshair7",
+    "smallcrosshair7OL",
+    "smallcrosshair7circle",
+    "smallcrosshair7circleOL",
+    "fatcross",
+    "fatcrossOL",
+    "fatcrosscircle",
+    "fatcrosscircleOL",
+    "mediccrossbig",
+    "opencross",
+    "opencrossOL",
+    "seeker",
+    "seekerOL",
+    "sniperbig",
+    "sniperbigOL",
+    "snipercircle",
+    "snipercircleOL",
+    "sniperOL",
+    "thalashseeker",
+    "yzwings",
+  ],
+  Tob: ["tob_rocketcross", "tob_wingscross", "tob_wingsdot"],
+  wavesui: [
+    "xhairshadowdefault",
+    "xhairshadowdots",
+    "xhairshadowplus",
+    "xhairshadowpluss",
+    "xhairshadowrocketsthick",
+  ],
+  CPMA: [
+    "cpma_1",
+    "cpma_2",
+    "cpma_3",
+    "cpma_4",
+    "cpma_5",
+    "cpma_6",
+    "cpma_7",
+    "cpma_8",
+    "cpma_9",
+    "cpma_10",
+    "cpma_11",
+    "cpma_12",
+    "cpma_13",
+    "cpma_14",
+    "cpma_15",
+    "cpma_16",
+    "cpma_17",
+    "cpma_18",
+    "cpma_19",
+  ],
+  Quake: [
+    "ql_1",
+    "ql_2",
+    "ql_3",
+    "ql_4",
+    "ql_5",
+    "ql_6",
+    "ql_7",
+    "ql_8",
+    "ql_9",
+    "ql_10",
+    "ql_11",
+    "ql_12",
+    "ql_13",
+    "ql_14",
+    "ql_15",
+    "ql_16",
+    "ql_17",
+    "ql_18",
+    "ql_19",
+  ],
+};
 
 let resourceCache = {};
 let language = "English";
@@ -543,11 +628,12 @@ async function getGameResourceDir(path) {
   };
 
   if (import.meta.env.GITHUB_TOKEN) {
-    headers["Authorization"] = `token ${import.meta.env.GITHUB_TOKEN}`
+    headers["Authorization"] = `token ${import.meta.env.GITHUB_TOKEN}`;
   }
 
   let response = await fetch(
-    `https://api.github.com/repos/SteamDatabase/GameTracking-TF2/contents/${path}?ref=efd8e5d79c690b33675c41227c33754fbf3e5800`, {
+    `https://api.github.com/repos/SteamDatabase/GameTracking-TF2/contents/${path}?ref=efd8e5d79c690b33675c41227c33754fbf3e5800`,
+    {
       headers,
     }
   );
@@ -925,23 +1011,23 @@ const slotToIndex = [
 ];
 
 const explosionEffects = {
-  "default": "Default",
-  "ExplosionCore_sapperdestroyed": "Sapper Destroyed",
-  "muzzle_minigun_starflash01": "Minigun Muzzle Flash",
-  "eotl_pyro_pool_explosion_flash": "Pyro Pool Explosion",
-  "electrocuted_red_flash": "Electrocuted Red",
-  "electrocuted_blue_flash": "Electrocuted Blue",
-  "duck_collect_trail_special_red": "Invisible",
+  default: "Default",
+  ExplosionCore_sapperdestroyed: "Sapper Destroyed",
+  muzzle_minigun_starflash01: "Minigun Muzzle Flash",
+  eotl_pyro_pool_explosion_flash: "Pyro Pool Explosion",
+  electrocuted_red_flash: "Electrocuted Red",
+  electrocuted_blue_flash: "Electrocuted Blue",
+  duck_collect_trail_special_red: "Invisible",
 };
 
 const explosionPreviews = {
-  "default": "default.webp",
-  "ExplosionCore_sapperdestroyed": "ExplosionCore_sapperdestroyed.webp",
-  "muzzle_minigun_starflash01": "muzzle_minigun_starflash01.webp",
-  "eotl_pyro_pool_explosion_flash": "eotl_pyro_pool_explosion_flash.webp",
-  "electrocuted_red_flash": "electrocuted_red_flash.webp",
-  "electrocuted_blue_flash": "electrocuted_blue_flash.webp",
-  "duck_collect_trail_special_red": "duck_collect_trail_special_red.webp",
+  default: "default.webp",
+  ExplosionCore_sapperdestroyed: "ExplosionCore_sapperdestroyed.webp",
+  muzzle_minigun_starflash01: "muzzle_minigun_starflash01.webp",
+  eotl_pyro_pool_explosion_flash: "eotl_pyro_pool_explosion_flash.webp",
+  electrocuted_red_flash: "electrocuted_red_flash.webp",
+  electrocuted_blue_flash: "electrocuted_blue_flash.webp",
+  duck_collect_trail_special_red: "duck_collect_trail_special_red.webp",
 };
 
 function getNormalizedSlotName(item) {
@@ -984,8 +1070,8 @@ let items = {
         file: "sprites/crosshairs",
         x: 64,
         y: 64,
-      }
-    }
+      },
+    },
   },
 };
 
@@ -1011,20 +1097,54 @@ async function initGameData() {
 const stockItems = {
   default: [],
   scout: ["tf_weapon_scattergun", "tf_weapon_pistol_scout", "tf_weapon_bat"],
-  soldier: ["tf_weapon_rocketlauncher", "tf_weapon_shotgun_soldier", "tf_weapon_shovel"],
-  pyro: ["tf_weapon_flamethrower", "tf_weapon_shotgun_pyro", "tf_weapon_fireaxe"],
-  demoman: ["tf_weapon_grenadelauncher", "tf_weapon_pipebomblauncher", "tf_weapon_bottle"],
+  soldier: [
+    "tf_weapon_rocketlauncher",
+    "tf_weapon_shotgun_soldier",
+    "tf_weapon_shovel",
+  ],
+  pyro: [
+    "tf_weapon_flamethrower",
+    "tf_weapon_shotgun_pyro",
+    "tf_weapon_fireaxe",
+  ],
+  demoman: [
+    "tf_weapon_grenadelauncher",
+    "tf_weapon_pipebomblauncher",
+    "tf_weapon_bottle",
+  ],
   heavy: ["tf_weapon_minigun", "tf_weapon_shotgun_hwg", "tf_weapon_fists"],
-  engineer: ["tf_weapon_shotgun_primary", "tf_weapon_pistol", "tf_weapon_wrench"],
-  medic: ["tf_weapon_syringegun_medic", "tf_weapon_medigun", "tf_weapon_bonesaw"],
+  engineer: [
+    "tf_weapon_shotgun_primary",
+    "tf_weapon_pistol",
+    "tf_weapon_wrench",
+  ],
+  medic: [
+    "tf_weapon_syringegun_medic",
+    "tf_weapon_medigun",
+    "tf_weapon_bonesaw",
+  ],
   sniper: ["tf_weapon_sniperrifle", "tf_weapon_smg", "tf_weapon_club"],
   spy: ["tf_weapon_revolver", "tf_weapon_knife", "tf_weapon_sapper"],
-  "All-Class": []
+  "All-Class": [],
 };
 
-const skipExplosionEffect = new Set(["tf_weapon_particle_cannon", "tf_weapon_grapplinghook", "tf_weapon_compound_bow", "tf_weapon_crossbow", "tf_weapon_shotgun_building_rescue", "tf_weapon_rocketlauncher_fireball", "tf_weapon_flaregun", "tf_weapon_flaregun_revenge"]);
+const skipExplosionEffect = new Set([
+  "tf_weapon_particle_cannon",
+  "tf_weapon_grapplinghook",
+  "tf_weapon_compound_bow",
+  "tf_weapon_crossbow",
+  "tf_weapon_shotgun_building_rescue",
+  "tf_weapon_rocketlauncher_fireball",
+  "tf_weapon_flaregun",
+  "tf_weapon_flaregun_revenge",
+]);
 
-const skipMuzzleFlash = new Set(["tf_weapon_drg_pomson", "tf_weapon_mechanical_arm", "tf_weapon_rocketlauncher_fireball", "tf_weapon_minigun"]);
+const skipMuzzleFlash = new Set([
+  "tf_weapon_drg_pomson",
+  "tf_weapon_mechanical_arm",
+  "tf_weapon_rocketlauncher_fireball",
+  "tf_weapon_minigun",
+]);
 
 const skipTracer = new Set(["tf_weapon_minigun"]);
 

@@ -5,7 +5,6 @@
 // Base
 * {
   scrollbar-color: $primary $dark;
-  
 }
 
 @media only screen and (min-width: 900px) {
@@ -38,7 +37,8 @@
 }
 
 // Link adjustments
-a, .nav-link {
+a,
+.nav-link {
   transition: 0.25s;
   text-decoration: none;
 }
@@ -53,7 +53,7 @@ a, .nav-link {
 }
 
 .alert a {
-  color: #0d6efd
+  color: #0d6efd;
 }
 
 .alert a:hover {
@@ -83,7 +83,7 @@ a, .nav-link {
 // Classes
 .img-separator {
   height: 40vh;
-  margin-bottom: 2rem
+  margin-bottom: 2rem;
 }
 
 // Elements
@@ -92,9 +92,10 @@ footer:last-of-type {
 }
 
 .home-header {
-  background: linear-gradient(rgba(38, 50, 56, 0.7) 10%, rgba(38, 50, 56, 0.7)), url('../../img/cp_badlands01.jpg');
+  background: linear-gradient(rgba(38, 50, 56, 0.7) 10%, rgba(38, 50, 56, 0.7)),
+    url("../../img/cp_badlands01.jpg");
   background-size: cover;
-  background-position: center
+  background-position: center;
 }
 
 // Header
@@ -204,42 +205,42 @@ b {
 }
 
 .text-light.form-control::placeholder {
-  color: rgba(255, 255, 255, .9);
+  color: rgba(255, 255, 255, 0.9);
 }
 
 // React select https://github.com/JedWatson/react-select/issues/2345#issuecomment-843674624
 :root {
-	--bs-select-padding-y: #{$form-select-padding-y}; //
-	--bs-select-padding-x: #{$form-select-padding-x}; //
-	--bs-select-font-size: #{$form-select-font-size}; //
-	--bs-select-indicator-padding: #{$form-select-indicator-padding};
-	--bs-select-font-weight: #{$form-select-font-weight}; //
-	--bs-select-line-height: #{$form-select-line-height}; //
-	--bs-select-color: #{$form-select-color}; //
-	--bs-select-bg: #{$form-select-bg}; //
-	--bs-select-disabled-color: #{$form-select-disabled-color};
-	--bs-select-disabled-bg: #{$form-select-disabled-bg};
-	--bs-select-disabled-border-color: #{$form-select-disabled-border-color};
-	--bs-select-bg-position: #{$form-select-bg-position};
-	--bs-select-bg-size: #{$form-select-bg-size};
-	--bs-select-indicator: #{escape-svg($form-select-indicator)};
-	--bs-select-feedback-icon-padding-end: #{$form-select-feedback-icon-padding-end};
-	--bs-select-feedback-icon-position: #{$form-select-feedback-icon-position};
-	--bs-select-feedback-icon-size: #{$form-select-feedback-icon-size};
-	--bs-select-border-width: #{$form-select-border-width}; //
-	--bs-select-border-color: #{$form-select-border-color}; //
-	--bs-select-focus-border-color: #{$form-select-focus-border-color}; //
-	--bs-select-padding-y-sm: #{$form-select-padding-y-sm};
-	--bs-select-padding-x-sm: #{$form-select-padding-x-sm};
-	--bs-select-font-size-sm: #{$form-select-font-size-sm};
-	--bs-select-padding-y-lg: #{$form-select-padding-y-lg};
-	--bs-select-padding-x-lg: #{$form-select-padding-x-lg};
-	--bs-select-font-size-lg: #{$form-select-font-size-lg};
-	@if $enable-rounded {
-		--bs-select-border-radius: #{$form-select-border-radius}; //
-	} @else {
-		--bs-select-border-radius: 0; //
-	}
+  --bs-select-padding-y: #{$form-select-padding-y}; //
+  --bs-select-padding-x: #{$form-select-padding-x}; //
+  --bs-select-font-size: #{$form-select-font-size}; //
+  --bs-select-indicator-padding: #{$form-select-indicator-padding};
+  --bs-select-font-weight: #{$form-select-font-weight}; //
+  --bs-select-line-height: #{$form-select-line-height}; //
+  --bs-select-color: #{$form-select-color}; //
+  --bs-select-bg: #{$form-select-bg}; //
+  --bs-select-disabled-color: #{$form-select-disabled-color};
+  --bs-select-disabled-bg: #{$form-select-disabled-bg};
+  --bs-select-disabled-border-color: #{$form-select-disabled-border-color};
+  --bs-select-bg-position: #{$form-select-bg-position};
+  --bs-select-bg-size: #{$form-select-bg-size};
+  --bs-select-indicator: #{escape-svg($form-select-indicator)};
+  --bs-select-feedback-icon-padding-end: #{$form-select-feedback-icon-padding-end};
+  --bs-select-feedback-icon-position: #{$form-select-feedback-icon-position};
+  --bs-select-feedback-icon-size: #{$form-select-feedback-icon-size};
+  --bs-select-border-width: #{$form-select-border-width}; //
+  --bs-select-border-color: #{$form-select-border-color}; //
+  --bs-select-focus-border-color: #{$form-select-focus-border-color}; //
+  --bs-select-padding-y-sm: #{$form-select-padding-y-sm};
+  --bs-select-padding-x-sm: #{$form-select-padding-x-sm};
+  --bs-select-font-size-sm: #{$form-select-font-size-sm};
+  --bs-select-padding-y-lg: #{$form-select-padding-y-lg};
+  --bs-select-padding-x-lg: #{$form-select-padding-x-lg};
+  --bs-select-font-size-lg: #{$form-select-font-size-lg};
+  @if $enable-rounded {
+    --bs-select-border-radius: #{$form-select-border-radius}; //
+  } @else {
+    --bs-select-border-radius: 0; //
+  }
 }
 
 // Download links
@@ -262,11 +263,11 @@ a.download-link.disabled {
   margin-right: 0.5rem;
 }
 
-#launch-options>* {
+#launch-options > * {
   float: left;
 }
 
-#launch-options>.fas {
+#launch-options > .fas {
   margin-top: 5px;
   margin-right: 5px;
 }
@@ -325,7 +326,7 @@ a.download-link.disabled {
   margin-bottom: 2rem;
 }
 
-.addons-list-community>.row {
+.addons-list-community > .row {
   display: flex;
   flex-wrap: nowrap;
   overflow-x: auto;
@@ -333,7 +334,7 @@ a.download-link.disabled {
   min-height: 30vh;
 }
 
-.addons-list-community>.row>.col-4 {
+.addons-list-community > .row > .col-4 {
   flex: 0 0 auto;
 }
 
@@ -383,7 +384,7 @@ a.addon-card:hover {
 // Item selection
 .crosshair-preview {
   aspect-ratio: 16 / 9;
-  background: url('/img/app/crosshairs/crosspreview.jpg');
+  background: url("/img/app/crosshairs/crosspreview.jpg");
   background-size: cover;
   background-position: center;
   justify-content: center;
@@ -555,6 +556,6 @@ a.addon-card:hover {
   color: white;
 }
 
-#root .simple-keyboard.custom-kb-theme+.simple-keyboard-preview {
+#root .simple-keyboard.custom-kb-theme + .simple-keyboard-preview {
   background: #009688;
 }

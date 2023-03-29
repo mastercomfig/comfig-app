@@ -18,10 +18,10 @@ $dark: rgb(33, 37, 41);
 $input-focus-border-color: tint-color($primary, 50%);
 
 // Form
-$input-padding-y: .375rem;
-$input-padding-x: .5rem;
-$input-padding-y-sm: .25rem;
-$input-padding-x-sm: .25rem;
+$input-padding-y: 0.375rem;
+$input-padding-x: 0.5rem;
+$input-padding-y-sm: 0.25rem;
+$input-padding-x-sm: 0.25rem;
 $input-border-color: rgb(108, 117, 125);
 // Form Select
 $form-select-indicator-color: $light;
@@ -37,13 +37,14 @@ $alert-border-radius: 0; // work around 5.2 bug
 
 // 3. Include remainder of required Bootstrap stylesheets
 @import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/variables-dark";
 
 // 4. Include any default map overrides here
 // Create your own map
 $custom-colors: (
   "teal": $teal,
   "gray": $gray-600,
-  "backdrop": $backdrop
+  "backdrop": $backdrop,
 );
 
 // Merge the maps
@@ -72,7 +73,6 @@ $form-select-border-width: 1px;
 $form-select-border-radius: $input-border-radius;
 $form-select-border-radius-sm: $input-border-radius-sm;
 $form-select-border-radius-lg: $input-border-radius-lg;
-
 
 // 5. Include remainder of required parts
 @import "~bootstrap/scss/maps";
@@ -123,4 +123,3 @@ $form-select-border-radius-lg: $input-border-radius-lg;
 $web-font-path: "";
 
 @import "./materia";
-

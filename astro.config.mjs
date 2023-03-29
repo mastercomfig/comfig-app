@@ -1,4 +1,4 @@
-import { defineConfig } from 'astro/config';
+import { defineConfig } from "astro/config";
 import crypto from "crypto";
 import fs from "fs";
 import url from "url";
@@ -124,9 +124,7 @@ let pwa = {
 // https://astro.build/config
 export default defineConfig({
   site: "https://mastercomfig.com",
-  integrations: [
-    react(),
-  ],
+  integrations: [react()],
   vite: {
     resolve: {
       alias: {
