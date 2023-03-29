@@ -68,11 +68,7 @@ const npmVersion = process.env.npm_package_version;
           e.src = "//browser-update.org/update.min.js";
           document.body.appendChild(e);
         }
-        try {
-          document.addEventListener("DOMContentLoaded", $buo_f, false);
-        } catch (e) {
-          window.attachEvent("onload", $buo_f);
-        }
+        document.addEventListener("DOMContentLoaded", $buo_f, false);
       </script>
 
       <script define:vars={{ npmVersion }}>
