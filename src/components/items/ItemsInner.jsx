@@ -1,20 +1,21 @@
-import { useMemo, useState, useEffect } from 'react';
-import { Button, Tab, Row, Col, Nav, FormCheck, Form } from 'react-bootstrap';
-import useItemStore from '../../store/items';
-import ItemsSelector from './ItemsSelector';
-import pkg from 'react-color/lib/Chrome';
+import { useMemo, useState, useEffect } from "react";
+import { Button, Tab, Row, Col, Nav, FormCheck, Form } from "react-bootstrap";
+import useItemStore from "@store/items";
+import ItemsSelector from "./ItemsSelector";
+import pkg from "react-color/lib/Chrome";
 const ChromePicker = pkg.default ?? pkg;
 
-const dataUrl = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAMUlEQVQ4T2NkYGAQYcAP3uCTZhw1gGGYhAGBZIA/nYDCgBDAm9BGDWAAJyRCgLaBCAAgXwixzAS0pgAAAABJRU5ErkJggg==";
+const dataUrl =
+  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAMUlEQVQ4T2NkYGAQYcAP3uCTZhw1gGGYhAGBZIA/nYDCgBDAm9BGDWAAJyRCgLaBCAAgXwixzAS0pgAAAABJRU5ErkJggg==";
 
 export class ServerCanvas {
-    constructor() {
-        this.toDataURL = () => dataUrl;
-        this.getContext = () => ({
-            fillRect: () => {},
-            translate: () => {}
-        });
-    }
+  constructor() {
+    this.toDataURL = () => dataUrl;
+    this.getContext = () => ({
+      fillRect: () => {},
+      translate: () => {},
+    });
+  }
 }
 
 function calculateItemSlots(playerClass, items) {
@@ -58,11 +59,12 @@ function calculateItemSlots(playerClass, items) {
 
 function calculateCrosshairs(items) {
   let crosshairs = {};
-  let crosshairPreviews = {"Valve.default.default": null};
+  let crosshairPreviews = { "Valve.default.default": null };
   let itemClasses = Object.values(items);
-  let isDefault = itemClasses.length === 1 && itemClasses[0].classname === "default";
+  let isDefault =
+    itemClasses.length === 1 && itemClasses[0].classname === "default";
   if (isDefault) {
-    crosshairs = {"Valve.default.default": "Default"};
+    crosshairs = { "Valve.default.default": "Default" };
   }
 
   for (const packGroup of Object.keys(crosshairPackGroups)) {
@@ -82,7 +84,7 @@ function calculateCrosshairs(items) {
   let defaultCrosshairs = {};
 
   if (isDefault) {
-    defaultCrosshairs = {default: "Valve.default.default"};
+    defaultCrosshairs = { default: "Valve.default.default" };
   } else {
     for (const item of itemClasses) {
       if (!item.TextureData) {
@@ -90,7 +92,9 @@ function calculateCrosshairs(items) {
       }
       let crosshair = item.TextureData.crosshair;
       const crosshairKey = `_${crosshair.x}_${crosshair.y}`;
-      defaultCrosshairs[item.classname] = `Valve.${crosshair.file}.${crosshairKey}`;
+      defaultCrosshairs[
+        item.classname
+      ] = `Valve.${crosshair.file}.${crosshairKey}`;
     }
   }
 
@@ -98,10 +102,15 @@ function calculateCrosshairs(items) {
 }
 
 export default function ItemsInner({ playerClass, items }) {
+  let [slots, slotNames, firstKey] = useMemo(
+    () => calculateItemSlots(playerClass, items),
+    [playerClass, items]
+  );
 
-  let [slots, slotNames, firstKey] = useMemo(() => calculateItemSlots(playerClass, items), [playerClass, items]);
-
-  let [crosshairs, defaultCrosshairs, crosshairPreviews] = useMemo(() => calculateCrosshairs(items), []);
+  let [crosshairs, defaultCrosshairs, crosshairPreviews] = useMemo(
+    () => calculateCrosshairs(items),
+    []
+  );
 
   let [itemStore, setItemStore] = useState({});
 
@@ -111,14 +120,16 @@ export default function ItemsInner({ playerClass, items }) {
     if (useItemStore.persist.hasHydrated()) {
       setItemStore(useItemStore.getState());
     } else {
-      unsubFinishHydration = useItemStore.persist.onFinishHydration((state) => setItemStore(state));
+      unsubFinishHydration = useItemStore.persist.onFinishHydration((state) =>
+        setItemStore(state)
+      );
     }
 
     return () => {
       if (unsubFinishHydration) {
         unsubFinishHydration();
       }
-    }
+    };
   }, []);
 
   const itemClasses = Object.values(items);
@@ -134,7 +145,8 @@ export default function ItemsInner({ playerClass, items }) {
   const [liveCrosshairColor, setLiveCrosshairColor] = useState(undefined);
   const [liveCrosshairScale, setLiveCrosshairScale] = useState(undefined);
 
-  const currentCrosshairColor = liveCrosshairColor ?? selectedCrosshairColor ?? {r: 200, g: 200, b: 200, a: 0.784};
+  const currentCrosshairColor = liveCrosshairColor ??
+    selectedCrosshairColor ?? { r: 200, g: 200, b: 200, a: 0.784 };
   const defaultCrosshairScale = selectedCrosshairScale ?? 32;
   const currentCrosshairScale = liveCrosshairScale ?? defaultCrosshairScale;
 
@@ -153,23 +165,21 @@ export default function ItemsInner({ playerClass, items }) {
     delTracer,
     setExplosionEffect,
     delExplosionEffect,
-  ] = useItemStore(
-    (state) => 
-    [
-      state.setCrosshair,
-      state.delCrosshair,
-      state.setCrosshairColor,
-      state.delCrosshairColor,
-      state.setCrosshairScale,
-      state.delCrosshairScale,
-      state.setMuzzleFlash,
-      state.delMuzzleFlash,
-      state.setBrassModel,
-      state.delBrassModel,
-      state.setTracer,
-      state.delTracer,
-      state.setExplosionEffect,
-      state.delExplosionEffect,
+  ] = useItemStore((state) => [
+    state.setCrosshair,
+    state.delCrosshair,
+    state.setCrosshairColor,
+    state.delCrosshairColor,
+    state.setCrosshairScale,
+    state.delCrosshairScale,
+    state.setMuzzleFlash,
+    state.delMuzzleFlash,
+    state.setBrassModel,
+    state.delBrassModel,
+    state.setTracer,
+    state.delTracer,
+    state.setExplosionEffect,
+    state.delExplosionEffect,
   ]);
 
   return (
@@ -177,126 +187,223 @@ export default function ItemsInner({ playerClass, items }) {
       <Row>
         <Col sm={3} className={`bg-dark py-2 ${slots[""] ? "d-none" : ""}`}>
           <Nav variant="pills" className="flex-column">
-            {slotNames.map(slot => <div key={`${playerClass}-${slot}-nav`}>
-              {slot && <><Nav.Item className="pt-2"><small className="fw-semibold">{slot.toUpperCase()}</small></Nav.Item>
-              <hr></hr></>}
-              {slots[slot].map(item => {
-                const itemName = getItemName(item);
-                return (
-                  <Nav.Item key={`${playerClass}-${item.classname}-item`}>
-                    <Nav.Link type="button" eventKey={`${playerClass}-${item.classname}`}>{itemName}</Nav.Link>
-                  </Nav.Item>
-                )
-              })}
-            </div>)}
+            {slotNames.map((slot) => (
+              <div key={`${playerClass}-${slot}-nav`}>
+                {slot && (
+                  <>
+                    <Nav.Item className="pt-2">
+                      <small className="fw-semibold">
+                        {slot.toUpperCase()}
+                      </small>
+                    </Nav.Item>
+                    <hr />
+                  </>
+                )}
+                {slots[slot].map((item) => {
+                  const itemName = getItemName(item);
+                  return (
+                    <Nav.Item key={`${playerClass}-${item.classname}-item`}>
+                      <Nav.Link
+                        type="button"
+                        eventKey={`${playerClass}-${item.classname}`}
+                      >
+                        {itemName}
+                      </Nav.Link>
+                    </Nav.Item>
+                  );
+                })}
+              </div>
+            ))}
           </Nav>
         </Col>
         <Col sm={9}>
           <Tab.Content>
-            {slotNames.map(slot =>
-                slots[slot].map(item =>
-                  <Tab.Pane key={`${playerClass}-${item.classname}-pane`} eventKey={`${playerClass}-${item.classname}`}>
-                    <div className="container py-4">
-                      <h3>Crosshairs</h3>
-                      {selectedCrosshairs 
-                      && (<ItemsSelector
-                          playerClass={playerClass}
-                          selection={selectedCrosshairs?.[item.classname]}
-                          options={crosshairs}
-                          defaultValue={defaultCrosshairs[item.classname]}
-                          classname={item.classname}
-                          delItem={delCrosshair}
-                          setItem={setCrosshair}
-                          isDefaultWeapon={itemClasses[0].classname === "default"}
-                          type="crosshair"
-                          previewPath="/img/app/crosshairs/preview/"
-                          previews={crosshairPreviews}
-                          previewClass="crosshair-preview d-flex"
-                          previewImgClass="crosshair-preview-img"
-                          useAdvancedSelect={true}
-                          groups={crosshairPackGroups}
+            {slotNames.map((slot) =>
+              slots[slot].map((item) => (
+                <Tab.Pane
+                  key={`${playerClass}-${item.classname}-pane`}
+                  eventKey={`${playerClass}-${item.classname}`}
+                >
+                  <div className="container py-4">
+                    <h3>Crosshairs</h3>
+                    {selectedCrosshairs && (
+                      <ItemsSelector
+                        playerClass={playerClass}
+                        selection={selectedCrosshairs?.[item.classname]}
+                        options={crosshairs}
+                        defaultValue={defaultCrosshairs[item.classname]}
+                        classname={item.classname}
+                        delItem={delCrosshair}
+                        setItem={setCrosshair}
+                        isDefaultWeapon={itemClasses[0].classname === "default"}
+                        type="crosshair"
+                        previewPath="/img/app/crosshairs/preview/"
+                        previews={crosshairPreviews}
+                        previewClass="crosshair-preview d-flex"
+                        previewImgClass="crosshair-preview-img"
+                        useAdvancedSelect={true}
+                        groups={crosshairPackGroups}
                       >
                         <h4 className="pt-2 mb-0">Crosshair Settings</h4>
-                        <h6 className="mb-2"><strong><small>{(itemClasses[0].classname === "default" || playerClass === "All-Class") ? "ALL CLASSES" : "PER CLASS"}</small></strong></h6>
+                        <h6 className="mb-2">
+                          <strong>
+                            <small>
+                              {itemClasses[0].classname === "default" ||
+                              playerClass === "All-Class"
+                                ? "ALL CLASSES"
+                                : "PER CLASS"}
+                            </small>
+                          </strong>
+                        </h6>
                         <h6>Crosshair Scale: {currentCrosshairScale}</h6>
-                        <Form.Range defaultValue={defaultCrosshairScale} min="16" max="64" step="1" onChange={(e) => setLiveCrosshairScale(e.target.value)} onBlur={(e) => {
-                          setCrosshairScale(playerClass === "All-Class" ? "default" : playerClass, e.target.value);
-                        }}/>
+                        <Form.Range
+                          defaultValue={defaultCrosshairScale}
+                          min="16"
+                          max="64"
+                          step="1"
+                          onChange={(e) =>
+                            setLiveCrosshairScale(e.target.value)
+                          }
+                          onBlur={(e) => {
+                            setCrosshairScale(
+                              playerClass === "All-Class"
+                                ? "default"
+                                : playerClass,
+                              e.target.value
+                            );
+                          }}
+                        />
                         <h6>Crosshair Color</h6>
                         <ChromePicker
                           className="w-100"
-                          renderers={{canvas: ServerCanvas}}
+                          renderers={{ canvas: ServerCanvas }}
                           color={currentCrosshairColor}
                           onChange={(color) => {
                             setLiveCrosshairColor(color.rgb);
                           }}
                           onChangeComplete={(color) => {
-                            setCrosshairColor(playerClass === "All-Class" ? "default" : playerClass, color.rgb);
+                            setCrosshairColor(
+                              playerClass === "All-Class"
+                                ? "default"
+                                : playerClass,
+                              color.rgb
+                            );
                           }}
                         />
-                        <Button className="w-100" variant="danger" size="sm" onClick={() => {
-                          delCrosshairColor(playerClass === "All-Class" ? "default" : playerClass);
-                          setLiveCrosshairColor({r: 200, g: 200, b: 200, a: 0.784});
-                        }}><span className="fa fa-undo fa-fw"></span> <strong>RESET COLOR</strong></Button>
-                      </ItemsSelector>)}
-                      {(item.MuzzleFlashParticleEffect && !skipMuzzleFlash.has(item.classname) || item.BrassModel || item.TracerEffect && !skipTracer.has(item.classname)) && <h3 className="pt-4">Firing Effects</h3>}
-                      {item.MuzzleFlashParticleEffect && selectedMuzzleFlashes && !skipMuzzleFlash.has(item.classname) && (
-                        <FormCheck type="switch" label="Muzzle Flash" defaultChecked={!selectedMuzzleFlashes.has(item.classname)} onChange={((e) => {
-                          let check = e.target.checked;
-                          if (!check) {
-                            setMuzzleFlash(item.classname);
-                          } else {
-                            delMuzzleFlash(item.classname);
+                        <Button
+                          className="w-100"
+                          variant="danger"
+                          size="sm"
+                          onClick={() => {
+                            delCrosshairColor(
+                              playerClass === "All-Class"
+                                ? "default"
+                                : playerClass
+                            );
+                            setLiveCrosshairColor({
+                              r: 200,
+                              g: 200,
+                              b: 200,
+                              a: 0.784,
+                            });
+                          }}
+                        >
+                          <span className="fa fa-undo fa-fw"></span>{" "}
+                          <strong>RESET COLOR</strong>
+                        </Button>
+                      </ItemsSelector>
+                    )}
+                    {((item.MuzzleFlashParticleEffect &&
+                      !skipMuzzleFlash.has(item.classname)) ||
+                      item.BrassModel ||
+                      (item.TracerEffect &&
+                        !skipTracer.has(item.classname))) && (
+                      <h3 className="pt-4">Firing Effects</h3>
+                    )}
+                    {item.MuzzleFlashParticleEffect &&
+                      selectedMuzzleFlashes &&
+                      !skipMuzzleFlash.has(item.classname) && (
+                        <FormCheck
+                          type="switch"
+                          label="Muzzle Flash"
+                          defaultChecked={
+                            !selectedMuzzleFlashes.has(item.classname)
                           }
-                        })}></FormCheck>
+                          onChange={(e) => {
+                            let check = e.target.checked;
+                            if (!check) {
+                              setMuzzleFlash(item.classname);
+                            } else {
+                              delMuzzleFlash(item.classname);
+                            }
+                          }}
+                        ></FormCheck>
                       )}
-                      {item.BrassModel && selectedBrassModels && (
-                        <FormCheck type="switch" label="Shell Ejection" defaultChecked={!selectedBrassModels.has(item.classname)} onChange={((e) => {
+                    {item.BrassModel && selectedBrassModels && (
+                      <FormCheck
+                        type="switch"
+                        label="Shell Ejection"
+                        defaultChecked={
+                          !selectedBrassModels.has(item.classname)
+                        }
+                        onChange={(e) => {
                           let check = e.target.checked;
                           if (!check) {
                             setBrassModel(item.classname);
                           } else {
                             delBrassModel(item.classname);
                           }
-                        })}></FormCheck>
+                        }}
+                      ></FormCheck>
+                    )}
+                    {item.TracerEffect &&
+                      selectedTracers &&
+                      !skipTracer.has(item.classname) && (
+                        <FormCheck
+                          type="switch"
+                          label="Tracer"
+                          defaultChecked={!selectedTracers.has(item.classname)}
+                          onChange={(e) => {
+                            let check = e.target.checked;
+                            if (!check) {
+                              setTracer(item.classname);
+                            } else {
+                              delTracer(item.classname);
+                            }
+                          }}
+                        ></FormCheck>
                       )}
-                      {item.TracerEffect && selectedTracers && !skipTracer.has(item.classname) && (
-                        <FormCheck type="switch" label="Tracer" defaultChecked={!selectedTracers.has(item.classname)} onChange={((e) => {
-                          let check = e.target.checked;
-                          if (!check) {
-                            setTracer(item.classname);
-                          } else {
-                            delTracer(item.classname);
-                          }
-                        })}></FormCheck>
-                      )}
-                      {item.ExplosionEffect && !skipExplosionEffect.has(item.classname) && (
+                    {item.ExplosionEffect &&
+                      !skipExplosionEffect.has(item.classname) && (
                         <>
                           <h3 className="pt-4">Explosion Effect</h3>
-                          {selectedExplosion 
-                            && (<ItemsSelector
-                                playerClass={playerClass}
-                                selection={selectedExplosion?.[item.classname]}
-                                options={explosionEffects}
-                                defaultValue="default"
-                                classname={item.classname}
-                                delItem={delExplosionEffect}
-                                setItem={setExplosionEffect}
-                                isDefaultWeapon={itemClasses[0].classname === "default"}
-                                type="explosion"
-                                previewPath="/img/app/explosions/"
-                                previews={explosionPreviews}
-                                previewImgClass="explosion-preview-img"
-                            />)}
+                          {selectedExplosion && (
+                            <ItemsSelector
+                              playerClass={playerClass}
+                              selection={selectedExplosion?.[item.classname]}
+                              options={explosionEffects}
+                              defaultValue="default"
+                              classname={item.classname}
+                              delItem={delExplosionEffect}
+                              setItem={setExplosionEffect}
+                              isDefaultWeapon={
+                                itemClasses[0].classname === "default"
+                              }
+                              type="explosion"
+                              previewPath="/img/app/explosions/"
+                              previews={explosionPreviews}
+                              previewImgClass="explosion-preview-img"
+                            />
+                          )}
                         </>
                       )}
-                    </div>
-                  </Tab.Pane>
-                )
+                  </div>
+                </Tab.Pane>
+              ))
             )}
           </Tab.Content>
         </Col>
       </Row>
     </Tab.Container>
-  )
+  );
 }

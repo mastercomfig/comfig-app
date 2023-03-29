@@ -4,22 +4,22 @@ on:
   workflow_dispatch:
     inputs:
       reason:
-        description: 'Change reason'
+        description: "Change reason"
         required: true
         type: string
-        default: 'bump comfig web'
+        default: "bump comfig web"
 
 jobs:
   bump:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-      with:
-        token: ${{ secrets.REPO_TOKEN }}
-        fetch-depth: 0
-    - name: Commit bump
-      run: |
-        git config user.email "support@mastercomfig.com"
-        git config user.name "mastercoms"
-        git commit --allow-empty -m "web data update: ${{ github.event.inputs.reason }}"
-        git push
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.REPO_TOKEN }}
+          fetch-depth: 0
+      - name: Commit bump
+        run: |
+          git config user.email "support@mastercomfig.com"
+          git config user.name "mastercoms"
+          git commit --allow-empty -m "web data update: ${{ github.event.inputs.reason }}"
+          git push

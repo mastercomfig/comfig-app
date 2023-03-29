@@ -9,8 +9,8 @@ import { BlobReader, BlobWriter, ZipWriter } from "@zip.js/zip.js";
 let idbKeyval = {
   get,
   set,
-  del
-}
+  del,
+};
 
 async function app() {
   let downloadStatusEl = document.getElementById("download-status");
@@ -18,25 +18,29 @@ async function app() {
     downloadStatusEl.innerHTML = "";
   }
 
-  let dfirebase = import("firebase/compat/app").then(async (firebase) => {
-    await import("firebase/compat/auth");
-    await import("firebase/compat/firestore");
-    return firebase.default;
-  }).then((firebase) => {
-    const firebaseConfig = {
-      apiKey: "AIzaSyBKDPeOgq97k5whdxL_Z94ak9jSfdjXU4E",
-      authDomain: "mastercomfig-app.firebaseapp.com",
-      projectId: "mastercomfig-app",
-      storageBucket: "mastercomfig-app.appspot.com",
-      messagingSenderId: "1055009628964",
-      appId: "1:1055009628964:web:6ad7954859d843050d49b1",
-      measurementId: "G-S0F8JT6ZQE",
-    };
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    return firebase;
-  });
-  let dkeyboard = import("simple-keyboard/build/index.modern.js").then((Keyboard) => Keyboard.default);
+  let dfirebase = import("firebase/compat/app")
+    .then(async (firebase) => {
+      await import("firebase/compat/auth");
+      await import("firebase/compat/firestore");
+      return firebase.default;
+    })
+    .then((firebase) => {
+      const firebaseConfig = {
+        apiKey: "AIzaSyBKDPeOgq97k5whdxL_Z94ak9jSfdjXU4E",
+        authDomain: "mastercomfig-app.firebaseapp.com",
+        projectId: "mastercomfig-app",
+        storageBucket: "mastercomfig-app.appspot.com",
+        messagingSenderId: "1055009628964",
+        appId: "1:1055009628964:web:6ad7954859d843050d49b1",
+        measurementId: "G-S0F8JT6ZQE",
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      return firebase;
+    });
+  let dkeyboard = import("simple-keyboard/build/index.modern.js").then(
+    (Keyboard) => Keyboard.default
+  );
 
   const logLevelToSentrySeverity = {
     warn: "warning",
@@ -208,7 +212,7 @@ async function app() {
     "very-low": {
       name: "Very Low",
       description:
-        "<h4>Negatively affects playability by <strong>a lot</strong> and disables very essential features like HUD elements in desperation for performance.</h4>Not recommended unless the game has such low performance that it is more of a hinderance than not having HUD elements and good player visibility.<br><strong>BY DOWNLOADING THIS PRESET YOU UNDERSTAND THAT IT <em>REMOVES HUD ELEMENTS AND REDUCES VISIBILITY</em>. IF YOU DON'T WANT THIS <em>USE LOW</em>, THAT'S THE <em>ONLY</em> DIFFERENCE.</strong><br>",
+        "<h4>Negatively affects playability by <strong>a lot</strong> and disables very essential features like HUD elements in desperation for performance.</h4>Not recommended unless the game has such low performance that it is more of a hinderance than not having HUD elements and good player visibility.<br/><strong>BY DOWNLOADING THIS PRESET YOU UNDERSTAND THAT IT <em>REMOVES HUD ELEMENTS AND REDUCES VISIBILITY</em>. IF YOU DON'T WANT THIS <em>USE LOW</em>, THAT'S THE <em>ONLY</em> DIFFERENCE.</strong><br/>",
     },
   };
 
@@ -505,7 +509,9 @@ async function app() {
     let downloadFailures = [];
     if (customDirectory) {
       try {
-        await Promise.all(urls.map((url) => url.blob.catch(() => downloadFailures.push(url))));
+        await Promise.all(
+          urls.map((url) => url.blob.catch(() => downloadFailures.push(url)))
+        );
         if (downloadFailures.length) {
           throw new Error("Download failures detected");
         } else {
@@ -513,19 +519,31 @@ async function app() {
         }
       } catch (err) {
         console.error(err);
-        updateDownloadProgress(0, (downloadFailures.length > 3 ? `Failed to download ${downloadFailures.length} files` : `Failed to download ${downloadFailures.map((url) => url.name).join(", ")}`) + ". Please try again later.");
+        updateDownloadProgress(
+          0,
+          (downloadFailures.length > 3
+            ? `Failed to download ${downloadFailures.length} files`
+            : `Failed to download ${downloadFailures
+                .map((url) => url.name)
+                .join(", ")}`) + ". Please try again later."
+        );
       }
     } else {
       try {
-        let zipWriter = new ZipWriter(new BlobWriter("application/zip"), { bufferedWrite: true });
+        let zipWriter = new ZipWriter(new BlobWriter("application/zip"), {
+          bufferedWrite: true,
+        });
         let wroteFile = false;
-        await Promise.all(urls.map((url) => Promise.resolve(url.blob)
-          .then((blob) => {
-            zipWriter.add(url.path, new BlobReader(blob));
-            wroteFile = true;
-          })
-          .catch(() => downloadFailures.push(url))
-        ));
+        await Promise.all(
+          urls.map((url) =>
+            Promise.resolve(url.blob)
+              .then((blob) => {
+                zipWriter.add(url.path, new BlobReader(blob));
+                wroteFile = true;
+              })
+              .catch(() => downloadFailures.push(url))
+          )
+        );
         if (wroteFile) {
           const blobURL = URL.createObjectURL(await zipWriter.close());
           zipWriter = null;
@@ -550,7 +568,14 @@ async function app() {
         }
       } catch (err) {
         console.error(err);
-        updateDownloadProgress(0, (downloadFailures.length > 3 ? `Failed to download ${downloadFailures.length} files` : `Failed to download ${downloadFailures.map((url) => url.name).join(", ")}`) + ". Please try again later.");
+        updateDownloadProgress(
+          0,
+          (downloadFailures.length > 3
+            ? `Failed to download ${downloadFailures.length} files`
+            : `Failed to download ${downloadFailures
+                .map((url) => url.name)
+                .join(", ")}`) + ". Please try again later."
+        );
       }
     }
     // We're done
@@ -608,7 +633,8 @@ async function app() {
     }
     getEl("game-folder-container").classList.remove("d-none");
     if (
-      !(await tryDBGet("hide-game-folder-warning")) && getEl("game-folder-warning")
+      !(await tryDBGet("hide-game-folder-warning")) &&
+      getEl("game-folder-warning")
     ) {
       getEl("game-folder-warning").classList.remove("d-none");
     }
@@ -644,13 +670,21 @@ async function app() {
       instructionEl.classList.remove("d-none");
     }
     if (
-      (await tryDBGet("hide-game-folder-warning")) && getEl("game-folder-warning")
+      (await tryDBGet("hide-game-folder-warning")) &&
+      getEl("game-folder-warning")
     ) {
       getEl("game-folder-warning").classList.add("d-none");
     }
   }
 
-  let bannedDirectories = new Set(["tf", "custom", "cfg", "user", "overrides", "app"]);
+  let bannedDirectories = new Set([
+    "tf",
+    "custom",
+    "cfg",
+    "user",
+    "overrides",
+    "app",
+  ]);
   let silentBannedDirectories = new Set([""]);
 
   function checkDirectory(directoryHandle) {
@@ -749,33 +783,43 @@ async function app() {
       customDirectory = await tfDirectory.getDirectoryHandle("custom", {
         create: true,
       });
-      comfigCustomDirectory = await customDirectory.getDirectoryHandle("comfig-custom", {
-        create: true,
-      });
-      scriptsDirectory = await comfigCustomDirectory.getDirectoryHandle("scripts", {
-        create: true,
-      });
-      const materialsRootDirectory = await comfigCustomDirectory.getDirectoryHandle("materials", {
-        create: true,
-      });
-      const vguiDirectory = await materialsRootDirectory.getDirectoryHandle("vgui", {
-        create: true,
-      });
-      const replayDirectory = await vguiDirectory.getDirectoryHandle("replay", {
-        create: true,
-      });
-      materialsDirectory = await replayDirectory.getDirectoryHandle("thumbnails", {
-        create: true,
-      });
-      const cfgDirectory = await tfDirectory.getDirectoryHandle("cfg", {
-        create: true,
-      });
-      overridesDirectory = await cfgDirectory.getDirectoryHandle(
-        "overrides",
+      comfigCustomDirectory = await customDirectory.getDirectoryHandle(
+        "comfig-custom",
         {
           create: true,
         }
       );
+      scriptsDirectory = await comfigCustomDirectory.getDirectoryHandle(
+        "scripts",
+        {
+          create: true,
+        }
+      );
+      const materialsRootDirectory =
+        await comfigCustomDirectory.getDirectoryHandle("materials", {
+          create: true,
+        });
+      const vguiDirectory = await materialsRootDirectory.getDirectoryHandle(
+        "vgui",
+        {
+          create: true,
+        }
+      );
+      const replayDirectory = await vguiDirectory.getDirectoryHandle("replay", {
+        create: true,
+      });
+      materialsDirectory = await replayDirectory.getDirectoryHandle(
+        "thumbnails",
+        {
+          create: true,
+        }
+      );
+      const cfgDirectory = await tfDirectory.getDirectoryHandle("cfg", {
+        create: true,
+      });
+      overridesDirectory = await cfgDirectory.getDirectoryHandle("overrides", {
+        create: true,
+      });
       appDirectory = await cfgDirectory.getDirectoryHandle("app", {
         create: true,
       });
@@ -791,8 +835,10 @@ async function app() {
 
   let unlinkErrHandler = {
     "could not be found": () => {},
-    "state had changed since it was read from disk": () => { filesInUse = true; },
-  }
+    "state had changed since it was read from disk": () => {
+      filesInUse = true;
+    },
+  };
 
   async function safeUnlink(name, directory) {
     try {
@@ -826,7 +872,9 @@ async function app() {
       return null;
     }
     if (directory) {
-      return getWritable(name, directory).then((writable) => writable.write(contents).then(() => writable.close()));
+      return getWritable(name, directory).then((writable) =>
+        writable.write(contents).then(() => writable.close())
+      );
     } else {
       const file = new File([contents], name, {
         type: "application/octet-stream",
@@ -852,7 +900,9 @@ async function app() {
       if (!triesLeft) {
         throw err;
       }
-      return wait(delay).then(() => fetchRetry(url, delay * 2, triesLeft, fetchOptions));
+      return wait(delay).then(() =>
+        fetchRetry(url, delay * 2, triesLeft, fetchOptions)
+      );
     }
     return fetch(url, fetchOptions).then(checkFetch).catch(onError);
   }
@@ -863,9 +913,9 @@ async function app() {
       let name = url.split("/").pop();
       if (directory) {
         const writable = await getWritable(name, directory, true);
-        return {name, blob: response.then((r) => r.body.pipeTo(writable))};
+        return { name, blob: response.then((r) => r.body.pipeTo(writable)) };
       }
-      return {name, blob: response.then((r) => r.blob())};
+      return { name, blob: response.then((r) => r.blob()) };
     } catch (err) {
       console.error(`Failed fetching ${url}`, err);
       return false;
@@ -881,7 +931,7 @@ async function app() {
 
   async function getVPKDownloadUrls() {
     // We need permissions for the directory
-    if (!await accessDirectory()) {
+    if (!(await accessDirectory())) {
       return [];
     }
     let downloads = [];
@@ -889,7 +939,7 @@ async function app() {
     updateDownloadProgress(0, "Generating files...");
     let presetUrl = getPresetUrl();
     if (customDirectory) {
-      console.log("Using Direct Install.")
+      console.log("Using Direct Install.");
       filesInUse = false;
       // Clear out all existing files
       let presetKeys = Object.keys(presets);
@@ -904,7 +954,9 @@ async function app() {
         await safeUnlink(addonFile + ".sound.cache", customDirectory);
       }
       if (filesInUse) {
-        alert("Files are in use. Please close TF2 before updating mastercomfig.");
+        alert(
+          "Files are in use. Please close TF2 before updating mastercomfig."
+        );
         return downloads;
       }
     } else {
@@ -927,7 +979,9 @@ async function app() {
         addonResult.path = `tf/custom/${addonResult.name}`;
         downloads.push(addonResult);
       } else {
-        alert(`Failed to download ${selection} addon file. Please try again later.`);
+        alert(
+          `Failed to download ${selection} addon file. Please try again later.`
+        );
       }
     }
     // Also handle customizations
@@ -1152,7 +1206,10 @@ async function app() {
       let bindingStr;
       // Should we quote arg, or raw arg?
       let isMultiCommand = binding.indexOf(";") !== -1;
-      if (typeof binding === "string" && (binding.indexOf(" ") !== -1 || isMultiCommand)) {
+      if (
+        typeof binding === "string" &&
+        (binding.indexOf(" ") !== -1 || isMultiCommand)
+      ) {
         // Handle multi-command binds
         if (isMultiCommand) {
           // If we have keydown commands, we need keydown/keyup aliases
@@ -1206,8 +1263,8 @@ async function app() {
         isObject: true,
       });
     } catch (err) {
-       console.error(err);
-       return null;
+      console.error(err);
+      return null;
     }
   }
 
@@ -1225,7 +1282,7 @@ async function app() {
       downloads.push({
         name: "modules.cfg",
         path: "tf/cfg/overrides/modules.cfg",
-        blob: modulesFile
+        blob: modulesFile,
       });
     } else if (overridesDirectory) {
       // TODO: we should instead read in the existing modules.cfg and set selections
@@ -1235,8 +1292,7 @@ async function app() {
         // Delete modules file if empty
         try {
           overridesDirectory.removeEntry("modules.cfg");
-        } catch (err) {
-        }
+        } catch (err) {}
       }
     }
     // Clear out old scripts directory
@@ -1252,7 +1308,7 @@ async function app() {
       }
     }
     if (globalThis.items) {
-      let {default: useItemStore} = await import("../store/items.js");
+      let { default: useItemStore } = await import("../store/items.js");
       const itemsState = useItemStore.getState();
       const crosshairs = itemsState.crosshairs;
       const crosshairColors = itemsState.crosshairColors;
@@ -1272,23 +1328,25 @@ async function app() {
       if (crosshairColorCount > 0) {
         function addColor(target, color) {
           configContents[target] += `cl_crosshair_red ${Math.round(color.r)};`;
-          configContents[target] += `cl_crosshair_green ${Math.round(color.g)};`;
+          configContents[target] += `cl_crosshair_green ${Math.round(
+            color.g
+          )};`;
           configContents[target] += `cl_crosshair_blue ${Math.round(color.b)};`;
-          configContents[target] += `cl_crosshairalpha ${Math.round((color.a ?? 1) * 255)}\n`;
+          configContents[target] += `cl_crosshairalpha ${Math.round(
+            (color.a ?? 1) * 255
+          )}\n`;
         }
         // If any color is set, we need to use color mode 5
         configContents["autoexec.cfg"] += "cl_crosshaircolor 5\n";
         let defaultColor = crosshairColors["default"];
         let defaultFile = "game_overrides.cfg";
         // If only specified a default color, use autoexec
-        if (crosshairColorCount == 1 && defaultColor)
-        {
+        if (crosshairColorCount == 1 && defaultColor) {
           defaultFile = "autoexec.cfg";
         }
-        defaultColor = defaultColor ?? {r: 200, g: 200, b: 200, a: 0.784};
+        defaultColor = defaultColor ?? { r: 200, g: 200, b: 200, a: 0.784 };
         addColor(defaultFile, defaultColor);
-        for (const playerClass of Object.keys(crosshairColors))
-        {
+        for (const playerClass of Object.keys(crosshairColors)) {
           if (playerClass == "default") {
             continue;
           }
@@ -1303,14 +1361,12 @@ async function app() {
         let defaultScale = crosshairScales["default"];
         let defaultFile = "game_overrides.cfg";
         // If only specified a default scale, use autoexec
-        if (crosshairScaleCount == 1 && defaultScale)
-        {
+        if (crosshairScaleCount == 1 && defaultScale) {
           defaultFile = "autoexec.cfg";
         }
         defaultScale = defaultScale ?? 32;
         addScale(defaultFile, defaultScale);
-        for (const playerClass of Object.keys(crosshairScales))
-        {
+        for (const playerClass of Object.keys(crosshairScales)) {
           if (playerClass == "default") {
             continue;
           }
@@ -1319,10 +1375,12 @@ async function app() {
       }
       // If there's weapon crosshairs, we need to clear a set crosshair file
       if (Object.keys(crosshairs).length > 0) {
-        configContents["autoexec.cfg"] += "cl_crosshair_file\"\"\n"
+        configContents["autoexec.cfg"] += 'cl_crosshair_file""\n';
       }
       if (crosshairs["default"]) {
-        let [crosshairGroup, crosshairFile, crosshairKey] = crosshairs["default"].split(".", 3);
+        let [crosshairGroup, crosshairFile, crosshairKey] = crosshairs[
+          "default"
+        ].split(".", 3);
         let crosshairPack = crosshairPacks[crosshairFile];
         let crosshairInfo = crosshairPack[crosshairKey] ?? crosshairPack;
         for (const classname of Object.keys(items)) {
@@ -1343,7 +1401,9 @@ async function app() {
       } else {
         for (const classname of Object.keys(crosshairs)) {
           let item = items[classname];
-          let [crosshairGroup, crosshairFile, crosshairKey] = crosshairs[classname].split(".", 3);
+          let [crosshairGroup, crosshairFile, crosshairKey] = crosshairs[
+            classname
+          ].split(".", 3);
           let itemCrosshair = item.TextureData.crosshair;
           let crosshairPack = crosshairPacks[crosshairFile];
           let crosshairInfo = crosshairPack[crosshairKey];
@@ -1367,7 +1427,7 @@ async function app() {
           }
           let item = items[classname];
           if (!item.MuzzleFlashParticleEffect) {
-            continue
+            continue;
           }
           item.MuzzleFlashParticleEffect = "";
           itemsToDownload.add(classname);
@@ -1453,8 +1513,8 @@ async function app() {
       }
       for (const classname of Array.from(itemsToDownload)) {
         let fileName = `${classname}.txt`;
-        let item = {WeaponData: items[classname]};
-        let contents = stringify(item, {pretty: true});
+        let item = { WeaponData: items[classname] };
+        let contents = stringify(item, { pretty: true });
         let file = newFile(contents, fileName, scriptsDirectory);
         if (!file) {
           continue;
@@ -1462,7 +1522,7 @@ async function app() {
         downloads.push({
           name: fileName,
           path: `tf/custom/comfig-custom/scripts/${fileName}`,
-          blob: file
+          blob: file,
         });
       }
       const crosshairExtensions = [".vtf", ".vmt"];
@@ -1495,7 +1555,7 @@ async function app() {
       downloads.push({
         name: "autoexec.cfg",
         path: "tf/cfg/app/autoexec.cfg",
-        blob: autoexecFile
+        blob: autoexecFile,
       });
     }
     for (const fileName of Object.keys(configContentsRaw)) {
@@ -1508,7 +1568,7 @@ async function app() {
         downloads.push({
           name: fileName,
           path: `tf/cfg/app/${fileName}`,
-          blob: file
+          blob: file,
         });
       }
     }
@@ -2770,7 +2830,7 @@ async function app() {
     "Toggle minimized viewmodels": "toggle tf_use_min_viewmodels",
     "Toggle Ready": "player_ready_toggle",
     Spray: "impulse 201",
-    "Take screenshot": "screenshot", 
+    "Take screenshot": "screenshot",
     "Save replay": "save_replay",
     "View/Accept alert": "cl_trigger_first_notification",
     "Remove/Decline alert": "cl_decline_first_notification",

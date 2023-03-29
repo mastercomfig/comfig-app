@@ -1,5 +1,5 @@
 import WaveSurfer from "wavesurfer.js";
-import { WaveFile } from 'wavefile';
+import { WaveFile } from "wavefile";
 
 // AAdapted from MS-ADPCM decoder
 // https://github.com/Snack-X/node-ms-adpcm
@@ -9,39 +9,41 @@ const LE = true;
 const BE = false;
 
 const ADAPTATION_TABLE = [
-  230, 230, 230, 230, 307, 409, 512, 614,
-  768, 614, 512, 409, 307, 230, 230, 230,
+  230, 230, 230, 230, 307, 409, 512, 614, 768, 614, 512, 409, 307, 230, 230,
+  230,
 ];
 
-
 function clamp(val, min, max) {
-  if(val < min) return min;
-  else if(val > max) return max;
+  if (val < min) return min;
+  else if (val > max) return max;
   else return val;
 }
 
 function expandNibble(nibble, state, channel) {
   const signed = 8 <= nibble ? nibble - 16 : nibble;
 
-  let predictor = ((
-    state.sample1[channel] * state.coeff1[channel] +
-    state.sample2[channel] * state.coeff2[channel]
-  ) >> 8) + (signed * state.delta[channel]);
+  let predictor =
+    ((state.sample1[channel] * state.coeff1[channel] +
+      state.sample2[channel] * state.coeff2[channel]) >>
+      8) +
+    signed * state.delta[channel];
 
   predictor = clamp(predictor, -0x8000, 0x7fff);
 
   state.sample2[channel] = state.sample1[channel];
   state.sample1[channel] = predictor;
 
-  state.delta[channel] = Math.floor(ADAPTATION_TABLE[nibble] * state.delta[channel] / 256);
-  if(state.delta[channel] < 16) state.delta[channel] = 16;
+  state.delta[channel] = Math.floor(
+    (ADAPTATION_TABLE[nibble] * state.delta[channel]) / 256
+  );
+  if (state.delta[channel] < 16) state.delta[channel] = 16;
 
   return predictor;
 }
 
 function decodeMsAdpcmBlock(buf, channels, coefficient1, coefficient2) {
   const state = {
-    coefficient: [ coefficient1, coefficient2 ],
+    coefficient: [coefficient1, coefficient2],
     coeff1: [],
     coeff2: [],
     delta: [],
@@ -52,7 +54,7 @@ function decodeMsAdpcmBlock(buf, channels, coefficient1, coefficient2) {
   let offset = 0;
 
   // Read MS-ADPCM header
-  for(let i = 0 ; i < channels ; i++) {
+  for (let i = 0; i < channels; i++) {
     const predictor = clamp(buf.getUint8(offset, LE), 0, 6);
     offset += 1;
 
@@ -60,15 +62,24 @@ function decodeMsAdpcmBlock(buf, channels, coefficient1, coefficient2) {
     state.coeff2[i] = state.coefficient[1][predictor];
   }
 
-  for (let i = 0 ; i < channels ; i++) { state.delta.push(buf.getInt16(offset, LE)); offset += 2; }
-  for (let i = 0 ; i < channels ; i++) { state.sample1.push(buf.getInt16(offset, LE)); offset += 2; }
-  for (let i = 0 ; i < channels ; i++) { state.sample2.push(buf.getInt16(offset, LE)); offset += 2; }
+  for (let i = 0; i < channels; i++) {
+    state.delta.push(buf.getInt16(offset, LE));
+    offset += 2;
+  }
+  for (let i = 0; i < channels; i++) {
+    state.sample1.push(buf.getInt16(offset, LE));
+    offset += 2;
+  }
+  for (let i = 0; i < channels; i++) {
+    state.sample2.push(buf.getInt16(offset, LE));
+    offset += 2;
+  }
 
   // Decode
   const output = [];
 
-  for(let i = 0 ; i < channels ; i++)
-    output[i] = [ state.sample2[i], state.sample1[i] ];
+  for (let i = 0; i < channels; i++)
+    output[i] = [state.sample2[i], state.sample1[i]];
 
   let channel = 0;
   while (offset < buf.byteLength) {
@@ -131,29 +142,34 @@ function readWav(arr) {
   const buf = new DataView(arr);
 
   // 'RIFF'
-  const magic = buf.getUint32(offset, BE); offset += 4;
+  const magic = buf.getUint32(offset, BE);
+  offset += 4;
   if (magic !== 0x52494646) throw "0x0000:0x0004 != 52:49:46:46";
-  
-  const dataSize = buf.getUint32(offset, LE); offset += 4;
+
+  const dataSize = buf.getUint32(offset, LE);
+  offset += 4;
 
   // 'WAVE'
-  const format = buf.getUint32(offset, BE); offset += 4;
+  const format = buf.getUint32(offset, BE);
+  offset += 4;
   if (format !== 0x57415645) throw "0x0008:0x000B != 57:41:56:45";
 
   let wavFormat, wavData;
 
   while (offset < buf.byteLength) {
-    const name = buf.getUint32(offset, BE); offset += 4;
-    const blockSize = buf.getUint32(offset, LE); offset += 4;
+    const name = buf.getUint32(offset, BE);
+    offset += 4;
+    const blockSize = buf.getUint32(offset, LE);
+    offset += 4;
 
     // 'fmt '
-    if (name === 0x666D7420) {
+    if (name === 0x666d7420) {
       wavFormat = {
-        format:        buf.getUint16(offset +  0, LE),
-        channels:      buf.getUint16(offset +  2, LE),
-        sampleRate:    buf.getUint32(offset +  4, LE),
-        byteRate:      buf.getUint32(offset +  8, LE),
-        blockAlign:    buf.getUint16(offset + 12, LE),
+        format: buf.getUint16(offset + 0, LE),
+        channels: buf.getUint16(offset + 2, LE),
+        sampleRate: buf.getUint32(offset + 4, LE),
+        byteRate: buf.getUint32(offset + 8, LE),
+        blockAlign: buf.getUint16(offset + 12, LE),
         bitsPerSample: buf.getUint16(offset + 14, LE),
       };
 
@@ -165,17 +181,18 @@ function readWav(arr) {
       } else if (wavFormat.format === 0x02) {
         //console.log("is MS-ADPCM file");
 
-        const extraSize = buf.getUint16(offset, LE); offset += 2;
+        const extraSize = buf.getUint16(offset, LE);
+        offset += 2;
         wavFormat.extraSize = extraSize;
         wavFormat.extra = {
-          samplesPerBlock:  buf.getUint16(offset + 0, LE),
+          samplesPerBlock: buf.getUint16(offset + 0, LE),
           coefficientCount: buf.getUint16(offset + 2, LE),
-          coefficient: [ [], [] ],
+          coefficient: [[], []],
         };
 
         offset += 4;
 
-        for (let i = 0 ; i < wavFormat.extra.coefficientCount ; i++) {
+        for (let i = 0; i < wavFormat.extra.coefficientCount; i++) {
           wavFormat.extra.coefficient[0].push(buf.getInt16(offset + 0, LE));
           wavFormat.extra.coefficient[1].push(buf.getInt16(offset + 2, LE));
           offset += 4;
@@ -191,7 +208,7 @@ function readWav(arr) {
   }
 
   if (wavFormat && wavData) {
-     return { format: wavFormat, data: wavData };
+    return { format: wavFormat, data: wavData };
   } else {
     throw "'fmt' or/and 'data' block not found";
   }
@@ -212,14 +229,19 @@ async function createPlayer(player) {
     responsive: true,
   });
   wave.on("ready", () => {
-    player.classList.remove("loading-bg")
+    player.classList.remove("loading-bg");
   });
   let buf;
   const wav = readWav(buffer);
   const samples = decodeMsAdpcm(wav);
   // TODO: manually encode wav file again
   let wavFile = new WaveFile();
-  wavFile.fromScratch(wav.format.channels, wav.format.sampleRate, '16', samples);
+  wavFile.fromScratch(
+    wav.format.channels,
+    wav.format.sampleRate,
+    "16",
+    samples
+  );
   buf = wavFile.toBuffer().buffer;
   const decodedBuffer = await ctx.decodeAudioData(buf);
   wave.loadDecodedBuffer(decodedBuffer);
@@ -236,7 +258,7 @@ async function createPlayer(player) {
         wave.play();
       }
     }
-  }
+  };
 }
 
 const players = document.querySelectorAll(".hs-container");

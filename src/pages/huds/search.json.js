@@ -1,5 +1,5 @@
-import { fetchHuds } from '../../ssg/huds';
-import removeMd from 'remove-markdown';
+import { fetchHuds } from "@ssg/huds";
+import removeMd from "remove-markdown";
 
 export const get = async function get() {
   const allHuds = await fetchHuds(true);

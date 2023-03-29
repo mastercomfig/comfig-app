@@ -1,22 +1,22 @@
 ---
-import Layout from '../../../layouts/Layout.astro';
-import BaseHead from '../../../components/head/BaseHead.astro';
-import PreloadHead from '../../../components/head/PreloadHead.astro';
-import ImportHead from '../../../components/head/ImportHead.astro';
-import MainHead from '../../../components/head/MainHead.astro';
-import Body from '../../../components/Body.astro';
-import Footer from '../../../components/Footer.astro';
-import HudListItem from '../../../components/huds/HudListItem.astro';
-import HudNav from '../../../components/huds/HudNav.astro';
+import Layout from "@layouts/Layout.astro";
+import BaseHead from "@components/head/BaseHead.astro";
+import PreloadHead from "@components/head/PreloadHead.astro";
+import ImportHead from "@components/head/ImportHead.astro";
+import MainHead from "@components/head/MainHead.astro";
+import Body from "@components/Body.astro";
+import Footer from "@components/Footer.astro";
+import HudListItem from "@components/huds/HudListItem.astro";
+import HudNav from "@components/huds/HudNav.astro";
 
-import { fetchHuds } from '../../../ssg/huds';
+import { fetchHuds } from "@ssg/huds";
 
-import { Markdown } from 'astro-remote';
+import { Markdown } from "astro-remote";
 
 export async function getStaticPaths() {
   return (await fetchHuds(true)).map((hud) => ({
     params: {
-      id: hud.id
+      id: hud.id,
     },
     props: { hud },
   }));
@@ -67,7 +67,7 @@ const gamemodeToIcon = {
   pd: "wine-bottle",
   rd: "microchip",
   sd: "rocket",
-  tc: "map-location-dot"
+  tc: "map-location-dot",
 };
 
 const gamemodeToName = {
@@ -87,235 +87,465 @@ const gamemodeToName = {
   pd: "Player Destruction",
   rd: "Robot Destruction",
   sd: "Special Delivery",
-  tc: "Territorial Control"
+  tc: "Territorial Control",
 };
 
-const languageNames = new Intl.DisplayNames(['en'], {
-  type: 'language'
+const languageNames = new Intl.DisplayNames(["en"], {
+  type: "language",
 });
 
 const { hud } = Astro.props;
 ---
+
 <Layout>
-<head>
-  <BaseHead />
-  <PreloadHead>
-    <></>
-  </PreloadHead>
-  <ImportHead>
-    <style>
-      .screen {
-        object-fit: contain;
-      }
-      .verified-gold {
-        color: #c5b358;
-      }
-      .support-pink {
-        background: #880e4f;
-        --bs-link-hover-color: #ff8ab3;
-      }
-      @keyframes introduceCarouselHidable {
-        0% {
-          opacity: 1;
+  <head>
+    <BaseHead />
+    <PreloadHead />
+    <ImportHead>
+      <style>
+        .verified-gold {
+          color: #c5b358;
         }
-        100% {
+        .support-pink {
+          background: #880e4f;
+          --bs-link-hover-color: #ff8ab3;
+        }
+        @keyframes introduceCarouselHidable {
+          0% {
+            opacity: 1;
+          }
+          100% {
+            opacity: 0;
+          }
+        }
+        #hudScreenshots .carousel-hidable {
+          transition: opacity 0.5s;
+          animation: 1.5s introduceCarouselHidable;
           opacity: 0;
         }
+        #hudScreenshots:hover .carousel-hidable {
+          opacity: 1;
+          animation: 0;
+        }
+      </style>
+      <script>
+        import { Carousel } from "bootstrap";
+
+        const carouselEl = document.getElementById("hudScreenshots");
+        if (carouselEl) {
+          const carousel = new Carousel(carouselEl);
+        }
+      </script>
+      <script>
+        import { Tooltip } from "bootstrap";
+
+        const tooltipTriggerList = document.querySelectorAll(
+          '[data-bs-toggle="tooltip"]'
+        );
+        const tooltipList = [...tooltipTriggerList].map(
+          (tooltipTriggerEl) => new Tooltip(tooltipTriggerEl)
+        );
+      </script>
+    </ImportHead>
+    <MainHead
+      title={`${hud.name} | comfig huds`}
+      description={`${hud.name} on comfig huds, a modern Team Fortress 2 HUD directory.`}
+      url={`https://comfig.app/huds/page/${hud.id}`}
+      image={hud.resourceUrls[0]}
+    />
+    <style>
+      .carousel {
+        aspect-ratio: 16 / 9;
       }
-      #hudScreenshots .carousel-hidable {
-        transition: opacity 0.5s;
-        animation: 1.5s introduceCarouselHidable;
-        opacity: 0;
-      }
-      #hudScreenshots:hover .carousel-hidable {
-        opacity: 1;
-        animation: 0;
+      .list-group {
+        --bs-list-group-bg: #151515;
+        --bs-list-group-color: #f2f2f2;
+        background: #0d0d0d1c;
+        flex: 1;
       }
     </style>
-    <script>
-      import { Carousel } from "bootstrap";
-
-      const carouselEl = document.getElementById('hudScreenshots');
-      if (carouselEl) {
-        const carousel = new Carousel(carouselEl);
+  </head>
+  <Body>
+    <HudNav />
+    <div class="container">
+      <h1 class="display-1 mt-3">
+        {hud.name}
+        <span class="text-muted display-4">by {hud.author}</span>
+      </h1>
+      {
+        hud.resources.length > 1 ||
+          (true && (
+            <div id="hudScreenshots" class="carousel slide">
+              <div class="carousel-indicators carousel-hidable">
+                {hud.resources.map((resource, index) => (
+                  <button
+                    type="button"
+                    data-bs-target="#hudScreenshots"
+                    data-bs-slide-to={index}
+                    class={`${index == 0 ? "active" : ""}`}
+                    aria-current="true"
+                    aria-label={`Slide ${index + 1} ${resource}`}
+                  />
+                ))}
+              </div>
+              <div class="carousel-inner h-100">
+                {hud.resourceUrls.map((resource, index) => (
+                  <div
+                    class={`carousel-item h-100 ${index == 0 ? "active" : ""}`}
+                  >
+                    {(resource.startsWith("https://youtube.com/") && (
+                      <iframe
+                        width="100%"
+                        height="100%"
+                        src={resource}
+                        title={`${hud.resources[index]}`}
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen
+                      />
+                    )) || (
+                      <img
+                        src={resource}
+                        class="d-block w-100 position-relative translate-middle top-50 start-50"
+                        loading="lazy"
+                        alt={`${hud.resources[index]}`}
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+              <button
+                class="carousel-control-prev carousel-hidable"
+                type="button"
+                data-bs-target="#hudScreenshots"
+                data-bs-slide="prev"
+              >
+                <span class="carousel-control-prev-icon" aria-hidden="true" />
+                <span class="visually-hidden">Previous</span>
+              </button>
+              <button
+                class="carousel-control-next carousel-hidable"
+                type="button"
+                data-bs-target="#hudScreenshots"
+                data-bs-slide="next"
+              >
+                <span class="carousel-control-next-icon" aria-hidden="true" />
+                <span class="visually-hidden">Next</span>
+              </button>
+            </div>
+          )) || (
+            <div class="w-100 ratio ratio-16x9">
+              <img
+                class="img-fluid object-fit-contain"
+                src={hud.resourceUrls[0]}
+                alt={`${hud.resources[index]}`}
+              />
+            </div>
+          )
       }
-    </script>
-    <script>
-      import { Tooltip } from "bootstrap";
-
-      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new Tooltip(tooltipTriggerEl));
-    </script>
-  </ImportHead>
-  <MainHead title={`${hud.name} | comfig huds`} description={`${hud.name} on comfig huds, a modern Team Fortress 2 HUD directory.`} url={`https://comfig.app/huds/page/${hud.id}`} image={hud.resourceUrls[0]}>
-    <></>
-  </MainHead>
-  <style>
-    .carousel {
-      aspect-ratio: 16 / 9;
-    }
-    .list-group {
-      --bs-list-group-bg: #151515;
-      --bs-list-group-color: #f2f2f2;
-      background: #0d0d0d1c;
-      flex: 1;
-    }
-  </style>
-</head>
-<Body>
-  <HudNav />
-  <div class="container">
-    <h1 class="display-1 mt-3">{hud.name} <span class="text-muted display-4">by {hud.author}</span></h1>
-    {(hud.resources.length > 1 && (
-      <div id="hudScreenshots" class="carousel slide">
-        <div class="carousel-indicators carousel-hidable">
-          {hud.resources.map((resource, index) =>
-            <button type="button" data-bs-target="#hudScreenshots" data-bs-slide-to={index} class={`${index == 0 ? "active" : ""}`} aria-current="true" aria-label={`Slide ${index + 1} ${resource}`}></button>
-          )}
-        </div>
-        <div class="carousel-inner h-100">
-          {hud.resourceUrls.map((resource, index) =>
-            <div class={`carousel-item h-100 ${index == 0 ? "active" : ""}`}>
+      <a href={hud.downloadUrl} class="btn btn-secondary w-100 my-3"
+        ><span class="h3 fw-bold"
+          ><span class="fas fa-download fa-fw"></span> Download {
+            hud.versionName ? hud.versionName : ""
+          }</span
+        >
+        <br />Last updated <strong
+          >{
+            `${hud.publishDate.toLocaleDateString("en-us", {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            })}`
+          }</strong
+        ></a
+      >
+      <div class="row flex-md-row-reverse align-items-stretch">
+        <div class={hud.content ? "col-md-3 d-md-flex flex-md-column" : ""}>
+          <ul class="list-group list-group-flush">
+            {
+              hud.social.album && (
+                <a
+                  href={hud.social.album}
+                  class="list-group-item d-flex justify-content-between align-items-center"
+                >
+                  <span>
+                    <span class="fas fa-images fa-fw" /> Screenshot Album
+                  </span>
+                  <span class="fas fa-square-arrow-up-right fa-fw" />
+                </a>
+              )
+            }
+            <a
+              href={`${hud.repo}/tree/${hud.hash}`}
+              class="list-group-item d-flex justify-content-between align-items-center"
+            >
+              <span><span class="fab fa-github fa-fw"></span> GitHub</span>
+              <span class="fas fa-square-arrow-up-right fa-fw"></span>
+            </a>
+            <a
+              href={hud.social.issues}
+              class="list-group-item d-flex justify-content-between align-items-center"
+            >
+              <span
+                ><span class="fas fa-circle-question fa-fw"></span> Help/Requests</span
+              >
+              <span class="fas fa-square-arrow-up-right fa-fw"></span>
+            </a>
+            {
+              hud.social.support && (
+                <a
+                  href={hud.social.support}
+                  class="list-group-item d-flex justify-content-between align-items-center support-pink"
+                >
+                  <span>
+                    <span class="fas fa-hand-holding-heart fa-fw" /> Support
+                  </span>
+                  <span class="fas fa-square-arrow-up-right fa-fw" />
+                </a>
+              )
+            }
+            {
+              hud.social.discord && (
+                <a
+                  href={`https://discord.gg/${hud.social.discord}`}
+                  class="list-group-item d-flex justify-content-between align-items-center"
+                >
+                  <span>
+                    <span class="fab fa-discord fa-fw" /> Discord
+                  </span>
+                  <span class="fas fa-square-arrow-up-right fa-fw" />
+                </a>
+              )
+            }
+            {
+              hud.social.steam_group && (
+                <a
+                  href={`https://steamcommunity.com/groups/${hud.social.steam_group}`}
+                  class="list-group-item d-flex justify-content-between align-items-center"
+                >
+                  <span>
+                    <span class="fab fa-steam fa-fw" /> Steam Group
+                  </span>
+                  <span class="fas fa-square-arrow-up-right fa-fw" />
+                </a>
+              )
+            }
+            {
+              hud.social.steam_profile && (
+                <a
+                  href={`https://steamcommunity.com/profiles/${hud.social.steam_profile}`}
+                  class="list-group-item d-flex justify-content-between align-items-center"
+                >
+                  <span>
+                    <span class="fab fa-steam fa-fw" /> Steam Profile
+                  </span>
+                  <span class="fas fa-square-arrow-up-right fa-fw" />
+                </a>
+              )
+            }
+            {
+              hud.social.twitter && (
+                <a
+                  href={`https://twitter.com/${hud.social.twitter}`}
+                  class="list-group-item d-flex justify-content-between align-items-center"
+                >
+                  <span>
+                    <span class="fab fa-twitter fa-fw" /> Twitter
+                  </span>
+                  <span class="fas fa-square-arrow-up-right fa-fw" />
+                </a>
+              )
+            }
+            {
+              hud.social.youtube && (
+                <a
+                  href={`https://www.youtube.com/${hud.social.youtube}`}
+                  class="list-group-item d-flex justify-content-between align-items-center"
+                >
+                  <span>
+                    <span class="fab fa-youtube fa-fw" /> YouTube
+                  </span>
+                  <span class="fas fa-square-arrow-up-right fa-fw" />
+                </a>
+              )
+            }
+            {
+              hud.social.twitch && (
+                <a
+                  href={`https://twitch.tv/${hud.social.twitch}`}
+                  class="list-group-item d-flex justify-content-between align-items-center"
+                >
+                  <span>
+                    <span class="fab fa-twitch fa-fw" /> Twitch
+                  </span>
+                  <span class="fas fa-square-arrow-up-right fa-fw" />
+                </a>
+              )
+            }
+            <li class="list-group-item">
+              <span
+                class={`fas ${
+                  hud.prerelease
+                    ? "fa-flask text-warning"
+                    : "fa-circle-check text-success"
+                } fa-fw`}></span>
+              <strong>Release status:</strong>
+              {hud.prerelease ? "Preview" : "Stable"}
+            </li>
+            <li class="list-group-item">
+              <span
+                class={`fas ${
+                  hud.outdated
+                    ? "fa-circle-exclamation text-danger"
+                    : hud.verified
+                    ? "fa-square-check verified-gold"
+                    : "fa-circle-check text-success"
+                } fa-fw`}></span>
+              <strong>Compatibility:</strong>
               {
-                (resource.startsWith("https://youtube.com/") && (
-                  <iframe width="100%" height="100%" src={resource} title={`${hud.resources[index]}`} frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                )) || (<img src={resource} class="d-block w-100 position-relative translate-middle top-50 start-50" loading="lazy" alt={`${hud.resources[index]}`} />)
+                hud.outdated
+                  ? "Outdated/Incompatible"
+                  : hud.verified
+                  ? "Verified"
+                  : "Up to date"
               }
-            </div>)
-          }
+            </li>
+            {
+              hud.releaseDate && (
+                <li class="list-group-item">
+                  <strong>Release Date:</strong>{" "}
+                  {`${hud.releaseDate.toLocaleDateString("en-us", {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                  })}`}
+                </li>
+              )
+            }
+            {
+              hud.contributors && (
+                <li class="list-group-item">
+                  <strong>Contributors:</strong> {hud.contributors.join(", ")}
+                </li>
+              )
+            }
+            {
+              hud.traits?.os && (
+                <li class="list-group-item">
+                  <strong>OS:</strong>{" "}
+                  {hud.traits.os.map((os) => (
+                    <span class={`fab fa-${osToIcon[os]} fa-fw`} />
+                  ))}
+                </li>
+              )
+            }
+            {
+              hud.traits?.res && (
+                <li class="list-group-item">
+                  <strong>Resolutions:</strong>{" "}
+                  {hud.traits.res.join(", ").replaceAll("/", ":")}
+                </li>
+              )
+            }
+            {
+              hud.traits?.position && (
+                <li class="list-group-item">
+                  <strong>Position:</strong>{" "}
+                  {hud.traits.position
+                    .map((p) => p[0].toUpperCase() + p.substring(1))
+                    .join(", ")}
+                </li>
+              )
+            }
+            {
+              hud.traits?.lang && (
+                <li class="list-group-item">
+                  <strong>Languages:</strong>{" "}
+                  {hud.traits.lang.map((l) => languageNames.of(l)).join(", ")}
+                </li>
+              )
+            }
+          </ul>
         </div>
-        <button class="carousel-control-prev carousel-hidable" type="button" data-bs-target="#hudScreenshots" data-bs-slide="prev">
-          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next carousel-hidable" type="button" data-bs-target="#hudScreenshots" data-bs-slide="next">
-          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Next</span>
-        </button>
+        {
+          hud.content && (
+            <div class="col-md-9">
+              <Markdown content={hud.content} />
+            </div>
+          )
+        }
       </div>
-    )) || (<div class="w-100 ratio ratio-16x9"><img class="img-fluid screen" src={hud.resourceUrls[0]} /></div>)}
-    <a href={hud.downloadUrl} class="btn btn-secondary w-100 my-3"><span class="h3 fw-bold"><span class="fas fa-download fa-fw"></span> Download {hud.versionName ? hud.versionName : ""}</span> <br>Last updated <strong>{`${hud.publishDate.toLocaleDateString('en-us', { year: "numeric", month: "short", day: "numeric"})}`}</strong></a>
-    <div class="row flex-md-row-reverse align-items-stretch">
-      <div class={hud.content ? "col-md-3 d-md-flex flex-md-column" : ""}>
-        <ul class="list-group list-group-flush">
-          {hud.social.album && (<a href={hud.social.album} class="list-group-item d-flex justify-content-between align-items-center">
-            <span><span class="fas fa-images fa-fw"></span> Screenshot Album</span>
-            <span class="fas fa-square-arrow-up-right fa-fw"></span>
-          </a>)}
-          <a href={`${hud.repo}/tree/${hud.hash}`} class="list-group-item d-flex justify-content-between align-items-center">
-            <span><span class="fab fa-github fa-fw"></span> GitHub</span>
-            <span class="fas fa-square-arrow-up-right fa-fw"></span>
-          </a>
-          <a href={hud.social.issues} class="list-group-item d-flex justify-content-between align-items-center">
-            <span><span class="fas fa-circle-question fa-fw"></span> Help/Requests</span>
-            <span class="fas fa-square-arrow-up-right fa-fw"></span>
-          </a>
-          {hud.social.support && (<a href={hud.social.support} class="list-group-item d-flex justify-content-between align-items-center support-pink">
-            <span><span class="fas fa-hand-holding-heart fa-fw"></span> Support</span>
-            <span class="fas fa-square-arrow-up-right fa-fw"></span>
-          </a>)}
-          {hud.social.discord && (<a href={`https://discord.gg/${hud.social.discord}`} class="list-group-item d-flex justify-content-between align-items-center">
-            <span><span class="fab fa-discord fa-fw"></span> Discord</span>
-            <span class="fas fa-square-arrow-up-right fa-fw"></span>
-          </a>)}
-          {hud.social.steam_group && (<a href={`https://steamcommunity.com/groups/${hud.social.steam_group}`} class="list-group-item d-flex justify-content-between align-items-center">
-            <span><span class="fab fa-steam fa-fw"></span> Steam Group</span>
-            <span class="fas fa-square-arrow-up-right fa-fw"></span>
-          </a>)}
-          {hud.social.steam_profile && (<a href={`https://steamcommunity.com/profiles/${hud.social.steam_profile}`} class="list-group-item d-flex justify-content-between align-items-center">
-            <span><span class="fab fa-steam fa-fw"></span> Steam Profile</span>
-            <span class="fas fa-square-arrow-up-right fa-fw"></span>
-          </a>)}
-          {hud.social.twitter && (<a href={`https://twitter.com/${hud.social.twitter}`} class="list-group-item d-flex justify-content-between align-items-center">
-            <span><span class="fab fa-twitter fa-fw"></span> Twitter</span>
-            <span class="fas fa-square-arrow-up-right fa-fw"></span>
-          </a>)}
-          {hud.social.youtube && (<a href={`https://www.youtube.com/${hud.social.youtube}`} class="list-group-item d-flex justify-content-between align-items-center">
-            <span><span class="fab fa-youtube fa-fw"></span> YouTube</span>
-            <span class="fas fa-square-arrow-up-right fa-fw"></span>
-          </a>)}
-          {hud.social.twitch && (<a href={`https://twitch.tv/${hud.social.twitch}`} class="list-group-item d-flex justify-content-between align-items-center">
-            <span><span class="fab fa-twitch fa-fw"></span> Twitch</span>
-            <span class="fas fa-square-arrow-up-right fa-fw"></span>
-          </a>)}
-          <li class="list-group-item">
-            <span class={`fas ${hud.prerelease ? "fa-flask text-warning" : "fa-circle-check text-success"} fa-fw`}></span> <strong>Release status:</strong> {hud.prerelease ? "Preview" : "Stable"}
-          </li>
-          <li class="list-group-item">
-            <span class={`fas ${hud.outdated ? "fa-circle-exclamation text-danger" : (hud.verified ? "fa-square-check verified-gold" : "fa-circle-check text-success")} fa-fw`}></span> <strong>Compatibility:</strong> {hud.outdated ? "Outdated/Incompatible" : (hud.verified ? "Verified" : "Up to date")}
-          </li>
-          {hud.releaseDate && (<li class="list-group-item">
-            <strong>Release Date:</strong> {`${hud.releaseDate.toLocaleDateString('en-us', { year: "numeric", month: "short", day: "numeric"})}`}
-          </li>)}
-          {hud.contributors && (<li class="list-group-item">
-            <strong>Contributors:</strong> {hud.contributors.join(", ")}
-          </li>)}
-          {hud.traits?.os && (<li class="list-group-item">
-            <strong>OS:</strong> {hud.traits.os.map((os) => <span class={`fab fa-${osToIcon[os]} fa-fw`}></span>)}
-          </li>)}
-          {hud.traits?.res && (<li class="list-group-item">
-            <strong>Resolutions:</strong> {hud.traits.res.join(", ").replaceAll("/", ":")}
-          </li>)}
-          {hud.traits?.position && (<li class="list-group-item">
-            <strong>Position:</strong> {hud.traits.position.map((p) => p[0].toUpperCase() + p.substring(1)).join(", ")}
-          </li>)}
-          {hud.traits?.lang && (<li class="list-group-item">
-            <strong>Languages:</strong> {hud.traits.lang.map((l) => languageNames.of(l)).join(", ")}
-          </li>)}
-        </ul>
-      </div>
-      {hud.content && (<div class="col-md-9"><Markdown content={hud.content} /></div>)}
+      {
+        hud.tags && (
+          <small>
+            <strong>Tags:</strong> {hud.tags.join(", ")}
+          </small>
+        )
+      }
+      {
+        hud.flags && (
+          <>
+            <hr />
+            <h3>Features</h3>
+            <div class="container">
+              <div class="card-group row">
+                {hud.flags.map((f) => (
+                  <div class="col-6 col-md-3">
+                    <div class="card mt-4">
+                      <div class="card-body text-center">
+                        <div class="h1">
+                          <span class={`fas fa-${featureToIcon[f]} fa-fw`} />
+                        </div>
+                        <h5 class="card-title mt-3">{featureToName[f]}</h5>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </>
+        )
+      }
+      {
+        hud.traits?.gamemode && (
+          <>
+            <h3 class="mt-3">Gamemodes</h3>
+            <div class="container">
+              <div class="card-group row">
+                {hud.traits.gamemode.map((gm) => (
+                  <div class="col-6 col-md-3 col-lg-2">
+                    <div class="card mt-4">
+                      <div class="card-body text-center">
+                        <div class="h2">
+                          <span class={`fas fa-${gamemodeToIcon[gm]} fa-fw`} />
+                        </div>
+                        <h6 class="card-title mt-3">{gamemodeToName[gm]}</h6>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </>
+        )
+      }
+      {
+        hud.variants && (
+          <>
+            <hr />
+            <h1>Variants</h1>
+            <div class="row">
+              {hud.variants.map((variant) => (
+                <div class="col-12 col-md-2 col-lg-4 mt-3">
+                  <HudListItem hud={variant} />
+                </div>
+              ))}
+            </div>
+          </>
+        )
+      }
+      <hr />
     </div>
-    {hud.tags && (
-      <small><strong>Tags:</strong> {hud.tags.join(", ")}</small>
-    )}
-    {hud.flags && (
-      <hr><h3>Features</h3>
-      <div class="container">
-        <div class="card-group row">
-          {hud.flags.map((f) => 
-            <div class="col-6 col-md-3">
-              <div class="card mt-4">
-                <div class="card-body text-center">
-                  <div class="h1"><span class={`fas fa-${featureToIcon[f]} fa-fw`}></span></div>
-                  <h5 class="card-title mt-3">{featureToName[f]}</h5>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-    )}
-    {hud.traits?.gamemode && (
-      <h3 class="mt-3">Gamemodes</h3>
-      <div class="container">
-        <div class="card-group row">
-          {hud.traits.gamemode.map((gm) => 
-            <div class="col-6 col-md-3 col-lg-2">
-              <div class="card mt-4">
-                <div class="card-body text-center">
-                  <div class="h2"><span class={`fas fa-${gamemodeToIcon[gm]} fa-fw`}></span></div>
-                  <h6 class="card-title mt-3">{gamemodeToName[gm]}</h6>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-    )}
-    {hud.variants && (
-      <hr><h1>Variants</h1>
-      <div class="row">
-        {hud.variants.map((variant) =>
-          <div class="col-12 col-md-2 col-lg-4 mt-3">
-            <HudListItem hud={variant}></HudListItem>
-          </div>)}
-      </div>
-    )}
-    <hr>
-  </div>
-  <Footer>
-    <></>
-  </Footer>
-</Body>
+    <Footer />
+  </Body>
 </Layout>
