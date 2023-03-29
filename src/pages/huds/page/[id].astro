@@ -173,7 +173,7 @@ const { hud } = Astro.props;
         <span class="text-muted display-4">by {hud.author}</span>
       </h1>
       {
-        (hud.resources.length > 1 || true) ||
+        (hud.resources.length > 1 || true) &&
           (
             <div id="hudScreenshots" class="carousel slide">
               <div class="carousel-indicators carousel-hidable">
