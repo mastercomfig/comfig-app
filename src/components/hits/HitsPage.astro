@@ -7,6 +7,8 @@ import MainHead from "@components/head/MainHead.astro";
 import Body from "@components/Body.astro";
 import Footer from "@components/Footer.astro";
 import HitsNav from "@components/hits/HitsNav.astro";
+import Sponsor from "@components/Sponsor.astro";
+
 import "@styles/hits.css";
 
 const { page, hitsounds } = Astro.props;
@@ -35,6 +37,8 @@ const currentPage = page.currentPage ?? 1;
   <Body>
     <HitsNav />
     <div class="container">
+      <br />
+      <Sponsor />
       <br />
       <nav class="nav nav-pills nav-fill">
         <a

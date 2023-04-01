@@ -8,6 +8,7 @@ import Body from "@components/Body.astro";
 import Footer from "@components/Footer.astro";
 import HudListItem from "@components/huds/HudListItem.astro";
 import HudNav from "@components/huds/HudNav.astro";
+import Sponsor from "@components/Sponsor.astro";
 
 import { fetchHuds } from "@ssg/huds";
 
@@ -74,6 +75,8 @@ const currentPage = page.currentPage ?? 1;
   <Body>
     <HudNav />
     <div class="container">
+      <br/>
+      <Sponsor />
       <div class="row">
         {
           page.data.map((hud) => (
