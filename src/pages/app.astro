@@ -8,6 +8,7 @@ import Body from "@components/Body.astro";
 import Global from "@components/Global.jsx";
 import Items from "@components/items/Items.jsx";
 import Footer from "@components/Footer.astro";
+import Sponsor from "@components/Sponsor.astro";
 import gm from "@utils/game.js";
 import "simple-keyboard/build/css/index.css";
 
@@ -183,15 +184,9 @@ const npmVersion = process.env.npm_package_version;
         </div>
       </div>
     </nav>
-    <!--
-  <section id="sponsor" class="container" style="padding-bottom: 1rem">
-    <div class="card">
-      <div class="card-body">
-        <strong>Want to sponsor mastercomfig and reserve a spot here?</strong> Contact us at support@mastercomfig.com.
-      </div>
-    </div>
-  </section>
-  -->
+    <section class="container" style="padding-bottom: 1rem">
+      <Sponsor />
+    </section>
     <section
       class="container text-light"
       style="margin-bottom: 1rem;padding-bottom: 0;padding-top: 0"
