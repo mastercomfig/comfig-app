@@ -1022,6 +1022,14 @@ async function app() {
   const EMPTY_ACTION_VALUE = "empty";
   const CUSTOM_ACTION_VALUE = "custom";
 
+  const bindCommandReplacements = {
+    "+attack": "+attack;cmd spec_next",
+    "+attack2": "+attack2;cmd spec_prev",
+    "+jump": "+jump;cmd spec_mode",
+    //"+duck": "+duck;showpanel specmenu", // specmenu seems to do nothing?
+    "+strafe": "+strafe;spec_autodirector 1", // unused, but here for posterity.
+  };
+
   async function updateBinds() {
     const bindFields = document.querySelectorAll(".binding-field");
 
@@ -1097,6 +1105,10 @@ async function app() {
           bindCommand = actionOverrides[actionSelect]
             ? actionOverrides[actionSelect]
             : actionMappings[actionSelect];
+          // Now add the spec overrides for the binds.
+          for (const [key, value] of Object.entries(bindCommandReplacements)) {
+            bindCommand = bindCommand.replace(key, value);
+          }
         }
         // Now we create the actual key -> bind command mapping.
         let bindObject;
@@ -2767,8 +2779,8 @@ async function app() {
     Drop: "dropitem",
     "Call MEDIC!": "+helpme",
     "Push to Talk": "+voicerecord",
-    "Primary attack": "+attack;cmd spec_next",
-    "Secondary attack": "+attack2;cmd spec_prev",
+    "Primary attack": "+attack",
+    "Secondary attack": "+attack2",
     "Special attack": "+attack3",
     "Reload weapon": "+reload",
     "Previous weapon": "invprev",
