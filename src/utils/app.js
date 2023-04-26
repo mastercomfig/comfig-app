@@ -1023,8 +1023,8 @@ async function app() {
   const CUSTOM_ACTION_VALUE = "custom";
 
   const bindCommandReplacements = {
-    "+attack": "+attack;cmd spec_next",
     "+attack2": "+attack2;cmd spec_prev",
+    "+attack": "+attack;cmd spec_next",
     "+jump": "+jump;cmd spec_mode",
     //"+duck": "+duck;showpanel specmenu", // specmenu seems to do nothing?
     "+strafe": "+strafe;spec_autodirector 1", // unused, but here for posterity.
