@@ -1217,7 +1217,7 @@ async function app() {
     // Now add the spec overrides for the binds.
     for (const [key, value] of Object.entries(bindCommandReplacements)) {
       const pattern = new RegExp(String.raw`${commandSeparationRegex}(${escapeRegExp(key)})${commandSeparationRegex}`);
-      bindCommand = bindCommand.replace(pattern, `$1$2;${value}`);
+      bindCommand = bindCommand.replace(pattern, `$1$2;${value}$3`);
     }
     return bindCommand;
   }
