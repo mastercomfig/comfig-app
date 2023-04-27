@@ -1022,20 +1022,6 @@ async function app() {
   const EMPTY_ACTION_VALUE = "empty";
   const CUSTOM_ACTION_VALUE = "custom";
 
-  const bindCommandReplacements = {
-    "+attack2": "cmd spec_prev",
-    "+attack": "cmd spec_next",
-    "+jump": "cmd spec_mode",
-    //"+duck": "showpanel specmenu", // specmenu seems to do nothing?
-    "+strafe": "spec_autodirector 1", // unused, but here for posterity.
-  };
-
-  const commandSeparationRegex = "([\"\';\s\n\r]+|^|$)";
-
-  function escapeRegExp(string) {
-    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
-  }
-
   async function updateBinds() {
     const bindFields = document.querySelectorAll(".binding-field");
 
@@ -1111,11 +1097,6 @@ async function app() {
           bindCommand = actionOverrides[actionSelect]
             ? actionOverrides[actionSelect]
             : actionMappings[actionSelect];
-          // Now add the spec overrides for the binds.
-          for (const [key, value] of Object.entries(bindCommandReplacements)) {
-            const pattern = new RegExp(String.raw`${commandSeparationRegex}(${escapeRegExp(key)})${commandSeparationRegex}`);
-            bindCommand = bindCommand.replace(pattern, `$1$2;${value}`);
-          }
         }
         // Now we create the actual key -> bind command mapping.
         let bindObject;
@@ -1218,6 +1199,29 @@ async function app() {
     await tryDBSet("bindLayers", actionLayerBinds);
   }
 
+  const bindCommandReplacements = {
+    "+attack2": "cmd spec_prev",
+    "+attack": "cmd spec_next",
+    "+jump": "cmd spec_mode",
+    //"+duck": "showpanel specmenu", // specmenu seems to do nothing?
+    "+strafe": "spec_autodirector 1", // unused, but here for posterity.
+  };
+
+  const commandSeparationRegex = "([\"\';\s\n\r]+|^|$)";
+
+  function escapeRegExp(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+  }
+
+  function handleKeyDownReplacements(bindCommand) {
+    // Now add the spec overrides for the binds.
+    for (const [key, value] of Object.entries(bindCommandReplacements)) {
+      const pattern = new RegExp(String.raw`${commandSeparationRegex}(${escapeRegExp(key)})${commandSeparationRegex}`);
+      bindCommand = bindCommand.replace(pattern, `$1$2;${value}`);
+    }
+    return bindCommand;
+  }
+
   function getBindsFromBindsObject(bindsObject) {
     let contents = "";
     for (const key of Object.keys(bindsObject)) {
@@ -1234,7 +1238,8 @@ async function app() {
           // If we have keydown commands, we need keydown/keyup aliases
           if (binding.indexOf("+") !== -1) {
             const aliasName = `@${key}`;
-            contents += `alias +${aliasName}"${binding}"\n`;
+            const keyDownBind = handleKeyDownReplacements(binding);
+            contents += `alias +${aliasName}"${keyDownBind}"\n`;
             const keyUpBinding = binding.replaceAll("+", "-");
             contents += `alias -${aliasName}"${keyUpBinding}"\n`;
             bindingStr = ` +${aliasName}`;
@@ -1244,9 +1249,11 @@ async function app() {
         }
         if (!isMultiCommand) {
           // We can just quote like normal
-          bindingStr = `"${binding}"`;
+          // We still need to handle keydown replacements because it's an exact match and we already ruined it by having a space.
+          bindingStr = `"${handleKeyDownReplacements(binding)}"`;
         }
       } else {
+        // We don't need a keydown replacement since it's an exact single command match.
         bindingStr = ` ${binding}`;
       }
       contents += `bind ${key}${bindingStr}\n`;
