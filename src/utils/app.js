@@ -1023,11 +1023,11 @@ async function app() {
   const CUSTOM_ACTION_VALUE = "custom";
 
   const bindCommandReplacements = {
-    "+attack2": "+attack2;cmd spec_prev",
-    "+attack": "+attack;cmd spec_next",
-    "+jump": "+jump;cmd spec_mode",
-    //"+duck": "+duck;showpanel specmenu", // specmenu seems to do nothing?
-    "+strafe": "+strafe;spec_autodirector 1", // unused, but here for posterity.
+    "+attack2": "cmd spec_prev",
+    "+attack": "cmd spec_next",
+    "+jump": "cmd spec_mode",
+    //"+duck": "showpanel specmenu", // specmenu seems to do nothing?
+    "+strafe": "spec_autodirector 1", // unused, but here for posterity.
   };
 
   async function updateBinds() {
@@ -1107,7 +1107,8 @@ async function app() {
             : actionMappings[actionSelect];
           // Now add the spec overrides for the binds.
           for (const [key, value] of Object.entries(bindCommandReplacements)) {
-            bindCommand = bindCommand.replace(key, value);
+            const pattern = new RegExp(`\\b${key}\\b`);
+            bindCommand = bindCommand.replace(pattern, `$&${value}`);
           }
         }
         // Now we create the actual key -> bind command mapping.
