@@ -1107,7 +1107,7 @@ async function app() {
             : actionMappings[actionSelect];
           // Now add the spec overrides for the binds.
           for (const [key, value] of Object.entries(bindCommandReplacements)) {
-            const pattern = new RegExp(`\\b${key}\\b`);
+            const pattern = new RegExp(String.raw`\\b${key}\\b`);
             bindCommand = bindCommand.replace(pattern, `$&${value}`);
           }
         }
