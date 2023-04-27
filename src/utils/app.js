@@ -1030,6 +1030,12 @@ async function app() {
     "+strafe": "spec_autodirector 1", // unused, but here for posterity.
   };
 
+  const commandSeparationRegex = "([\"\';\s\n\r]+|^|$)";
+
+  function escapeRegExp(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+  }
+
   async function updateBinds() {
     const bindFields = document.querySelectorAll(".binding-field");
 
@@ -1107,8 +1113,8 @@ async function app() {
             : actionMappings[actionSelect];
           // Now add the spec overrides for the binds.
           for (const [key, value] of Object.entries(bindCommandReplacements)) {
-            const pattern = new RegExp(String.raw`\b${key}\b`);
-            bindCommand = bindCommand.replace(pattern, `$&${value}`);
+            const pattern = new RegExp(String.raw`${commandSeparationRegex}(${escapeRegExp(key)})${commandSeparationRegex}`);
+            bindCommand = bindCommand.replace(pattern, `$1$2;${value}`);
           }
         }
         // Now we create the actual key -> bind command mapping.
