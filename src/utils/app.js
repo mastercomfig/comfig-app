@@ -1200,9 +1200,9 @@ async function app() {
   }
 
   const bindCommandReplacements = {
-    "+attack2": "cmd spec_prev",
-    "+attack": "cmd spec_next",
-    "+jump": "cmd spec_mode",
+    "+attack2": "spec_prev",
+    "+attack": "spec_next",
+    "+jump": "spec_mode",
     //"+duck": "showpanel specmenu", // specmenu seems to do nothing?
     "+strafe": "spec_autodirector 1", // unused, but here for posterity.
   };
