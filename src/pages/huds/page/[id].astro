@@ -432,7 +432,7 @@ const { hud } = Astro.props;
             {
               hud.traits?.os && (
                 <li class="list-group-item">
-                  <strong>OS:</strong>{" "}
+                  <strong>Platform:</strong>{" "}
                   {hud.traits.os.map((os) => (
                     <span class={`fab fa-${osToIcon[os]} fa-fw`} />
                   ))}
