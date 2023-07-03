@@ -1,7 +1,29 @@
 ---
 ---
-
-<div class="card text-start" style="background: linear-gradient(135deg, rgba(33,37,41, 0.01), rgba(33,37,41, 1) 60%),radial-gradient(ellipse at top left, rgba(255,255,255, 0.5), transparent 50%),radial-gradient(ellipse at top right, rgba(255,228,132, 0.5), transparent 50%),radial-gradient(ellipse at center right, rgba(112.520718,44.062154,249.437846, 0.5), transparent 50%),radial-gradient(ellipse at center left, rgba(13,110,253, 0.5), transparent 50%)">
+<style>
+  .card {
+    text-align: left !important
+  }
+  a {
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    content: "";
+  }
+</style>
+<script>
+  const linkElement = document.querySelector("a[href='https://tradeit.gg/?aff=comfig']");
+  linkElement.removeAttribute("href");
+  linkElement.addEventListener("click", function(e) {
+    e.preventDefault();
+    window.open("https://tradeit.gg/?aff=comfig", "_blank");
+  });
+</script>
+<div class="card" style="background: linear-gradient(135deg, rgba(33,37,41, 0.01), rgba(33,37,41, 1) 60%),radial-gradient(ellipse at top left, rgba(255,255,255, 0.5), transparent 50%),radial-gradient(ellipse at top right, rgba(255,228,132, 0.5), transparent 50%),radial-gradient(ellipse at center right, rgba(112.520718,44.062154,249.437846, 0.5), transparent 50%),radial-gradient(ellipse at center left, rgba(13,110,253, 0.5), transparent 50%)">
   <div class="card-body">
     <div class="row align-items-center">
       <div class="col-auto">
@@ -11,9 +33,10 @@
       <div class="col-auto text-white">
         <strong class="fw-bold h5">Trade, buy or sell items</strong><br/>
         Trade items instantly for real money with the lowest fees.<br>
-        Fully automated. Over 45 million successful trades.
+        Fully automated. Over 45 million successful trades.<br>
+        <strong>Get started now with $5 credit and 35% off your first trade.</strong>
       </div>
-      <a href="https://tradeit.gg/?aff=comfig" class="stretched-link"></a>
+      <a href="https://tradeit.gg/?aff=comfig"></a>
     </div>
   </div>
   <div class="card-footer text-body-secondary">
