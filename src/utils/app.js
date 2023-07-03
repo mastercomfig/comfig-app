@@ -1200,11 +1200,12 @@ async function app() {
   }
 
   const bindCommandReplacements = {
-    "+attack2": "spec_prev",
-    "+attack": "spec_next",
-    "+jump": "spec_mode",
+    "+attack2": ["spec_prev", false],
+    "+attack": ["spec_next", false],
+    "+jump": ["spec_mode", false],
     //"+duck": "showpanel specmenu", // specmenu seems to do nothing?
-    "+strafe": "spec_autodirector 1", // unused, but here for posterity.
+    "+strafe": ["spec_autodirector 1", false], // unused, but here for posterity.
+    "+taunt": ["cmd stop_taunt", true]
   };
 
   const commandSeparationRegex = "([\"\';\s\n\r]+|^|$)";
@@ -1215,9 +1216,9 @@ async function app() {
 
   function handleKeyDownReplacements(bindCommand) {
     // Now add the spec overrides for the binds.
-    for (const [key, value] of Object.entries(bindCommandReplacements)) {
+    for (const [key, [value, before]] of Object.entries(bindCommandReplacements)) {
       const pattern = new RegExp(String.raw`${commandSeparationRegex}(${escapeRegExp(key)})${commandSeparationRegex}`);
-      bindCommand = bindCommand.replace(pattern, `$1$2;${value}$3`);
+      bindCommand = before ? bindCommand.replace(pattern, `$1${value};$2$3`) : bindCommand.replace(pattern, `$1$2;${value}$3`);
     }
     return bindCommand;
   }
@@ -2846,7 +2847,7 @@ async function app() {
     Taunts: "+taunt",
     "Weapon Taunt": "cmd taunt",
     "Stop Taunt": "cmd stop_taunt",
-    "Contextual Action/Taunt": "+context_action",
+    "MvM Canteen or Taunt": "+context_action",
     "Open Map information": "showmapinfo",
     "Show Round information": "+showroundinfo",
     "Call vote": "callvote",
@@ -2864,7 +2865,8 @@ async function app() {
   };
 
   const legacyActionMappings = {
-    "Use voice communication": "Push to Talk"
+    "Use voice communication": "Push to Talk",
+    "Contextual Action/Taunt": "MvM Canteen or Taunt",
   };
 
   const actionNames = Object.keys(actionMappings);
