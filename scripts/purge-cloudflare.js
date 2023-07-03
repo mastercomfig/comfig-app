@@ -1,4 +1,4 @@
-const glob = require("glob");
+const { glob } = require("glob");
 const https = require('https');
 
 const MAX_CF_URLS = 30;
