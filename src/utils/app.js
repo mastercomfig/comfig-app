@@ -2823,7 +2823,6 @@ async function app() {
     "Spy: Last Disguise": "lastdisguise",
     "Spy: Toggle Disguise Team": "disguiseteam",
     "Spy: Place Sapper": "cmd build 3 0",
-    "Use voice communication": "+voicerecord",
     "Chat message": "say",
     "Team message": "say_team",
     "Party message": "say_party",
@@ -2862,6 +2861,10 @@ async function app() {
     "Remove/Decline alert": "cl_decline_first_notification",
     "Quit Game (prompt)": "quit prompt",
     "Quit Game (no prompt)": "quit",
+  };
+
+  const legacyActionMappings = {
+    "Use voice communication": "Push to Talk"
   };
 
   const actionNames = Object.keys(actionMappings);
@@ -2906,6 +2909,7 @@ async function app() {
     selectElement.append(optionElement);
     let action = bindOptions?.action;
     if (action) {
+      action = legacyActionMappings[action] ?? action;
       action = actionMappings[action] ? action : CUSTOM_ACTION_VALUE;
       if (action === CUSTOM_ACTION_VALUE) {
         selectElement.selectedIndex = 1;
