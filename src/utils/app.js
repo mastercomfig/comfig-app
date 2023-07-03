@@ -1201,7 +1201,7 @@ async function app() {
 
   const bindCommandReplacements = {
     "+attack2": ["spec_prev", false],
-    "+attack": ["spec_next", false],
+    "+attack": ["spec_next;cmd boo", false],
     "+jump": ["spec_mode", false],
     //"+duck": "showpanel specmenu", // specmenu seems to do nothing?
     "+strafe": ["spec_autodirector 1", false], // unused, but here for posterity.
