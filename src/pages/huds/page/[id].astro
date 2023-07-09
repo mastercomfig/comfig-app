@@ -12,6 +12,7 @@ import HudNav from "@components/huds/HudNav.astro";
 import { fetchHuds } from "@ssg/huds";
 
 import { Markdown } from "astro-remote";
+import removeMd from "remove-markdown";
 
 export async function getStaticPaths() {
   return (await fetchHuds(true)).map((hud) => ({
@@ -149,7 +150,7 @@ const { hud } = Astro.props;
     </ImportHead>
     <MainHead
       title={`${hud.name} | comfig huds`}
-      description={`${hud.name} on comfig huds, a modern Team Fortress 2 HUD directory.`}
+      description={`${hud.name} on comfig huds, a modern Team Fortress 2 HUD directory. About ${hud.name}: ${removeMd(hud.content)}`}
       url={`https://comfig.app/huds/page/${hud.id}`}
       image={hud.resourceUrls[0]}
     />
