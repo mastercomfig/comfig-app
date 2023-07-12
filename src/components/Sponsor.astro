@@ -8,7 +8,26 @@
     return str;
   }
 
-  const r = (Math.random() + 1).toString(36).substring(7);
+  function dec2hex (dec) {
+    return dec.toString(16).padStart(2, "0")
+  }
+
+  function isLetter(c) {
+    return c.toLowerCase() != c.toUpperCase();
+  }
+
+  function generateId(len) {
+    var arr = new Uint8Array((len) / 2);
+    window.crypto.getRandomValues(arr);
+    let id = Array.from(arr, dec2hex).join('');
+    if (!isLetter(id.charAt(0))) {
+      const randomLetter = String.fromCharCode(97 + Math.floor(Math.random() * 26));
+      id = randomLetter + id.substring(1);
+    }
+    return id;
+  }
+
+  const r = generateId(8);
   const sponsors = [
     {
       name: "tradeit.gg",
@@ -47,7 +66,8 @@
 
   const card = linkElement.closest(".card");
   card.classList.add(r);
-  document.head.insertAdjacentHTML("beforeend", `<style>
+  const stylesheet = new CSSStyleSheet();
+  stylesheet.replaceSync(`
     .${r} {
       text-align: left !important;
       background: ${background};
@@ -62,7 +82,8 @@
       z-index: 1;
       content: "";
     }
-  </style>`);
+  `);
+  document.adoptedStyleSheets = [...document.adoptedStyleSheets, stylesheet];
   
   const img = card.querySelector("img");
   img.src = logo;
