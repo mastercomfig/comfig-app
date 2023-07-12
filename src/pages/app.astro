@@ -40,6 +40,10 @@ for (const lang of Object.keys(gm.languageCache)) {
 }
 
 const npmVersion = process.env.npm_package_version;
+
+globalThis.npmVersion = npmVersion;
+globalThis.languageCache = clientLanguageCache;
+globalThis.latestData = appData;
 ---
 
 <Layout>
