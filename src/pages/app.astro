@@ -5,7 +5,6 @@ import PreloadHead from "@components/head/PreloadHead.astro";
 import ImportHead from "@components/head/ImportHead.astro";
 import MainHead from "@components/head/MainHead.astro";
 import Body from "@components/Body.astro";
-import Global from "@components/Global.jsx";
 import Items from "@components/items/Items.jsx";
 import Footer from "@components/Footer.astro";
 import Sponsor from "@components/Sponsor.astro";
@@ -72,8 +71,10 @@ const npmVersion = process.env.npm_package_version;
         document.addEventListener("DOMContentLoaded", $buo_f, false);
       </script>
 
-      <script define:vars={{ npmVersion }}>
+      <script define:vars={{ npmVersion, clientLanguageCache, appData, gm }}>
         globalThis.npmVersion = npmVersion;
+        globalThis.languageCache = clientLanguageCache;
+        globalThis.latestData = appData;
       </script>
 
       <script>
@@ -102,11 +103,6 @@ const npmVersion = process.env.npm_package_version;
     />
   </head>
   <Body>
-    <Global
-      client:load
-      languageCache={clientLanguageCache}
-      latestData={appData}
-    />
     <nav class="navbar navbar-expand-sm sticky-top navbar-dark bg-teal">
       <div class="container">
         <span class="navbar-brand"

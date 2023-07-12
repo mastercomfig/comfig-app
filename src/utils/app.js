@@ -2464,9 +2464,6 @@ async function app() {
         }
       })
       .catch(async (err) => {
-        if (err instanceof ReferenceError) {
-          window.location.reload();
-        }
         let data = await tryDBGet("cachedData");
         if (data) {
           console.log("Get data failed, falling back to cache:", err);
