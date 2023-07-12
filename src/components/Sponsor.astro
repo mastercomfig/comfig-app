@@ -75,6 +75,7 @@
   const row = card.querySelector(".row");
   const col2 = row.querySelector(".col-auto:nth-child(2)");
   col2.classList.remove("text-muted");
+  col2.classList.add("text-white");
   col2.innerHTML = `<strong class="fw-bold h5">${title}</strong><br/>${description}<strong>${cta}</strong>`;
 
   linkElement.removeAttribute("href");
