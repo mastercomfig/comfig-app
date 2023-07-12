@@ -44,6 +44,7 @@ const npmVersion = process.env.npm_package_version;
 globalThis.npmVersion = npmVersion;
 globalThis.languageCache = clientLanguageCache;
 globalThis.latestData = appData;
+globalThis.items = gm.items;
 ---
 
 <Layout>
@@ -79,6 +80,7 @@ globalThis.latestData = appData;
         globalThis.npmVersion = npmVersion;
         globalThis.languageCache = clientLanguageCache;
         globalThis.latestData = appData;
+        globalThis.items = gm.items;
       </script>
 
       <script>
