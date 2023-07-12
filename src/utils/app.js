@@ -1334,9 +1334,7 @@ async function app() {
         materialsDirectory.removeEntry(key);
       }
     }
-    console.log(globalThis.items);
     if (globalThis.items) {
-      console.log(globalThis.items);
       let { default: useItemStore } = await import("../store/items.js");
       const itemsState = useItemStore.getState();
       const crosshairs = itemsState.crosshairs;
@@ -1406,7 +1404,6 @@ async function app() {
       if (Object.keys(crosshairs).length > 0) {
         configContents["autoexec.cfg"] += 'cl_crosshair_file""\n';
       }
-      console.log(crosshairs);
       if (crosshairs["default"]) {
         let [crosshairGroup, crosshairFile, crosshairKey] = crosshairs[
           "default"
