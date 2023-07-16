@@ -287,7 +287,7 @@ async function handleRequest(request) {
   if (request.method === "OPTIONS") {
     return handleOptions(request);
   }
-  if (request.method === "GET") {
+  if (request.method === "GET" || request.method == "POST") {
     const url = new URL(request.url)
     //let version = url.searchParams.get("v") ?? 2;
     let version = 2;
@@ -299,7 +299,7 @@ async function handleRequest(request) {
       await forceUpdate(version)
     }
     if (url.pathname.startsWith("/download")) {
-      downloadUrl = url.pathname.substring(downloadLength)
+      let downloadUrl = url.pathname.substring(downloadLength)
       let isDevDownload = downloadUrl.startsWith("/download/dev/")
       let validDownload = isDevDownload || downloadUrl.startsWith("/latest/download/")
       if (!validDownload && downloadUrl.startsWith("/download/")) {
