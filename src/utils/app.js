@@ -1021,6 +1021,7 @@ async function app() {
 
   const EMPTY_ACTION_VALUE = "empty";
   const CUSTOM_ACTION_VALUE = "custom";
+  const UNBIND_ACTION_VALUE = "unbind";
 
   async function updateBinds() {
     const bindFields = document.querySelectorAll(".binding-field");
@@ -1130,6 +1131,9 @@ async function app() {
         hasCustomLayers = true;
       }
       for (const key of Object.keys(bindLayers[bindLayer])) {
+        if (pendingOverrideLayer[key]) {
+          continue;
+        }
         let defaultBind = selectedBinds[key];
         if (defaultBind) {
           // If we have a bind for this key, we need to override it
@@ -1137,7 +1141,7 @@ async function app() {
           delete selectedBinds[key];
         } else {
           // If we don't have a bind, we need to bind on override
-          pendingOverrideLayer[key] = `unbind ${key}`;
+          pendingOverrideLayer[key] = UNBIND_ACTION_VALUE;
         }
       }
     }
@@ -1227,6 +1231,10 @@ async function app() {
     let contents = "";
     for (const key of Object.keys(bindsObject)) {
       let binding = bindsObject[key];
+      if (binding === UNBIND_ACTION_VALUE) {
+        contents += `unbind ${key}\n`;
+        continue;
+      }
       let bindingStr;
       // Should we quote arg, or raw arg?
       let isMultiCommand = binding.indexOf(";") !== -1;
