@@ -74,6 +74,8 @@ $form-select-border-radius: $input-border-radius;
 $form-select-border-radius-sm: $input-border-radius-sm;
 $form-select-border-radius-lg: $input-border-radius-lg;
 
+$tooltip-color: $light;
+
 // 5. Include remainder of required parts
 @import "~bootstrap/scss/maps";
 @import "~bootstrap/scss/mixins";
