@@ -126,8 +126,21 @@ const form = schemaProps.flatMap(([prop, propSchema]) =>
           return formObject;
         }
 
-        formElement.onsubmit = (e) => {
+        formElement.addEventListener("submit", (e) => {
           e.preventDefault();
+          e.stopPropagation();
+
+          const isValid = formElement.checkValidity();
+          const validatedElements = formElement.querySelectorAll(".form-control");
+          for (const element of validatedElements) {
+            if (element.value || element.required) {
+              element.parentNode.classList.add("was-validated");
+            }
+          }
+
+          if (!isValid) {
+            return;
+          }
 
           const form = formElement.elements;
 
@@ -189,11 +202,12 @@ const form = schemaProps.flatMap(([prop, propSchema]) =>
             URL.revokeObjectURL(url);
             url = null;
           }, 120000);
-        };
+        }, false);
       </script>
     </ImportHead>
     <MainHead
-      title="comfig huds | mastercomfig"
+      title="Submit a HUD"
+      site="comfig huds - mastercomfig"
       description="comfig huds by mastercomfig is a modern Team Fortress 2 HUD directory. You can find HUDs to customize the look of your menus and in-game UI, and easily install them to your game after finding the one that suits your style and needs."
       url="https://comfig.app/huds"
     />
@@ -214,7 +228,7 @@ const form = schemaProps.flatMap(([prop, propSchema]) =>
         this file to the GitHub. Let me know if there's anything else I can do
         to make the process easier for you!
       </p>
-      <form id="hud-form">
+      <form id="hud-form" class="needs-validation" novalidate>
         <div class="mb-3">
           <label for="id" class="form-label">
             HUD ID
@@ -228,6 +242,8 @@ const form = schemaProps.flatMap(([prop, propSchema]) =>
             placeholder="myhud-name"
             required
           />
+          <div class="valid-feedback"></div>
+          <div class="invalid-feedback" id="id-invalid"></div>
           <div id="id-help" class="form-text">
             The ID for your HUD. This should be a unique, all lowercase, dashed
             name.
@@ -254,6 +270,8 @@ const form = schemaProps.flatMap(([prop, propSchema]) =>
                     placeholder={entry.example}
                     required={entry.required ? true : undefined}
                   />
+                  <div class="valid-feedback"></div>
+                  <div class="invalid-feedback" id={`${entry.prop}-invalid`}></div>
                 )}
                 {entry.type === "boolean" && (
                   <div class="form-check form-switch">
@@ -267,22 +285,25 @@ const form = schemaProps.flatMap(([prop, propSchema]) =>
                 )}
                 {entry.type === "array" &&
                   entry.choices &&
-                  entry.choices.map((choice) => (
-                    <div class="form-check form-check-inline">
-                      <input
-                        class="form-check-input"
-                        type="checkbox"
-                        id={`${entry.prop}:${choice}`}
-                        value="on"
-                      />
-                      <label
-                        class="form-check-label"
-                        for={`${entry.prop}:${choice}`}
-                      >
-                        {choice}
-                      </label>
-                    </div>
-                  ))}
+                  <div id={entry.prop} class="form-wrapper">
+                    {entry.choices.map((choice) => (
+                      <div class="form-check form-check-inline">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          id={`${entry.prop}:${choice}`}
+                          value="on"
+                        />
+                        <label
+                          class="form-check-label"
+                          for={`${entry.prop}:${choice}`}
+                        >
+                          {choice}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                }
                 {entry.type === "array" && !entry.choices && (
                   <input
                     type="text"
@@ -293,6 +314,8 @@ const form = schemaProps.flatMap(([prop, propSchema]) =>
                     required={entry.required ? true : undefined}
                     data-array="true"
                   />
+                  <div class="valid-feedback"></div>
+                  <div class="invalid-feedback" id={`${entry.prop}-invalid`}></div>
                 )}
                 <div id={`${entry.prop}-help`} class="form-text">
                   {entry.description}

@@ -149,8 +149,13 @@ const { hud } = Astro.props;
       </script>
     </ImportHead>
     <MainHead
-      title={`${hud.name} | comfig huds`}
-      description={`${hud.name} on comfig huds, a modern Team Fortress 2 HUD directory. About ${hud.name}: ${removeMd(hud.content)}`}
+      title={`${hud.name}`}
+      site="comfig huds - mastercomfig"
+      description={`${
+        hud.name
+      } on comfig huds, a modern Team Fortress 2 HUD directory. About ${
+        hud.name
+      }: ${removeMd(hud.content)}`}
       url={`https://comfig.app/huds/page/${hud.id}`}
       image={hud.resourceUrls[0]}
     />
@@ -174,75 +179,74 @@ const { hud } = Astro.props;
         <span class="text-muted display-4">by {hud.author}</span>
       </h1>
       {
-        (hud.resources.length > 1 || true) &&
-          (
-            <div id="hudScreenshots" class="carousel slide">
-              <div class="carousel-indicators carousel-hidable">
-                {hud.resources.map((resource, index) => (
-                  <button
-                    type="button"
-                    data-bs-target="#hudScreenshots"
-                    data-bs-slide-to={index}
-                    class={`${index == 0 ? "active" : ""}`}
-                    aria-current="true"
-                    aria-label={`Slide ${index + 1} ${resource}`}
-                  />
-                ))}
-              </div>
-              <div class="carousel-inner h-100">
-                {hud.resourceUrls.map((resource, index) => (
-                  <div
-                    class={`carousel-item h-100 ${index == 0 ? "active" : ""}`}
-                  >
-                    {(resource.startsWith("https://youtube.com/") && (
-                      <iframe
-                        width="100%"
-                        height="100%"
-                        src={resource}
-                        title={`${hud.resources[index]}`}
-                        frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen
-                      />
-                    )) || (
-                      <img
-                        src={resource}
-                        class="d-block w-100 position-relative translate-middle top-50 start-50"
-                        loading="lazy"
-                        alt={`${hud.resources[index]}`}
-                      />
-                    )}
-                  </div>
-                ))}
-              </div>
-              <button
-                class="carousel-control-prev carousel-hidable"
-                type="button"
-                data-bs-target="#hudScreenshots"
-                data-bs-slide="prev"
-              >
-                <span class="carousel-control-prev-icon" aria-hidden="true" />
-                <span class="visually-hidden">Previous</span>
-              </button>
-              <button
-                class="carousel-control-next carousel-hidable"
-                type="button"
-                data-bs-target="#hudScreenshots"
-                data-bs-slide="next"
-              >
-                <span class="carousel-control-next-icon" aria-hidden="true" />
-                <span class="visually-hidden">Next</span>
-              </button>
+        ((hud.resources.length > 1 || true) && (
+          <div id="hudScreenshots" class="carousel slide">
+            <div class="carousel-indicators carousel-hidable">
+              {hud.resources.map((resource, index) => (
+                <button
+                  type="button"
+                  data-bs-target="#hudScreenshots"
+                  data-bs-slide-to={index}
+                  class={`${index == 0 ? "active" : ""}`}
+                  aria-current="true"
+                  aria-label={`Slide ${index + 1} ${resource}`}
+                />
+              ))}
             </div>
-          ) || (
-            <div class="w-100 ratio ratio-16x9">
-              <img
-                class="img-fluid object-fit-contain"
-                src={hud.resourceUrls[0]}
-                alt={`${hud.resources[0]}`}
-              />
+            <div class="carousel-inner h-100">
+              {hud.resourceUrls.map((resource, index) => (
+                <div
+                  class={`carousel-item h-100 ${index == 0 ? "active" : ""}`}
+                >
+                  {(resource.startsWith("https://youtube.com/") && (
+                    <iframe
+                      width="100%"
+                      height="100%"
+                      src={resource}
+                      title={`${hud.resources[index]}`}
+                      frameborder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowfullscreen
+                    />
+                  )) || (
+                    <img
+                      src={resource}
+                      class="d-block w-100 position-relative translate-middle top-50 start-50"
+                      loading="lazy"
+                      alt={`${hud.resources[index]}`}
+                    />
+                  )}
+                </div>
+              ))}
             </div>
-          )
+            <button
+              class="carousel-control-prev carousel-hidable"
+              type="button"
+              data-bs-target="#hudScreenshots"
+              data-bs-slide="prev"
+            >
+              <span class="carousel-control-prev-icon" aria-hidden="true" />
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button
+              class="carousel-control-next carousel-hidable"
+              type="button"
+              data-bs-target="#hudScreenshots"
+              data-bs-slide="next"
+            >
+              <span class="carousel-control-next-icon" aria-hidden="true" />
+              <span class="visually-hidden">Next</span>
+            </button>
+          </div>
+        )) || (
+          <div class="w-100 ratio ratio-16x9">
+            <img
+              class="img-fluid object-fit-contain"
+              src={hud.resourceUrls[0]}
+              alt={`${hud.resources[0]}`}
+            />
+          </div>
+        )
       }
       <a href={hud.downloadUrl} class="btn btn-secondary w-100 my-3"
         ><span class="h3 fw-bold"

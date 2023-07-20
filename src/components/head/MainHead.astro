@@ -1,6 +1,8 @@
 ---
 export interface Props {
   title?: string;
+  site?: string;
+  noSite?: boolean;
   description?: string;
   url?: string;
   image?: string;
@@ -8,6 +10,8 @@ export interface Props {
 
 const {
   title = "mastercomfig",
+  site = "mastercomfig",
+  noSite = false,
   description = "mastercomfig is modern Team Fortress 2 performance and customization config.",
   url = "https://mastercomfig.com",
   image = "https://mastercomfig.com/img/mastercomfig_banner.png",
@@ -19,14 +23,14 @@ const {
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#009688" />
 
-<title>{title}</title>
+<title>{noSite ? title : `${title} | ${site}`}</title>
 <meta name="theme-color" content="#009688" />
 <meta name="msapplication-TileColor" content="#009688" />
 <!--<link rel="manifest" href="/manifest.webmanifest" />-->
 <slot />
 
-<meta property="og:site_name" content="mastercomfig" />
-<meta property="og:title" content="mastercomfig" />
+<meta property="og:site_name" content={site} />
+<meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
 <meta name="twitter:description" content={description} />
 <meta name="description" content={description} />
