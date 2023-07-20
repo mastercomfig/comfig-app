@@ -66,6 +66,9 @@ $progress-bg: $backdrop;
 $card-bg: $gray-900;
 // Input
 $input-bg: $body-bg;
+$input-color: $light;
+$input-focus-color: $light;
+$input-placeholder-color: #666;
 // Form Select
 $form-select-color: $white;
 $form-select-border-color: lighten($input-bg, 5%);
