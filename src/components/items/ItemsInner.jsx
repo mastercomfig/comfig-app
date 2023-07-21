@@ -101,7 +101,7 @@ function calculateCrosshairs(items) {
   return [crosshairs, defaultCrosshairs, crosshairPreviews];
 }
 
-export default function ItemsInner({ playerClass, items }) {
+export default function ItemsInner({ playerClass, items, setResetKey }) {
   let [slots, slotNames, firstKey] = useMemo(
     () => calculateItemSlots(playerClass, items),
     [playerClass, items]
@@ -151,6 +151,7 @@ export default function ItemsInner({ playerClass, items }) {
   const currentCrosshairScale = liveCrosshairScale ?? defaultCrosshairScale;
 
   const [
+    clearAllItems,
     setCrosshair,
     delCrosshair,
     setCrosshairColor,
@@ -166,6 +167,7 @@ export default function ItemsInner({ playerClass, items }) {
     setExplosionEffect,
     delExplosionEffect,
   ] = useItemStore((state) => [
+    state.clearAllItems,
     state.setCrosshair,
     state.delCrosshair,
     state.setCrosshairColor,
@@ -181,6 +183,8 @@ export default function ItemsInner({ playerClass, items }) {
     state.setExplosionEffect,
     state.delExplosionEffect,
   ]);
+
+  const isDefault = itemClasses[0].classname === "default";
 
   return (
     <Tab.Container defaultActiveKey={firstKey}>
@@ -235,7 +239,7 @@ export default function ItemsInner({ playerClass, items }) {
                         classname={item.classname}
                         delItem={delCrosshair}
                         setItem={setCrosshair}
-                        isDefaultWeapon={itemClasses[0].classname === "default"}
+                        isDefaultWeapon={isDefault}
                         type="crosshair"
                         previewPath="/img/app/crosshairs/preview/"
                         previews={crosshairPreviews}
@@ -248,8 +252,7 @@ export default function ItemsInner({ playerClass, items }) {
                         <h6 className="mb-2">
                           <strong>
                             <small>
-                              {itemClasses[0].classname === "default" ||
-                              playerClass === "All-Class"
+                              {isDefault || playerClass === "All-Class"
                                 ? "ALL CLASSES"
                                 : "PER CLASS"}
                             </small>
@@ -386,9 +389,7 @@ export default function ItemsInner({ playerClass, items }) {
                               classname={item.classname}
                               delItem={delExplosionEffect}
                               setItem={setExplosionEffect}
-                              isDefaultWeapon={
-                                itemClasses[0].classname === "default"
-                              }
+                              isDefaultWeapon={isDefault}
                               type="explosion"
                               previewPath="/img/app/explosions/"
                               previews={explosionPreviews}
@@ -397,6 +398,20 @@ export default function ItemsInner({ playerClass, items }) {
                           )}
                         </>
                       )}
+                    {isDefault && (
+                      <Button
+                        onClick={() => {
+                          clearAllItems();
+                          setItemStore(useItemStore.getState());
+                          setResetKey((state) => state + 1);
+                        }}
+                        variant="danger"
+                        className="mt-5"
+                      >
+                        <span className="fas fa-undo fa-fw"></span> Reset all
+                        weapons
+                      </Button>
+                    )}
                   </div>
                 </Tab.Pane>
               ))
