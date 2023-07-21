@@ -13,6 +13,18 @@ const useStore = create(
       tracers: new Set(),
       explosioneffects: {},
       playerexplosioneffects: {},
+      clearAllItems: () =>
+        set((state) => {
+          state.crosshairs = {};
+          state.crosshairColors = {};
+          state.crosshairScales = {};
+          state.muzzleflashes = new Set();
+          state.brassmodels = new Set();
+          state.tracers = new Set();
+          state.explosioneffects = {};
+          state.playerexplosioneffects = {};
+          return state;
+        }),
       setCrosshair: (k, v) =>
         set((state) => ({ crosshairs: { ...state.crosshairs, [k]: v } })),
       delCrosshair: (k) =>

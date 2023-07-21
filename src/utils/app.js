@@ -1209,20 +1209,28 @@ async function app() {
     "+jump": ["spec_mode", false],
     //"+duck": "showpanel specmenu", // specmenu seems to do nothing?
     "+strafe": ["spec_autodirector 1", false], // unused, but here for posterity.
-    "+taunt": ["cmd stop_taunt", true]
+    "+taunt": ["cmd stop_taunt", true],
   };
 
-  const commandSeparationRegex = "([\"\';\s\n\r]+|^|$)";
+  const commandSeparationRegex = "([\"';s\n\r]+|^|$)";
 
   function escapeRegExp(string) {
-    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+    return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
   }
 
   function handleKeyDownReplacements(bindCommand) {
     // Now add the spec overrides for the binds.
-    for (const [key, [value, before]] of Object.entries(bindCommandReplacements)) {
-      const pattern = new RegExp(String.raw`${commandSeparationRegex}(${escapeRegExp(key)})${commandSeparationRegex}`);
-      bindCommand = before ? bindCommand.replace(pattern, `$1${value};$2$3`) : bindCommand.replace(pattern, `$1$2;${value}$3`);
+    for (const [key, [value, before]] of Object.entries(
+      bindCommandReplacements
+    )) {
+      const pattern = new RegExp(
+        String.raw`${commandSeparationRegex}(${escapeRegExp(
+          key
+        )})${commandSeparationRegex}`
+      );
+      bindCommand = before
+        ? bindCommand.replace(pattern, `$1${value};$2$3`)
+        : bindCommand.replace(pattern, `$1$2;${value}$3`);
     }
     return bindCommand;
   }
