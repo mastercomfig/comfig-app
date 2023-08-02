@@ -1,3 +1,85 @@
+.download-progress {
+  --bs-progress-height: 1px;
+  margin-bottom: 1em;
+}
+
+#download-progress-status {
+  margin-left: 1em;
+}
+
+#modules-root .form-range {
+  margin-bottom: -5px;
+}
+
+// Launch options
+#launch-options code {
+  margin-top: 2px;
+  margin-right: 0.5rem;
+}
+
+#launch-options>* {
+  float: left;
+}
+
+#launch-options>.fas {
+  margin-top: 5px;
+  margin-right: 5px;
+}
+
+// Customize
+#customize-toggler.active span {
+  transform: rotate(180deg);
+}
+
+#customize-toggler .fa-angles-down {
+  transition: 0.2s;
+  transition-timing-function: ease-in-out;
+}
+
+#customizations {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+// Modules
+.module-title {
+  margin-top: 0.8rem !important;
+  font-size: 1.1rem;
+}
+
+.module-category-title {
+  margin-top: 1rem !important;
+  font-size: 1.8rem;
+}
+
+.module-category {
+  display: flow-root;
+}
+
+#modules-controls {
+  height: 65vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  position: relative;
+}
+
+.inset-box {
+  box-shadow: inset 0 0 5px #000;
+  padding: 20px;
+}
+
+.fixed-inner {
+  position: absolute;
+}
+
+#modules-sidebar {
+  background: #fff1;
+  padding-top: 0.2rem;
+}
+
+#modules-sidebar .nav {
+  --bs-nav-link-color: #b2dfdb;
+}
+
 // Addon cards
 .addons-list {
   margin-top: 2rem;
@@ -14,6 +96,28 @@
 
 .addons-list-community > .row > .col-4 {
   flex: 0 0 auto;
+}
+
+.addon-card {
+  border: rgba(0, 0, 0, 0.6) 1px solid;
+}
+
+.addon-card.active {
+  border: #009688 1px solid;
+}
+
+a.addon-card:focus {
+  color: #cbd3da !important;
+}
+
+a.addon-card {
+  color: #cbd3da !important;
+}
+
+a.addon-card.active,
+a.addon-card:hover {
+  --bs-card-bg: #212529;
+  color: #f8f9fa !important;
 }
 
 // Other downloads

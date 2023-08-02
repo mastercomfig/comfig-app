@@ -10,6 +10,8 @@ import Footer from "@components/Footer.astro";
 import Sponsor from "@components/Sponsor.astro";
 import gm from "@utils/game.js";
 import "simple-keyboard/build/css/index.css";
+import "@styles/app.scss";
+import "@styles/keyboard.scss";
 
 const appResponse = await fetch("https://api.mastercomfig.com/");
 const appData = await appResponse.json();
