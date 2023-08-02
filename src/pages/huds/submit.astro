@@ -216,18 +216,20 @@ const form = schemaProps.flatMap(([prop, propSchema]) =>
     <HudNav />
     <div class="container">
       <br />
-      <h1>How to submit a HUD</h1>
-      <p class="lead">
-        To submit a HUD to this site, use the <a
-          href="https://github.com/mastercomfig/hud-db">hud-db GitHub repo</a
-        >. Visit the repo for more instructions and format details.
-      </p>
-      <p class="lead">
-        For those not familiar with JSON, or wanting more assistance, use the
-        form on this page to generate a HUD JSON file for you. You can upload
-        this file to the GitHub. Let me know if there's anything else I can do
-        to make the process easier for you!
-      </p>
+      <div class="text-light">
+        <h1>How to submit a HUD</h1>
+        <p class="lead">
+          To submit a HUD to this site, use the <a
+            href="https://github.com/mastercomfig/hud-db">hud-db GitHub repo</a
+          >. Visit the repo for more instructions and format details.
+        </p>
+        <p class="lead">
+          For those not familiar with JSON, or wanting more assistance, use the
+          form on this page to generate a HUD JSON file for you. You can upload
+          this file to the GitHub. Let me know if there's anything else I can do
+          to make the process easier for you!
+        </p>
+      </div>
       <form id="hud-form" class="needs-validation" novalidate>
         <div class="mb-3">
           <label for="id" class="form-label">
@@ -324,7 +326,7 @@ const form = schemaProps.flatMap(([prop, propSchema]) =>
             );
           })
         }
-        <button type="submit" class="btn btn-primary">Generate</button>
+        <button type="submit" class="btn btn-primary text-light">Generate</button>
       </form>
       <hr />
     </div>

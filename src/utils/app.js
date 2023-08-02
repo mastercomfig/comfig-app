@@ -1087,6 +1087,7 @@ async function app() {
             actionBindObject[keyInput] = [bindCommand];
           }
           // Ok now, replace all the quotes from the user with blank
+          // TODO: we need to create an exec bind for quoted args with a semicolon for multiple commands
           bindCommand = bindCommand.replaceAll('"', "");
         } else {
           if (actionBindObject[keyInput]) {
@@ -1138,7 +1139,6 @@ async function app() {
         if (defaultBind) {
           // If we have a bind for this key, we need to override it
           pendingOverrideLayer[key] = defaultBind;
-          delete selectedBinds[key];
         } else {
           // If we don't have a bind, we need to bind on override
           pendingOverrideLayer[key] = UNBIND_ACTION_VALUE;
@@ -2193,6 +2193,7 @@ async function app() {
   function handleCategory(name, category) {
     // Create category element
     let categoryContainer = document.createElement("div");
+    categoryContainer.classList.add("module-category");
     let id = "module-cont-" + name;
     categoryContainer.id = id;
     // Create category title
@@ -2254,7 +2255,8 @@ async function app() {
 
     scrollSpy = new ScrollSpy(customizationsCol, {
       target: getEl("modules-nav"),
-      rootMargin: "0px 0px -73%",
+      rootMargin: "-5% 0px -95%",
+      threshold: [0],
     });
   }
 

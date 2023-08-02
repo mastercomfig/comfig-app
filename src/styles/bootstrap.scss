@@ -29,6 +29,8 @@ $form-select-indicator-color: $light;
 $form-switch-color: $input-focus-border-color;
 // Form Check
 $form-check-input-border: 1px solid $input-focus-border-color;
+// Form range
+$form-range-track-bg: lighten(#000, 46%);
 
 // Alert
 $alert-border-radius: 0; // work around 5.2 bug
