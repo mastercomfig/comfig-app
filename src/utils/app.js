@@ -1087,6 +1087,7 @@ async function app() {
             actionBindObject[keyInput] = [bindCommand];
           }
           // Ok now, replace all the quotes from the user with blank
+          // TODO: we need to create an exec bind for quoted args with a semicolon for multiple commands
           bindCommand = bindCommand.replaceAll('"', "");
         } else {
           if (actionBindObject[keyInput]) {
@@ -1138,7 +1139,6 @@ async function app() {
         if (defaultBind) {
           // If we have a bind for this key, we need to override it
           pendingOverrideLayer[key] = defaultBind;
-          delete selectedBinds[key];
         } else {
           // If we don't have a bind, we need to bind on override
           pendingOverrideLayer[key] = UNBIND_ACTION_VALUE;

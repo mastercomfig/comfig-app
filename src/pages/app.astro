@@ -372,6 +372,24 @@ globalThis.items = gm.items;
                   role="tabpanel"
                   aria-labelledby="bindings"
                 >
+                  <p>
+                    Bind rules:
+                    <ul>
+                      <li>
+                        Multiple binds to the same key will all execute, in
+                        order
+                      </li>
+                      <li>Binds are not shared across layers</li>
+                      <li>
+                        Commands automatically manage necessary extra commands,
+                        like spectator controls, when using multiple binds
+                      </li>
+                      <li>
+                        Custom commands support limited console syntax. Full
+                        support for quoted arguments in commands is coming soon.
+                      </li>
+                    </ul>
+                  </p>
                   <div id="binds-root" class="inset-box">
                     <div id="binds-list" class="container"></div>
                     <br />
@@ -396,6 +414,22 @@ globalThis.items = gm.items;
                   role="tabpanel"
                   aria-labelledby="weapons"
                 >
+                  <p>
+                    Weapon customization tips:
+                    <ul>
+                      <li>
+                        If a crosshair is chosen for Default, it will override
+                        any per weapon customizations.
+                      </li>
+                      <li>
+                        Crosshair color and scale cannot change per weapon, only
+                        per class or for all classes.
+                      </li>
+                      <li>
+                        Preview for color and scale changes are coming soon!
+                      </li>
+                    </ul>
+                  </p>
                   <Items client:load items={gm.items} />
                 </div>
               </div>
