@@ -16,6 +16,7 @@ async function app() {
   let downloadStatusEl = document.getElementById("download-status");
   if (downloadStatusEl) {
     downloadStatusEl.innerHTML = "";
+    downloadStatusEl.classList.remove("download-status-fill");
   }
 
   let dfirebase = import("firebase/compat/app")
@@ -2498,6 +2499,7 @@ async function app() {
     if (downloadStatusEl) {
       downloadStatusEl.innerHTML =
         '<a href="#downloads-section">Skip to downloads</a>';
+      downloadStatusEl.classList.add("download-status-fill");
     }
   } else {
     await setPreset("medium-high", true);

@@ -7,8 +7,8 @@
   margin-left: 1em;
 }
 
-#modules-root .form-range {
-  margin-bottom: -5px;
+.download-status-fill {
+  margin-bottom: 1rem;
 }
 
 // Launch options
@@ -78,6 +78,10 @@
 
 #modules-sidebar .nav {
   --bs-nav-link-color: #b2dfdb;
+}
+
+#modules-root .form-range {
+  margin-bottom: -5px;
 }
 
 // Addon cards
