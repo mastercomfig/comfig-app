@@ -248,9 +248,16 @@ const { hud } = Astro.props;
           </div>
         )
       }
-      <a href={hud.downloadUrl} class="btn btn-secondary w-100 my-3"
+      <a
+        href={hud.downloadUrl ?? hud.repo}
+        class="btn btn-secondary w-100 my-3"
+        target={hud.downloadUrl ? undefined : "_blank"}
+        rel={hud.downloadUrl ? undefined : "noopener noreferrer"}
         ><span class="h3 fw-bold"
-          ><span class="fas fa-download fa-fw"></span> Download {
+          ><span
+            class={`fas fa-${
+              hud.downloadUrl ? "download" : "up-right-from-square"
+            } fa-fw`}></span> Download {
             hud.versionName ? hud.versionName : ""
           }</span
         >
@@ -409,7 +416,7 @@ const { hud } = Astro.props;
               <strong>Compatibility:</strong>
               {
                 hud.outdated
-                  ? "Outdated/Incompatible"
+                  ? "Incompatible"
                   : hud.verified
                   ? "Verified"
                   : "Up to date"
