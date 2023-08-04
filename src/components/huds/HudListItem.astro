@@ -64,7 +64,7 @@ const { hud, expanded = false, carousel = false } = Astro.props;
             class="d-inline-block position-relative text-danger"
             style="z-index: 2"
             data-bs-toggle="tooltip"
-            data-bs-title="Outdated/Incompatible"
+            data-bs-title="Incompatible"
           >
             <span class="fas fa-circle-exclamation fa-fw" />
           </small>
@@ -92,12 +92,18 @@ const { hud, expanded = false, carousel = false } = Astro.props;
       expanded && (
         <>
           <a
-            href={hud.downloadUrl}
+            href={hud.downloadUrl ?? hud.repo}
             class={`btn btn-outline-secondary ms-3 py-2 my-1 position-relative ${
               hud.outdated ? "d-none" : ""
             }`}
+            target={hud.downloadUrl ? undefined : "_blank"}
+            rel={hud.downloadUrl ? undefined : "noopener noreferrer"}
           >
-            <span class="fas fa-download fa-fw" />
+            <span
+              class={`fas fa-${
+                hud.downloadUrl ? "download" : "up-right-from-square"
+              } fa-fw`}
+            />
           </a>
           <br />
           <span class="text-muted">

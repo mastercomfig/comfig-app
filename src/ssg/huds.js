@@ -32,6 +32,14 @@ const getHudDb = async () => {
   return hudDb;
 };
 
+const getHudFileInfo = async (path) => {
+  return await hudApi(`contents/${path}`);
+};
+
+const getHudDbCommit = async (sha) => {
+  return await hudApi(`git/commits/${sha}`);
+};
+
 const getHudResource = (id, name) => {
   if (name.startsWith("https://youtu.be/")) {
     return name.replace("https://youtu.be", "https://youtube.com/embed");
@@ -101,69 +109,86 @@ const getHuds = async () => {
           hudData.social = {};
         }
 
-        if (!hudData.social.issues) {
+        const isGithub = hudData.repo.startsWith("https://github.com/");
+
+        if (!hudData.social.issues && isGithub) {
           hudData.social.issues = `${hudData.repo}/issues`;
         }
 
-        // Just the user/repo
-        const ghRepo = hudData.repo.replace("https://github.com/", "");
+        if (isGithub) {
+          // Just the user/repo
+          const ghRepo = hudData.repo.replace("https://github.com/", "");
 
-        // Query the info.vdf in the repo to get the UI version
-        try {
-          const infoVdf = await fetchWithTimeout(
-            `https://raw.githubusercontent.com/${ghRepo}/${hudData.hash}/info.vdf`
-          );
-          if (infoVdf.ok) {
-            try {
-              const infoVdfJson = parse(await infoVdf.text());
-              const tfUiVersion = parseInt(
-                Object.entries(infoVdfJson)[0][1].ui_version,
-                10
-              );
-              hudData.outdated = tfUiVersion !== CURRENT_HUD_VERSION;
-            } catch (e) {
-              // info.vdf exists but is invalid
-              console.log(`Invalid info.vdf for ${hudId} (${ghRepo})`);
+          // Query the info.vdf in the repo to get the UI version
+          try {
+            const infoVdf = await fetchWithTimeout(
+              `https://raw.githubusercontent.com/${ghRepo}/${hudData.hash}/info.vdf`
+            );
+            if (infoVdf.ok) {
+              try {
+                const infoVdfJson = parse(await infoVdf.text());
+                const tfUiVersion = parseInt(
+                  Object.entries(infoVdfJson)[0][1].ui_version,
+                  10
+                );
+                hudData.outdated = tfUiVersion !== CURRENT_HUD_VERSION;
+              } catch (e) {
+                // info.vdf exists but is invalid
+                console.log(`Invalid info.vdf for ${hudId} (${ghRepo})`);
+                hudData.outdated = true;
+              }
+            } else if (infoVdf.status == 404) {
+              // info.vdf doesn't exist at all, this is a very old HUD
               hudData.outdated = true;
             }
-          } else if (infoVdf.status == 404) {
-            // info.vdf doesn't exist at all, this is a very old HUD
+          } catch {
+            // info.vdf timed out, assume it's outdated since GitHub sometimes stalls on 404s
             hudData.outdated = true;
           }
-        } catch {
-          // info.vdf timed out, assume it's outdated since GitHub sometimes stalls on 404s
+
+          // Add download link
+          //hudData.downloadUrl = `https://github.com/${ghRepo}/archive/${hudData.hash}.zip`
+          hudData.downloadUrl = `https://codeload.github.com/${ghRepo}/legacy.zip/${hudData.hash}`;
+
+          // Query the tag
+          const branchTags = await fetch(
+            `https://github.com/${ghRepo}/branch_commits/${hudData.hash}`
+          );
+          const dom = new JSDOM(await branchTags.text());
+          const tagList =
+            dom.window.document.querySelector(".branches-tag-list");
+          if (tagList) {
+            // Get the oldest tag associated with this commit
+            hudData.versionName = tagList.children.item(
+              tagList.children.length - 1
+            ).lastChild.textContent;
+          }
+
+          // Query the commit
+          try {
+            const commit = await ghApi(
+              `repos/${ghRepo}/git/commits/${hudData.hash}`
+            );
+            hudData.publishDate = new Date(commit.author.date);
+          } catch (e) {
+            console.log(
+              `Failed to fetch commit ${hudData.hash} for ${hudId} (${ghRepo})`
+            );
+            hudData.publishDate = new Date(null);
+            throw e;
+          }
+        } else {
+          // Not a GitHub repo, assume it's outdated
+          if (!hudData.publishDate) {
+            const hudDbFile = getHudFileInfo(hud.path);
+            const commitHash = hudDbFile.sha;
+            const commit = getHudDbCommit(commitHash);
+            hudData.publishDate = new Date(commit.author.date);
+          } else {
+            hudData.publishDate = new Date(hudData.publishDate);
+          }
+          hudData.versionName = hudData.hash;
           hudData.outdated = true;
-        }
-
-        // Add download link
-        //hudData.downloadUrl = `https://github.com/${ghRepo}/archive/${hudData.hash}.zip`
-        hudData.downloadUrl = `https://codeload.github.com/${ghRepo}/legacy.zip/${hudData.hash}`;
-
-        // Query the tag
-        const branchTags = await fetch(
-          `https://github.com/${ghRepo}/branch_commits/${hudData.hash}`
-        );
-        const dom = new JSDOM(await branchTags.text());
-        const tagList = dom.window.document.querySelector(".branches-tag-list");
-        if (tagList) {
-          // Get the oldest tag associated with this commit
-          hudData.versionName = tagList.children.item(
-            tagList.children.length - 1
-          ).lastChild.textContent;
-        }
-
-        // Query the commit
-        try {
-          const commit = await ghApi(
-            `repos/${ghRepo}/git/commits/${hudData.hash}`
-          );
-          hudData.publishDate = new Date(commit.author.date);
-        } catch (e) {
-          console.log(
-            `Failed to fetch commit ${hudData.hash} for ${hudId} (${ghRepo})`
-          );
-          hudData.publishDate = new Date(null);
-          throw e;
         }
 
         // Remap resources to full URLs
