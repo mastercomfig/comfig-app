@@ -399,7 +399,7 @@ select.form-control {
 
 // Containers
 
-.card {
+.card:not(.card-container) {
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
 
   &.border-primary,

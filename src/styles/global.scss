@@ -93,7 +93,7 @@ header {
 // Sections
 section {
   padding-top: 2rem;
-  padding-bottom: 4rem;
+  padding-bottom: 2rem;
 }
 
 // Header logo
@@ -143,6 +143,14 @@ h6 {
 
 b {
   font-weight: 600;
+}
+
+.card br {
+  margin: 0.5rem;
+}
+
+.row br {
+  margin: initial;
 }
 
 // Nav tabs

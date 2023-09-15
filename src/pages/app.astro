@@ -192,7 +192,7 @@ globalThis.items = gm.items;
         </div>
       </div>
     </nav>
-    <section class="container" style="padding-bottom: 1rem">
+    <section class="container" style="background-color: var(--bs-body-bg)">
       <Sponsor />
     </section>
     <section
@@ -200,7 +200,10 @@ globalThis.items = gm.items;
       style="margin-bottom: 1rem;padding-bottom: 0;padding-top: 0"
     >
       <div style="min-height: 100%">
-        <div class="card" style="background-color: var(--bs-bg-color)">
+        <div
+          class="card card-container text-light"
+          style="background-color: var(--bs-body-bg)"
+        >
           <noscript
             >Note: Customizations require JavaScript. <a
               href="#downloads-section">Skip to downloads</a
@@ -851,9 +854,9 @@ globalThis.items = gm.items;
           </div>
           <hr />
         </div>
-        <div class="position-absolute">
-          Please disable your Easylist ad-blocker due to reckless/negligent
-          rules breaking the app.
+        <div class="position-absolute" style="top: 104px; z-index: -1">
+          Please disable your EasyList/UBlock ad-blocker due to
+          reckless/negligent rules breaking the app.
         </div>
       </div>
     </section>
