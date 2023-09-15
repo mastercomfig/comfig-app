@@ -8,8 +8,8 @@
     return str;
   }
 
-  function dec2hex (dec) {
-    return dec.toString(16).padStart(2, "0")
+  function dec2hex(dec) {
+    return dec.toString(16).padStart(2, "0");
   }
 
   function isLetter(c) {
@@ -17,11 +17,13 @@
   }
 
   function generateId(len) {
-    var arr = new Uint8Array((len) / 2);
+    var arr = new Uint8Array(len / 2);
     window.crypto.getRandomValues(arr);
-    let id = Array.from(arr, dec2hex).join('');
+    let id = Array.from(arr, dec2hex).join("");
     if (!isLetter(id.charAt(0))) {
-      const randomLetter = String.fromCharCode(97 + Math.floor(Math.random() * 26));
+      const randomLetter = String.fromCharCode(
+        97 + Math.floor(Math.random() * 26)
+      );
       id = randomLetter + id.substring(1);
     }
     return id;
@@ -35,11 +37,13 @@
       logo_alt: "TF2CC logo",
       url: "https://discord.gg/tf2-coaching-central-tf2cc-727627956058325052",
       title: "Coach or get coached for competitive TF2!",
-      description: "TF2CC is a resource hub for new comp players.\n" +
+      description:
+        "TF2CC is a resource hub for new comp players.\n" +
         "Provides guides, mentoring, demo reviews, pugs, and the upcoming Newcomer's Cup!\n",
       cta: "Whether you're experienced or a new player, join the Discord and get involved!",
-      background: "linear-gradient(135deg, rgba(33,37,41, 0.01), rgba(33,37,41, 1) 60%),radial-gradient(ellipse at top left, rgba(255,255,255, 0.5), transparent 50%),radial-gradient(ellipse at top right, rgb(255 174 132 / 50%), transparent 50%),radial-gradient(ellipse at center right, rgb(249 44 78 / 50%), transparent 50%),radial-gradient(ellipse at center left, rgb(253 13 13 / 50%), transparent 50%)"
-    }
+      background:
+        "linear-gradient(135deg, rgba(33,37,41, 0.01), rgba(33,37,41, 1) 60%),radial-gradient(ellipse at top left, rgba(255,255,255, 0.5), transparent 50%),radial-gradient(ellipse at top right, rgb(255 174 132 / 50%), transparent 50%),radial-gradient(ellipse at center right, rgb(249 44 78 / 50%), transparent 50%),radial-gradient(ellipse at center left, rgb(253 13 13 / 50%), transparent 50%)",
+    },
   ];
   const sponsor = sponsors[Math.floor(Math.random() * sponsors.length)];
   const name = generateCoolString(sponsor.name);
@@ -47,11 +51,16 @@
   const logo = sponsor.logo;
   const logo_alt = generateCoolString(sponsor.logo_alt);
   const title = generateCoolString(sponsor.title);
-  const description = sponsor.description.split("\n").map((d) => generateCoolString(d)).join("<br/>");
+  const description = sponsor.description
+    .split("\n")
+    .map((d) => generateCoolString(d))
+    .join("<br/>");
   const cta = generateCoolString(sponsor.cta);
   const url = sponsor.url;
 
-  const linkElement = document.querySelector("a[href='https://mastercomfig.com/?aff=comfig']");
+  const linkElement = document.querySelector(
+    "a[href='https://mastercomfig.com/?aff=comfig']"
+  );
 
   const card = linkElement.closest(".card");
   card.classList.add(r);
@@ -73,13 +82,13 @@
     }
   `);
   document.adoptedStyleSheets = [...document.adoptedStyleSheets, stylesheet];
-  
+
   const img = card.querySelector("img");
   img.src = logo;
   img.alt = logo_alt;
 
   const footer = card.querySelector(".card-footer");
-  const sponsoredBy = generateCoolString("Sponsored by");
+  const sponsoredBy = generateCoolString("Partnered with");
   footer.innerHTML = `${sponsoredBy} <strong>${name}</strong>`;
 
   const row = card.querySelector(".row");
@@ -89,22 +98,28 @@
   col2.innerHTML = `<strong class="fw-bold h5">${title}</strong><br/>${description}<strong>${cta}</strong>`;
 
   linkElement.removeAttribute("href");
-  linkElement.addEventListener("click", function(e) {
+  linkElement.addEventListener("click", function (e) {
     e.preventDefault();
     window.open(url, "_blank");
   });
 </script>
-<div class="card ">
+<div class="card">
   <div class="card-body">
     <div class="row align-items-center">
       <div class="col-auto">
-        <img style="height:8rem;width:8rem;aspect-ratio:1/1" width="128" height="128" src="/img/third_party/solid_gray.svg" alt="logo"/>
+        <img
+          style="height:8rem;width:8rem;aspect-ratio:1/1"
+          width="128"
+          height="128"
+          src="/img/third_party/solid_gray.svg"
+          alt="logo"
+        />
         <span class="d-block d-md-none"> </span>
       </div>
       <div class="col-auto text-muted">
-        <strong class="fw-bold h5">█████████</strong><br/>
-        █████████████████████████████<br>
-        ████████████████████████<br>
+        <strong class="fw-bold h5">█████████</strong><br />
+        █████████████████████████████<br />
+        ████████████████████████<br />
         <strong>███████████████████████████████████</strong>
       </div>
       <a href="https://mastercomfig.com/?aff=comfig"></a>
