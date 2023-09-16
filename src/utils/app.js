@@ -2716,7 +2716,9 @@ async function app() {
 
   document.addEventListener("contextmenu", (e) => {
     if (e) {
-      e.preventDefault();
+      if (blockKeyboard) {
+        e.preventDefault();
+      }
     } else {
       console.error("Context menu event is null:", e);
     }
@@ -2765,7 +2767,10 @@ async function app() {
     if (!lastBindInput) {
       return;
     }
-    blockKeyboard = false;
+    // HACK: contextmenu fires after input events, so we need to wait a bit
+    setTimeout(() => {
+      blockKeyboard = false;
+    }, 1);
     history.back();
     element.placeholder = "<Unbound>";
     element.classList.add("disabled");
