@@ -215,7 +215,6 @@ function readWav(arr) {
 }
 
 async function createPlayer(player) {
-  const buffer = await response.arrayBuffer();
   const wave = WaveSurfer.create({
     container: player,
     height: 64,
@@ -228,6 +227,7 @@ async function createPlayer(player) {
   });
   const hash = player.dataset.hash;
   const response = await fetch(`https://hits.mastercomfig.com/${hash}.wav`);
+  const buffer = await response.arrayBuffer();
   const wav = readWav(buffer);
   const samples = decodeMsAdpcm(wav);
   // TODO: manually encode wav file again
