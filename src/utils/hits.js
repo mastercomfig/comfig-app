@@ -1,7 +1,7 @@
 import WaveSurfer from "wavesurfer.js";
 import { WaveFile } from "wavefile";
 
-// AAdapted from MS-ADPCM decoder
+// Adapted from MS-ADPCM decoder
 // https://github.com/Snack-X/node-ms-adpcm
 // Public Domain
 
@@ -215,23 +215,19 @@ function readWav(arr) {
 }
 
 async function createPlayer(player) {
-  const ctx = new AudioContext();
-  const hash = player.dataset.hash;
-  const response = await fetch(`https://hits.mastercomfig.com/${hash}.wav`);
   const buffer = await response.arrayBuffer();
   const wave = WaveSurfer.create({
     container: player,
-    audioContext: ctx,
     height: 64,
     interact: false,
     cursorWidth: 0,
     hideScrollbar: true,
-    responsive: true,
   });
   wave.on("ready", () => {
     player.classList.remove("loading-bg");
   });
-  let buf;
+  const hash = player.dataset.hash;
+  const response = await fetch(`https://hits.mastercomfig.com/${hash}.wav`);
   const wav = readWav(buffer);
   const samples = decodeMsAdpcm(wav);
   // TODO: manually encode wav file again
@@ -242,9 +238,14 @@ async function createPlayer(player) {
     "16",
     samples
   );
-  buf = wavFile.toBuffer().buffer;
-  const decodedBuffer = await ctx.decodeAudioData(buf);
-  wave.loadDecodedBuffer(decodedBuffer);
+  const duration =
+    wavFile.data.chunkSize /
+    wavFile.fmt.numChannels /
+    wavFile.fmt.sampleRate /
+    (wavFile.fmt.bitsPerSample / 8);
+  const buf = wavFile.toBuffer().buffer;
+  const audioBlob = new Blob([buf], { type: "audio/wav" });
+  wave.loadBlob(audioBlob, samples, duration);
   const playLink = document.getElementById(`play-${hash}`);
   playLink.onclick = (e) => {
     e.preventDefault();
