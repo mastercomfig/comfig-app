@@ -1,7 +1,7 @@
 import { fetchHuds } from "@ssg/huds";
 import removeMd from "remove-markdown";
 
-export const get = async function get() {
+export async function GET() {
   const allHuds = await fetchHuds(true);
   const hudData = allHuds.map((hud) => {
     const data = {
@@ -26,5 +26,10 @@ export const get = async function get() {
     }
     return data;
   });
-  return { body: JSON.stringify(hudData) };
+  return new Response(JSON.stringify(hudData), {
+    status: 200,
+    headers: {
+      "Content-Type": "application/json"
+    }
+  });
 };
