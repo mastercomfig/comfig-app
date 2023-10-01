@@ -153,9 +153,9 @@ const { hud } = Astro.props;
       site="comfig huds - mastercomfig"
       description={`${
         hud.name
-      } on comfig huds, a modern Team Fortress 2 HUD directory. About ${
-        hud.name
-      }: ${removeMd(hud.content)}`}
+      } on comfig huds, a modern Team Fortress 2 HUD directory.${
+        hud.content ? ` About ${hud.name}: ${removeMd(hud.content)}` : ``
+      }`}
       url={`https://comfig.app/huds/page/${hud.id}`}
       image={hud.resourceUrls[0]}
     />
@@ -176,7 +176,7 @@ const { hud } = Astro.props;
     <div class="container">
       <h1 class="display-1 mt-3">
         {hud.name}
-        <span class="text-muted display-4">by {hud.author}</span>
+        <span class="text-muted display-4">&nbsp;by {hud.author}</span>
       </h1>
       {
         ((hud.resources.length > 1 || true) && (
@@ -299,7 +299,8 @@ const { hud } = Astro.props;
               class="list-group-item d-flex justify-content-between align-items-center"
             >
               <span
-                ><span class="fas fa-circle-question fa-fw"></span> Help/Requests</span
+                ><span class="fas fa-circle-question fa-fw"></span>
+                 Help/Requests</span
               >
               <span class="fas fa-square-arrow-up-right fa-fw"></span>
             </a>
@@ -401,7 +402,7 @@ const { hud } = Astro.props;
                     ? "fa-flask text-warning"
                     : "fa-circle-check text-success"
                 } fa-fw`}></span>
-              <strong>Release status:</strong>
+              <strong>Release status:&nbsp;</strong>
               {hud.prerelease ? "Preview" : "Stable"}
             </li>
             <li class="list-group-item">
@@ -413,7 +414,7 @@ const { hud } = Astro.props;
                     ? "fa-square-check verified-gold"
                     : "fa-circle-check text-success"
                 } fa-fw`}></span>
-              <strong>Compatibility:</strong>
+              <strong>Compatibility:&nbsp;</strong>
               {
                 hud.outdated
                   ? "Incompatible"
@@ -425,7 +426,7 @@ const { hud } = Astro.props;
             {
               hud.releaseDate && (
                 <li class="list-group-item">
-                  <strong>Release Date:</strong>{" "}
+                  <strong>Release Date:&nbsp;</strong>
                   {`${hud.releaseDate.toLocaleDateString("en-us", {
                     year: "numeric",
                     month: "short",
@@ -437,14 +438,15 @@ const { hud } = Astro.props;
             {
               hud.contributors && (
                 <li class="list-group-item">
-                  <strong>Contributors:</strong> {hud.contributors.join(", ")}
+                  <strong>Contributors:&nbsp;</strong>
+                  {hud.contributors.join(", ")}
                 </li>
               )
             }
             {
               hud.traits?.os && (
                 <li class="list-group-item">
-                  <strong>Platform:</strong>{" "}
+                  <strong>Platform:&nbsp;</strong>
                   {hud.traits.os.map((os) => (
                     <span class={`fab fa-${osToIcon[os]} fa-fw`} />
                   ))}
@@ -454,7 +456,7 @@ const { hud } = Astro.props;
             {
               hud.traits?.res && (
                 <li class="list-group-item">
-                  <strong>Resolutions:</strong>{" "}
+                  <strong>Resolutions:&nbsp;</strong>
                   {hud.traits.res.join(", ").replaceAll("/", ":")}
                 </li>
               )
@@ -462,7 +464,7 @@ const { hud } = Astro.props;
             {
               hud.traits?.position && (
                 <li class="list-group-item">
-                  <strong>Position:</strong>{" "}
+                  <strong>Position:&nbsp;</strong>
                   {hud.traits.position
                     .map((p) => p[0].toUpperCase() + p.substring(1))
                     .join(", ")}
@@ -472,7 +474,7 @@ const { hud } = Astro.props;
             {
               hud.traits?.lang && (
                 <li class="list-group-item">
-                  <strong>Languages:</strong>{" "}
+                  <strong>Languages:&nbsp;</strong>
                   {hud.traits.lang.map((l) => languageNames.of(l)).join(", ")}
                 </li>
               )
@@ -490,7 +492,7 @@ const { hud } = Astro.props;
       {
         hud.tags && (
           <small>
-            <strong>Tags:</strong> {hud.tags.join(", ")}
+            <strong>Tags:&nbsp;</strong> {hud.tags.join(", ")}
           </small>
         )
       }
@@ -559,5 +561,13 @@ const { hud } = Astro.props;
       <hr />
     </div>
     <Footer />
+    <footer class="container">
+      <br />
+      <p>
+        <a href="https://github.com/mastercomfig/comfig-app"
+          ><span class="fab fa-github fa-fw"></span> Source code</a
+        >
+      </p>
+    </footer>
   </Body>
 </Layout>
