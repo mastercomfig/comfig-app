@@ -207,6 +207,13 @@ b {
   color: rgba(255, 255, 255, 0.9);
 }
 
+// Navbar
+.navbar {
+  --bs-navbar-padding-x: 1rem;
+  --bs-navbar-padding-y: 0.4rem;
+  z-index: 5;
+}
+
 // React select https://github.com/JedWatson/react-select/issues/2345#issuecomment-843674624
 :root {
   --bs-select-padding-y: #{$form-select-padding-y}; //
