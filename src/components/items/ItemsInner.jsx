@@ -141,6 +141,7 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
   const selectedBrassModels = itemStore.brassmodels;
   const selectedTracers = itemStore.tracers;
   const selectedExplosion = itemStore.explosioneffects;
+  const selectedPlayerExplosion = itemStore.playerexplosions;
 
   const [liveCrosshairColor, setLiveCrosshairColor] = useState(undefined);
   const [liveCrosshairScale, setLiveCrosshairScale] = useState(undefined);
@@ -166,6 +167,8 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
     delTracer,
     setExplosionEffect,
     delExplosionEffect,
+    setPlayerExplosionEffect,
+    delPlayerExplosionEffect,
   ] = useItemStore((state) => [
     state.clearAllItems,
     state.setCrosshair,
@@ -182,6 +185,8 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
     state.delTracer,
     state.setExplosionEffect,
     state.delExplosionEffect,
+    state.setPlayerExplosionEffect,
+    state.delPlayerExplosionEffect,
   ]);
 
   const isDefault = itemClasses[0].classname === "default";
@@ -393,6 +398,30 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
                               type="explosion"
                               previewPath="/img/app/explosions/"
                               previews={explosionPreviews}
+                              previewImgClass="explosion-preview-img"
+                            />
+                          )}
+                        </>
+                      )}
+                    {item.ExplosionEffect &&
+                      !skipExplosionEffect.has(item.classname) && (
+                        <>
+                          <h3 className="pt-4">Player Hit Explosion Effect</h3>
+                          {selectedPlayerExplosion && (
+                            <ItemsSelector
+                              playerClass={playerClass}
+                              selection={
+                                selectedPlayerExplosion?.[item.classname]
+                              }
+                              options={playerExplosionEffects}
+                              defaultValue="default"
+                              classname={item.classname}
+                              delItem={delPlayerExplosionEffect}
+                              setItem={setPlayerExplosionEffect}
+                              isDefaultWeapon={isDefault}
+                              type="explosion"
+                              previewPath="/img/app/explosions/"
+                              previews={playerExplosionPreviews}
                               previewImgClass="explosion-preview-img"
                             />
                           )}

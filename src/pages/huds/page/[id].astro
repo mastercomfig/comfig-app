@@ -274,6 +274,36 @@ const { hud } = Astro.props;
       <div class="row flex-md-row-reverse align-items-stretch">
         <div class={hud.content ? "col-md-3 d-md-flex flex-md-column" : ""}>
           <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+              <strong>
+                <span
+                  class={`fas ${
+                    hud.prerelease
+                      ? "fa-flask text-warning"
+                      : "fa-circle-check text-success"
+                  } fa-fw`} /> Release status:&nbsp;</strong>
+              {hud.prerelease ? "Pre-release" : "Stable"}
+            </li>
+            <li class="list-group-item">
+              <strong>
+                <span
+                  class={`fas ${
+                    hud.outdated
+                      ? "fa-circle-exclamation text-danger"
+                      : hud.verified
+                      ? "fa-square-check verified-gold"
+                      : "fa-circle-check text-success"
+                  } fa-fw`} 
+                />
+                Compatibility:&nbsp;</strong>
+              {
+                hud.outdated
+                  ? "Incompatible"
+                  : hud.verified
+                  ? "Verified"
+                  : "Up to date"
+              }
+            </li>
             {
               hud.social.album && (
                 <a
@@ -318,17 +348,30 @@ const { hud } = Astro.props;
               )
             }
             {
-              hud.social.discord && (
-                <a
-                  href={`https://discord.gg/${hud.social.discord}`}
-                  class="list-group-item d-flex justify-content-between align-items-center"
-                >
-                  <span>
-                    <span class="fab fa-discord fa-fw" /> Discord
-                  </span>
-                  <span class="fas fa-square-arrow-up-right fa-fw" />
-                </a>
-              )
+              hud.social.discord &&
+                hud.social.discord.includes("#") && (
+                  <li class="list-group-item">
+                    <strong></strong>
+                      <span class="fab fa-discord fa-fw" />
+                      Discord:&nbsp;
+                    </strong>
+                    <span>{hud.social.discord}</span>
+                  </li>
+                )
+            }
+            {
+              hud.social.discord &&
+                !hud.social.discord.includes("#") && (
+                  <a
+                    href={`https://discord.gg/${hud.social.discord}`}
+                    class="list-group-item d-flex justify-content-between align-items-center"
+                  >
+                    <span>
+                      <span class="fab fa-discord fa-fw" /> Discord
+                    </span>
+                    <span class="fas fa-square-arrow-up-right fa-fw" />
+                  </a>
+                )
             }
             {
               hud.social.steam_group && (
@@ -395,34 +438,6 @@ const { hud } = Astro.props;
                 </a>
               )
             }
-            <li class="list-group-item">
-              <span
-                class={`fas ${
-                  hud.prerelease
-                    ? "fa-flask text-warning"
-                    : "fa-circle-check text-success"
-                } fa-fw`}></span>
-              <strong>Release status:&nbsp;</strong>
-              {hud.prerelease ? "Preview" : "Stable"}
-            </li>
-            <li class="list-group-item">
-              <span
-                class={`fas ${
-                  hud.outdated
-                    ? "fa-circle-exclamation text-danger"
-                    : hud.verified
-                    ? "fa-square-check verified-gold"
-                    : "fa-circle-check text-success"
-                } fa-fw`}></span>
-              <strong>Compatibility:&nbsp;</strong>
-              {
-                hud.outdated
-                  ? "Incompatible"
-                  : hud.verified
-                  ? "Verified"
-                  : "Up to date"
-              }
-            </li>
             {
               hud.releaseDate && (
                 <li class="list-group-item">

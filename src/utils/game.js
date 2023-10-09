@@ -1020,6 +1020,9 @@ const explosionEffects = {
   duck_collect_trail_special_red: "Invisible",
 };
 
+const playerExplosionEffects = structuredClone(explosionEffects);
+playerExplosionEffects["default"] = "Use Explosion Effect";
+
 const explosionPreviews = {
   default: "default.webp",
   ExplosionCore_sapperdestroyed: "ExplosionCore_sapperdestroyed.webp",
@@ -1029,6 +1032,9 @@ const explosionPreviews = {
   electrocuted_blue_flash: "electrocuted_blue_flash.webp",
   duck_collect_trail_special_red: "duck_collect_trail_special_red.webp",
 };
+
+const playerExplosionPreviews = structuredClone(explosionPreviews);
+playerExplosionPreviews["default"] = null;
 
 function getNormalizedSlotName(item) {
   if (customItemSlot[item.classname]) {
@@ -1161,7 +1167,9 @@ globalThis.getLocalization = getLocalization;
 globalThis.getItemName = getItemName;
 globalThis.getNormalizedSlotName = getNormalizedSlotName;
 globalThis.explosionEffects = explosionEffects;
+globalThis.playerExplosionEffects = playerExplosionEffects;
 globalThis.explosionPreviews = explosionPreviews;
+globalThis.playerExplosionPreviews = playerExplosionPreviews;
 globalThis.skipExplosionEffect = skipExplosionEffect;
 globalThis.skipMuzzleFlash = skipMuzzleFlash;
 globalThis.skipTracer = skipTracer;

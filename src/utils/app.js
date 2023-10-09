@@ -2,7 +2,6 @@ import { get, set, del } from "idb-keyval";
 //import { registerSW } from "virtual:pwa-register";
 import { Tab, ScrollSpy } from "bootstrap";
 import * as Sentry from "@sentry/browser";
-import cloneDeep from "lodash/cloneDeep";
 import { stringify } from "vdf-parser";
 import { BlobReader, BlobWriter, ZipWriter } from "@zip.js/zip.js";
 
@@ -489,7 +488,7 @@ async function app() {
     url = url.format(userVersion, id);
     url = url.replace(
       "https://github.com/mastercomfig/mastercomfig/releases",
-      "https://api.mastercomfig.com/download"
+      "https://api.comfig.app/download"
     );
     return url;
   }
@@ -1361,7 +1360,8 @@ async function app() {
       const brassmodels = itemsState.brassmodels;
       const tracers = itemsState.tracers;
       const selectedExplosionEffects = itemsState.explosioneffects;
-      let items = cloneDeep(globalThis.items);
+      const selectedPlayerExplosions = itemsState.playerexplosions;
+      let items = structuredClone(globalThis.items);
       delete items.default;
       let itemsToDownload = new Set();
       let crosshairsToDownload = new Set();
@@ -1444,13 +1444,13 @@ async function app() {
         }
       } else {
         for (const classname of Object.keys(crosshairs)) {
-          let item = items[classname];
           let [crosshairGroup, crosshairFile, crosshairKey] = crosshairs[
             classname
           ].split(".", 3);
-          let itemCrosshair = item.TextureData.crosshair;
           let crosshairPack = crosshairPacks[crosshairFile];
           let crosshairInfo = crosshairPack[crosshairKey];
+          let item = items[classname];
+          let itemCrosshair = item.TextureData.crosshair;
           if (crosshairFile.indexOf("/") === -1) {
             itemCrosshair.file = `${crosshairTargetBase}${crosshairFile}`;
             crosshairsToDownload.add(crosshairFile);
@@ -1552,6 +1552,33 @@ async function app() {
           item.ExplosionEffect = effect;
           item.ExplosionPlayerEffect = effect;
           item.ExplosionWaterEffect = effect;
+          itemsToDownload.add(classname);
+        }
+      }
+      if (selectedPlayerExplosions["default"]) {
+        let effect = selectedPlayerExplosions["default"];
+        for (const classname of Object.keys(items)) {
+          if (skipExplosionEffect.has(classname)) {
+            continue;
+          }
+          let item = items[classname];
+          if (!item.ExplosionEffect) {
+            continue;
+          }
+          item.ExplosionPlayerEffect = effect;
+          itemsToDownload.add(classname);
+        }
+      } else {
+        for (const classname of Object.keys(selectedPlayerExplosions)) {
+          if (skipExplosionEffect.has(classname)) {
+            continue;
+          }
+          let item = items[classname];
+          let effect = selectedPlayerExplosions[classname];
+          if (!item.ExplosionEffect) {
+            continue;
+          }
+          item.ExplosionPlayerEffect = effect;
           itemsToDownload.add(classname);
         }
       }
@@ -1670,7 +1697,7 @@ async function app() {
 
   function updateDocsLinks(version) {
     for (const el of document.querySelectorAll(".docs-link")) {
-      el.href = `https://docs.mastercomfig.com/${version}/${el.dataset.url}/`;
+      el.href = `https://docs.comfig.app/${version}/${el.dataset.url}/`;
     }
   }
 
@@ -1707,7 +1734,7 @@ async function app() {
           updateDocsLinks("page");
         }
       } else {
-        let tag = `https://api.mastercomfig.com/?t=${userVersion}`;
+        let tag = `https://api.comfig.app/?t=${userVersion}`;
         sendApiRequest(tag);
         updateDocsLinks(userVersion);
       }
@@ -2143,7 +2170,7 @@ async function app() {
     // Create a link to module documentation
     let moduleDocsLink = document.createElement("a");
     moduleDocsLink.href =
-      `https://docs.mastercomfig.com/${
+      `https://docs.comfig.app/${
         userVersion !== "latest" ? userVersion : "page"
       }/customization/modules/#` +
       displayName.replace(/\(|\)/g, "").split(" ").join("-").toLowerCase();

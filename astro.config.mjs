@@ -123,7 +123,7 @@ let pwa = {
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://mastercomfig.com",
+  site: "https://comfig.app",
   integrations: [react()],
   vite: {
     resolve: {

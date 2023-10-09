@@ -13,7 +13,7 @@ import "simple-keyboard/build/css/index.css";
 import "@styles/app.scss";
 import "@styles/keyboard.scss";
 
-const appResponse = await fetch("https://api.mastercomfig.com/");
+const appResponse = await fetch("https://api.comfig.app/");
 const appData = await appResponse.json();
 await gm.initGameData();
 const clientLanguageCache = {};
@@ -157,8 +157,8 @@ globalThis.items = gm.items;
             <li class="nav-item d-none" id="up-to-date-mark">
               <span class="nav-link"
                 ><span class="badge bg-success"
-                  ><span class="fas fa-check fa-fw" aria-hidden="true"></span> Up
-                  to Date</span
+                  ><span class="fas fa-check fa-fw" aria-hidden="true"></span>
+                   Up to Date</span
                 ></span
               >
             </li>
@@ -214,8 +214,8 @@ globalThis.items = gm.items;
             refresh the app and restore functionality.
           </div>
           <h2 class="fw-normal">
-            <span class="fas fa-box-open fa-fw" aria-hidden="true"></span> Choose
-            a preset
+            <span class="fas fa-box-open fa-fw" aria-hidden="true"></span>
+             Choose a preset
           </h2>
           <br />
           <ul class="nav nav-pills bg-teal-nav" id="presets" role="tablist">
@@ -335,7 +335,7 @@ globalThis.items = gm.items;
                 >
                   <p>
                     For more information about modules, <a
-                      href="https://docs.mastercomfig.com/page/customization/modules/"
+                      href="https://docs.comfig.app/page/customization/modules/"
                       data-url="customization/modules"
                       target="_blank"
                       class="docs-link"
@@ -343,8 +343,8 @@ globalThis.items = gm.items;
                     >
                   </p>
                   <div id="modules-root">
-                    <span class="fas fa-circle-notch fa-spin fa-fw"></span> Loading,
-                    please wait...
+                    <span class="fas fa-circle-notch fa-spin fa-fw"></span>
+                     Loading, please wait...
                   </div>
                 </div>
                 <div
@@ -355,7 +355,7 @@ globalThis.items = gm.items;
                 >
                   <p>
                     For more information about configs, <a
-                      href="https://docs.mastercomfig.com/page/customization/custom_configs/"
+                      href="https://docs.comfig.app/page/customization/custom_configs/"
                       data-url="customization/custom_configs"
                       target="_blank"
                       class="docs-link"
@@ -363,8 +363,8 @@ globalThis.items = gm.items;
                     >
                   </p>
                   <div id="configs-root">
-                    <span class="fas fa-circle-notch fa-spin fa-fw"></span> Loading,
-                    please wait...
+                    <span class="fas fa-circle-notch fa-spin fa-fw"></span>
+                     Loading, please wait...
                   </div>
                 </div>
                 <div
@@ -584,8 +584,8 @@ globalThis.items = gm.items;
                   </div>
                   <div class="card-footer">
                     <small>
-                      <strong>WARNING:</strong> will <strong>REDUCE</strong> performance
-                      on high memory!!!
+                      <strong>WARNING:</strong> will <strong>REDUCE</strong>
+                       performance on high memory!!!
                     </small>
                   </div>
                 </a>
@@ -601,7 +601,8 @@ globalThis.items = gm.items;
           <div class="row" id="downloads-section">
             <div class="col-sm-12">
               <h2 class="fw-normal">
-                <span class="fas fa-cloud-download fa-fw"></span> Download your files
+                <span class="fas fa-cloud-download fa-fw"></span> Download your
+                files
               </h2>
               <br />
               <div class="mb-3 d-none" id="game-folder-wrapper">
@@ -612,8 +613,8 @@ globalThis.items = gm.items;
                     id="direct-install"
                   />
                   <label class="custom-control-label" for="direct-install">
-                    <strong>Use Direct Install</strong> &mdash; Installs mastercomfig
-                    and all customizations directly to your game.
+                    <strong>Use Direct Install</strong> &mdash; Installs
+                    mastercomfig and all customizations directly to your game.
                   </label>
                 </div>
                 <div class="d-none" id="game-folder-container">
@@ -624,11 +625,11 @@ globalThis.items = gm.items;
                     id="game-folder-warning"
                   >
                     <span class="lead">Heads Up!</span><br />
-                    Installations in system folders like <strong
+                     Installations in system folders like <strong
                       >Program Files</strong
-                    > (which is the default Steam library folder) are not supported
-                    by the browser for security reasons.<br /><br />
-                    If you have Team Fortress 2 installed in there, please <a
+                    > (which is the default Steam library folder) are not
+                    supported by the browser for security reasons.<br /><br />
+                     If you have Team Fortress 2 installed in there, please <a
                       href="https://help.steampowered.com/en/faqs/view/4BD4-4528-6B2E-8327#exist"
                       target="_blank"
                       rel="noopener">move Steam</a
@@ -681,7 +682,7 @@ globalThis.items = gm.items;
                     id="vpk-dl"
                     style="cursor: pointer"
                     ><span class="fas fa-cloud-download fa-fw"></span>
-                    Download from GitHub</a
+                     Download from GitHub</a
                   ></b
                 ><span id="download-progress-status"></span>
               </p>
@@ -719,12 +720,12 @@ globalThis.items = gm.items;
                 <p>
                   Right click Team Fortress 2 in your Steam library and click <b
                     >Properties…</b
-                  > . In the window that appears, under Launch Options, remove anything
-                  that's in there and paste the above text.<br /><a
+                  > . In the window that appears, under Launch Options, remove
+                  anything that's in there and paste the above text.<br /><a
                     target="_blank"
                     class="docs-link"
                     rel="noopener"
-                    href="https://docs.mastercomfig.com/latest/customization/launch_options/"
+                    href="https://docs.comfig.app/page/customization/launch_options/"
                     data-url="customization/launch_options"
                     >More about launch options</a
                   >
@@ -768,7 +769,7 @@ globalThis.items = gm.items;
                   <p>
                     <a
                       class="docs-link"
-                      href="https://docs.mastercomfig.com/page/setup/install/"
+                      href="https://docs.comfig.app/page/setup/install/"
                       data-url="setup/install"
                       ><span class="far fa-hard-drive fa-fw"></span>
                       <b>How to install</b></a
@@ -779,7 +780,7 @@ globalThis.items = gm.items;
                   <p>
                     <a
                       class="docs-link"
-                      href="https://docs.mastercomfig.com/page/next_steps/update/"
+                      href="https://docs.comfig.app/page/next_steps/update/"
                       data-url="next_steps/update"
                       ><span class="fas fa-rotate fa-fw"></span>
                       <b>How to update</b></a
@@ -788,7 +789,7 @@ globalThis.items = gm.items;
                 </div>
                 <div class="col-sm-auto">
                   <p>
-                    <a href="https://docs.mastercomfig.com/page/support_me/"
+                    <a href="https://docs.comfig.app/page/support_me/"
                       ><span class="fas fa-heart fa-fw"></span>
                       <b>Support me</b></a
                     >
@@ -808,24 +809,25 @@ globalThis.items = gm.items;
               </p>
               <a
                 class="btn btn-primary docs-link"
-                href="https://docs.mastercomfig.com/page/customization/modules/"
+                href="https://docs.comfig.app/page/customization/modules/"
                 data-url="customization/modules">Modules</a
               >
               <a
                 class="btn btn-primary docs-link"
-                href="https://docs.mastercomfig.com/page/customization/custom_configs/"
+                href="https://docs.comfig.app/page/customization/custom_configs/"
                 data-url="customization/custom_configs">Configs</a
               >
               <h5 style="padding-top: 16px"><b>Support</b></h5>
               <p>
-                <strong>Experiencing problems with mastercomfig?</strong> Head to
-                the Quick Fixes page to get help with common issues.<br />
-                <strong>Don't see your issue?</strong> Ask our community for help!
-                You can also join to give feedback and suggestions about the config.
+                <strong>Experiencing problems with mastercomfig?</strong> Head
+                to the Quick Fixes page to get help with common issues.<br />
+                <strong>Don't see your issue?</strong> Ask our community for
+                help! You can also join to give feedback and suggestions about
+                the config.
               </p>
               <a
                 class="btn btn-primary docs-link"
-                href="https://docs.mastercomfig.com/page/next_steps/quick_fixes/"
+                href="https://docs.comfig.app/page/next_steps/quick_fixes/"
                 data-url="next_steps/quick_fixes">Quick Fixes</a
               >
               <a
@@ -836,18 +838,18 @@ globalThis.items = gm.items;
               >
               <h5 style="padding-top: 16px"><b>See Also</b></h5>
               <p>
-                <strong>Want even more from TF2?</strong> There are some other great
-                mods and custom configs which you may want to check out in addition
-                to mastercomfig.
+                <strong>Want even more from TF2?</strong> There are some other
+                great mods and custom configs which you may want to check out in
+                addition to mastercomfig.
               </p>
               <a
                 class="btn btn-primary"
-                href="https://docs.mastercomfig.com/page/customization/see_also/"
+                href="https://docs.comfig.app/page/customization/see_also/"
                 >Extra mods</a
               >
               <a
                 class="btn btn-primary"
-                href="https://docs.mastercomfig.com/page/customization/custom_config_list/"
+                href="https://docs.comfig.app/page/customization/custom_config_list/"
                 >Community configs</a
               >
             </div>
@@ -860,7 +862,7 @@ globalThis.items = gm.items;
     <br />
     <footer class="container">
       Portions of this application are based upon <a
-        href="https://docs.mastercomfig.com/latest/credits"
+        href="https://docs.comfig.app/page/credits"
         >free software and other projects</a
       >. This application is <a
         href="https://github.com/mastercomfig/comfig-app"

@@ -12,7 +12,7 @@ const useStore = create(
       brassmodels: new Set(),
       tracers: new Set(),
       explosioneffects: {},
-      playerexplosioneffects: {},
+      playerexplosions: {},
       clearAllItems: () =>
         set((state) => {
           state.crosshairs = {};
@@ -22,7 +22,7 @@ const useStore = create(
           state.brassmodels = new Set();
           state.tracers = new Set();
           state.explosioneffects = {};
-          state.playerexplosioneffects = {};
+          state.playerexplosions = {};
           return state;
         }),
       setCrosshair: (k, v) =>
@@ -92,11 +92,11 @@ const useStore = create(
         }),
       setPlayerExplosionEffect: (k, v) =>
         set((state) => ({
-          playerexplosioneffects: { ...state.playerexplosioneffects, [k]: v },
+          playerexplosions: { ...state.playerexplosions, [k]: v },
         })),
       delPlayerExplosionEffect: (k) =>
         set((state) => {
-          delete state.playerexplosioneffects[k];
+          delete state.playerexplosions[k];
           return state;
         }),
     }),
@@ -138,7 +138,7 @@ const useStore = create(
         "brassmodels",
         "tracers",
         "explosioneffects",
-        "playerexplosioneffects",
+        "playerexplosions",
       ]
     )
   )
