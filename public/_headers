@@ -4,30 +4,3 @@
 
 /_astro/*
   Cache-Control: public, max-age=31536000, immutable
-
-/app*
-  Cache-Control: public, max-age=2419200, stale-while-revalidate=86400
-
-/*.png
-  Cache-Control: public, max-age=2419200, stale-while-revalidate=86400
-
-/*.jpg
-  Cache-Control: public, max-age=2419200, stale-while-revalidate=86400
-
-/*.ico
-  Cache-Control: public, max-age=2419200, stale-while-revalidate=86400
-
-/*.webp
-  Cache-Control: public, max-age=2419200, stale-while-revalidate=86400
-
-/*.vtf
-  Cache-Control: public, max-age=2419200, stale-while-revalidate=86400
-
-/*.vmt
-  Cache-Control: public, max-age=2419200, stale-while-revalidate=86400
-
-/*.svg
-  Cache-Control: public, max-age=2419200, stale-while-revalidate=86400
-
-/*.json
-  Cache-Control: public, max-age=2419200, stale-while-revalidate=86400
