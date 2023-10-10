@@ -1,103 +1,33 @@
 /*
-  X-Frame-Options: DENY
-  X-Content-Type-Options: nosniff
-  Referrer-Policy: no-referrer
   Permissions-Policy: document-domain=()
   Content-Security-Policy: script-src 'unsafe-inline' 'self' blob: https://static.cloudflareinsights.com https://browser-update.org; frame-ancestors 'none';
-  Cache-Control: public, max-age=2419200, stale-while-revalidate=86400
-
-/ap:p
-  ! Cache-Control
-
-/app*
-  Cache-Control: public, max-age=2419200, stale-while-revalidate=86400
-
-/assets*
-  ! Cache-Control
-
-/assets/*
-  Cache-Control: public, max-age=31536000, immutable
-
-/_astro*
-  ! Cache-Control
 
 /_astro/*
   Cache-Control: public, max-age=31536000, immutable
 
-/chunks*
-  ! Cache-Control
-
-/chunks/*
-  Cache-Control: public, max-age=31536000, immutable
-
-/clien*
-  ! Cache-Control
-
-/client*
-  Cache-Control: public, max-age=31536000, immutable
-
-/hoiste*
-  ! Cache-Control
-
-/hoisted*
-  Cache-Control: public, max-age=31536000, immutable
-
-/ImageSlide*
-  ! Cache-Control
-
-/ImageSlider*
-  Cache-Control: public, max-age=31536000, immutable
-
-/Item*
-  ! Cache-Control
-
-/Items*
-  Cache-Control: public, max-age=31536000, immutable
-
-/*.pn:p
-  ! Cache-Control
+/app*
+  Cache-Control: public, max-age=2419200, stale-while-revalidate=86400
 
 /*.png
   Cache-Control: public, max-age=2419200, stale-while-revalidate=86400
 
-/*.jp:p
-  ! Cache-Control
-
 /*.jpg
   Cache-Control: public, max-age=2419200, stale-while-revalidate=86400
-
-/*.ic:o
-  ! Cache-Control
 
 /*.ico
   Cache-Control: public, max-age=2419200, stale-while-revalidate=86400
 
-/*.web:p
-  ! Cache-Control
-
 /*.webp
   Cache-Control: public, max-age=2419200, stale-while-revalidate=86400
-
-/*.vt:f
-  ! Cache-Control
 
 /*.vtf
   Cache-Control: public, max-age=2419200, stale-while-revalidate=86400
 
-/*.vm:t
-  ! Cache-Control
-
 /*.vmt
   Cache-Control: public, max-age=2419200, stale-while-revalidate=86400
 
-/*.sv:g
-  ! Cache-Control
-
 /*.svg
   Cache-Control: public, max-age=2419200, stale-while-revalidate=86400
-
-/*.jso:n
-  ! Cache-Control
 
 /*.json
   Cache-Control: public, max-age=2419200, stale-while-revalidate=86400

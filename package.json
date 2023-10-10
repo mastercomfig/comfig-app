@@ -7,7 +7,7 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "deploy": "astro build && node ./scripts/purge-cloudflare.js",
+    "prod": "astro build",
     "format": "prettier --write --plugin-search-dir=. src",
     "lint": "eslint src/**/*.{js,jsx,astro}"
   },
