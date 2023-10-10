@@ -1,5 +1,5 @@
-const { glob } = require("glob");
-const https = require('https');
+const { globSync } = require("glob");
+const https = require("https");
 
 const MAX_CF_URLS = 30;
 
@@ -9,34 +9,32 @@ const headers = {
   "Content-Type": "application/json",
 };
 
-function purgeOnCloudflare(files) {
-  const files1 = files.map(f => `https://mastercomfig.com/${f}`);
-  const files2 = files.map(f => `https://comfig.app/${f}`);
+const hosts = ["mastercomfig.com", "comfig.app"];
+
+function purgeOnCloudflare(pages) {
+  const files = pages.flatMap((f) => hosts.map((h) => `https://${h}/${f}`));
   const data = JSON.stringify({
-    files: files1.concat(files2),
+    files,
   });
   const options = {
-      hostname: "api.cloudflare.com",
-      port: 443,
-      path: `/client/v4/zones/${process.env.CF_ZONE_ID}/purge_cache`,
-      method: "POST",
-      headers,
+    hostname: "api.cloudflare.com",
+    port: 443,
+    path: `/client/v4/zones/${process.env.CF_ZONE_ID}/purge_cache`,
+    method: "POST",
+    headers,
   };
-    const req = https.request(options, (res) => {
-      res.on('data', (d) => {
-        process.stdout.write(d);
-      });
+  const req = https.request(options, (res) => {
+    res.on("data", (d) => {
+      process.stdout.write(d);
     });
-    req.write(data);
-    req.end();
+  });
+  req.write(data);
+  req.end();
 }
 
-glob("src/pages/*.astro", (err, files) => {
-  if (err) {
-    console.warn(err);
-    return;
-  }
-  files = files.flatMap(f => {
+function main() {
+  let files = globSync("src/pages/**/*.astro");
+  files = files.flatMap((f) => {
     if (f.endsWith("index.astro")) {
       return [""];
     }
@@ -50,4 +48,6 @@ glob("src/pages/*.astro", (err, files) => {
   } else {
     purgeOnCloudflare(files);
   }
-});
+}
+
+main();
