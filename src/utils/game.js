@@ -375,7 +375,7 @@ const crosshairPacks = {
   },
   cpma_14: {
     _0_0: {
-      name: "CPMA 15",
+      name: "CPMA 14",
     },
   },
   cpma_15: {
