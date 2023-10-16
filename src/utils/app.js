@@ -1356,6 +1356,7 @@ async function app() {
       const crosshairs = itemsState.crosshairs;
       const crosshairColors = itemsState.crosshairColors;
       const crosshairScales = itemsState.crosshairScales;
+      const zoomCrosshairs = itemsState.zoomCrosshairs;
       const muzzleflashes = itemsState.muzzleflashes;
       const brassmodels = itemsState.brassmodels;
       const tracers = itemsState.tracers;
@@ -1463,6 +1464,29 @@ async function app() {
           itemCrosshair.height = crosshairInfo.size ?? "64";
           itemsToDownload.add(classname);
         }
+      }
+      for (const classname of Object.keys(zoomCrosshairs)) {
+        let [crosshairGroup, crosshairFile, crosshairKey] = zoomCrosshairs[
+          classname
+        ].split(".", 3);
+        let crosshairPack = crosshairPacks[crosshairFile];
+        let crosshairInfo = crosshairPack[crosshairKey];
+        let item = items[classname];
+        let itemCrosshair = item.TextureData.zoom;
+        if (!itemCrosshair) {
+          itemCrosshair = item.TextureData.zoom = {};
+        }
+        if (crosshairFile.indexOf("/") === -1) {
+          itemCrosshair.file = `${crosshairTargetBase}${crosshairFile}`;
+          crosshairsToDownload.add(crosshairFile);
+        } else {
+          itemCrosshair.file = crosshairFile;
+        }
+        itemCrosshair.x = crosshairInfo.pos?.[0] ?? "0";
+        itemCrosshair.y = crosshairInfo.pos?.[1] ?? "0";
+        itemCrosshair.width = crosshairInfo.size ?? "64";
+        itemCrosshair.height = crosshairInfo.size ?? "64";
+        itemsToDownload.add(classname);
       }
       if (muzzleflashes.has("default")) {
         for (const classname of Object.keys(items)) {

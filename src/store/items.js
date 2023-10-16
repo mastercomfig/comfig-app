@@ -6,6 +6,7 @@ const useStore = create(
   persist(
     (set) => ({
       crosshairs: {},
+      zoomCrosshairs: {},
       crosshairColors: {},
       crosshairScales: {},
       muzzleflashes: new Set(),
@@ -18,6 +19,7 @@ const useStore = create(
           state.crosshairs = {};
           state.crosshairColors = {};
           state.crosshairScales = {};
+          state.zoomCrosshairs = {};
           state.muzzleflashes = new Set();
           state.brassmodels = new Set();
           state.tracers = new Set();
@@ -49,6 +51,15 @@ const useStore = create(
       delCrosshairScale: (k) =>
         set((state) => {
           delete state.crosshairScales[k];
+          return state;
+        }),
+      setZoomCrosshair: (k, v) =>
+        set((state) => ({
+          zoomCrosshairs: { ...state.zoomCrosshairs, [k]: v },
+        })),
+      delZoomCrosshair: (k) =>
+        set((state) => {
+          delete state.zoomCrosshairs[k];
           return state;
         }),
       setMuzzleFlash: (k) =>
@@ -134,6 +145,7 @@ const useStore = create(
         "crosshairs",
         "crosshairColors",
         "crosshairScales",
+        "zoomCrosshairs",
         "muzzleflashes",
         "brassmodels",
         "tracers",
