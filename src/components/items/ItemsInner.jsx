@@ -137,6 +137,7 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
   const selectedCrosshairs = itemStore.crosshairs;
   const selectedCrosshairColor = itemStore.crosshairColors?.[playerClass];
   const selectedCrosshairScale = itemStore.crosshairScales?.[playerClass];
+  const selectedZoomCrosshairs = itemStore.zoomCrosshairs;
   const selectedMuzzleFlashes = itemStore.muzzleflashes;
   const selectedBrassModels = itemStore.brassmodels;
   const selectedTracers = itemStore.tracers;
@@ -147,8 +148,10 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
   const [liveCrosshairScale, setLiveCrosshairScale] = useState(undefined);
 
   const currentCrosshairColor = liveCrosshairColor ??
-    selectedCrosshairColor ?? { r: 200, g: 200, b: 200, a: 0.784 };
-  const defaultCrosshairScale = selectedCrosshairScale ?? 32;
+    selectedCrosshairColor ??
+    itemStore.crosshairColors?.default ?? { r: 200, g: 200, b: 200, a: 0.784 };
+  const defaultCrosshairScale =
+    selectedCrosshairScale ?? itemStore.crosshairScales?.default ?? 32;
   const currentCrosshairScale = liveCrosshairScale ?? defaultCrosshairScale;
 
   const [
@@ -159,6 +162,8 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
     delCrosshairColor,
     setCrosshairScale,
     delCrosshairScale,
+    setZoomCrosshair,
+    delZoomCrosshair,
     setMuzzleFlash,
     delMuzzleFlash,
     setBrassModel,
@@ -177,6 +182,8 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
     state.delCrosshairColor,
     state.setCrosshairScale,
     state.delCrosshairScale,
+    state.setZoomCrosshair,
+    state.delZoomCrosshair,
     state.setMuzzleFlash,
     state.delMuzzleFlash,
     state.setBrassModel,
@@ -252,7 +259,38 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
                         previewImgClass="crosshair-preview-img"
                         useAdvancedSelect={true}
                         groups={crosshairPackGroups}
+                        previewImgStyle={{
+                          transform: `scale(${currentCrosshairScale / 32})`,
+                        }}
+                        colorize={currentCrosshairColor}
                       >
+                        {selectedZoomCrosshairs &&
+                          zoomable.has(item.classname) && (
+                            <>
+                              <h5 className="pt-2">Scoped Crosshair</h5>
+                              <ItemsSelector
+                                playerClass={playerClass}
+                                selection={
+                                  selectedZoomCrosshairs?.[item.classname]
+                                }
+                                options={crosshairs}
+                                defaultValue={"Valve.default.default"}
+                                customDefaultDisplay={"Use weapon crosshair"}
+                                classname={item.classname}
+                                delItem={delZoomCrosshair}
+                                setItem={setZoomCrosshair}
+                                isDefaultWeapon={true}
+                                type="crosshair"
+                                previewPath="/img/app/crosshairs/preview/"
+                                previews={crosshairPreviews}
+                                previewClass="crosshair-preview d-flex"
+                                previewImgClass="crosshair-preview-img"
+                                useAdvancedSelect={true}
+                                groups={crosshairPackGroups}
+                                hidePreview={true}
+                              />
+                            </>
+                          )}
                         <h4 className="pt-2 mb-0">Crosshair Settings</h4>
                         <h6 className="mb-2">
                           <strong>
@@ -273,12 +311,22 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
                             setLiveCrosshairScale(e.target.value)
                           }
                           onBlur={(e) => {
-                            setCrosshairScale(
-                              playerClass === "All-Class"
-                                ? "default"
-                                : playerClass,
-                              e.target.value
-                            );
+                            const isDefault = playerClass === "All-Class";
+                            const targetClass = isDefault
+                              ? "default"
+                              : playerClass;
+                            const defaultValue =
+                              (isDefault
+                                ? undefined
+                                : itemStore.crosshairScales?.[playerClass]) ??
+                              32;
+                            // If we're default, we can't actually reset the value (for now).
+                            // Because crosshair scale is archived, so we have no guarantee what the game value is.
+                            if (e.target.value === defaultValue && !isDefault) {
+                              delCrosshairScale(targetClass);
+                            } else {
+                              setCrosshairScale(targetClass, e.target.value);
+                            }
                           }}
                         />
                         <h6>Crosshair Color</h6>

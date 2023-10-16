@@ -125,7 +125,8 @@ function getPreviewImage(
   previews,
   previewPath,
   previewImgClass,
-  previewImgStyle
+  previewImgStyle,
+  colorize
 ) {
   let selectedInfo = selected.split(".", 3);
   let selectedName;
@@ -133,6 +134,28 @@ function getPreviewImage(
     selectedName = selectedInfo[1];
   } else {
     selectedName = selectedInfo;
+  }
+  if (colorize) {
+    return (
+      previews &&
+      previews[selected] !== null && (
+        <span
+          className="colorMask"
+          style={{
+            ...previewImgStyle,
+            maskImage: `url(${previewPath}${
+              previews[selected] ?? selectedName + ".png"
+            })`,
+            backgroundColor: `rgb(${colorize.r} ${colorize.g} ${colorize.b})`,
+          }}
+        >
+          <img
+            className={previewImgClass}
+            src={`${previewPath}${previews[selected] ?? selectedName + ".png"}`}
+          />
+        </span>
+      )
+    );
   }
   return (
     previews &&
@@ -151,6 +174,7 @@ export default function ItemsSelector({
   selection,
   options,
   defaultValue,
+  customDefaultDisplay,
   classname,
   delItem,
   setItem,
@@ -164,6 +188,8 @@ export default function ItemsSelector({
   useAdvancedSelect,
   groups,
   children,
+  colorize,
+  hidePreview,
 }) {
   let [selected, setSelected] = useState(selection ?? defaultValue);
 
@@ -173,14 +199,19 @@ export default function ItemsSelector({
     if (!isDefaultWeapon && x === "default") {
       continue;
     }
+    let label = options[x];
+    if (x === defaultValue) {
+      if (customDefaultDisplay) {
+        label = customDefaultDisplay;
+      } else if (isDefaultWeapon) {
+        label = "Per Weapon";
+      } else {
+        label += " (Default)";
+      }
+    }
     selectOptions[x] = {
       value: x,
-      label:
-        x === defaultValue && isDefaultWeapon
-          ? "Per Weapon"
-          : `${options[x]}${
-              x === defaultValue && !isDefaultWeapon ? " (Default)" : ""
-            }`,
+      label,
     };
   }
 
@@ -212,7 +243,7 @@ export default function ItemsSelector({
 
   return (
     <div className="row">
-      <div className="col-4">
+      <div className={hidePreview ? "col-12" : "col-4"}>
         {(useAdvancedSelect && (
           <Select
             components={{ DropdownIndicator, IndicatorSeparator }}
@@ -223,13 +254,7 @@ export default function ItemsSelector({
             classNamePrefix={"MyDropdown"}
             formatOptionLabel={({ value, label }) => (
               <div style={{ display: "flex", alignItems: "center" }}>
-                {getPreviewImage(
-                  value,
-                  previews,
-                  previewPath,
-                  previewImgClass,
-                  previewImgStyle
-                )}
+                {getPreviewImage(value, previews, previewPath, previewImgClass)}
                 <div style={{ marginLeft: "0.5rem" }}>{label}</div>
               </div>
             )}
@@ -279,7 +304,7 @@ export default function ItemsSelector({
         )}
         {children}
       </div>
-      {(selected !== defaultValue || !isDefaultWeapon) && (
+      {(selected !== defaultValue || !isDefaultWeapon) && !hidePreview && (
         <div className="col-8">
           <div className={`col-8 preview-container ${previewClass}`}>
             {getPreviewImage(
@@ -287,7 +312,8 @@ export default function ItemsSelector({
               previews,
               previewPath,
               previewImgClass,
-              previewImgStyle
+              previewImgStyle,
+              colorize
             )}
           </div>
         </div>

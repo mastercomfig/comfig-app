@@ -58,9 +58,9 @@ const crosshairPacks = {
     },
     _0_48: {
       pos: ["0", "48"],
-      name: "None",
+      name: "Square Bracket",
       size: "24",
-      preview: null,
+      preview: "squarebracket.png",
     },
   },
   crosshair1: {
@@ -736,8 +736,6 @@ const itemUsedBy = {
     "tf_weapon_drg_pomson",
     "tf_weapon_laser_pointer",
     "tf_weapon_mechanical_arm",
-    "tf_weapon_pda_engineer_build",
-    "tf_weapon_pda_engineer_destroy",
     "tf_weapon_pistol",
     "tf_weapon_robot_arm",
     "tf_weapon_sentry_revenge",
@@ -761,12 +759,7 @@ const itemUsedBy = {
     "tf_weapon_sniperrifle_classic",
     "tf_weapon_sniperrifle_decap",
   ],
-  spy: [
-    "tf_weapon_knife",
-    "tf_weapon_pda_spy",
-    "tf_weapon_revolver",
-    "tf_weapon_sapper",
-  ],
+  spy: ["tf_weapon_knife", "tf_weapon_revolver", "tf_weapon_builder"],
   "All-Class": [
     "tf_weapon_grapplinghook",
     "tf_weapon_spellbook",
@@ -805,7 +798,7 @@ const classNameToName = {
     "#TF_TheBattalionsBackup",
     "#TF_SoldierSashimono",
   ],
-  tf_weapon_builder: "Toolbox",
+  tf_weapon_builder: ["Toolbox", "#TF_Weapon_Spy_Sapper"],
   tf_weapon_charged_smg: "#TF_Pro_SMG",
   tf_weapon_cleaver: "#TF_SD_Cleaver",
   tf_weapon_club: [
@@ -876,9 +869,6 @@ const classNameToName = {
   tf_weapon_parachute_secondary: "#TF_Weapon_BaseJumper",
   tf_weapon_particle_cannon: "#TF_CowMangler",
   tf_weapon_passtime_gun: "PASS Time JACK",
-  tf_weapon_pda_engineer_build: "#TF_Weapon_PDA_Engineer_Builder",
-  tf_weapon_pda_engineer_destroy: "#TF_Weapon_PDA_Engineer_Destroyer",
-  tf_weapon_pda_spy: "#TF_Weapon_Disguise_Kit",
   tf_weapon_pep_brawler_blaster: "#TF_Weapon_PEP_Scattergun",
   //tf_weapon_pipebomblauncher: ["#TF_Weapon_PipebombLauncher", "#TF_Unique_Achievement_StickyLauncher", "#TF_Weapon_StickyBomb_Jump"],
   tf_weapon_pipebomblauncher: "#TF_Weapon_PipebombLauncher",
@@ -898,8 +888,6 @@ const classNameToName = {
   tf_weapon_rocketlauncher_directhit: "#TF_Unique_Achievement_RocketLauncher",
   tf_weapon_rocketlauncher_fireball: "#TF_Weapon_DragonsFury",
   tf_weapon_rocketpack: "#TF_ThermalThruster",
-  //tf_weapon_sapper: ["#TF_Weapon_Spy_Sapper", "#TF_SD_Sapper", "#TF_Weapon_Ap_Sap", "#TF_Weapon_SnackAttack"],
-  tf_weapon_sapper: "#TF_Weapon_Spy_Sapper",
   tf_weapon_scattergun: [
     "#TF_Weapon_Scattergun",
     "#TF_Unique_Achievement_Scattergun_Double",
@@ -985,7 +973,6 @@ const customItemSlot = {
   tf_weapon_parachute_secondary: "Secondary",
   tf_weapon_passtime_gun: "Utility",
   tf_weapon_rocketpack: "Secondary",
-  tf_weapon_pda_spy: "PDA",
   tf_weapon_spellbook: "Action Item",
   tf_weapon_builder: "Building",
 };
@@ -1130,7 +1117,7 @@ const stockItems = {
     "tf_weapon_bonesaw",
   ],
   sniper: ["tf_weapon_sniperrifle", "tf_weapon_smg", "tf_weapon_club"],
-  spy: ["tf_weapon_revolver", "tf_weapon_knife", "tf_weapon_sapper"],
+  spy: ["tf_weapon_revolver", "tf_weapon_knife", "tf_weapon_builder"],
   "All-Class": [],
 };
 
@@ -1154,6 +1141,12 @@ const skipMuzzleFlash = new Set([
 
 const skipTracer = new Set(["tf_weapon_minigun"]);
 
+const zoomable = new Set([
+  "tf_weapon_sniperrifle",
+  "tf_weapon_sniperrifle_classic",
+  "tf_weapon_sniperrifle_decap",
+]);
+
 globalThis.classes = classes;
 globalThis.crosshairPacks = crosshairPacks;
 globalThis.crosshairPackGroups = crosshairPackGroups;
@@ -1173,6 +1166,7 @@ globalThis.playerExplosionPreviews = playerExplosionPreviews;
 globalThis.skipExplosionEffect = skipExplosionEffect;
 globalThis.skipMuzzleFlash = skipMuzzleFlash;
 globalThis.skipTracer = skipTracer;
+globalThis.zoomable = zoomable;
 
 export default {
   languageCache,

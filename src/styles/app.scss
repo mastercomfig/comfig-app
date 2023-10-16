@@ -173,3 +173,27 @@ a.addon-card:hover {
   padding: 0;
   width: 100%;
 }
+
+.chrome-picker {
+  font-family: var(--bs-body-font-family) !important;
+}
+
+.chrome-picker input {
+  background-color: #f2f2f2;
+}
+
+.colorMask {
+  mask-size: 100%; /* edges might get cut off if you use 100% */
+  mask-repeat: no-repeat;
+  mask-position: center;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
+}
+
+.colorMask > img {
+  mix-blend-mode: multiply;
+}
+
+.MyDropdown__menu-list {
+  scroll-behavior: auto;
+}
