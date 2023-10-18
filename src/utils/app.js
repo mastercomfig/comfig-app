@@ -1420,7 +1420,7 @@ async function app() {
       }
       // If there's weapon crosshairs, we need to clear a set crosshair file
       if (Object.keys(crosshairs).length > 0) {
-        configContents["autoexec.cfg"] += 'cl_crosshair_file""\n';
+        configContents["autoexec.cfg"] += 'cl_crosshair_file""\ncrosshair 1\n';
       }
       if (crosshairs["default"]) {
         let [crosshairGroup, crosshairFile, crosshairKey] = crosshairs[
