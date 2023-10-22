@@ -28,9 +28,3 @@
 
 /*.xml
   Cache-Control: private, max-age=604800, stale-while-revalidate=1987200
-
-/*.json
-  Cache-Control: private, max-age=86400, stale-while-revalidate=86400
-
-/app*
-  Cache-Control: private, max-age=86400, stale-while-revalidate=86400
