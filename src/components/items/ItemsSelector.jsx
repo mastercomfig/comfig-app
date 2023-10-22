@@ -143,6 +143,9 @@ function getPreviewImage(
           className="colorMask"
           style={{
             ...previewImgStyle,
+            WebkitMaskImage: `url(${previewPath}${
+              previews[selected] ?? selectedName + ".png"
+            })`,
             maskImage: `url(${previewPath}${
               previews[selected] ?? selectedName + ".png"
             })`,
