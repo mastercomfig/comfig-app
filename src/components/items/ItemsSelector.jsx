@@ -147,6 +147,7 @@ function getPreviewImage(
               previews[selected] ?? selectedName + ".png"
             })`,
             backgroundColor: `rgb(${colorize.r} ${colorize.g} ${colorize.b})`,
+            opacity: colorize.a,
           }}
         >
           <img

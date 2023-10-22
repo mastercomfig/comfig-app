@@ -303,7 +303,7 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
                         </h6>
                         <h6>Crosshair Scale: {currentCrosshairScale}</h6>
                         <Form.Range
-                          defaultValue={defaultCrosshairScale}
+                          value={currentCrosshairScale}
                           min="16"
                           max="64"
                           step="1"
