@@ -187,6 +187,7 @@ a.addon-card:hover {
   mask-repeat: no-repeat;
   mask-position: center;
   image-rendering: crisp-edges;
+  image-rendering: -webkit-optimize-contrast;
   image-rendering: pixelated;
 }
 
