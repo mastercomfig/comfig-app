@@ -521,7 +521,9 @@ async function app() {
           urls.map((url) => url.blob.catch(() => downloadFailures.push(url))),
         );
         if (downloadFailures.length) {
-          throw new Error("Download failures detected");
+          throw new Error(
+            `Download failures detected: ${downloadFailures.join(",")}`,
+          );
         } else {
           updateDownloadProgress(100, "Done!");
         }
@@ -570,7 +572,9 @@ async function app() {
           pendingObjectURLs.push(blobURL);
         }
         if (downloadFailures.length) {
-          throw new Error("Download failures detected");
+          throw new Error(
+            `Download failures detected: ${downloadFailures.join(",")}`,
+          );
         } else {
           updateDownloadProgress(100, "Done!");
         }
@@ -1629,7 +1633,7 @@ async function app() {
         });
       }
       const crosshairExtensions = [".vtf", ".vmt"];
-      let crosshairSrcBase = `/assets/app/crosshairs/assets/`;
+      let crosshairSrcBase = `/img/app/crosshairs/assets/`;
       let hasAlerted = false;
       for (const crosshairFile of Array.from(crosshairsToDownload)) {
         for (const ext of crosshairExtensions) {
