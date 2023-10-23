@@ -1633,7 +1633,7 @@ async function app() {
         });
       }
       const crosshairExtensions = [".vtf", ".vmt"];
-      let crosshairSrcBase = `/img/app/crosshairs/assets/`;
+      let crosshairSrcBase = `/assets/app/crosshairs/`;
       let hasAlerted = false;
       for (const crosshairFile of Array.from(crosshairsToDownload)) {
         for (const ext of crosshairExtensions) {
