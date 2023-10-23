@@ -1794,7 +1794,7 @@ async function app() {
     "medium-low": mediumLowImg,
     medium: mediumImg,
     ultra: ultraImg,
-    veryLowImg: veryLowImg,
+    "very-low": veryLowImg,
     high: highImg,
     none: noneImg,
   };
