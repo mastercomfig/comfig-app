@@ -96,6 +96,13 @@ const languageNames = new Intl.DisplayNames(["en"], {
 });
 
 const { hud } = Astro.props;
+
+const cleanContent = hud.content ? removeMd(hud.content) : "";
+let hudDescBase = cleanContent.split("\n")[0].substring(0, 297);
+if (hudDescBase.length < cleanContent.length) {
+  hudDescBase += "...";
+}
+const hudDescription = hudDescBase;
 ---
 
 <Layout>
@@ -154,7 +161,7 @@ const { hud } = Astro.props;
       description={`${
         hud.name
       } on comfig huds, a modern Team Fortress 2 HUD directory.${
-        hud.content ? ` About ${hud.name}: ${removeMd(hud.content)}` : ``
+        hud.content ? ` About ${hud.name}: ${hudDescription}` : ``
       }`}
       url={`https://comfig.app/huds/page/${hud.id}`}
       image={hud.resourceUrls[0]}

@@ -1,11 +1,25 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Tabs, Tab } from "react-bootstrap";
 import ItemsInner from "./ItemsInner.jsx";
 
-export default function Items({ items }) {
-  const playerClasses = Object.keys(itemUsedBy);
-
+export default function Items({ hash }) {
   let [resetKey, setResetKey] = useState(0);
+
+  useEffect(() => {
+    (async () => {
+      const gameDataResp = await fetch(`/gameData/${hash}.cached.json`);
+      const gameData = await gameDataResp.json();
+      globalThis.items = gameData.items;
+      globalThis.languageCache = gameData.languageCache;
+      setResetKey((resetKey) => resetKey + 1);
+    })();
+  }, []);
+
+  if (!globalThis.items) {
+    return <></>;
+  }
+
+  const playerClasses = Object.keys(itemUsedBy);
 
   return (
     <div className="items-root">
@@ -28,7 +42,7 @@ export default function Items({ items }) {
               key={resetKey}
               playerClass={playerClass}
               items={Object.fromEntries(
-                itemUsedBy[playerClass].map((i) => [i, items[i]])
+                itemUsedBy[playerClass].map((i) => [i, items[i]]),
               )}
             />
           </Tab>

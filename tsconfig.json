@@ -8,7 +8,8 @@
       "@styles/*": ["src/styles/*"],
       "@utils/*": ["src/utils/*"],
       "@store/*": ["src/store/*"],
-      "@ssg/*": ["src/ssg/*"]
+      "@ssg/*": ["src/ssg/*"],
+      "@img/*": ["src/img/*"],
     }
   }
 }

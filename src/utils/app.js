@@ -4,6 +4,14 @@ import { Tab, ScrollSpy } from "bootstrap";
 import * as Sentry from "@sentry/browser";
 import { stringify } from "vdf-parser";
 import { BlobReader, BlobWriter, ZipWriter } from "@zip.js/zip.js";
+import mediumHighImg from "@img/presets/medium-high.webp";
+import lowImg from "@img/presets/low.webp";
+import mediumLowImg from "@img/presets/medium-low.webp";
+import mediumImg from "@img/presets/medium.webp";
+import ultraImg from "@img/presets/ultra.webp";
+import veryLowImg from "@img/presets/very-low.webp";
+import highImg from "@img/presets/high.webp";
+import noneImg from "@img/presets/none.webp";
 
 let idbKeyval = {
   get,
@@ -39,7 +47,7 @@ async function app() {
       return firebase;
     });
   let dkeyboard = import("simple-keyboard/build/index.modern.js").then(
-    (Keyboard) => Keyboard.default
+    (Keyboard) => Keyboard.default,
   );
 
   const logLevelToSentrySeverity = {
@@ -66,7 +74,7 @@ async function app() {
         {
           input: [...arguments],
           level,
-        }
+        },
       );
       original.apply(console, arguments);
     };
@@ -230,7 +238,7 @@ async function app() {
   function setRecommendedAddons(id, values) {
     // don't set non-recommendable addons
     let addons = values.filter(
-      (addon) => recommendableAddons.indexOf(addon) !== -1
+      (addon) => recommendableAddons.indexOf(addon) !== -1,
     );
     if (addons.length != values.length) {
       console.error("Attempted to set non-recommendable addon!");
@@ -488,7 +496,7 @@ async function app() {
     url = url.format(userVersion, id);
     url = url.replace(
       "https://github.com/mastercomfig/mastercomfig/releases",
-      "https://api.comfig.app/download"
+      "https://api.comfig.app/download",
     );
     return url;
   }
@@ -510,7 +518,7 @@ async function app() {
     if (customDirectory) {
       try {
         await Promise.all(
-          urls.map((url) => url.blob.catch(() => downloadFailures.push(url)))
+          urls.map((url) => url.blob.catch(() => downloadFailures.push(url))),
         );
         if (downloadFailures.length) {
           throw new Error("Download failures detected");
@@ -525,7 +533,7 @@ async function app() {
             ? `Failed to download ${downloadFailures.length} files`
             : `Failed to download ${downloadFailures
                 .map((url) => url.name)
-                .join(", ")}`) + ". Please try again later."
+                .join(", ")}`) + ". Please try again later.",
         );
       }
     } else {
@@ -541,8 +549,8 @@ async function app() {
                 zipWriter.add(url.path, new BlobReader(blob));
                 wroteFile = true;
               })
-              .catch(() => downloadFailures.push(url))
-          )
+              .catch(() => downloadFailures.push(url)),
+          ),
         );
         if (wroteFile) {
           const blobURL = URL.createObjectURL(await zipWriter.close());
@@ -556,7 +564,7 @@ async function app() {
               bubbles: true,
               cancelable: true,
               view: window,
-            })
+            }),
           );
           link.remove();
           pendingObjectURLs.push(blobURL);
@@ -574,7 +582,7 @@ async function app() {
             ? `Failed to download ${downloadFailures.length} files`
             : `Failed to download ${downloadFailures
                 .map((url) => url.name)
-                .join(", ")}`) + ". Please try again later."
+                .join(", ")}`) + ". Please try again later.",
         );
       }
     }
@@ -692,7 +700,7 @@ async function app() {
     let fail = bannedDirectories.has(name);
     if (fail) {
       alert(
-        `${name} is not a valid folder. To install to your game, please select the top-level "Team Fortress 2" folder.`
+        `${name} is not a valid folder. To install to your game, please select the top-level "Team Fortress 2" folder.`,
       );
     } else {
       fail = silentBannedDirectories.has(name);
@@ -758,7 +766,7 @@ async function app() {
       gameDirectory = directoryHandle;
       updatePresetDownloadButton();
       getEl(
-        "game-folder-text"
+        "game-folder-text",
       ).innerText = `${gameDirectory.name} folder chosen, click to change`;
     } catch (err) {
       console.error("Get directory failed:", err);
@@ -787,13 +795,13 @@ async function app() {
         "comfig-custom",
         {
           create: true,
-        }
+        },
       );
       scriptsDirectory = await comfigCustomDirectory.getDirectoryHandle(
         "scripts",
         {
           create: true,
-        }
+        },
       );
       const materialsRootDirectory =
         await comfigCustomDirectory.getDirectoryHandle("materials", {
@@ -803,7 +811,7 @@ async function app() {
         "vgui",
         {
           create: true,
-        }
+        },
       );
       const replayDirectory = await vguiDirectory.getDirectoryHandle("replay", {
         create: true,
@@ -812,7 +820,7 @@ async function app() {
         "thumbnails",
         {
           create: true,
-        }
+        },
       );
       const cfgDirectory = await tfDirectory.getDirectoryHandle("cfg", {
         create: true,
@@ -873,7 +881,7 @@ async function app() {
     }
     if (directory) {
       return getWritable(name, directory).then((writable) =>
-        writable.write(contents).then(() => writable.close())
+        writable.write(contents).then(() => writable.close()),
       );
     } else {
       const file = new File([contents], name, {
@@ -901,7 +909,7 @@ async function app() {
         throw err;
       }
       return wait(delay).then(() =>
-        fetchRetry(url, delay * 2, triesLeft, fetchOptions)
+        fetchRetry(url, delay * 2, triesLeft, fetchOptions),
       );
     }
     return fetch(url, fetchOptions).then(checkFetch).catch(onError);
@@ -955,7 +963,7 @@ async function app() {
       }
       if (filesInUse) {
         alert(
-          "Files are in use. Please close TF2 before updating mastercomfig."
+          "Files are in use. Please close TF2 before updating mastercomfig.",
         );
         return downloads;
       }
@@ -980,7 +988,7 @@ async function app() {
         downloads.push(addonResult);
       } else {
         alert(
-          `Failed to download ${selection} addon file. Please try again later.`
+          `Failed to download ${selection} addon file. Please try again later.`,
         );
       }
     }
@@ -1221,12 +1229,12 @@ async function app() {
   function handleKeyDownReplacements(bindCommand) {
     // Now add the spec overrides for the binds.
     for (const [key, [value, before]] of Object.entries(
-      bindCommandReplacements
+      bindCommandReplacements,
     )) {
       const pattern = new RegExp(
         String.raw`${commandSeparationRegex}(${escapeRegExp(
-          key
-        )})${commandSeparationRegex}`
+          key,
+        )})${commandSeparationRegex}`,
       );
       bindCommand = before
         ? bindCommand.replace(pattern, `$1${value};$2$3`)
@@ -1374,11 +1382,11 @@ async function app() {
         function addColor(target, color) {
           configContents[target] += `cl_crosshair_red ${Math.round(color.r)};`;
           configContents[target] += `cl_crosshair_green ${Math.round(
-            color.g
+            color.g,
           )};`;
           configContents[target] += `cl_crosshair_blue ${Math.round(color.b)};`;
           configContents[target] += `cl_crosshairalpha ${Math.round(
-            (color.a ?? 1) * 255
+            (color.a ?? 1) * 255,
           )}\n`;
         }
         // If any color is set, we need to use color mode 5
@@ -1621,7 +1629,7 @@ async function app() {
         });
       }
       const crosshairExtensions = [".vtf", ".vmt"];
-      let crosshairSrcBase = `/img/app/crosshairs/assets/`;
+      let crosshairSrcBase = `/assets/app/crosshairs/assets/`;
       let hasAlerted = false;
       for (const crosshairFile of Array.from(crosshairsToDownload)) {
         for (const ext of crosshairExtensions) {
@@ -1682,7 +1690,7 @@ async function app() {
           return;
         }
         for (const actions of Object.keys(
-          addonActionMappings["null-canceling-movement"]
+          addonActionMappings["null-canceling-movement"],
         )) {
           // TODO: add default bindings if user doesn't have any
         }
@@ -1754,7 +1762,7 @@ async function app() {
     if (didChange) {
       if (userVersion === "latest") {
         if (cachedData) {
-          handleApiResponse(latestData);
+          sendApiRequest();
           updateDocsLinks("page");
         }
       } else {
@@ -1775,10 +1783,21 @@ async function app() {
         icon = "download";
       }
       getEl(
-        "vpk-dl"
+        "vpk-dl",
       ).innerHTML = `<span class="fas fa-${icon} fa-fw"></span> ${text} `; // update download text
     }
   }
+
+  const presetImg = {
+    "medium-high": mediumHighImg,
+    low: lowImg,
+    "medium-low": mediumLowImg,
+    medium: mediumImg,
+    ultra: ultraImg,
+    veryLowImg: veryLowImg,
+    high: highImg,
+    none: noneImg,
+  };
 
   async function setPreset(id, fromDB) {
     if (selectedPreset === id) {
@@ -1802,7 +1821,7 @@ async function app() {
     let presetInfo = presets[selectedPreset];
     new Tab(getEl(selectedPreset)).show(); // visually display as active in tabs menu bar
     let presetImage = getEl("preset-image");
-    presetImage.src = `/img/presets/${selectedPreset}.webp`;
+    presetImage.src = presetImg[selectedPreset].src;
     presetImage.alt = `${presetInfo.name} preset screenshot`;
     getEl("preset-description").innerHTML = presetInfo.description;
     getEl("vpk-dl").removeAttribute("href"); // we don't need the static download anymore
@@ -2007,7 +2026,7 @@ async function app() {
       "form-select",
       "form-select-sm",
       "bg-dark",
-      "text-light"
+      "text-light",
     );
     let defaultValue = getModuleDefault(name);
     let configDefault = getBuiltinModuleDefault(name);
@@ -2060,7 +2079,7 @@ async function app() {
     // Event listener for undoing
     let configDefault = getDefaultValueFromName(
       values,
-      getBuiltinModuleDefault(name)
+      getBuiltinModuleDefault(name),
     );
     inputUndo.addEventListener("click", () => {
       switchElement.checked = configDefault;
@@ -2094,7 +2113,7 @@ async function app() {
     if (typeof defaultSelection === "object") {
       valueIndicator.innerText = properCaseOrDisplayModuleName(
         defaultSelection,
-        defaultSelection.value
+        defaultSelection.value,
       );
     } else {
       valueIndicator.innerText = capitalize(defaultSelection);
@@ -2102,7 +2121,7 @@ async function app() {
     // Event listener for undoing
     let configDefault = getDefaultValueFromName(
       values,
-      getBuiltinModuleDefault(name)
+      getBuiltinModuleDefault(name),
     );
     inputUndo.addEventListener("click", () => {
       rangeElement.value = configDefault;
@@ -2110,7 +2129,7 @@ async function app() {
       if (typeof configDefaultSelection === "object") {
         valueIndicator.innerText = properCaseOrDisplayModuleName(
           configDefaultSelection,
-          configDefaultSelection.value
+          configDefaultSelection.value,
         );
       } else {
         valueIndicator.innerText = capitalize(configDefaultSelection);
@@ -2123,7 +2142,7 @@ async function app() {
         setModule(name, selected.value);
         valueIndicator.innerText = properCaseOrDisplayModuleName(
           selected,
-          selected.value
+          selected.value,
         );
       } else {
         setModule(name, selected);
@@ -2214,7 +2233,7 @@ async function app() {
     let moduleInput = handleModuleInput(
       moduleInputType,
       module.name,
-      module.values
+      module.values,
     );
     // If we could create an input control, show it to our parent
     if (moduleInput) {
@@ -2282,7 +2301,7 @@ async function app() {
       },
       {
         passive: false,
-      }
+      },
     );
     categoryNavItem.append(categoryNavLink);
     // If we have a module in this category, show the whole category
@@ -2342,7 +2361,7 @@ async function app() {
     Object.keys(modules).forEach((module, index) => {
       let [moduleCategoryElement, moduleCategoryNavLink] = handleCategory(
         module,
-        modules[module]
+        modules[module],
       );
       if (moduleCategoryElement) {
         customizationsCol.append(moduleCategoryElement);
@@ -2362,7 +2381,7 @@ async function app() {
       "position-absolute",
       "bottom-0",
       "btn",
-      "btn-secondary"
+      "btn-secondary",
     );
     resetButton.style.marginBottom = "0.5rem";
     resetButton.addEventListener("click", async (e) => {
@@ -2449,7 +2468,7 @@ async function app() {
 
     releaseUrl.dev =
       "https://github.com/mastercomfig/mastercomfig/compare/{0}...develop".format(
-        latestVersion
+        latestVersion,
       );
 
     let versionDropdown = getEl("versionDropdownMenu");
@@ -2519,10 +2538,10 @@ async function app() {
   }
 
   async function getApiResponse(url) {
-    if (url) {
-      return fetch(url).then((resp) => resp.json());
+    if (!url) {
+      url = `/api/${globalThis.appVersion}.${globalThis.appHash}.cached.json`;
     }
-    return latestData;
+    return fetch(url).then((resp) => resp.json());
   }
 
   function sendApiRequest(url) {
@@ -2797,12 +2816,12 @@ async function app() {
     },
     {
       passive: false,
-    }
+    },
   );
 
   // Capture keyboard input when bindings are shown
   let tabEls = document.querySelectorAll(
-    '#customizations a[data-bs-toggle="tab"]'
+    '#customizations a[data-bs-toggle="tab"]',
   );
   for (const tabEl of tabEls) {
     tabEl.addEventListener("shown.bs.tab", async (e) => {
@@ -2831,7 +2850,7 @@ async function app() {
       if (!element.parentNode.parentNode.nextSibling) {
         // display remove button
         element.parentNode.parentNode.childNodes[3].firstChild.classList.remove(
-          "d-none"
+          "d-none",
         );
         createBindingField();
       }
@@ -2954,7 +2973,7 @@ async function app() {
       "form-control-sm",
       "disabled",
       "text-light",
-      "bg-dark"
+      "bg-dark",
     );
     keyInput.placeholder = "<Unbound>";
     let key = bindOptions?.key;
@@ -2970,7 +2989,7 @@ async function app() {
       "form-select",
       "form-select-sm",
       "bg-dark",
-      "text-light"
+      "text-light",
     );
     // Add empty
     let optionElement = document.createElement("option");
@@ -3010,7 +3029,7 @@ async function app() {
       "form-control",
       "form-control-sm",
       "text-light",
-      "bg-dark"
+      "bg-dark",
     );
     textInput.placeholder = "Type a console command to run";
     textInput.ariaLabel = "Custom command to run";

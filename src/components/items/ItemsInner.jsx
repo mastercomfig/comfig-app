@@ -2,6 +2,7 @@ import { useMemo, useState, useEffect } from "react";
 import { Button, Tab, Row, Col, Nav, FormCheck, Form } from "react-bootstrap";
 import useItemStore from "@store/items";
 import ItemsSelector from "./ItemsSelector";
+import crosshairPreviewImg from "@img/app/crosshairs/crosspreview.webp";
 import pkg from "react-color/lib/Chrome";
 const ChromePicker = pkg.default ?? pkg;
 
@@ -104,12 +105,12 @@ function calculateCrosshairs(items) {
 export default function ItemsInner({ playerClass, items, setResetKey }) {
   let [slots, slotNames, firstKey] = useMemo(
     () => calculateItemSlots(playerClass, items),
-    [playerClass, items]
+    [playerClass, items],
   );
 
   let [crosshairs, defaultCrosshairs, crosshairPreviews] = useMemo(
     () => calculateCrosshairs(items),
-    []
+    [],
   );
 
   let [itemStore, setItemStore] = useState({});
@@ -121,7 +122,7 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
       setItemStore(useItemStore.getState());
     } else {
       unsubFinishHydration = useItemStore.persist.onFinishHydration((state) =>
-        setItemStore(state)
+        setItemStore(state),
       );
     }
 
@@ -256,6 +257,11 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
                         previewPath="/img/app/crosshairs/preview/"
                         previews={crosshairPreviews}
                         previewClass="crosshair-preview d-flex"
+                        previewStyle={{
+                          background: `url(${crosshairPreviewImg.src})`,
+                          backgroundSize: "cover",
+                          backgroundPosition: "center",
+                        }}
                         previewImgClass="crosshair-preview-img"
                         useAdvancedSelect={true}
                         groups={crosshairPackGroups}
@@ -342,7 +348,7 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
                               playerClass === "All-Class"
                                 ? "default"
                                 : playerClass,
-                              color.rgb
+                              color.rgb,
                             );
                           }}
                         />
@@ -354,7 +360,7 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
                             delCrosshairColor(
                               playerClass === "All-Class"
                                 ? "default"
-                                : playerClass
+                                : playerClass,
                             );
                             setLiveCrosshairColor({
                               r: 200,
@@ -444,7 +450,7 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
                               setItem={setExplosionEffect}
                               isDefaultWeapon={isDefault}
                               type="explosion"
-                              previewPath="/img/app/explosions/"
+                              previewPath=""
                               previews={explosionPreviews}
                               previewImgClass="explosion-preview-img"
                             />
@@ -468,7 +474,7 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
                               setItem={setPlayerExplosionEffect}
                               isDefaultWeapon={isDefault}
                               type="explosion"
-                              previewPath="/img/app/explosions/"
+                              previewPath=""
                               previews={playerExplosionPreviews}
                               previewImgClass="explosion-preview-img"
                             />
@@ -491,7 +497,7 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
                     )}
                   </div>
                 </Tab.Pane>
-              ))
+              )),
             )}
           </Tab.Content>
         </Col>

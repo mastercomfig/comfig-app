@@ -6,7 +6,7 @@ import Select from "react-select";
 function onMenuOpen() {
   setTimeout(() => {
     const selectedEl = document.getElementsByClassName(
-      "MyDropdown__option--is-selected"
+      "MyDropdown__option--is-selected",
     )[0];
     if (selectedEl) {
       selectedEl.scrollIntoView({
@@ -40,7 +40,7 @@ function getSelectStyles(multi, size = "") {
     }),
     singleValue: (
       { marginLeft, marginRight, ...provided },
-      { isDisabled }
+      { isDisabled },
     ) => ({
       ...provided,
       color: `var(--bs-select${isDisabled ? "-disabled" : ""}-color)`,
@@ -85,7 +85,7 @@ function getSelectStyles(multi, size = "") {
     }),
     multiValueLabel: (
       { padding, paddingLeft, fontSize, ...provided },
-      state
+      state,
     ) => ({
       ...provided,
       padding: `0 var(--bs-select-padding-y${suffix})`,
@@ -119,14 +119,13 @@ function getSelectTheme(theme) {
   };
 }
 
-// TODO: https://stackoverflow.com/questions/29280817/is-there-any-way-to-colorize-a-white-png-image-with-css-only
 function getPreviewImage(
   selected,
   previews,
   previewPath,
   previewImgClass,
   previewImgStyle,
-  colorize
+  colorize,
 ) {
   let selectedInfo = selected.split(".", 3);
   let selectedName;
@@ -144,10 +143,10 @@ function getPreviewImage(
           style={{
             ...previewImgStyle,
             WebkitMaskImage: `url(${previewPath}${
-              previews[selected] ?? selectedName + ".png"
+              previews[selected] ?? selectedName + ".webp"
             })`,
             maskImage: `url(${previewPath}${
-              previews[selected] ?? selectedName + ".png"
+              previews[selected] ?? selectedName + ".webp"
             })`,
             backgroundColor: `rgb(${colorize.r} ${colorize.g} ${colorize.b})`,
             opacity: colorize.a,
@@ -155,7 +154,9 @@ function getPreviewImage(
         >
           <img
             className={previewImgClass}
-            src={`${previewPath}${previews[selected] ?? selectedName + ".png"}`}
+            src={`${previewPath}${
+              previews[selected] ?? selectedName + ".webp"
+            }`}
           />
         </span>
       )
@@ -167,7 +168,7 @@ function getPreviewImage(
       <img
         className={previewImgClass}
         style={previewImgStyle}
-        src={`${previewPath}${previews[selected] ?? selectedName + ".png"}`}
+        src={`${previewPath}${previews[selected] ?? selectedName + ".webp"}`}
       />
     )
   );
@@ -187,6 +188,7 @@ export default function ItemsSelector({
   previewPath,
   previews,
   previewClass,
+  previewStyle,
   previewImgClass,
   previewImgStyle,
   useAdvancedSelect,
@@ -238,7 +240,7 @@ export default function ItemsSelector({
         }
         for (const x of Object.keys(pack)) {
           groupedSelectOptions[group].options.push(
-            selectOptions[`${group}.${groupOption}.${x}`]
+            selectOptions[`${group}.${groupOption}.${x}`],
           );
         }
       }
@@ -310,14 +312,17 @@ export default function ItemsSelector({
       </div>
       {(selected !== defaultValue || !isDefaultWeapon) && !hidePreview && (
         <div className="col-8">
-          <div className={`col-8 preview-container ${previewClass}`}>
+          <div
+            className={`col-8 preview-container ${previewClass}`}
+            style={previewStyle}
+          >
             {getPreviewImage(
               selected,
               previews,
               previewPath,
               previewImgClass,
               previewImgStyle,
-              colorize
+              colorize,
             )}
           </div>
         </div>

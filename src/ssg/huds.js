@@ -1,6 +1,7 @@
 import { parse } from "vdf-parser";
 
 import { JSDOM } from "jsdom";
+import { sha256 } from "./appData";
 
 let hudDb = null;
 
@@ -78,7 +79,7 @@ const getHuds = async () => {
       huds.map(async (hud) => {
         // Fetch and parse JSON from db
         const data = await fetch(
-          `https://raw.githubusercontent.com/mastercomfig/hud-db/main/${hud.path}`
+          `https://raw.githubusercontent.com/mastercomfig/hud-db/main/${hud.path}`,
         );
         const hudData = JSON.parse(await data.text());
 
@@ -90,7 +91,7 @@ const getHuds = async () => {
         // Query markdown
         try {
           const markdownData = await fetchWithTimeout(
-            `https://raw.githubusercontent.com/mastercomfig/hud-db/main/hud-pages/${hudId}.md`
+            `https://raw.githubusercontent.com/mastercomfig/hud-db/main/hud-pages/${hudId}.md`,
           );
           if (markdownData.ok) {
             hudData.content = await markdownData.text();
@@ -122,14 +123,14 @@ const getHuds = async () => {
           // Query the info.vdf in the repo to get the UI version
           try {
             const infoVdf = await fetchWithTimeout(
-              `https://raw.githubusercontent.com/${ghRepo}/${hudData.hash}/info.vdf`
+              `https://raw.githubusercontent.com/${ghRepo}/${hudData.hash}/info.vdf`,
             );
             if (infoVdf.ok) {
               try {
                 const infoVdfJson = parse(await infoVdf.text());
                 const tfUiVersion = parseInt(
                   Object.entries(infoVdfJson)[0][1].ui_version,
-                  10
+                  10,
                 );
                 hudData.outdated = tfUiVersion !== CURRENT_HUD_VERSION;
               } catch (e) {
@@ -152,7 +153,7 @@ const getHuds = async () => {
 
           // Query the tag
           const branchTags = await fetch(
-            `https://github.com/${ghRepo}/branch_commits/${hudData.hash}`
+            `https://github.com/${ghRepo}/branch_commits/${hudData.hash}`,
           );
           const dom = new JSDOM(await branchTags.text());
           const tagList =
@@ -160,19 +161,19 @@ const getHuds = async () => {
           if (tagList) {
             // Get the oldest tag associated with this commit
             hudData.versionName = tagList.children.item(
-              tagList.children.length - 1
+              tagList.children.length - 1,
             ).lastChild.textContent;
           }
 
           // Query the commit
           try {
             const commit = await ghApi(
-              `repos/${ghRepo}/git/commits/${hudData.hash}`
+              `repos/${ghRepo}/git/commits/${hudData.hash}`,
             );
             hudData.publishDate = new Date(commit.author.date);
           } catch (e) {
             console.log(
-              `Failed to fetch commit ${hudData.hash} for ${hudId} (${ghRepo})`
+              `Failed to fetch commit ${hudData.hash} for ${hudId} (${ghRepo})`,
             );
             hudData.publishDate = new Date(null);
             throw e;
@@ -193,7 +194,7 @@ const getHuds = async () => {
 
         // Remap resources to full URLs
         hudData.resourceUrls = hudData.resources.map((name) =>
-          getHudResource(hudId, name)
+          getHudResource(hudId, name),
         );
         hudData.bannerUrl = hudData.resourceUrls[0];
 
@@ -207,7 +208,7 @@ const getHuds = async () => {
         }
 
         return [hudId, hudData];
-      })
+      }),
     );
     hudMap = new Map(hudEntries);
   }
@@ -240,3 +241,13 @@ export const fetchHuds = async function (all) {
 
   return results;
 };
+
+export async function getAllHudsHash() {
+  const allHuds = await getHudDb();
+
+  const hudsJson = JSON.stringify(allHuds);
+
+  const hash = await sha256(hudsJson);
+
+  return hash;
+}

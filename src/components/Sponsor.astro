@@ -1,4 +1,6 @@
 <script>
+  import tf2cc from "@img/third_party/tf2cc.webp";
+
   function generateCoolString(str) {
     const count = Math.floor(Math.random() * 10);
     for (let i = 0; i < count; i++) {
@@ -22,7 +24,7 @@
     let id = Array.from(arr, dec2hex).join("");
     if (!isLetter(id.charAt(0))) {
       const randomLetter = String.fromCharCode(
-        97 + Math.floor(Math.random() * 26)
+        97 + Math.floor(Math.random() * 26),
       );
       id = randomLetter + id.substring(1);
     }
@@ -33,7 +35,7 @@
   const sponsors = [
     {
       name: "TF2 Coaching Central",
-      logo: "/img/third_party/tf2cc.webp",
+      logo: tf2cc.src,
       logo_alt: "TF2CC logo",
       url: "https://discord.gg/tf2-coaching-central-tf2cc-727627956058325052",
       title: "Coach or get coached for competitive TF2!",
@@ -59,7 +61,7 @@
   const url = sponsor.url;
 
   const linkElement = document.querySelector(
-    "a[href='https://comfig.app/?aff=comfig']"
+    "a[href='https://comfig.app/?aff=comfig']",
   );
 
   const card = linkElement.closest(".card");
@@ -126,6 +128,6 @@
     </div>
   </div>
   <div class="card-footer text-body-secondary">
-    Sponsored by <strong></strong>
+    Partnered with <strong></strong>
   </div>
 </div>
