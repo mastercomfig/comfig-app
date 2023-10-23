@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Tabs, Tab } from "react-bootstrap";
 import ItemsInner from "./ItemsInner.jsx";
+import "@utils/game.js";
 
 export default function Items({ hash }) {
   let [resetKey, setResetKey] = useState(0);
