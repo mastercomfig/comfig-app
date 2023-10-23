@@ -153,8 +153,8 @@ dependencies:
     specifier: ^11.0.0
     version: 11.0.0
   wavesurfer.js:
-    specifier: ^7.4.0
-    version: 7.4.0
+    specifier: ^7.4.2
+    version: 7.4.2
   workbox-core:
     specifier: ^7.0.0
     version: 7.0.0
@@ -3412,7 +3412,7 @@ packages:
       postcss: ^8.1.0
     dependencies:
       browserslist: 4.22.1
-      caniuse-lite: 1.0.30001551
+      caniuse-lite: 1.0.30001553
       fraction.js: 4.3.7
       normalize-range: 0.1.2
       picocolors: 1.0.0
@@ -3583,7 +3583,7 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001551
+      caniuse-lite: 1.0.30001553
       electron-to-chromium: 1.4.563
       node-releases: 2.0.13
       update-browserslist-db: 1.0.13(browserslist@4.22.1)
@@ -3638,8 +3638,8 @@ packages:
     engines: {node: '>=14.16'}
     dev: false
 
-  /caniuse-lite@1.0.30001551:
-    resolution: {integrity: sha512-vtBAez47BoGMMzlbYhfXrMV1kvRF2WP/lqiMuDu1Sb4EE4LKEgjopFDSRtZfdVnslNRpOqV/woE+Xgrwj6VQlg==}
+  /caniuse-lite@1.0.30001553:
+    resolution: {integrity: sha512-N0ttd6TrFfuqKNi+pMgWJTb9qrdJu4JSpgPFLe/lrD19ugC6fZgF0pUewRowDwzdDnb9V41mFcdlYgl/PyKf4A==}
     dev: false
 
   /canvas@2.11.2:
@@ -8506,8 +8506,8 @@ packages:
     hasBin: true
     dev: false
 
-  /wavesurfer.js@7.4.0:
-    resolution: {integrity: sha512-VXJgf/uL3S5AYWT8Y9+2StFrCzRHMXlQwGSR3zpXHqmZ/Z6AtOerpfwsluu0M2UMSuaqGYu5PoENSCSrDuBJCQ==}
+  /wavesurfer.js@7.4.2:
+    resolution: {integrity: sha512-4pNQ1porOCUBYBmd2F1TqVuBnB2wBPipaw2qI920zYLuPnada0Rd1CURgh8HRuPGKxijj2iyZDFN2UZwsaEuhA==}
     dev: false
 
   /web-namespaces@2.0.1:

@@ -9,6 +9,14 @@ import Footer from "@components/Footer.astro";
 import ImageSlider from "@components/ImageSlider.jsx";
 import Sponsor from "@components/Sponsor.astro";
 import "highlight.js/styles/atom-one-dark.css";
+import badlandsImg from "@img/cp_badlands01.webp";
+import sunshineImg from "@img/cp_sunshine04.webp";
+import badwaterImg from "@img/pl_badwater01.webp";
+import veryLowImg from "@img/presets/very-low.webp";
+import ultraImg from "@img/presets/ultra.webp";
+import veryLowHqImg from "@img/presets/very-low-hq.webp";
+import ultraHqImg from "@img/presets/ultra-hq.webp";
+import networkImg from "@img/network.webp";
 ---
 
 <Layout>
@@ -30,7 +38,10 @@ import "highlight.js/styles/atom-one-dark.css";
     />
   </head>
   <Body>
-    <header class="jumbotron jumbotron-fluid text-light home-header">
+    <header
+      class="jumbotron jumbotron-fluid text-light"
+      style=`background: linear-gradient(rgba(38, 50, 56, 0.7) 10%, rgba(38, 50, 56, 0.7)), url(${badlandsImg.src}); background-size: cover; background-position: center`
+    >
       <div
         class="container d-flex align-items-center justify-content-center"
         style="min-height: 100vh"
@@ -172,13 +183,13 @@ import "highlight.js/styles/atom-one-dark.css";
 
     <div
       class="img-separator"
-      style="background: linear-gradient(rgba(38, 50, 56, 0.7) 10%, rgba(38, 50, 56, 0.7)), url('img/cp_sunshine04.jpg'); background-size: cover; background-position: center; background-attachment: fixed; margin-bottom: 0"
+      style=`background: linear-gradient(rgba(38, 50, 56, 0.7) 10%, rgba(38, 50, 56, 0.7)), url(${sunshineImg.src}); background-size: cover; background-position: center; background-attachment: fixed; margin-bottom: 0`
     >
     </div>
 
     <section style="padding-top: 0; padding-bottom: 0">
       <div
-        style="background-image: url('img/network.png'); background-size: cover; height: 100%"
+        style=`background-image: url(${networkImg.src}); background-size: cover; height: 100%`
       >
         <div
           class="container"
@@ -205,7 +216,7 @@ import "highlight.js/styles/atom-one-dark.css";
 
     <div
       class="img-separator"
-      style="background: linear-gradient(rgba(38, 50, 56, 0.7) 10%, rgba(38, 50, 56, 0.7)), url('img/pl_badwater01.jpg'); background-size: cover; background-position: center; background-attachment: fixed"
+      style=`background: linear-gradient(rgba(38, 50, 56, 0.7) 10%, rgba(38, 50, 56, 0.7)), url(${badwaterImg.src}); background-size: cover; background-position: center; background-attachment: fixed`
     >
     </div>
 
@@ -218,9 +229,9 @@ import "highlight.js/styles/atom-one-dark.css";
           <div class="col-md align-middle">
             <ImageSlider
               client:load
-              srcOne="/img/koth_sawmill_performance.jpg"
+              srcOne={veryLowImg.src}
               altOne="koth_sawmill low"
-              srcTwo="/img/koth_sawmill_quality.jpg"
+              srcTwo={ultraImg.src}
               altTwo="koth_sawmill ultra"
             />
             <br />
@@ -361,9 +372,9 @@ tf_item_inspect_model_spin_rate 30 // Rate at which items spin in the inspect vi
           <div class="modal-body">
             <ImageSlider
               client:load
-              srcOne="/img/koth_sawmill_performance.jpg"
+              srcOne={veryLowHqImg.src}
               altOne="koth_sawmill low"
-              srcTwo="/img/koth_sawmill_quality.jpg"
+              srcTwo={ultraHqImg.src}
               altTwo="koth_sawmill ultra"
             />
           </div>

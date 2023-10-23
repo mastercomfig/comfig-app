@@ -1,0 +1,24 @@
+---
+const { version } = Astro.props;
+---
+
+<sentry-wrapper data-version={version}></sentry-wrapper>
+
+<script>
+  import * as Sentry from "@sentry/browser";
+
+  class SentryWrapper extends HTMLElement {
+    constructor() {
+      super();
+
+      const version = this.dataset.version;
+
+      Sentry.init({
+        dsn: "https://42c25ee2fb084eb5a832ee92d97057d5@o182209.ingest.sentry.io/6265934",
+        release: `mastercomfig@${version}`,
+      });
+    }
+  }
+
+  customElements.define("sentry-wrapper", SentryWrapper);
+</script>

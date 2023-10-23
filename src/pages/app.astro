@@ -8,59 +8,39 @@ import Body from "@components/Body.astro";
 import Items from "@components/items/Items.jsx";
 import Footer from "@components/Footer.astro";
 import Sponsor from "@components/Sponsor.astro";
-import gm from "@utils/game.js";
 import "simple-keyboard/build/css/index.css";
 import "@styles/app.scss";
 import "@styles/keyboard.scss";
+import { getAppData, getAppVersion, getGameData } from "@ssg/appData";
+import SentryWrapper from "@components/SentryWrapper.astro";
+import mediumHighImg from "@img/presets/medium-high.webp";
+import lowImg from "@img/presets/low.webp";
+import mediumLowImg from "@img/presets/medium-low.webp";
+import mediumImg from "@img/presets/medium.webp";
+import ultraImg from "@img/presets/ultra.webp";
+import veryLowImg from "@img/presets/very-low.webp";
+import highImg from "@img/presets/high.webp";
+import noneImg from "@img/presets/none.webp";
 
-const appResponse = await fetch("https://api.comfig.app/");
-const appData = await appResponse.json();
-await gm.initGameData();
-const clientLanguageCache = {};
-for (const lang of Object.keys(gm.languageCache)) {
-  let langCache = {};
-  for (const playerClass of Object.keys(itemUsedBy)) {
-    const classItems = itemUsedBy[playerClass];
-    for (const item of classItems) {
-      const itemData = gm.items[item];
-      let key = itemData.printname;
-      if (classNameToName[itemData.classname]) {
-        key = classNameToName[itemData.classname];
-      }
-      if (Array.isArray(key)) {
-        for (const k of key) {
-          key = k.substring(1);
-          langCache[key] = gm.languageCache[lang][key];
-        }
-      } else if (key.startsWith("#")) {
-        key = key.substring(1);
-        langCache[key] = gm.languageCache[lang][key];
-      }
-    }
-  }
-  clientLanguageCache[lang] = langCache;
-}
-
-const npmVersion = process.env.npm_package_version;
-
-globalThis.npmVersion = npmVersion;
-globalThis.languageCache = clientLanguageCache;
-globalThis.latestData = appData;
-globalThis.items = gm.items;
+const { appData, hash: appDataHash } = await getAppData();
+const appVersion = appData.v[0];
+const appHash = appDataHash.substring(0, 8);
+const { hash } = await getGameData();
+const npmVersion = getAppVersion();
 ---
 
 <Layout>
   <head>
     <BaseHead />
     <PreloadHead>
-      <link rel="preload" as="image" href="/img/presets/medium-high.webp" />
-      <link rel="preload" as="image" href="/img/presets/low.webp" />
-      <link rel="preload" as="image" href="/img/presets/medium-low.webp" />
-      <link rel="preload" as="image" href="/img/presets/medium.webp" />
-      <link rel="preload" as="image" href="/img/presets/ultra.webp" />
-      <link rel="preload" as="image" href="/img/presets/very-low.webp" />
-      <link rel="preload" as="image" href="/img/presets/high.webp" />
-      <link rel="preload" as="image" href="/img/presets/none.webp" />
+      <link rel="preload" as="image" href={mediumHighImg.src} />
+      <link rel="preload" as="image" href={lowImg.src} />
+      <link rel="preload" as="image" href={mediumLowImg.src} />
+      <link rel="preload" as="image" href={mediumImg.src} />
+      <link rel="preload" as="image" href={ultraImg.src} />
+      <link rel="preload" as="image" href={veryLowImg.src} />
+      <link rel="preload" as="image" href={highImg.src} />
+      <link rel="preload" as="image" href={noneImg.src} />
     </PreloadHead>
     <ImportHead>
       <script>
@@ -78,29 +58,14 @@ globalThis.items = gm.items;
         document.addEventListener("DOMContentLoaded", $buo_f, false);
       </script>
 
-      <script define:vars={{ npmVersion, clientLanguageCache, appData, gm }}>
-        globalThis.npmVersion = npmVersion;
-        globalThis.languageCache = clientLanguageCache;
-        globalThis.latestData = appData;
-        globalThis.items = gm.items;
+      <script define:vars={{ appHash, appVersion }}>
+        globalThis.appHash = appHash;
+        globalThis.appVersion = appVersion;
       </script>
 
       <script>
-        import * as Sentry from "@sentry/browser";
-        Sentry.init({
-          dsn: "https://42c25ee2fb084eb5a832ee92d97057d5@o182209.ingest.sentry.io/6265934",
-          release: `mastercomfig@${npmVersion}`,
-        });
-
         import { Alert, Collapse, Dropdown, Tab } from "bootstrap";
         import "@utils/game.js";
-
-        if (typeof TransformStream == "undefined") {
-          const script = document.createElement("script");
-          script.src =
-            "https://cdn.jsdelivr.net/npm/web-streams-polyfill@3.2.1/dist/polyfill.es2018.min.js";
-          document.body.appendChild(script);
-        }
 
         import "@utils/app.js";
       </script>
@@ -110,6 +75,7 @@ globalThis.items = gm.items;
       noSite={true}
       description="mastercomfig is a modern Team Fortress 2 performance and customization config. Use the app to easily customize various graphics and gameplay options. mastercomfig is the most popular config, with millions of downloads, and has been highly tuned and researched for the best performance."
     />
+    <SentryWrapper version={npmVersion} />
   </head>
   <Body>
     <nav class="navbar navbar-expand-sm sticky-top navbar-dark bg-teal">
@@ -145,8 +111,7 @@ globalThis.items = gm.items;
                 role="button"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
-                ><span class="badge bg-dark" id="version">{appData.v[0]}</span
-                ></a
+                ><span class="badge bg-dark" id="version">{appVersion}</span></a
               >
               <ul
                 class="dropdown-menu dropdown-menu-dark"
@@ -429,7 +394,7 @@ globalThis.items = gm.items;
                       </li>
                     </ul>
                   </p>
-                  <Items client:load items={gm.items} />
+                  <Items client:only hash={hash.substring(0, 8)} />
                 </div>
               </div>
             </div>

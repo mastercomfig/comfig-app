@@ -148,15 +148,12 @@ a.addon-card:hover {
 // Item selection
 .crosshair-preview {
   aspect-ratio: 16 / 9;
-  background: url("/img/app/crosshairs/crosspreview.jpg");
-  background-size: cover;
-  background-position: center;
   justify-content: center;
   align-items: center;
 }
 
 .crosshair-preview:hover {
-  background: #000;
+  background: #000 !important;
 }
 
 .crosshair-preview-img {

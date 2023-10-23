@@ -1,4 +1,11 @@
 import { parse } from "vdf-parser";
+import defaultExplosionImg from "@img/app/explosions/default.webp";
+import sapperDestroyedImg from "@img/app/explosions/ExplosionCore_sapperdestroyed.webp";
+import minigunStarFlashImg from "@img/app/explosions/muzzle_minigun_starflash01.webp";
+import eotlPyroPoolImg from "@img/app/explosions/eotl_pyro_pool_explosion_flash.webp";
+import electrocutedRedImg from "@img/app/explosions/electrocuted_red_flash.webp";
+import electrocutedBlueImg from "@img/app/explosions/electrocuted_blue_flash.webp";
+import duckCollectTrailImg from "@img/app/explosions/duck_collect_trail_special_red.webp";
 
 const classes = [
   "scout",
@@ -36,19 +43,19 @@ const crosshairPacks = {
       pos: ["64", "0"],
       name: "Sniper",
       size: "32",
-      preview: "sniper.png",
+      preview: "sniper.webp",
     },
     "_64_-1": {
       pos: ["64", "-1"],
       name: "Sniper Center Fix",
       size: "32",
-      preview: "sniper.png",
+      preview: "sniper.webp",
     },
     _0_64: {
       pos: ["0", "64"],
       name: "Medic Cross",
       size: "32",
-      preview: "mediccross.png",
+      preview: "mediccross.webp",
     },
     _0_0: {
       pos: ["0", "0"],
@@ -60,7 +67,7 @@ const crosshairPacks = {
       pos: ["0", "48"],
       name: "Square Bracket",
       size: "24",
-      preview: "squarebracket.png",
+      preview: "squarebracket.webp",
     },
   },
   crosshair1: {
@@ -604,7 +611,7 @@ async function getGameResourceFile(path) {
     return resourceCache[path];
   }
   let response = await fetch(
-    `https://raw.githubusercontent.com/SteamDatabase/GameTracking-TF2/efd8e5d79c690b33675c41227c33754fbf3e5800/${path}`
+    `https://raw.githubusercontent.com/SteamDatabase/GameTracking-TF2/efd8e5d79c690b33675c41227c33754fbf3e5800/${path}`,
   );
   let content = await response.text();
   content = parse(content);
@@ -635,7 +642,7 @@ async function getGameResourceDir(path) {
     `https://api.github.com/repos/SteamDatabase/GameTracking-TF2/contents/${path}?ref=efd8e5d79c690b33675c41227c33754fbf3e5800`,
     {
       headers,
-    }
+    },
   );
   let contents = await response.json();
   let result = [];
@@ -1011,13 +1018,13 @@ const playerExplosionEffects = structuredClone(explosionEffects);
 playerExplosionEffects["default"] = "Use Explosion Effect";
 
 const explosionPreviews = {
-  default: "default.webp",
-  ExplosionCore_sapperdestroyed: "ExplosionCore_sapperdestroyed.webp",
-  muzzle_minigun_starflash01: "muzzle_minigun_starflash01.webp",
-  eotl_pyro_pool_explosion_flash: "eotl_pyro_pool_explosion_flash.webp",
-  electrocuted_red_flash: "electrocuted_red_flash.webp",
-  electrocuted_blue_flash: "electrocuted_blue_flash.webp",
-  duck_collect_trail_special_red: "duck_collect_trail_special_red.webp",
+  default: defaultExplosionImg.src,
+  ExplosionCore_sapperdestroyed: sapperDestroyedImg.src,
+  muzzle_minigun_starflash01: minigunStarFlashImg.src,
+  eotl_pyro_pool_explosion_flash: eotlPyroPoolImg.src,
+  electrocuted_red_flash: electrocutedRedImg.src,
+  electrocuted_blue_flash: electrocutedBlueImg.src,
+  duck_collect_trail_special_red: duckCollectTrailImg.src,
 };
 
 const playerExplosionPreviews = structuredClone(explosionPreviews);
@@ -1072,11 +1079,11 @@ async function initGameData() {
   const tfItems = await getGameResource(
     "tf/tf2_misc_dir/scripts",
     "tf_weapon_.*.txt",
-    true
+    true,
   );
   const langRes = await getGameResource(
     "tf/resource/",
-    `tf_${language.toLowerCase()}.txt`
+    `tf_${language.toLowerCase()}.txt`,
   );
   languageCache[langRes.lang.Language] = langRes.lang.Tokens;
   for (const item of tfItems) {
