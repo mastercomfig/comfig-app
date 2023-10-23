@@ -522,7 +522,9 @@ async function app() {
         );
         if (downloadFailures.length) {
           throw new Error(
-            `Download failures detected: ${downloadFailures.join(",")}`,
+            `Download failures detected: ${downloadFailures
+              .map((url) => url.name)
+              .join(",")}`,
           );
         } else {
           updateDownloadProgress(100, "Done!");
@@ -573,7 +575,9 @@ async function app() {
         }
         if (downloadFailures.length) {
           throw new Error(
-            `Download failures detected: ${downloadFailures.join(",")}`,
+            `Download failures detected: ${downloadFailures
+              .map((url) => url.name)
+              .join(",")}`,
           );
         } else {
           updateDownloadProgress(100, "Done!");
