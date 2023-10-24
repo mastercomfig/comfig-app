@@ -13,9 +13,10 @@ const {
   site = "mastercomfig",
   noSite = false,
   description = "mastercomfig is a modern Team Fortress 2 performance and customization config.",
-  url = "https://comfig.app",
   image = "https://comfig.app/img/mastercomfig_banner.png",
 } = Astro.props as Props;
+
+const canonical = Astro.url.href;
 ---
 
 <link rel="icon" href="/favicon.ico" sizes="any" />
@@ -36,9 +37,9 @@ const {
 <meta name="description" content={description} />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary" />
-<meta property="og:url" content={url} />
-<meta name="twitter:url" content={url} />
-<link rel="canonical" href={url} />
+<meta property="og:url" content={canonical} />
+<meta name="twitter:url" content={canonical} />
+<link rel="canonical" href={canonical} />
 <meta name="twitter:site" content="@mastercoms" />
 <meta name="twitter:creator" content="@mastercoms" />
 <meta property="og:image" content={image} />
