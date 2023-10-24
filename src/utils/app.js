@@ -262,34 +262,22 @@ async function app() {
   // End preset -> recommended addon mapping
 
   // Base release URL
-  let releasesUrl = "https://github.com/mastercomfig/mastercomfig/releases";
+  const releasesUrl = "https://github.com/mastercomfig/mastercomfig/releases";
   // Release homepage
-  let releaseUrl = {
-    latest: releasesUrl + "/latest",
+  const releaseUrl = {
     default: releasesUrl + "/{0}",
   };
-  let assetsUrl = {
-    latest: releasesUrl + "/latest",
-    default: releaseUrl.default,
-  };
-  // Where latest downloads come from
-  let downloadUrl = releaseUrl.default + "/download/";
+  const assetsUrl = releaseUrl.default;
   // Where a specific release's downloads come from
-  let releaseDownloadUrl = releasesUrl + "/download/{0}/";
+  const releaseDownloadUrl = releasesUrl + "/download/{0}/";
   // Prefix for mastercomfig files
-  let mastercomfigFileUrl = "mastercomfig-";
+  const mastercomfigFileUrl = "mastercomfig-";
   // Addon extension format string to download
-  let addonFileUrl = mastercomfigFileUrl + "{1}-addon.vpk";
-  let addonUrl = {
-    latest: downloadUrl + addonFileUrl,
-    default: releaseDownloadUrl + addonFileUrl,
-  };
+  const addonFileUrl = mastercomfigFileUrl + "{1}-addon.vpk";
+  const addonUrl = releaseDownloadUrl + addonFileUrl;
   // Preset extension format string to download
-  let presetFileUrl = mastercomfigFileUrl + "{1}-preset.vpk";
-  let presetUrl = {
-    latest: downloadUrl + presetFileUrl,
-    default: releaseDownloadUrl + presetFileUrl,
-  };
+  const presetFileUrl = mastercomfigFileUrl + "{1}-preset.vpk";
+  const presetUrl = releaseDownloadUrl + presetFileUrl;
 
   // Current mastercomfig version, comes in from API
   let version = null;
@@ -485,15 +473,9 @@ async function app() {
   }
 
   // Helper functions to format download URLs
-  function getDownloadUrl(id, preset, notDirect) {
-    let urlOptions = preset ? presetUrl : addonUrl;
-    let url;
-    if (urlOptions.hasOwnProperty(userVersion)) {
-      url = urlOptions[userVersion];
-    } else {
-      url = urlOptions.default;
-    }
-    url = url.format(userVersion, id);
+  function getDownloadUrl(id, preset) {
+    let url = preset ? presetUrl : addonUrl;
+    url = url.format(version, id);
     url = url.replace(
       "https://github.com/mastercomfig/mastercomfig/releases",
       "https://api.comfig.app/download",
@@ -501,12 +483,12 @@ async function app() {
     return url;
   }
 
-  function getAddonUrl(id, notDirect) {
-    return getDownloadUrl(id, false, notDirect);
+  function getAddonUrl(id) {
+    return getDownloadUrl(id, false);
   }
 
-  function getPresetUrl(notDirect) {
-    return getDownloadUrl(selectedPreset, true, notDirect);
+  function getPresetUrl() {
+    return getDownloadUrl(selectedPreset, true);
   }
   // End download URL helpers
 
@@ -1752,19 +1734,9 @@ async function app() {
     }
     version = userVer;
     getEl("version").innerText = userVer;
-    let url;
-    if (releaseUrl.hasOwnProperty(userVersion)) {
-      url = releaseUrl[userVersion];
-    } else {
-      url = releaseUrl.default.format(userVersion);
-    }
+    const url = releaseUrl?.[userVersion] ?? releaseUrl.default.format(userVer);
     getEl("changelog-link").href = url;
-    let assetUrl;
-    if (assetsUrl.hasOwnProperty(userVersion)) {
-      assetUrl = assetsUrl[userVersion];
-    } else {
-      assetUrl = assetsUrl.default.format(userVersion);
-    }
+    const assetUrl = assetsUrl.format(userVer);
     getEl("assets-link").href = assetUrl;
 
     if (didChange) {
