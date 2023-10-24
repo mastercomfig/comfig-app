@@ -1771,13 +1771,12 @@ async function app() {
       if (userVersion === "latest") {
         if (cachedData) {
           sendApiRequest();
-          updateDocsLinks("page");
         }
       } else {
         let tag = `https://api.comfig.app/?t=${userVersion}`;
         sendApiRequest(tag);
-        updateDocsLinks(userVersion);
       }
+      updateDocsLinks(userVersion);
     }
   }
 
@@ -2221,9 +2220,7 @@ async function app() {
     // Create a link to module documentation
     let moduleDocsLink = document.createElement("a");
     moduleDocsLink.href =
-      `https://docs.comfig.app/${
-        userVersion !== "latest" ? userVersion : "page"
-      }/customization/modules/#` +
+      `https://docs.comfig.app/${userVersion}/customization/modules/#` +
       displayName.replace(/\(|\)/g, "").split(" ").join("-").toLowerCase();
     moduleDocsLink.target = "_blank";
     moduleDocsLink.rel = "noopener";
