@@ -1,4 +1,5 @@
-@import "./bootstrap.scss";
+@use "sass:color";
+@import "./bootstrap";
 
 // 8. Add additional custom code here
 
@@ -7,7 +8,7 @@
   scrollbar-color: $primary $dark;
 }
 
-@media only screen and (min-width: 900px) {
+@media only screen and (width >= 900px) {
   * {
     scrollbar-width: thin;
   }
@@ -73,13 +74,13 @@ a,
   margin-bottom: 2rem;
 }
 
+footer {
+  color: rgb(187 187 187);
+}
+
 // Elements
 footer:last-of-type {
   padding-bottom: 2rem;
-}
-
-footer {
-  color: rgb(187, 187, 187);
 }
 
 // Header
@@ -155,31 +156,32 @@ b {
   --bs-nav-link-hover-color: #fff;
 }
 
-.nav.nav-pills.bg-teal-nav .nav-link:hover:not(.active) {
-  background: #05746c;
+.nav.nav-pills.bg-teal-nav .nav-link:not(.active) {
+  background: rgb(0 150 136 / 60%);
 }
 
-.nav.nav-pills.bg-teal-nav .nav-link:not(.active) {
-  background: rgba(0, 150, 136, 0.6);
+.nav.nav-pills.bg-teal-nav .nav-link:hover:not(.active) {
+  background: #05746c;
 }
 
 .nav.nav-tabs {
   --bs-nav-tabs-link-active-bg: var(--bs-primary);
   --bs-nav-tabs-link-active-color: #fff;
   --bs-nav-tabs-border-width: 0;
+
   border-bottom: 2px solid $primary;
 }
 
 // Form adjustments
+.form-check-input {
+  border-color: color.adjust(#000, $lightness: 46%);
+}
+
 .form-switch {
   .form-check-input {
     border-radius: $form-switch-border-radius;
     width: 2.5rem;
   }
-}
-
-.form-check-input {
-  border-color: lighten(#000, 46%);;
 }
 
 .form-check-label {
@@ -197,26 +199,27 @@ b {
 }
 
 .text-light.form-control::placeholder {
-  color: rgba(255, 255, 255, 0.9);
+  color: rgb(255 255 255 / 90%);
 }
 
 // Navbar
 .navbar {
   --bs-navbar-padding-x: 1rem;
   --bs-navbar-padding-y: 0.4rem;
+
   z-index: 5;
 }
 
 // React select https://github.com/JedWatson/react-select/issues/2345#issuecomment-843674624
 :root {
-  --bs-select-padding-y: #{$form-select-padding-y}; //
-  --bs-select-padding-x: #{$form-select-padding-x}; //
-  --bs-select-font-size: #{$form-select-font-size}; //
+  --bs-select-padding-y: #{$form-select-padding-y};
+  --bs-select-padding-x: #{$form-select-padding-x};
+  --bs-select-font-size: #{$form-select-font-size};
   --bs-select-indicator-padding: #{$form-select-indicator-padding};
-  --bs-select-font-weight: #{$form-select-font-weight}; //
-  --bs-select-line-height: #{$form-select-line-height}; //
-  --bs-select-color: #{$form-select-color}; //
-  --bs-select-bg: #{$form-select-bg}; //
+  --bs-select-font-weight: #{$form-select-font-weight};
+  --bs-select-line-height: #{$form-select-line-height};
+  --bs-select-color: #{$form-select-color};
+  --bs-select-bg: #{$form-select-bg};
   --bs-select-disabled-color: #{$form-select-disabled-color};
   --bs-select-disabled-bg: #{$form-select-disabled-bg};
   --bs-select-disabled-border-color: #{$form-select-disabled-border-color};
@@ -226,18 +229,19 @@ b {
   --bs-select-feedback-icon-padding-end: #{$form-select-feedback-icon-padding-end};
   --bs-select-feedback-icon-position: #{$form-select-feedback-icon-position};
   --bs-select-feedback-icon-size: #{$form-select-feedback-icon-size};
-  --bs-select-border-width: #{$form-select-border-width}; //
-  --bs-select-border-color: #{$form-select-border-color}; //
-  --bs-select-focus-border-color: #{$form-select-focus-border-color}; //
+  --bs-select-border-width: #{$form-select-border-width};
+  --bs-select-border-color: #{$form-select-border-color};
+  --bs-select-focus-border-color: #{$form-select-focus-border-color};
   --bs-select-padding-y-sm: #{$form-select-padding-y-sm};
   --bs-select-padding-x-sm: #{$form-select-padding-x-sm};
   --bs-select-font-size-sm: #{$form-select-font-size-sm};
   --bs-select-padding-y-lg: #{$form-select-padding-y-lg};
   --bs-select-padding-x-lg: #{$form-select-padding-x-lg};
   --bs-select-font-size-lg: #{$form-select-font-size-lg};
+
   @if $enable-rounded {
-    --bs-select-border-radius: #{$form-select-border-radius}; //
+    --bs-select-border-radius: #{$form-select-border-radius};
   } @else {
-    --bs-select-border-radius: 0; //
+    --bs-select-border-radius: 0;
   }
 }

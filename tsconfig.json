@@ -1,6 +1,9 @@
 {
-  "extends": "astro/tsconfigs/base",
+  "extends": "astro/tsconfigs/strictest",
   "compilerOptions": {
+    "jsx": "react-jsx",
+    "verbatimModuleSyntax": true,
+    "noImplicitAny": false,
     "baseUrl": ".",
     "paths": {
       "@components/*": ["src/components/*"],
@@ -9,7 +12,7 @@
       "@utils/*": ["src/utils/*"],
       "@store/*": ["src/store/*"],
       "@ssg/*": ["src/ssg/*"],
-      "@img/*": ["src/img/*"],
+      "@img/*": ["src/img/*"]
     }
   }
 }

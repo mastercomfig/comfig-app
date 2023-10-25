@@ -6,6 +6,7 @@ const { version } = Astro.props;
 
 <script>
   import * as Sentry from "@sentry/browser";
+  import { CaptureConsole, ExtraErrorData } from "@sentry/integrations";
 
   class SentryWrapper extends HTMLElement {
     constructor() {
@@ -16,6 +17,7 @@ const { version } = Astro.props;
       Sentry.init({
         dsn: "https://42c25ee2fb084eb5a832ee92d97057d5@o182209.ingest.sentry.io/6265934",
         release: `mastercomfig@${version}`,
+        integrations: [new CaptureConsole(), new ExtraErrorData()],
       });
     }
   }

@@ -1,7 +1,6 @@
 import { get, set, del } from "idb-keyval";
 //import { registerSW } from "virtual:pwa-register";
 import { Tab, ScrollSpy } from "bootstrap";
-import * as Sentry from "@sentry/browser";
 import { stringify } from "vdf-parser";
 import { BlobReader, BlobWriter, ZipWriter } from "@zip.js/zip.js";
 import mediumHighImg from "@img/presets/medium-high.webp";
@@ -50,43 +49,8 @@ async function app() {
     (Keyboard) => Keyboard.default,
   );
 
-  const logLevelToSentrySeverity = {
-    warn: "warning",
-  };
-
-  function consoleHook(level) {
-    const original = console[level].bind(console);
-    return function () {
-      Sentry.addBreadcrumb(
-        {
-          category: "console",
-          level: logLevelToSentrySeverity[level]
-            ? logLevelToSentrySeverity[level]
-            : level,
-          message: !arguments
-            ? "undefined"
-            : arguments.length === 1
-            ? `${arguments[0]}`
-            : `${arguments[0]}: ${Array.prototype.slice
-                .call(arguments, 1)
-                .join()}`,
-        },
-        {
-          input: [...arguments],
-          level,
-        },
-      );
-      original.apply(console, arguments);
-    };
-  }
-
-  for (const level of ["debug", "info", "warn", "error", "log"]) {
-    console[level] = consoleHook(level);
-  }
-
   // convenience format method for string
-  String.prototype.format = function () {
-    const args = arguments;
+  String.prototype.format = function (...args) {
     return this.replace(/{(\d+)}/g, function (match, number) {
       return typeof args[number] !== "undefined" ? args[number] : match;
     });
@@ -173,10 +137,9 @@ async function app() {
   }
 
   // convenience proper case name or display for modules
-  function properCaseOrDisplayModuleName(module, name) {
-    let displayName = module.hasOwnProperty("display")
-      ? module.display
-      : properCaseModuleName(name ? name : module.name);
+  function properCaseOrDisplayModuleName(module, name?) {
+    const displayName =
+      module?.display ?? properCaseModuleName(name ? name : module.name);
     return displayName;
   }
 
@@ -310,9 +273,7 @@ async function app() {
   // Config contents
   let configContentsRaw = {};
   let contentsDefaulter = {
-    get: (target, name) => {
-      return target.hasOwnProperty(name) ? target[name] : "";
-    },
+    get: (target, name) => target?.[name] ?? "",
   };
   let configContents = new Proxy(configContentsRaw, contentsDefaulter);
 
@@ -391,7 +352,7 @@ async function app() {
     }
   }
 
-  function handleConnectivityChange(e) {
+  function handleConnectivityChange() {
     let element = getEl("vpk-dl");
     // HACK: we are currently using a hack, by using the "downloading" variable
     // to block downloads and track blocked download state.
@@ -404,7 +365,7 @@ async function app() {
     }
   }
 
-  function requireVersion(major, minor, patch, latest, dev) {
+  function requireVersion(major, minor, patch, latest?, dev?) {
     if (import.meta.env.DEV && cachedData) {
       let debugVersion = "" + major;
       if (minor !== undefined) {
@@ -853,7 +814,7 @@ async function app() {
     }
   }
 
-  async function getWritable(name, directory, skipDelete) {
+  async function getWritable(name, directory, skipDelete?) {
     if (!directory) {
       return;
     }
@@ -1333,7 +1294,9 @@ async function app() {
         // Delete modules file if empty
         try {
           overridesDirectory.removeEntry("modules.cfg");
-        } catch (err) {}
+        } catch (err) {
+          //console.log("Failed deleting modules.cfg", err);
+        }
       }
     }
     // Clear out old scripts directory
@@ -1349,7 +1312,7 @@ async function app() {
       }
     }
     if (globalThis.items) {
-      let { default: useItemStore } = await import("../store/items.js");
+      let { default: useItemStore } = await import("../store/items.ts");
       const itemsState = useItemStore.getState();
       const crosshairs = itemsState.crosshairs;
       const crosshairColors = itemsState.crosshairColors;
@@ -1689,7 +1652,7 @@ async function app() {
   };
 
   // set addon enabled/disabled
-  async function setAddon(id, checked, fromDB) {
+  async function setAddon(id, checked, fromDB?) {
     // Update our DB with the value
     if (!fromDB) {
       await tryDBSet(id, checked);
@@ -1778,7 +1741,7 @@ async function app() {
     none: noneImg,
   };
 
-  async function setPreset(id, fromDB) {
+  async function setPreset(id, fromDB?) {
     if (selectedPreset === id) {
       return;
     }
@@ -1860,7 +1823,7 @@ async function app() {
   };
 
   function bindingToBind(binding) {
-    if (keyBindMap.hasOwnProperty(binding)) {
+    if (keyBindMap?.[binding] !== undefined) {
       return keyBindMap[binding];
     }
     if (binding.startsWith("ARROW")) {
@@ -1876,7 +1839,7 @@ async function app() {
       return "R" + bindingToBind(binding);
     }
     if (e.location === KeyboardEvent.DOM_KEY_LOCATION_NUMPAD) {
-      if (keypadBindMap.hasOwnProperty(binding)) {
+      if (keypadBindMap?.[binding] !== undefined) {
         binding = keypadBindMap[binding];
       }
       return "KP_" + bindingToBind(binding);
@@ -1893,10 +1856,10 @@ async function app() {
     }
     if (binding.startsWith(numpadKeyword)) {
       binding = binding.substr(numpadKeyword.length, binding.length - 1);
-      if (simpleKeypadMap.hasOwnProperty(binding)) {
+      if (simpleKeypadMap?.[binding] !== undefined) {
         binding = simpleKeypadMap[binding];
       }
-      if (keypadBindMap.hasOwnProperty(binding)) {
+      if (keypadBindMap?.[binding] !== undefined) {
         binding = keypadBindMap[binding];
       }
       return "KP_" + bindingToBind(binding);
@@ -1930,7 +1893,7 @@ async function app() {
   function setModule(name, value) {
     let defaultValue = getBuiltinModuleDefault(name);
     if (defaultValue === value) {
-      if (selectedModules.hasOwnProperty(name)) {
+      if (selectedModules?.[name] !== undefined) {
         delete selectedModules[name];
       }
       updateUndoLink(name, true);
@@ -2203,9 +2166,7 @@ async function app() {
     moduleDocsLink.innerHTML = " " + moduleDocsLink.innerHTML;
     moduleTitle.append(moduleDocsLink);
     // Create the module's input control
-    let moduleInputType = module.hasOwnProperty("type")
-      ? module.type
-      : "select";
+    let moduleInputType = module?.type ?? "select";
 
     let moduleInput = handleModuleInput(
       moduleInputType,
@@ -2390,7 +2351,7 @@ async function app() {
     }
   }
 
-  function addVersion(ver, dropdown, badge, disabled) {
+  function addVersion(ver, dropdown, badge, disabled?) {
     let versionListItem = document.createElement("li");
     let dropdownItem = document.createElement("a");
     dropdownItem.classList.add("dropdown-item");
@@ -2514,14 +2475,14 @@ async function app() {
     handleModulesRoot(cachedData.m);
   }
 
-  async function getApiResponse(url) {
+  async function getApiResponse(url?) {
     if (!url) {
       url = `/api/${globalThis.appVersion}.${globalThis.appHash}.cached.json`;
     }
     return fetch(url).then((resp) => resp.json());
   }
 
-  function sendApiRequest(url) {
+  function sendApiRequest(url?) {
     getApiResponse(url)
       .then(async (data) => {
         await handleApiResponse(data);
@@ -2810,7 +2771,7 @@ async function app() {
     });
   }
 
-  function finishBindInput(element, removeInput) {
+  function finishBindInput(element, removeInput?) {
     if (!lastBindInput) {
       return;
     }
@@ -2942,7 +2903,7 @@ async function app() {
 
   const bindsList = getEl("binds-list");
 
-  function createBindingField(bindOptions) {
+  function createBindingField(bindOptions?) {
     let keyInput = document.createElement("input");
     keyInput.type = "text";
     keyInput.classList.add(
@@ -3188,20 +3149,20 @@ async function app() {
 
   let firebaseMessaging;
 
-  function messaging() {
+  async function messaging() {
     if (!firebaseMessaging) {
+      let firebase = await dfirebase;
       firebaseMessaging = firebase.messaging();
     }
     return firebaseMessaging;
   }
 
   async function getToken(serviceWorkerRegistration) {
-    await dfirebase;
     try {
-      messaging().onMessage((payload) => {
+      (await messaging()).onMessage((payload) => {
         console.log("Message received:", payload);
       });
-      return messaging()
+      return (await messaging())
         .getToken({
           vapidKey:
             "BPfZekvCE2KeCCGFTvCtu2J1kW8cXiYS3LxrNK4pAewiw4sYWip92u9LPl4Mlo4dBXogHKEvURve3DUlA_eh1U4",

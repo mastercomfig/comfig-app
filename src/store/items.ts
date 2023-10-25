@@ -118,7 +118,7 @@ const useStore = create(
         // Explosion effects were wrong order
         if (version === 0) {
           for (const [key, val] of Object.entries(
-            persistedState.explosioneffects
+            persistedState.explosioneffects,
           )) {
             persistedState.explosioneffects[val] = key;
             delete persistedState.explosioneffects[key];
@@ -127,7 +127,7 @@ const useStore = create(
         // Incorrect migration
         if (version < 3) {
           for (const [key, val] of Object.entries(
-            persistedState.explosioneffects
+            persistedState.explosioneffects,
           )) {
             persistedState.explosioneffects[val] = explosionEffects[key];
             delete persistedState.explosioneffects[key];
@@ -151,9 +151,9 @@ const useStore = create(
         "tracers",
         "explosioneffects",
         "playerexplosions",
-      ]
-    )
-  )
+      ],
+    ),
+  ),
 );
 
 export default useStore;

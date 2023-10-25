@@ -11,7 +11,7 @@ const idbStorage = (name, version, migrate, keys) => ({
   migrate,
   partialize: (state) =>
     Object.fromEntries(
-      Object.entries(state).filter(([key]) => keys.includes(key))
+      Object.entries(state).filter(([key]) => keys.includes(key)),
     ),
 });
 

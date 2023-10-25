@@ -1,4 +1,4 @@
-import gm from "@utils/game.js";
+import gm from "@utils/game.ts";
 
 export function getAppVersion() {
   const npmVersion = process.env.npm_package_version;
@@ -36,10 +36,11 @@ let hasInit = false;
 export async function getGameData() {
   if (!hasInit) {
     await gm.initGameData();
+    hasInit = true;
   }
   const clientLanguageCache = {};
   for (const lang of Object.keys(gm.languageCache)) {
-    let langCache = {};
+    const langCache = {};
     for (const playerClass of Object.keys(itemUsedBy)) {
       const classItems = itemUsedBy[playerClass];
       for (const item of classItems) {

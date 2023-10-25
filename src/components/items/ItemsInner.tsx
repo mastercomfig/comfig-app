@@ -3,13 +3,14 @@ import { Button, Tab, Row, Col, Nav, FormCheck, Form } from "react-bootstrap";
 import useItemStore from "@store/items";
 import ItemsSelector from "./ItemsSelector";
 import crosshairPreviewImg from "@img/app/crosshairs/crosspreview.webp";
-import pkg from "react-color/lib/Chrome";
-const ChromePicker = pkg.default ?? pkg;
+import { ChromePicker } from "react-color";
 
 const dataUrl =
   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAMUlEQVQ4T2NkYGAQYcAP3uCTZhw1gGGYhAGBZIA/nYDCgBDAm9BGDWAAJyRCgLaBCAAgXwixzAS0pgAAAABJRU5ErkJggg==";
 
 export class ServerCanvas {
+  toDataURL: () => string;
+  getContext: () => { fillRect: () => void; translate: () => void };
   constructor() {
     this.toDataURL = () => dataUrl;
     this.getContext = () => ({
@@ -20,9 +21,9 @@ export class ServerCanvas {
 }
 
 function calculateItemSlots(playerClass, items) {
-  let slots = {};
-  let slotNames = [];
-  let usedItems = new Set();
+  const slots = {};
+  const slotNames = [];
+  const usedItems = new Set();
 
   function addItemToSlot(item) {
     const slot = getNormalizedSlotName(item);
@@ -60,9 +61,9 @@ function calculateItemSlots(playerClass, items) {
 
 function calculateCrosshairs(items) {
   let crosshairs = {};
-  let crosshairPreviews = { "Valve.default.default": null };
-  let itemClasses = Object.values(items);
-  let isDefault =
+  const crosshairPreviews = { "Valve.default.default": null };
+  const itemClasses = Object.values(items);
+  const isDefault =
     itemClasses.length === 1 && itemClasses[0].classname === "default";
   if (isDefault) {
     crosshairs = { "Valve.default.default": "Default" };
@@ -75,7 +76,7 @@ function calculateCrosshairs(items) {
         continue;
       }
       for (const x of Object.keys(pack)) {
-        let crosshair = pack[x];
+        const crosshair = pack[x];
         crosshairs[`${packGroup}.${packName}.${x}`] = crosshair.name;
         crosshairPreviews[`${packGroup}.${packName}.${x}`] = crosshair.preview;
       }
@@ -91,7 +92,7 @@ function calculateCrosshairs(items) {
       if (!item.TextureData) {
         continue;
       }
-      let crosshair = item.TextureData.crosshair;
+      const crosshair = item.TextureData.crosshair;
       const crosshairKey = `_${crosshair.x}_${crosshair.y}`;
       defaultCrosshairs[
         item.classname
@@ -103,17 +104,17 @@ function calculateCrosshairs(items) {
 }
 
 export default function ItemsInner({ playerClass, items, setResetKey }) {
-  let [slots, slotNames, firstKey] = useMemo(
+  const [slots, slotNames, firstKey] = useMemo(
     () => calculateItemSlots(playerClass, items),
     [playerClass, items],
   );
 
-  let [crosshairs, defaultCrosshairs, crosshairPreviews] = useMemo(
+  const [crosshairs, defaultCrosshairs, crosshairPreviews] = useMemo(
     () => calculateCrosshairs(items),
-    [],
+    [items],
   );
 
-  let [itemStore, setItemStore] = useState({});
+  const [itemStore, setItemStore] = useState({});
 
   useEffect(() => {
     let unsubFinishHydration = null;
@@ -392,7 +393,7 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
                             !selectedMuzzleFlashes.has(item.classname)
                           }
                           onChange={(e) => {
-                            let check = e.target.checked;
+                            const check = e.target.checked;
                             if (!check) {
                               setMuzzleFlash(item.classname);
                             } else {
@@ -409,7 +410,7 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
                           !selectedBrassModels.has(item.classname)
                         }
                         onChange={(e) => {
-                          let check = e.target.checked;
+                          const check = e.target.checked;
                           if (!check) {
                             setBrassModel(item.classname);
                           } else {
@@ -426,7 +427,7 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
                           label="Tracer"
                           defaultChecked={!selectedTracers.has(item.classname)}
                           onChange={(e) => {
-                            let check = e.target.checked;
+                            const check = e.target.checked;
                             if (!check) {
                               setTracer(item.classname);
                             } else {

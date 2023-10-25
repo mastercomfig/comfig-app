@@ -127,7 +127,7 @@ function getPreviewImage(
   previewImgStyle,
   colorize,
 ) {
-  let selectedInfo = selected.split(".", 3);
+  const selectedInfo = selected.split(".", 3);
   let selectedName;
   if (selectedInfo.length === 3) {
     selectedName = selectedInfo[1];
@@ -197,9 +197,9 @@ export default function ItemsSelector({
   colorize,
   hidePreview,
 }) {
-  let [selected, setSelected] = useState(selection ?? defaultValue);
+  const [selected, setSelected] = useState(selection ?? defaultValue);
 
-  let selectOptions = {};
+  const selectOptions = {};
 
   for (const x of Object.keys(options)) {
     if (!isDefaultWeapon && x === "default") {
@@ -229,7 +229,7 @@ export default function ItemsSelector({
         label: group,
         options: [],
       };
-      let groupOptions = groups[group];
+      const groupOptions = groups[group];
       for (const groupOption of groupOptions) {
         if (!isDefaultWeapon && groupOption === "default") {
           continue;
@@ -267,7 +267,7 @@ export default function ItemsSelector({
             defaultValue={selectOptions[selection ?? defaultValue]}
             autoComplete="off"
             onChange={(option) => {
-              let value = option.value;
+              const value = option.value;
               setSelected(value);
               if (value === defaultValue) {
                 delItem(classname);
@@ -283,9 +283,9 @@ export default function ItemsSelector({
             defaultValue={selection ?? defaultValue}
             autoComplete="off"
             onChange={(e) => {
-              let select = e.target;
-              let option = select.options[select.selectedIndex];
-              let value = option.value;
+              const select = e.target;
+              const option = select.options[select.selectedIndex];
+              const value = option.value;
               setSelected(value);
               if (value === defaultValue) {
                 delItem(classname);

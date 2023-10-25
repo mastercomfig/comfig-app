@@ -9,7 +9,7 @@ import Footer from "@components/Footer.astro";
 import HudNav from "@components/huds/HudNav.astro";
 
 const schemaReq = await fetch(
-  "https://raw.githubusercontent.com/mastercomfig/hud-db/main/utils/hud-data.schema.json"
+  "https://raw.githubusercontent.com/mastercomfig/hud-db/main/utils/hud-data.schema.json",
 );
 
 const schema = await schemaReq.json();
@@ -47,7 +47,7 @@ function parseProp(prop, propSchema) {
   if (type === "object") {
     const props = Object.entries(propSchema.properties);
     return props.flatMap(([childProp, childPropSchema]) =>
-      parseProp(`${prop}.${childProp}`, childPropSchema)
+      parseProp(`${prop}.${childProp}`, childPropSchema),
     );
   } else {
     const example = propSchema.examples?.[0];
@@ -64,7 +64,7 @@ function parseProp(prop, propSchema) {
 }
 
 const form = schemaProps.flatMap(([prop, propSchema]) =>
-  parseProp(prop, propSchema)
+  parseProp(prop, propSchema),
 );
 ---
 
@@ -77,10 +77,10 @@ const form = schemaProps.flatMap(([prop, propSchema]) =>
         import { Tooltip } from "bootstrap";
 
         const tooltipTriggerList = document.querySelectorAll(
-          '[data-bs-toggle="tooltip"]'
+          '[data-bs-toggle="tooltip"]',
         );
         const tooltipList = [...tooltipTriggerList].map(
-          (tooltipTriggerEl) => new Tooltip(tooltipTriggerEl)
+          (tooltipTriggerEl) => new Tooltip(tooltipTriggerEl),
         );
       </script>
       <script>
@@ -126,83 +126,88 @@ const form = schemaProps.flatMap(([prop, propSchema]) =>
           return formObject;
         }
 
-        formElement.addEventListener("submit", (e) => {
-          e.preventDefault();
-          e.stopPropagation();
+        formElement.addEventListener(
+          "submit",
+          (e) => {
+            e.preventDefault();
+            e.stopPropagation();
 
-          const isValid = formElement.checkValidity();
-          const validatedElements = formElement.querySelectorAll(".form-control");
-          for (const element of validatedElements) {
-            if (element.value || element.required) {
-              element.parentNode.classList.add("was-validated");
-            }
-          }
-
-          if (!isValid) {
-            return;
-          }
-
-          const form = formElement.elements;
-
-          let formObject = {};
-          for (const element of form) {
-            const subObjectSplit = element.id.split(".");
-            if (subObjectSplit.length === 2) {
-              if (!formObject[subObjectSplit[0]]) {
-                formObject[subObjectSplit[0]] = [];
+            const isValid = formElement.checkValidity();
+            const validatedElements =
+              formElement.querySelectorAll(".form-control");
+            for (const element of validatedElements) {
+              if (element.value || element.required) {
+                element.parentNode.classList.add("was-validated");
               }
-              formObject[subObjectSplit[0]].push(element);
-            } else if (subObjectSplit.length === 1) {
-              if (!formObject["__default"]) {
-                formObject["__default"] = [];
+            }
+
+            if (!isValid) {
+              return;
+            }
+
+            const form = formElement.elements;
+
+            let formObject = {};
+            for (const element of form) {
+              const subObjectSplit = element.id.split(".");
+              if (subObjectSplit.length === 2) {
+                if (!formObject[subObjectSplit[0]]) {
+                  formObject[subObjectSplit[0]] = [];
+                }
+                formObject[subObjectSplit[0]].push(element);
+              } else if (subObjectSplit.length === 1) {
+                if (!formObject["__default"]) {
+                  formObject["__default"] = [];
+                }
+                formObject["__default"].push(element);
+              } else {
+                console.error("Invalid subobject split length");
               }
-              formObject["__default"].push(element);
-            } else {
-              console.error("Invalid subobject split length");
             }
-          }
 
-          for (const [name, elements] of Object.entries(formObject)) {
-            formObject[name] = generateFormObject(elements);
-          }
-
-          for (const [name, formSubObject] of Object.entries(formObject)) {
-            if (name === "__default") {
-              continue;
+            for (const [name, elements] of Object.entries(formObject)) {
+              formObject[name] = generateFormObject(elements);
             }
-            formObject.__default[name] = formSubObject;
-          }
 
-          formObject = formObject.__default;
+            for (const [name, formSubObject] of Object.entries(formObject)) {
+              if (name === "__default") {
+                continue;
+              }
+              formObject.__default[name] = formSubObject;
+            }
 
-          const id = formObject.id;
-          delete formObject.id;
+            formObject = formObject.__default;
 
-          const json = JSON.stringify(formObject, null, 2);
+            const id = formObject.id;
+            delete formObject.id;
 
-          const file = new File([json], `${id}.json`, {
-            type: "application/octet-stream",
-          });
+            const json = JSON.stringify(formObject, null, 2);
 
-          let url = URL.createObjectURL(file);
+            const file = new File([json], `${id}.json`, {
+              type: "application/octet-stream",
+            });
 
-          const link = document.createElement("a");
-          link.href = url;
-          link.download = `${id}.json`;
-          document.body.append(link);
-          link.dispatchEvent(
-            new MouseEvent("click", {
-              bubbles: true,
-              cancelable: true,
-              view: window,
-            })
-          );
-          link.remove();
-          setTimeout(() => {
-            URL.revokeObjectURL(url);
-            url = null;
-          }, 120000);
-        }, false);
+            let url = URL.createObjectURL(file);
+
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = `${id}.json`;
+            document.body.append(link);
+            link.dispatchEvent(
+              new MouseEvent("click", {
+                bubbles: true,
+                cancelable: true,
+                view: window,
+              }),
+            );
+            link.remove();
+            setTimeout(() => {
+              URL.revokeObjectURL(url);
+              url = null;
+            }, 120000);
+          },
+          false,
+        );
       </script>
     </ImportHead>
     <MainHead
@@ -263,16 +268,21 @@ const form = schemaProps.flatMap(([prop, propSchema]) =>
                 </label>
                 <br />
                 {entry.type === "string" && (
-                  <input
-                    type="text"
-                    class="form-control"
-                    id={entry.prop}
-                    aria-describedby={`${entry.prop}-help`}
-                    placeholder={entry.example}
-                    required={entry.required ? true : undefined}
-                  />
-                  <div class="valid-feedback"></div>
-                  <div class="invalid-feedback" id={`${entry.prop}-invalid`}></div>
+                  <>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id={entry.prop}
+                      aria-describedby={`${entry.prop}-help`}
+                      placeholder={entry.example}
+                      required={entry.required ? true : undefined}
+                    />
+                    <div class="valid-feedback" />
+                    <div
+                      class="invalid-feedback"
+                      id={`${entry.prop}-invalid`}
+                    />
+                  </>
                 )}
                 {entry.type === "boolean" && (
                   <div class="form-check form-switch">
@@ -284,8 +294,7 @@ const form = schemaProps.flatMap(([prop, propSchema]) =>
                     />
                   </div>
                 )}
-                {entry.type === "array" &&
-                  entry.choices &&
+                {entry.type === "array" && entry.choices && (
                   <div id={entry.prop} class="form-wrapper">
                     {entry.choices.map((choice) => (
                       <div class="form-check form-check-inline">
@@ -304,19 +313,24 @@ const form = schemaProps.flatMap(([prop, propSchema]) =>
                       </div>
                     ))}
                   </div>
-                }
+                )}
                 {entry.type === "array" && !entry.choices && (
-                  <input
-                    type="text"
-                    class="form-control"
-                    id={entry.prop}
-                    aria-describedby={`${entry.prop}-help`}
-                    placeholder={entry.example}
-                    required={entry.required ? true : undefined}
-                    data-array="true"
-                  />
-                  <div class="valid-feedback"></div>
-                  <div class="invalid-feedback" id={`${entry.prop}-invalid`}></div>
+                  <>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id={entry.prop}
+                      aria-describedby={`${entry.prop}-help`}
+                      placeholder={entry.example}
+                      required={entry.required ? true : undefined}
+                      data-array="true"
+                    />
+                    <div class="valid-feedback" />
+                    <div
+                      class="invalid-feedback"
+                      id={`${entry.prop}-invalid`}
+                    />
+                  </>
                 )}
                 <div id={`${entry.prop}-help`} class="form-text">
                   {entry.description}
@@ -325,7 +339,9 @@ const form = schemaProps.flatMap(([prop, propSchema]) =>
             );
           })
         }
-        <button type="submit" class="btn btn-primary text-light">Generate</button>
+        <button type="submit" class="btn btn-primary text-light"
+          >Generate</button
+        >
       </form>
       <hr />
     </div>

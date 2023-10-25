@@ -9,7 +9,7 @@ import Footer from "@components/Footer.astro";
 import HitsNav from "@components/hits/HitsNav.astro";
 import Sponsor from "@components/Sponsor.astro";
 
-import "@styles/hits.css";
+import "@styles/hits.scss";
 
 const { page, hitsounds } = Astro.props;
 
@@ -26,7 +26,7 @@ const currentPage = page.currentPage ?? 1;
         fitty(".card-title");
       </script>
       <script>
-        import "@utils/hits.js";
+        import "@utils/hits.ts";
       </script>
     </ImportHead>
     <MainHead

@@ -6,7 +6,7 @@ import ImportHead from "@components/head/ImportHead.astro";
 import MainHead from "@components/head/MainHead.astro";
 import Body from "@components/Body.astro";
 import Footer from "@components/Footer.astro";
-import ImageSlider from "@components/ImageSlider.jsx";
+import ImageSlider from "@components/ImageSlider.tsx";
 import Sponsor from "@components/Sponsor.astro";
 import "highlight.js/styles/atom-one-dark.css";
 import badlandsImg from "@img/cp_badlands01.webp";
@@ -28,7 +28,7 @@ import networkImg from "@img/network.webp";
     <ImportHead>
       <script>
         import "bootstrap/js/src/modal.js";
-        import "@utils/index.js";
+        import "@utils/index.ts";
       </script>
     </ImportHead>
     <MainHead

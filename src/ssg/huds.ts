@@ -6,7 +6,7 @@ import { sha256 } from "./appData";
 let hudDb = null;
 
 const ghApi = async (path) => {
-  let headers = {
+  const headers = {
     "User-Agent": "comfig app",
     Accept: "application/vnd.github.v3+json",
   };
@@ -65,7 +65,7 @@ async function fetchWithTimeout(resource, options = {}) {
 }
 
 let hudMap = null;
-let hudChildren = new Map();
+const hudChildren = new Map();
 
 // TODO: Sync with tf_ui_version
 const CURRENT_HUD_VERSION = 3;

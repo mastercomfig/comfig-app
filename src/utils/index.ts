@@ -2,7 +2,7 @@ import hljs from "highlight.js/lib/core";
 import cpp from "highlight.js/lib/languages/cpp";
 
 function updateBarWidth(id, width) {
-  let el = document.getElementById(id);
+  const el = document.getElementById(id);
   el.style.width = `${width}%`;
   el.style.willChange = "auto";
 }

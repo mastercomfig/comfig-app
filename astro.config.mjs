@@ -73,7 +73,7 @@ let pwa = {
       for (const p of plugins) {
         if (Array.isArray(p)) {
           pwaPlugin = p.find(
-            (p1) => p1 && !Array.isArray(p1) && p1.name === "vite-plugin-pwa"
+            (p1) => p1 && !Array.isArray(p1) && p1.name === "vite-plugin-pwa",
           );
           break;
         }
@@ -105,8 +105,8 @@ let pwa = {
                       revision: `${cHash.digest("hex")}`,
                     });
                   });
-                })
-            )
+                }),
+            ),
         );
         api.extendManifestEntries((manifestEntries) => {
           manifestEntries.push(...addRoutes);
@@ -129,10 +129,10 @@ export default defineConfig({
     resolve: {
       alias: {
         "~bootstrap": url.fileURLToPath(
-          new URL("./node_modules/bootstrap", import.meta.url)
+          new URL("./node_modules/bootstrap", import.meta.url),
         ),
         "~bootswatch": url.fileURLToPath(
-          new URL("./node_modules/bootswatch", import.meta.url)
+          new URL("./node_modules/bootswatch", import.meta.url),
         ),
       },
     },

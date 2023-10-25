@@ -180,26 +180,6 @@ const crosshairPacks = {
       name: "Thick Plus (Outlined)",
     },
   },
-  fatcross: {
-    _0_0: {
-      name: "Thick Plus",
-    },
-  },
-  fatcrossOL: {
-    _0_0: {
-      name: "Thick Plus (Outlined)",
-    },
-  },
-  fatcross: {
-    _0_0: {
-      name: "Thick Plus",
-    },
-  },
-  fatcrossOL: {
-    _0_0: {
-      name: "Thick Plus (Outlined)",
-    },
-  },
   fatcrosscircle: {
     _0_0: {
       name: "Thick Plus (Circled)",
@@ -308,12 +288,6 @@ const crosshairPacks = {
   cpma_1: {
     _0_0: {
       name: "CPMA 1",
-      size: "32",
-    },
-  },
-  cpma_2: {
-    _0_0: {
-      name: "CPMA 2",
       size: "32",
     },
   },
@@ -602,26 +576,26 @@ const crosshairPackGroups = {
   ],
 };
 
-let resourceCache = {};
-let language = "English";
-let languageCache = {};
+const resourceCache = {};
+const language = "English";
+const languageCache = {};
 
 async function getGameResourceFile(path) {
   if (resourceCache[path]) {
     return resourceCache[path];
   }
-  let response = await fetch(
+  const response = await fetch(
     `https://raw.githubusercontent.com/SteamDatabase/GameTracking-TF2/efd8e5d79c690b33675c41227c33754fbf3e5800/${path}`,
   );
-  let content = await response.text();
-  content = parse(content);
+  const rawContent = await response.text();
+  const content = parse<any>(rawContent);
   // kind of a hack, but works for now
   if (content.fWeaponData) {
     content.WeaponData = content.fWeaponData;
     delete content.fWeaponData;
   }
   if (path.includes("tf_weapon")) {
-    let parents = path.split("/");
+    const parents = path.split("/");
     content.WeaponData.classname = parents[parents.length - 1].split(".")[0];
   }
   resourceCache[path] = content;
@@ -629,7 +603,7 @@ async function getGameResourceFile(path) {
 }
 
 async function getGameResourceDir(path) {
-  let headers = {
+  const headers = {
     "User-Agent": "comfig app",
     Accept: "application/vnd.github.v3+json",
   };
@@ -638,14 +612,14 @@ async function getGameResourceDir(path) {
     headers["Authorization"] = `token ${import.meta.env.GITHUB_TOKEN}`;
   }
 
-  let response = await fetch(
+  const response = await fetch(
     `https://api.github.com/repos/SteamDatabase/GameTracking-TF2/contents/${path}?ref=efd8e5d79c690b33675c41227c33754fbf3e5800`,
     {
       headers,
     },
   );
-  let contents = await response.json();
-  let result = [];
+  const contents = await response.json();
+  const result = [];
   for (const file of contents) {
     if (file.type === "file") {
       result.push(file.path);
@@ -656,9 +630,9 @@ async function getGameResourceDir(path) {
   return result;
 }
 
-function getLocalization(key) {
+function getLocalization(key): string {
   if (Array.isArray(key)) {
-    let result = [];
+    const result = [];
     for (const k of key) {
       result.push(getLocalization(k));
     }
@@ -1034,19 +1008,19 @@ function getNormalizedSlotName(item) {
   if (customItemSlot[item.classname]) {
     return customItemSlot[item.classname];
   }
-  let slot = item.WeaponType;
+  const slot = item.WeaponType;
   if (normalizedSlots[slot]) {
     return normalizedSlots[slot];
   }
   return slot;
 }
 
-async function getGameResource(path, file, regex) {
+async function getGameResource(path, file, regex?) {
   if (regex) {
-    let folder = await getGameResourceDir(path);
-    let re = new RegExp(file);
-    let files = folder.filter((f) => re.test(f));
-    let res = [];
+    const folder = await getGameResourceDir(path);
+    const re = new RegExp(file);
+    const files = folder.filter((f) => re.test(f));
+    const res = [];
     for (const file of files) {
       res.push(await getGameResourceFile(file));
     }
@@ -1056,7 +1030,7 @@ async function getGameResource(path, file, regex) {
   }
 }
 
-let items = {
+const items = {
   default: {
     WeaponType: "",
     classname: "default",

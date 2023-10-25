@@ -1,5 +1,6 @@
 .download-progress {
   --bs-progress-height: 1px;
+
   margin-bottom: 1em;
 }
 
@@ -17,11 +18,11 @@
   margin-right: 0.5rem;
 }
 
-#launch-options>* {
+#launch-options > * {
   float: left;
 }
 
-#launch-options>.fas {
+#launch-options > .fas {
   margin-top: 5px;
   margin-right: 5px;
 }
@@ -37,7 +38,7 @@
 }
 
 #customizations {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgb(255 255 255 / 10%);
 }
 
 // Modules
@@ -57,8 +58,7 @@
 
 #modules-controls {
   height: 65vh;
-  overflow-y: scroll;
-  overflow-x: hidden;
+  overflow: hidden scroll;
   position: relative;
 }
 
@@ -103,24 +103,25 @@
 }
 
 .addon-card {
-  border: rgba(0, 0, 0, 0.6) 1px solid;
+  border: rgb(0 0 0 / 60%) 1px solid;
 }
 
 .addon-card.active {
   border: #009688 1px solid;
 }
 
-a.addon-card:focus {
+a.addon-card {
   color: #cbd3da !important;
 }
 
-a.addon-card {
+a.addon-card:focus {
   color: #cbd3da !important;
 }
 
 a.addon-card.active,
 a.addon-card:hover {
   --bs-card-bg: #212529;
+
   color: #f8f9fa !important;
 }
 

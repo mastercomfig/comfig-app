@@ -114,23 +114,29 @@ const hudDescription = hudDescBase;
         .verified-gold {
           color: #c5b358;
         }
+
         .support-pink {
           background: #880e4f;
+
           --bs-link-hover-color: #ff8ab3;
         }
+
         @keyframes introduceCarouselHidable {
           0% {
             opacity: 1;
           }
+
           100% {
             opacity: 0;
           }
         }
+
         #hudScreenshots .carousel-hidable {
           transition: opacity 0.5s;
           animation: 1.5s introduceCarouselHidable;
           opacity: 0;
         }
+
         #hudScreenshots:hover .carousel-hidable {
           opacity: 1;
           animation: 0;
@@ -148,10 +154,10 @@ const hudDescription = hudDescBase;
         import { Tooltip } from "bootstrap";
 
         const tooltipTriggerList = document.querySelectorAll(
-          '[data-bs-toggle="tooltip"]'
+          '[data-bs-toggle="tooltip"]',
         );
         const tooltipList = [...tooltipTriggerList].map(
-          (tooltipTriggerEl) => new Tooltip(tooltipTriggerEl)
+          (tooltipTriggerEl) => new Tooltip(tooltipTriggerEl),
         );
       </script>
     </ImportHead>
@@ -169,9 +175,11 @@ const hudDescription = hudDescBase;
       .carousel {
         aspect-ratio: 16 / 9;
       }
+
       .list-group {
         --bs-list-group-bg: #151515;
         --bs-list-group-color: #f2f2f2;
+
         background: #0d0d0d1c;
         flex: 1;
       }
@@ -287,7 +295,8 @@ const hudDescription = hudDescBase;
                     hud.prerelease
                       ? "fa-flask text-warning"
                       : "fa-circle-check text-success"
-                  } fa-fw`} /> Release status:&nbsp;</strong>
+                  } fa-fw`}></span> Release status:&nbsp;</strong
+              >
               {hud.prerelease ? "Pre-release" : "Stable"}
             </li>
             <li class="list-group-item">
@@ -299,9 +308,9 @@ const hudDescription = hudDescBase;
                       : hud.verified
                       ? "fa-square-check verified-gold"
                       : "fa-circle-check text-success"
-                  } fa-fw`} 
-                />
-                Compatibility:&nbsp;</strong>
+                  } fa-fw`}></span>
+                 Compatibility:&nbsp;</strong
+              >
               {
                 hud.outdated
                   ? "Incompatible"
@@ -354,30 +363,28 @@ const hudDescription = hudDescBase;
               )
             }
             {
-              hud.social.discord &&
-                hud.social.discord.includes("#") && (
-                  <li class="list-group-item">
-                    <strong></strong>
-                      <span class="fab fa-discord fa-fw" />
-                      Discord:&nbsp;
-                    </strong>
-                    <span>{hud.social.discord}</span>
-                  </li>
-                )
+              hud.social.discord && hud.social.discord.includes("#") && (
+                <li class="list-group-item">
+                  <strong>
+                    <span class="fab fa-discord fa-fw" />
+                    Discord:&nbsp;
+                  </strong>
+                  <span>{hud.social.discord}</span>
+                </li>
+              )
             }
             {
-              hud.social.discord &&
-                !hud.social.discord.includes("#") && (
-                  <a
-                    href={`https://discord.gg/${hud.social.discord}`}
-                    class="list-group-item d-flex justify-content-between align-items-center"
-                  >
-                    <span>
-                      <span class="fab fa-discord fa-fw" /> Discord
-                    </span>
-                    <span class="fas fa-square-arrow-up-right fa-fw" />
-                  </a>
-                )
+              hud.social.discord && !hud.social.discord.includes("#") && (
+                <a
+                  href={`https://discord.gg/${hud.social.discord}`}
+                  class="list-group-item d-flex justify-content-between align-items-center"
+                >
+                  <span>
+                    <span class="fab fa-discord fa-fw" /> Discord
+                  </span>
+                  <span class="fas fa-square-arrow-up-right fa-fw" />
+                </a>
+              )
             }
             {
               hud.social.steam_group && (

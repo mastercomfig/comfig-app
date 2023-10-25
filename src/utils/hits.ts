@@ -34,7 +34,7 @@ function expandNibble(nibble, state, channel) {
   state.sample1[channel] = predictor;
 
   state.delta[channel] = Math.floor(
-    (ADAPTATION_TABLE[nibble] * state.delta[channel]) / 256
+    (ADAPTATION_TABLE[nibble] * state.delta[channel]) / 256,
   );
   if (state.delta[channel] < 16) state.delta[channel] = 16;
 
@@ -110,7 +110,7 @@ function decodeMsAdpcm(adpcmData) {
       new DataView(adpcmBlock),
       adpcmData.format.channels,
       adpcmData.format.extra.coefficient[0],
-      adpcmData.format.extra.coefficient[1]
+      adpcmData.format.extra.coefficient[1],
     );
 
     //console.log(`${blockSize} bytes of block decoded into ${decoded[0].length} samples in ${decoded.length} channels`);
@@ -231,12 +231,12 @@ async function createPlayer(player) {
   const wav = readWav(buffer);
   const samples = decodeMsAdpcm(wav);
   // TODO: manually encode wav file again
-  let wavFile = new WaveFile();
+  const wavFile = new WaveFile();
   wavFile.fromScratch(
     wav.format.channels,
     wav.format.sampleRate,
     "16",
-    samples
+    samples,
   );
   const duration =
     wavFile.data.chunkSize /
