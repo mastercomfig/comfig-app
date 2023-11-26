@@ -12,20 +12,20 @@ import veryLowImg from "@img/presets/very-low.webp";
 import highImg from "@img/presets/high.webp";
 import noneImg from "@img/presets/none.webp";
 
-let idbKeyval = {
+const idbKeyval = {
   get,
   set,
   del,
 };
 
 async function app() {
-  let downloadStatusEl = document.getElementById("download-status");
+  const downloadStatusEl = document.getElementById("download-status");
   if (downloadStatusEl) {
     downloadStatusEl.innerHTML = "";
     downloadStatusEl.classList.remove("download-status-fill");
   }
 
-  let dfirebase = import("firebase/compat/app")
+  const dfirebase = import("firebase/compat/app")
     .then(async (firebase) => {
       await import("firebase/compat/auth");
       await import("firebase/compat/firestore");
@@ -45,7 +45,7 @@ async function app() {
       firebase.initializeApp(firebaseConfig);
       return firebase;
     });
-  let dkeyboard = import("simple-keyboard/build/index.modern.js").then(
+  const dkeyboard = import("simple-keyboard/build/index.modern.js").then(
     (Keyboard) => Keyboard.default,
   );
 
@@ -62,7 +62,7 @@ async function app() {
 
   // find RegEx
   Array.prototype.query = function (match) {
-    let reg = new RegExp(match);
+    const reg = new RegExp(match);
 
     return this.filter(function (item) {
       return typeof item == "string" && item.match(reg);
@@ -77,7 +77,7 @@ async function app() {
     return document.getElementById(element);
   }
 
-  let memDB = {};
+  const memDB = {};
 
   async function tryDBGet(key) {
     try {
@@ -107,7 +107,7 @@ async function app() {
   }
 
   async function loadModules() {
-    let storedModulesDB = await tryDBGet("modules");
+    const storedModulesDB = await tryDBGet("modules");
     if (storedModulesDB) {
       storedModules = storedModulesDB;
     }
@@ -129,7 +129,7 @@ async function app() {
 
   // convenience proper case for modules
   function properCaseModuleName(name) {
-    let split = name.split("_");
+    const split = name.split("_");
     split.forEach((str, index, array) => {
       array[index] = capitalize(str);
     });
@@ -144,7 +144,7 @@ async function app() {
   }
 
   // Map preset IDs to display names for download
-  let presets = {
+  const presets = {
     none: {
       name: "None",
       description:
@@ -196,11 +196,11 @@ async function app() {
   ];
 
   // Set what addons we recommend for each preset
-  let recommendedAddons = new Map();
+  const recommendedAddons = new Map();
 
   function setRecommendedAddons(id, values) {
     // don't set non-recommendable addons
-    let addons = values.filter(
+    const addons = values.filter(
       (addon) => recommendableAddons.indexOf(addon) !== -1,
     );
     if (addons.length != values.length) {
@@ -254,7 +254,7 @@ async function app() {
   let availableModuleLevels = {};
 
   // Defined addons (found through parsing HTML)
-  let addons = [];
+  const addons = [];
 
   // Currently selected preset
   let selectedPreset = null;
@@ -269,19 +269,19 @@ async function app() {
     gameoverrides: {},
   };
   // Current state of overrides
-  let selectedOverrides = {};
+  const selectedOverrides = {};
   // Config contents
-  let configContentsRaw = {};
-  let contentsDefaulter = {
+  const configContentsRaw = {};
+  const contentsDefaulter = {
     get: (target, name) => target?.[name] ?? "",
   };
-  let configContents = new Proxy(configContentsRaw, contentsDefaulter);
+  const configContents = new Proxy(configContentsRaw, contentsDefaulter);
 
   // Data cache
   let cachedData = null;
 
   // Overrides for default game action binds
-  let customActionMappings = {};
+  const customActionMappings = {};
 
   // Addons which override action mappings
   const addonActionMappings = {
@@ -333,16 +333,16 @@ async function app() {
       return;
     }
     // Mark we have started a download
-    let element = getEl(id);
+    const element = getEl(id);
     element.onclick = null; // Ignore clicks
     disableDownload(element);
-    let directInstall = await tryDBGet("enable-direct-install");
+    const directInstall = await tryDBGet("enable-direct-install");
     element.innerHTML = element.innerHTML
       .replace("Install", directInstall ? "Installing" : "Downloading")
       .replace("Download", directInstall ? "Installing" : "Downloading")
       .replace(" ", "…");
     // Do the download once clicked
-    let urls = await fnGatherUrls();
+    const urls = await fnGatherUrls();
     // Only download if we have a download
     if (urls.length > 0) {
       await downloadUrls(urls, id, fnGatherUrls);
@@ -353,7 +353,7 @@ async function app() {
   }
 
   function handleConnectivityChange() {
-    let element = getEl("vpk-dl");
+    const element = getEl("vpk-dl");
     // HACK: we are currently using a hack, by using the "downloading" variable
     // to block downloads and track blocked download state.
     if (navigator.onLine) {
@@ -383,11 +383,11 @@ async function app() {
       if (!isSupported) {
         // Check if even the latest version doesn't support the requirement
         // If so, it's an upcoming version, currently unknown, so we shouldn't throw
-        let backupVersion = userVersion;
+        const backupVersion = userVersion;
         userVersion = cachedData.v[0];
-        let backupData = cachedData;
+        const backupData = cachedData;
         cachedData = null;
-        let fatal = requireVersion(major, minor, patch);
+        const fatal = requireVersion(major, minor, patch);
         userVersion = backupVersion;
         cachedData = backupData;
         if (fatal) {
@@ -403,14 +403,14 @@ async function app() {
     if (userVersion === "latest") {
       return latest === undefined ? true : latest;
     }
-    let versions = [major, minor, patch];
-    let versionSplit = userVersion.split(".");
+    const versions = [major, minor, patch];
+    const versionSplit = userVersion.split(".");
     for (let i = 0; i < versions.length; i++) {
-      let requiredVersion = versions[i];
+      const requiredVersion = versions[i];
       if (!isValid(requiredVersion)) {
         continue;
       }
-      let currentVersion = parseInt(versionSplit[i], 10);
+      const currentVersion = parseInt(versionSplit[i], 10);
       if (currentVersion < requiredVersion) {
         return false;
       }
@@ -424,7 +424,7 @@ async function app() {
   // This is what we do when multi-download is ready (init or after finish)
   function bindDownloadClick(id, fnGatherUrls) {
     // Reregister that we can respond to a click
-    let element = getEl(id);
+    const element = getEl(id);
     element.onclick = async () => await downloadClickEvent(id, fnGatherUrls);
     enableDownload(element);
     element.innerHTML = element.innerHTML
@@ -457,7 +457,7 @@ async function app() {
 
   async function downloadUrls(urls, id, fnGatherUrls) {
     updateDownloadProgress(20, "Downloading files...");
-    let downloadFailures = [];
+    const downloadFailures = [];
     if (customDirectory) {
       try {
         await Promise.all(
@@ -502,7 +502,7 @@ async function app() {
         if (wroteFile) {
           const blobURL = URL.createObjectURL(await zipWriter.close());
           zipWriter = null;
-          let link = document.createElement("a");
+          const link = document.createElement("a");
           link.href = blobURL;
           link.download = "mastercomfig.zip";
           document.body.append(link);
@@ -617,14 +617,14 @@ async function app() {
   }
 
   async function clearDirectoryInstructions() {
-    let instructionEls = document.querySelectorAll(".instructions-text");
+    const instructionEls = document.querySelectorAll(".instructions-text");
     for (const instructionEl of instructionEls) {
       instructionEl.classList.add("d-none");
     }
   }
 
   async function restoreDirectoryInstructions() {
-    let instructionEls = document.querySelectorAll(".instructions-text");
+    const instructionEls = document.querySelectorAll(".instructions-text");
     for (const instructionEl of instructionEls) {
       instructionEl.classList.remove("d-none");
     }
@@ -636,7 +636,7 @@ async function app() {
     }
   }
 
-  let bannedDirectories = new Set([
+  const bannedDirectories = new Set([
     "tf",
     "custom",
     "cfg",
@@ -644,7 +644,7 @@ async function app() {
     "overrides",
     "app",
   ]);
-  let silentBannedDirectories = new Set([""]);
+  const silentBannedDirectories = new Set([""]);
 
   function checkDirectory(directoryHandle) {
     const name = directoryHandle.name;
@@ -664,7 +664,7 @@ async function app() {
       return;
     }
     try {
-      let directoryHandle = await window.showDirectoryPicker({
+      const directoryHandle = await window.showDirectoryPicker({
         id: "tf2",
         startIn: "desktop",
       });
@@ -705,7 +705,7 @@ async function app() {
       return;
     }
     try {
-      let directoryHandle = await tryDBGet("directory");
+      const directoryHandle = await tryDBGet("directory");
       if (!directoryHandle) {
         return;
       }
@@ -792,7 +792,7 @@ async function app() {
 
   let filesInUse = false;
 
-  let unlinkErrHandler = {
+  const unlinkErrHandler = {
     "could not be found": () => {},
     "state had changed since it was read from disk": () => {
       filesInUse = true;
@@ -803,7 +803,7 @@ async function app() {
     try {
       await directory.removeEntry(name);
     } catch (err) {
-      let errString = err.toString();
+      const errString = err.toString();
       for (const key in unlinkErrHandler) {
         if (errString.includes(key)) {
           unlinkErrHandler[key]();
@@ -855,7 +855,7 @@ async function app() {
 
   function fetchRetry(url, delay, tries, fetchOptions = {}) {
     function onError(err) {
-      let triesLeft = tries - 1;
+      const triesLeft = tries - 1;
       if (!triesLeft) {
         throw err;
       }
@@ -868,8 +868,8 @@ async function app() {
 
   async function writeRemoteFile(url, directory) {
     try {
-      let response = fetchRetry(url, 125, 6);
-      let name = url.split("/").pop();
+      const response = fetchRetry(url, 125, 6);
+      const name = url.split("/").pop();
       if (directory) {
         const writable = await getWritable(name, directory, true);
         return { name, blob: response.then((r) => r.body.pipeTo(writable)) };
@@ -883,7 +883,7 @@ async function app() {
 
   function updateDownloadProgress(progress, status) {
     getEl("download-progress-status").innerText = status;
-    let progressBar = getEl("download-progress-bar");
+    const progressBar = getEl("download-progress-bar");
     progressBar.style.width = `${progress}%`;
     progressBar.setAttribute("aria-valuenow", progress);
   }
@@ -896,19 +896,19 @@ async function app() {
     let downloads = [];
     getEl("download-progress-bar").classList.remove("d-none");
     updateDownloadProgress(0, "Generating files...");
-    let presetUrl = getPresetUrl();
+    const presetUrl = getPresetUrl();
     if (customDirectory) {
       console.log("Using Direct Install.");
       filesInUse = false;
       // Clear out all existing files
-      let presetKeys = Object.keys(presets);
+      const presetKeys = Object.keys(presets);
       for (const preset of presetKeys) {
-        let presetFile = presetFileUrl.format(null, preset);
+        const presetFile = presetFileUrl.format(null, preset);
         await safeUnlink(presetFile, customDirectory);
         await safeUnlink(presetFile + ".sound.cache", customDirectory);
       }
       for (const addon of addons) {
-        let addonFile = addonFileUrl.format(null, addon);
+        const addonFile = addonFileUrl.format(null, addon);
         await safeUnlink(addonFile, customDirectory);
         await safeUnlink(addonFile + ".sound.cache", customDirectory);
       }
@@ -922,7 +922,7 @@ async function app() {
       console.log("Using ZIP download.");
     }
     // Write preset file
-    let presetResult = await writeRemoteFile(presetUrl, customDirectory);
+    const presetResult = await writeRemoteFile(presetUrl, customDirectory);
     if (presetResult) {
       presetResult.path = `tf/custom/${presetResult.name}`;
       // Then push our preset download
@@ -932,8 +932,8 @@ async function app() {
     }
     // Then push all our addon downloads
     for (const selection of selectedAddons) {
-      let addonUrl = getAddonUrl(selection);
-      let addonResult = await writeRemoteFile(addonUrl, customDirectory);
+      const addonUrl = getAddonUrl(selection);
+      const addonResult = await writeRemoteFile(addonUrl, customDirectory);
       if (addonResult) {
         addonResult.path = `tf/custom/${addonResult.name}`;
         downloads.push(addonResult);
@@ -944,7 +944,7 @@ async function app() {
       }
     }
     // Also handle customizations
-    let customURLs = await getCustomDownloadUrls();
+    const customURLs = await getCustomDownloadUrls();
     if (!customDirectory) {
       downloads = downloads.concat(customURLs);
     }
@@ -960,7 +960,7 @@ async function app() {
   function newModulesFile() {
     let contents = "";
     for (const moduleName of Object.keys(selectedModules)) {
-      let moduleValue = selectedModules[moduleName];
+      const moduleValue = selectedModules[moduleName];
       if (moduleValue) {
         contents += `${moduleName}=${moduleValue}\n`;
       } else {
@@ -986,7 +986,7 @@ async function app() {
     const bindFields = document.querySelectorAll(".binding-field");
 
     // Populate our action overrides with the custom action mappings that modifiers have registered.
-    let actionOverrides = {};
+    const actionOverrides = {};
     for (const namespace of Object.keys(customActionMappings)) {
       for (const action of Object.keys(customActionMappings[namespace])) {
         actionOverrides[action] = customActionMappings[namespace][action];
@@ -994,16 +994,16 @@ async function app() {
     }
 
     // Keep track of command binds & user saved binds
-    let actionBinds = {};
-    let actionLayerBinds = {};
+    const actionBinds = {};
+    const actionLayerBinds = {};
     selectedBinds = {};
     bindLayers = { gameoverrides: {} };
     // Go through our user created bind fields UI
     for (const bindField of bindFields) {
       // The key name
-      let keyInput = bindField.childNodes[0].firstChild.value;
+      const keyInput = bindField.childNodes[0].firstChild.value;
       // The action input
-      let actionSelect = bindField.childNodes[1].firstChild.value;
+      const actionSelect = bindField.childNodes[1].firstChild.value;
       // The layer input
       let layerName = bindField.dataset.layer;
       if (layerName === "gameoverrides") {
@@ -1080,7 +1080,7 @@ async function app() {
       }
     }
     let hasCustomLayers = false;
-    let pendingOverrideLayer = {};
+    const pendingOverrideLayer = {};
     for (const bindLayer of Object.keys(bindLayers)) {
       // We don't need to handle resets for game overrides
       if (bindLayer === "gameoverrides") {
@@ -1094,7 +1094,7 @@ async function app() {
         if (pendingOverrideLayer[key]) {
           continue;
         }
-        let defaultBind = selectedBinds[key];
+        const defaultBind = selectedBinds[key];
         if (defaultBind) {
           // If we have a bind for this key, we need to override it
           pendingOverrideLayer[key] = defaultBind;
@@ -1105,22 +1105,22 @@ async function app() {
       }
     }
     // Our pending overrides are just placeholders to make sure layers don't propagate. If we have user set ones, use those.
-    let overrides = { ...pendingOverrideLayer, ...bindLayers["gameoverrides"] };
+    const overrides = { ...pendingOverrideLayer, ...bindLayers["gameoverrides"] };
     // If we have custom layers, put them in a new binds config so we don't re-run game overrides when we reset
     if (hasCustomLayers) {
-      let contents = getBindsFromBindsObject(overrides);
+      const contents = getBindsFromBindsObject(overrides);
       if (contents.length > 0) {
         configContents["reset_game_overrides.cfg"] = contents;
       }
     } else {
       bindLayers["gameoverrides"] = overrides;
     }
-    let customOverrideFiles = [];
-    let customLayers = [];
+    const customOverrideFiles = [];
+    const customLayers = [];
     // Populate other files with binds
     for (const bindLayer of Object.keys(bindLayers)) {
       let fileName = bindConfigLayers[bindLayer];
-      let contents = getBindsFromBindsObject(bindLayers[bindLayer]);
+      const contents = getBindsFromBindsObject(bindLayers[bindLayer]);
       if (contents.length < 1) {
         continue;
       }
@@ -1138,7 +1138,7 @@ async function app() {
       } else {
         customOverrideFiles.push(fileName);
       }
-      let prefix = hasCustomLayers ? "reset_" : "";
+      const prefix = hasCustomLayers ? "reset_" : "";
       configContents[`${prefix}${fileName}`] += contents;
     }
     if (hasCustomLayers) {
@@ -1147,7 +1147,7 @@ async function app() {
         "exec app/reset_game_overrides.cfg";
       // Apply class specific layer resets
       for (const fileName of customOverrideFiles) {
-        let isClassConfig = fileName !== "game_overrides.cfg";
+        const isClassConfig = fileName !== "game_overrides.cfg";
         for (const layer of customLayers) {
           if (isClassConfig) {
             configContents[
@@ -1197,7 +1197,7 @@ async function app() {
   function getBindsFromBindsObject(bindsObject) {
     let contents = "";
     for (const key of Object.keys(bindsObject)) {
-      let binding = bindsObject[key];
+      const binding = bindsObject[key];
       if (binding === UNBIND_ACTION_VALUE) {
         contents += `unbind ${key}\n`;
         continue;
@@ -1275,11 +1275,11 @@ async function app() {
     await saveModules();
     // We need permissions for the directory
     await accessDirectory();
-    let downloads = [];
+    const downloads = [];
     // Update binds
     await updateBinds();
     // Create the modules.cfg file
-    let modulesFile = newModulesFile();
+    const modulesFile = newModulesFile();
     if (modulesFile) {
       downloads.push({
         name: "modules.cfg",
@@ -1289,7 +1289,7 @@ async function app() {
     } else if (overridesDirectory) {
       // TODO: we should instead read in the existing modules.cfg and set selections
       // Avoid deleting a user's modules if they have not used the modules.cfg customizer
-      let hasModules = await tryDBGet("hasModules");
+      const hasModules = await tryDBGet("hasModules");
       if (hasModules) {
         // Delete modules file if empty
         try {
@@ -1312,7 +1312,7 @@ async function app() {
       }
     }
     if (globalThis.items) {
-      let { default: useItemStore } = await import("../store/items.ts");
+      const { default: useItemStore } = await import("../store/items.ts");
       const itemsState = useItemStore.getState();
       const crosshairs = itemsState.crosshairs;
       const crosshairColors = itemsState.crosshairColors;
@@ -1323,13 +1323,13 @@ async function app() {
       const tracers = itemsState.tracers;
       const selectedExplosionEffects = itemsState.explosioneffects;
       const selectedPlayerExplosions = itemsState.playerexplosions;
-      let items = structuredClone(globalThis.items);
+      const items = structuredClone(globalThis.items);
       delete items.default;
-      let itemsToDownload = new Set();
-      let crosshairsToDownload = new Set();
+      const itemsToDownload = new Set();
+      const crosshairsToDownload = new Set();
       const crosshairTargetBase = "vgui/replay/thumbnails/";
       const crosshairTarget = `tf/custom/comfig-custom/materials/${crosshairTargetBase}`;
-      let crosshairPacks = globalThis.crosshairPacks;
+      const crosshairPacks = globalThis.crosshairPacks;
       const crosshairColorCount = Object.keys(crosshairColors).length;
       if (crosshairColorCount > 0) {
         function addColor(target, color) {
@@ -1384,14 +1384,14 @@ async function app() {
         configContents["autoexec.cfg"] += 'cl_crosshair_file""\ncrosshair 1\n';
       }
       if (crosshairs["default"]) {
-        let [crosshairGroup, crosshairFile, crosshairKey] = crosshairs[
+        const [crosshairGroup, crosshairFile, crosshairKey] = crosshairs[
           "default"
         ].split(".", 3);
-        let crosshairPack = crosshairPacks[crosshairFile];
-        let crosshairInfo = crosshairPack[crosshairKey] ?? crosshairPack;
+        const crosshairPack = crosshairPacks[crosshairFile];
+        const crosshairInfo = crosshairPack[crosshairKey] ?? crosshairPack;
         for (const classname of Object.keys(items)) {
-          let item = items[classname];
-          let itemCrosshair = item.TextureData.crosshair;
+          const item = items[classname];
+          const itemCrosshair = item.TextureData.crosshair;
           if (crosshairFile.indexOf("/") === -1) {
             itemCrosshair.file = `${crosshairTargetBase}${crosshairFile}`;
             crosshairsToDownload.add(crosshairFile);
@@ -1406,13 +1406,13 @@ async function app() {
         }
       } else {
         for (const classname of Object.keys(crosshairs)) {
-          let [crosshairGroup, crosshairFile, crosshairKey] = crosshairs[
+          const [crosshairGroup, crosshairFile, crosshairKey] = crosshairs[
             classname
           ].split(".", 3);
-          let crosshairPack = crosshairPacks[crosshairFile];
-          let crosshairInfo = crosshairPack[crosshairKey];
-          let item = items[classname];
-          let itemCrosshair = item.TextureData.crosshair;
+          const crosshairPack = crosshairPacks[crosshairFile];
+          const crosshairInfo = crosshairPack[crosshairKey];
+          const item = items[classname];
+          const itemCrosshair = item.TextureData.crosshair;
           if (crosshairFile.indexOf("/") === -1) {
             itemCrosshair.file = `${crosshairTargetBase}${crosshairFile}`;
             crosshairsToDownload.add(crosshairFile);
@@ -1427,12 +1427,12 @@ async function app() {
         }
       }
       for (const classname of Object.keys(zoomCrosshairs)) {
-        let [crosshairGroup, crosshairFile, crosshairKey] = zoomCrosshairs[
+        const [crosshairGroup, crosshairFile, crosshairKey] = zoomCrosshairs[
           classname
         ].split(".", 3);
-        let crosshairPack = crosshairPacks[crosshairFile];
-        let crosshairInfo = crosshairPack[crosshairKey];
-        let item = items[classname];
+        const crosshairPack = crosshairPacks[crosshairFile];
+        const crosshairInfo = crosshairPack[crosshairKey];
+        const item = items[classname];
         let itemCrosshair = item.TextureData.zoom;
         if (!itemCrosshair) {
           itemCrosshair = item.TextureData.zoom = {};
@@ -1454,7 +1454,7 @@ async function app() {
           if (skipMuzzleFlash.has(classname)) {
             continue;
           }
-          let item = items[classname];
+          const item = items[classname];
           if (!item.MuzzleFlashParticleEffect) {
             continue;
           }
@@ -1466,14 +1466,14 @@ async function app() {
           if (skipMuzzleFlash.has(classname)) {
             continue;
           }
-          let item = items[classname];
+          const item = items[classname];
           item.MuzzleFlashParticleEffect = "";
           itemsToDownload.add(classname);
         }
       }
       if (brassmodels.has("default")) {
         for (const classname of Object.keys(items)) {
-          let item = items[classname];
+          const item = items[classname];
           if (!item.BrassModel) {
             continue;
           }
@@ -1482,7 +1482,7 @@ async function app() {
         }
       } else {
         for (const classname of Array.from(brassmodels)) {
-          let item = items[classname];
+          const item = items[classname];
           item.BrassModel = "";
           itemsToDownload.add(classname);
         }
@@ -1492,7 +1492,7 @@ async function app() {
           if (skipTracer.has(classname)) {
             continue;
           }
-          let item = items[classname];
+          const item = items[classname];
           if (!item.TracerEffect) {
             continue;
           }
@@ -1504,18 +1504,18 @@ async function app() {
           if (skipTracer.has(classname)) {
             continue;
           }
-          let item = items[classname];
+          const item = items[classname];
           item.TracerEffect = "";
           itemsToDownload.add(classname);
         }
       }
       if (selectedExplosionEffects["default"]) {
-        let effect = selectedExplosionEffects["default"];
+        const effect = selectedExplosionEffects["default"];
         for (const classname of Object.keys(items)) {
           if (skipExplosionEffect.has(classname)) {
             continue;
           }
-          let item = items[classname];
+          const item = items[classname];
           if (!item.ExplosionEffect) {
             continue;
           }
@@ -1529,8 +1529,8 @@ async function app() {
           if (skipExplosionEffect.has(classname)) {
             continue;
           }
-          let item = items[classname];
-          let effect = selectedExplosionEffects[classname];
+          const item = items[classname];
+          const effect = selectedExplosionEffects[classname];
           if (!item.ExplosionEffect) {
             continue;
           }
@@ -1541,12 +1541,12 @@ async function app() {
         }
       }
       if (selectedPlayerExplosions["default"]) {
-        let effect = selectedPlayerExplosions["default"];
+        const effect = selectedPlayerExplosions["default"];
         for (const classname of Object.keys(items)) {
           if (skipExplosionEffect.has(classname)) {
             continue;
           }
-          let item = items[classname];
+          const item = items[classname];
           if (!item.ExplosionEffect) {
             continue;
           }
@@ -1558,8 +1558,8 @@ async function app() {
           if (skipExplosionEffect.has(classname)) {
             continue;
           }
-          let item = items[classname];
-          let effect = selectedPlayerExplosions[classname];
+          const item = items[classname];
+          const effect = selectedPlayerExplosions[classname];
           if (!item.ExplosionEffect) {
             continue;
           }
@@ -1568,10 +1568,10 @@ async function app() {
         }
       }
       for (const classname of Array.from(itemsToDownload)) {
-        let fileName = `${classname}.txt`;
-        let item = { WeaponData: items[classname] };
-        let contents = stringify(item, { pretty: true });
-        let file = newFile(contents, fileName, scriptsDirectory);
+        const fileName = `${classname}.txt`;
+        const item = { WeaponData: items[classname] };
+        const contents = stringify(item, { pretty: true });
+        const file = newFile(contents, fileName, scriptsDirectory);
         if (!file) {
           continue;
         }
@@ -1582,14 +1582,14 @@ async function app() {
         });
       }
       const crosshairExtensions = [".vtf", ".vmt"];
-      let crosshairSrcBase = `/assets/app/crosshairs/`;
+      const crosshairSrcBase = `/assets/app/crosshairs/`;
       let hasAlerted = false;
       for (const crosshairFile of Array.from(crosshairsToDownload)) {
         for (const ext of crosshairExtensions) {
-          let src = `${crosshairSrcBase}${crosshairFile}${ext}`;
-          let crosshairResult = await writeRemoteFile(src, materialsDirectory);
+          const src = `${crosshairSrcBase}${crosshairFile}${ext}`;
+          const crosshairResult = await writeRemoteFile(src, materialsDirectory);
           if (crosshairResult) {
-            let dst = `${crosshairTarget}${crosshairFile}${ext}`;
+            const dst = `${crosshairTarget}${crosshairFile}${ext}`;
             crosshairResult.path = dst;
             downloads.push(crosshairResult);
           } else if (!hasAlerted) {
@@ -1606,7 +1606,7 @@ async function app() {
       }
     }
     // Create the autoexec.cfg file
-    let autoexecFile = newAutoexecFile();
+    const autoexecFile = newAutoexecFile();
     if (autoexecFile) {
       downloads.push({
         name: "autoexec.cfg",
@@ -1615,9 +1615,9 @@ async function app() {
       });
     }
     for (const fileName of Object.keys(configContentsRaw)) {
-      let contents = configContentsRaw[fileName];
+      const contents = configContentsRaw[fileName];
       if (contents.length > 0) {
-        let file = newFile(contents, fileName, appDirectory);
+        const file = newFile(contents, fileName, appDirectory);
         if (!file) {
           continue;
         }
@@ -1636,7 +1636,7 @@ async function app() {
     await setAddon(el.id, !el.classList.contains("active"));
   }
 
-  let addonHandler = {
+  const addonHandler = {
     "null-canceling-movement": {
       enabled: () => {
         if (document.querySelectorAll(".binding-field").length <= 1) {
@@ -1708,7 +1708,7 @@ async function app() {
           sendApiRequest();
         }
       } else {
-        let tag = `https://api.comfig.app/?t=${userVersion}`;
+        const tag = `https://api.comfig.app/?t=${userVersion}`;
         sendApiRequest(tag);
       }
       updateDocsLinks(userVersion);
@@ -1716,7 +1716,7 @@ async function app() {
   }
 
   function updatePresetDownloadButton() {
-    let presetInfo = presets[selectedPreset];
+    const presetInfo = presets[selectedPreset];
     if (!downloading) {
       let icon = "cloud-download";
       let text = `Download mastercomfig (${presetInfo.name} preset, addons and customizations)`;
@@ -1760,9 +1760,9 @@ async function app() {
         handleModulesRoot(cachedData.m);
       }
     }
-    let presetInfo = presets[selectedPreset];
+    const presetInfo = presets[selectedPreset];
     new Tab(getEl(selectedPreset)).show(); // visually display as active in tabs menu bar
-    let presetImage = getEl("preset-image");
+    const presetImage = getEl("preset-image");
     presetImage.src = presetImg[selectedPreset].src;
     presetImage.alt = `${presetInfo.name} preset screenshot`;
     getEl("preset-description").innerHTML = presetInfo.description;
@@ -1781,7 +1781,7 @@ async function app() {
     }
   }
 
-  let keyBindMap = {
+  const keyBindMap = {
     PAUSE: "NUMLOCK",
     INSERT: "INS",
     DELETE: "DEL",
@@ -1793,7 +1793,7 @@ async function app() {
     ";": "SEMICOLON",
   };
 
-  let keypadBindMap = {
+  const keypadBindMap = {
     "/": "SLASH",
     "*": "MULTIPLY",
     "-": "MINUS",
@@ -1813,7 +1813,7 @@ async function app() {
     3: "PAGEDOWN",
   };
 
-  let simpleKeypadMap = {
+  const simpleKeypadMap = {
     DIVIDE: "/",
     MULTIPLY: "*",
     SUBTRACT: "-",
@@ -1868,9 +1868,9 @@ async function app() {
   }
 
   function getBuiltinModuleDefault(name) {
-    let modulePresets = presetModulesDef[name];
+    const modulePresets = presetModulesDef[name];
     if (modulePresets) {
-      let presetValue = modulePresets[selectedPreset];
+      const presetValue = modulePresets[selectedPreset];
       if (presetValue === "" || presetValue) {
         return presetValue;
       }
@@ -1881,7 +1881,7 @@ async function app() {
 
   function getModuleDefault(name) {
     // DB can only contain non-builtin-defaults
-    let userValue = storedModules[name];
+    const userValue = storedModules[name];
     if (userValue && availableModuleLevels[name].has(userValue)) {
       selectedModules[name] = userValue;
       return userValue;
@@ -1891,7 +1891,7 @@ async function app() {
 
   // Set modules
   function setModule(name, value) {
-    let defaultValue = getBuiltinModuleDefault(name);
+    const defaultValue = getBuiltinModuleDefault(name);
     if (defaultValue === value) {
       if (selectedModules?.[name] !== undefined) {
         delete selectedModules[name];
@@ -1906,7 +1906,7 @@ async function app() {
   function getDefaultValueFromName(values, name) {
     let defaultValue = 0;
     for (let i = 0; i < values.length; i++) {
-      let value = values[i];
+      const value = values[i];
       if (value === name || value.value === name) {
         defaultValue = i;
       }
@@ -1916,7 +1916,7 @@ async function app() {
 
   // Convenience method for creating form input elements
   function createInputElement(type, className) {
-    let inputElement = document.createElement("input");
+    const inputElement = document.createElement("input");
     inputElement.autocomplete = "off";
     inputElement.classList.add(className);
     inputElement.type = type;
@@ -1924,20 +1924,20 @@ async function app() {
   }
 
   function updateUndoLink(name, isDefault) {
-    let undoLink = getEl(`undo-${name}`);
+    const undoLink = getEl(`undo-${name}`);
     undoLink.classList.toggle("d-none", isDefault);
   }
 
   // Convenience method for creating input containers
   function createInputContainer(name) {
-    let row = document.createElement("div");
+    const row = document.createElement("div");
     row.classList.add("row");
-    let col = document.createElement("div");
+    const col = document.createElement("div");
     col.classList.add("col-sm-5");
     row.append(col);
-    let undoCol = document.createElement("div");
+    const undoCol = document.createElement("div");
     undoCol.classList.add("col");
-    let undoLink = document.createElement("a");
+    const undoLink = document.createElement("a");
     undoLink.href = "#";
     undoLink.id = `undo-${name}`;
     undoLink.classList.add("align-middle");
@@ -1945,12 +1945,12 @@ async function app() {
       e.preventDefault();
       setModule(name, getBuiltinModuleDefault(name));
     });
-    let value = getModuleDefault(name);
-    let configDefault = getBuiltinModuleDefault(name);
+    const value = getModuleDefault(name);
+    const configDefault = getBuiltinModuleDefault(name);
     if (value === configDefault) {
       undoLink.classList.add("d-none");
     }
-    let undoIcon = document.createElement("span");
+    const undoIcon = document.createElement("span");
     undoIcon.classList.add("fa", "fa-undo", "fa-fw");
     undoLink.append(undoIcon);
     undoCol.append(undoLink);
@@ -1960,9 +1960,9 @@ async function app() {
 
   // Create a dropdown select input
   function handleModuleInputSelect(name, values) {
-    let [inputOuter, inputContainer, inputUndo] = createInputContainer(name);
+    const [inputOuter, inputContainer, inputUndo] = createInputContainer(name);
     // Create the element
-    let selectElement = document.createElement("select");
+    const selectElement = document.createElement("select");
     selectElement.autocomplete = "off";
     selectElement.classList.add(
       "form-select",
@@ -1970,13 +1970,13 @@ async function app() {
       "bg-dark",
       "text-light",
     );
-    let defaultValue = getModuleDefault(name);
-    let configDefault = getBuiltinModuleDefault(name);
+    const defaultValue = getModuleDefault(name);
+    const configDefault = getBuiltinModuleDefault(name);
     let defaultIndex = 0;
     // Add the values
     values.forEach((value, index) => {
       // Create the option element
-      let optionElement = document.createElement("option");
+      const optionElement = document.createElement("option");
       optionElement.value = value.value;
       if (value.value === defaultValue) {
         optionElement.selected = true;
@@ -1986,7 +1986,7 @@ async function app() {
         defaultIndex = index;
       }
       // Name the value
-      let displayName = properCaseOrDisplayModuleName(value, value.value);
+      const displayName = properCaseOrDisplayModuleName(value, value.value);
       optionElement.innerText = displayName;
       selectElement.append(optionElement);
     });
@@ -1996,8 +1996,8 @@ async function app() {
     });
     // Event listener for setting module
     selectElement.addEventListener("input", (e) => {
-      let select = e.target;
-      let value = select.options[select.selectedIndex].value;
+      const select = e.target;
+      const value = select.options[select.selectedIndex].value;
       setModule(name, value);
     });
     inputContainer.append(selectElement);
@@ -2006,20 +2006,20 @@ async function app() {
 
   // Create a switch/toggle input
   function handleModuleInputSwitch(name, values) {
-    let [inputOuter, inputContainer, inputUndo] = createInputContainer(name);
+    const [inputOuter, inputContainer, inputUndo] = createInputContainer(name);
     // Create the switch element
-    let switchContainer = document.createElement("div");
+    const switchContainer = document.createElement("div");
     switchContainer.classList.add("form-check", "form-switch");
-    let switchElement = createInputElement("checkbox", "form-check-input");
+    const switchElement = createInputElement("checkbox", "form-check-input");
     switchElement.value = "";
     switchContainer.append(switchElement);
     // Set default value
-    let defaultValue = getDefaultValueFromName(values, getModuleDefault(name));
+    const defaultValue = getDefaultValueFromName(values, getModuleDefault(name));
     if (defaultValue) {
       switchElement.checked = true;
     }
     // Event listener for undoing
-    let configDefault = getDefaultValueFromName(
+    const configDefault = getDefaultValueFromName(
       values,
       getBuiltinModuleDefault(name),
     );
@@ -2028,7 +2028,7 @@ async function app() {
     });
     // Event listener
     switchContainer.addEventListener("input", (e) => {
-      let selected = values[e.target.checked ? 1 : 0];
+      const selected = values[e.target.checked ? 1 : 0];
       setModule(name, selected.value);
     });
     inputContainer.append(switchContainer);
@@ -2040,18 +2040,18 @@ async function app() {
 
   // Creates a range slider
   function handleModuleInputSlider(name, values) {
-    let [inputOuter, inputContainer, inputUndo] = createInputContainer(name);
+    const [inputOuter, inputContainer, inputUndo] = createInputContainer(name);
     // Create the range element
-    let rangeElement = createInputElement("range", "form-range");
-    let defaultValue = getDefaultValueFromName(values, getModuleDefault(name));
+    const rangeElement = createInputElement("range", "form-range");
+    const defaultValue = getDefaultValueFromName(values, getModuleDefault(name));
     rangeElement.value = defaultValue;
     rangeElement.min = 0;
     rangeElement.max = values.length - 1;
     // Create the value indicator (shows what value in the range is selected)
-    let valueIndicator = document.createElement("span");
+    const valueIndicator = document.createElement("span");
     valueIndicator.classList.add("form-range-value");
     // Set default value
-    let defaultSelection = values[defaultValue];
+    const defaultSelection = values[defaultValue];
     if (typeof defaultSelection === "object") {
       valueIndicator.innerText = properCaseOrDisplayModuleName(
         defaultSelection,
@@ -2061,13 +2061,13 @@ async function app() {
       valueIndicator.innerText = capitalize(defaultSelection);
     }
     // Event listener for undoing
-    let configDefault = getDefaultValueFromName(
+    const configDefault = getDefaultValueFromName(
       values,
       getBuiltinModuleDefault(name),
     );
     inputUndo.addEventListener("click", () => {
       rangeElement.value = configDefault;
-      let configDefaultSelection = values[configDefault];
+      const configDefaultSelection = values[configDefault];
       if (typeof configDefaultSelection === "object") {
         valueIndicator.innerText = properCaseOrDisplayModuleName(
           configDefaultSelection,
@@ -2079,7 +2079,7 @@ async function app() {
     });
     // Event listener
     rangeElement.addEventListener("input", (e) => {
-      let selected = values[e.target.valueAsNumber];
+      const selected = values[e.target.valueAsNumber];
       if (typeof defaultSelection === "object") {
         setModule(name, selected.value);
         valueIndicator.innerText = properCaseOrDisplayModuleName(
@@ -2115,7 +2115,7 @@ async function app() {
   // Uses the factory to create the element
   function handleModuleInput(type, name, values) {
     if (values) {
-      let defaultValue = getBuiltinModuleDefault(name);
+      const defaultValue = getBuiltinModuleDefault(name);
       let newValues;
       if (defaultValue === "") {
         let emptyValue =
@@ -2132,7 +2132,7 @@ async function app() {
       } else {
         newValues = values;
       }
-      let fnModuleInput = moduleInputFactory(type);
+      const fnModuleInput = moduleInputFactory(type);
       if (fnModuleInput) {
         return fnModuleInput(name, newValues);
       }
@@ -2143,32 +2143,32 @@ async function app() {
   // Handle each module
   function handleModule(module) {
     // Create element
-    let moduleContainer = document.createElement("div");
+    const moduleContainer = document.createElement("div");
     moduleContainer.classList.add("row");
     moduleContainer.id = module.name + "-module-input-cont";
     // Create module title
-    let moduleTitle = document.createElement("h6");
+    const moduleTitle = document.createElement("h6");
     moduleTitle.classList.add("module-title");
-    let displayName = properCaseOrDisplayModuleName(module);
+    const displayName = properCaseOrDisplayModuleName(module);
     moduleTitle.innerText = displayName;
     moduleContainer.append(moduleTitle);
     // Create a link to module documentation
-    let moduleDocsLink = document.createElement("a");
+    const moduleDocsLink = document.createElement("a");
     moduleDocsLink.href =
       `https://docs.comfig.app/${userVersion}/customization/modules/#` +
       displayName.replace(/\(|\)/g, "").split(" ").join("-").toLowerCase();
     moduleDocsLink.target = "_blank";
     moduleDocsLink.rel = "noopener";
-    let modulesDocsIcon = document.createElement("span");
+    const modulesDocsIcon = document.createElement("span");
     modulesDocsIcon.classList.add("fa", "fa-book", "fa-fw");
     modulesDocsIcon.ariaHidden = true;
     moduleDocsLink.append(modulesDocsIcon);
     moduleDocsLink.innerHTML = " " + moduleDocsLink.innerHTML;
     moduleTitle.append(moduleDocsLink);
     // Create the module's input control
-    let moduleInputType = module?.type ?? "select";
+    const moduleInputType = module?.type ?? "select";
 
-    let moduleInput = handleModuleInput(
+    const moduleInput = handleModuleInput(
       moduleInputType,
       module.name,
       module.values,
@@ -2184,7 +2184,7 @@ async function app() {
 
   // Function to accurately calculate scroll position because scrollTop is busted...
   function getRelativePos(elm) {
-    let pPos = elm.parentNode.getBoundingClientRect(), // parent pos
+    const pPos = elm.parentNode.getBoundingClientRect(), // parent pos
       cPos = elm.getBoundingClientRect(), // target pos
       pos = {};
 
@@ -2201,28 +2201,28 @@ async function app() {
   // Handles each module category
   function handleCategory(name, category) {
     // Create category element
-    let categoryContainer = document.createElement("div");
+    const categoryContainer = document.createElement("div");
     categoryContainer.classList.add("module-category");
-    let id = "module-cont-" + name;
+    const id = "module-cont-" + name;
     categoryContainer.id = id;
     // Create category title
-    let categoryTitle = document.createElement("h4");
+    const categoryTitle = document.createElement("h4");
     categoryTitle.classList.add("module-category-title");
-    let displayName = properCaseOrDisplayModuleName(category, name);
+    const displayName = properCaseOrDisplayModuleName(category, name);
     categoryTitle.innerText = displayName;
     categoryContainer.append(categoryTitle);
     // Traverse modules to add
     let bHasModule = false;
     for (const module of category.modules) {
-      let moduleElement = handleModule(module);
+      const moduleElement = handleModule(module);
       if (moduleElement) {
         bHasModule = true;
         categoryContainer.append(moduleElement);
       }
     }
-    let categoryNavItem = document.createElement("li");
+    const categoryNavItem = document.createElement("li");
     categoryNavItem.classList.add("nav-item");
-    let categoryNavLink = document.createElement("a");
+    const categoryNavLink = document.createElement("a");
     categoryNavLink.classList.add("nav-link");
     if (bSetModuleNavActive) {
       categoryNavLink.classList.add("active");
@@ -2234,7 +2234,7 @@ async function app() {
       "click",
       (e) => {
         e.preventDefault();
-        let top = getRelativePos(categoryContainer).top;
+        const top = getRelativePos(categoryContainer).top;
         getEl("modules-controls").scrollTop = top - 10;
       },
       {
@@ -2250,7 +2250,7 @@ async function app() {
     }
   }
 
-  let customizeCollapse = getEl("customize");
+  const customizeCollapse = getEl("customize");
   function isCustomizeVisible() {
     return customizeCollapse.classList.contains("show");
   }
@@ -2275,21 +2275,21 @@ async function app() {
     }
 
     // Create row for columns
-    let modulesRow = document.createElement("div");
+    const modulesRow = document.createElement("div");
     modulesRow.classList.add("row");
 
     // Create column for all the customization controls
-    let customizationsCol = document.createElement("div");
+    const customizationsCol = document.createElement("div");
     customizationsCol.id = "modules-controls";
     customizationsCol.classList.add("col-8", "inset-box");
     customizationsCol.tabIndex = 0;
     modulesRow.append(customizationsCol);
 
     // Create column for the sidebar
-    let sidebarCol = document.createElement("div");
+    const sidebarCol = document.createElement("div");
     sidebarCol.classList.add("col-4", "position-relative");
     sidebarCol.id = "modules-sidebar";
-    let sidebarNav = document.createElement("ul");
+    const sidebarNav = document.createElement("ul");
     sidebarNav.classList.add("nav", "flex-column", "nav-pills", "fixed-inner");
     sidebarNav.id = "modules-nav";
     sidebarCol.append(sidebarNav);
@@ -2297,7 +2297,7 @@ async function app() {
 
     // For each module category, create its element and add it to the columns.
     Object.keys(modules).forEach((module, index) => {
-      let [moduleCategoryElement, moduleCategoryNavLink] = handleCategory(
+      const [moduleCategoryElement, moduleCategoryNavLink] = handleCategory(
         module,
         modules[module],
       );
@@ -2312,7 +2312,7 @@ async function app() {
       }
     });
 
-    let resetButton = document.createElement("button");
+    const resetButton = document.createElement("button");
     resetButton.innerHTML =
       '<span class="fas fa-undo fa-fw"></span> Reset all modules';
     resetButton.classList.add(
@@ -2330,7 +2330,7 @@ async function app() {
     sidebarCol.append(resetButton);
 
     // Add a bit of padding to our overflowed root
-    let paddingDiv = document.createElement("div");
+    const paddingDiv = document.createElement("div");
     paddingDiv.style.height = "48.75vh";
     customizationsCol.append(paddingDiv);
 
@@ -2352,8 +2352,8 @@ async function app() {
   }
 
   function addVersion(ver, dropdown, badge, disabled?) {
-    let versionListItem = document.createElement("li");
-    let dropdownItem = document.createElement("a");
+    const versionListItem = document.createElement("li");
+    const dropdownItem = document.createElement("a");
     dropdownItem.classList.add("dropdown-item");
     if (disabled) {
       dropdownItem.classList.add("disabled");
@@ -2367,7 +2367,7 @@ async function app() {
     dropdownItem.innerText = ver === "latest" ? latestVersion : ver;
     if (badge) {
       dropdownItem.innerText += " ";
-      let itemBadge = document.createElement("span");
+      const itemBadge = document.createElement("span");
       itemBadge.innerText = badge[0];
       itemBadge.classList.add("badge", badge[1]);
       dropdownItem.append(itemBadge);
@@ -2377,8 +2377,8 @@ async function app() {
   }
 
   function addDropdownDivider(dropdown) {
-    let dividerListItem = document.createElement("li");
-    let dropdownDivider = document.createElement("hr");
+    const dividerListItem = document.createElement("li");
+    const dropdownDivider = document.createElement("hr");
     dropdownDivider.classList.add("dropdown-divider");
     dividerListItem.append(dropdownDivider);
     dropdown.append(dividerListItem);
@@ -2393,7 +2393,7 @@ async function app() {
 
     versions = JSON.parse(JSON.stringify(versions));
 
-    let lastVersion = await tryDBGet("lastVersion");
+    const lastVersion = await tryDBGet("lastVersion");
     let foundVersion = false;
 
     latestVersion = versions.shift();
@@ -2409,7 +2409,7 @@ async function app() {
         latestVersion,
       );
 
-    let versionDropdown = getEl("versionDropdownMenu");
+    const versionDropdown = getEl("versionDropdownMenu");
 
     versionDropdown.innerHTML = "";
 
@@ -2425,7 +2425,7 @@ async function app() {
 
     addVersion("latest", versionDropdown, latestBadge);
 
-    let lastDownloadedBadge = ["last downloaded", "bg-gray"];
+    const lastDownloadedBadge = ["last downloaded", "bg-gray"];
 
     for (const thisVersion of versions) {
       let badge;
@@ -2459,11 +2459,11 @@ async function app() {
     presetModulesDef = cachedData.p;
     availableModuleLevels = {};
     for (const category of Object.keys(cachedData.m)) {
-      let modules = cachedData.m[category].modules;
+      const modules = cachedData.m[category].modules;
       for (const module of modules) {
-        let moduleName = module.name;
+        const moduleName = module.name;
         for (const level of module.values) {
-          let levelValue = level.value ? level.value : level;
+          const levelValue = level.value ? level.value : level;
           if (moduleName in availableModuleLevels) {
             availableModuleLevels[moduleName].add(levelValue);
           } else {
@@ -2491,7 +2491,7 @@ async function app() {
         }
       })
       .catch(async (err) => {
-        let data = await tryDBGet("cachedData");
+        const data = await tryDBGet("cachedData");
         if (data) {
           console.log("Get data failed, falling back to cache:", err);
           await handleApiResponse(data);
@@ -2516,7 +2516,7 @@ async function app() {
   if (getEl("launch-options")) {
     let currentTimeout = null;
     getEl("launch-options").addEventListener("click", () => {
-      let target = getEl("launch-options");
+      const target = getEl("launch-options");
       if (currentTimeout !== null) {
         clearTimeout(currentTimeout);
       }
@@ -2527,7 +2527,7 @@ async function app() {
       navigator.clipboard
         .writeText(target.firstElementChild.innerText)
         .then(() => {
-          let status = target.children[2];
+          const status = target.children[2];
           status.innerText = "Copied!";
           target.classList.add("text-success");
           currentTimeout = setTimeout(() => {
@@ -2537,15 +2537,15 @@ async function app() {
         })
         .catch(() => {
           console.error("Failed to copy text");
-          let status = target.children[2];
+          const status = target.children[2];
           status.innerText = "Please copy manually";
           target.classList.add("text-danger");
           currentTimeout = setTimeout(() => {
             status.innerText = "Click to copy";
             target.classList.remove("text-danger");
           }, 5000);
-          let selection = getSelection();
-          let range = document.createRange();
+          const selection = getSelection();
+          const range = document.createRange();
           range.selectNodeContents(target.firstElementChild);
           selection.removeAllRanges();
           selection.addRange(range);
@@ -2585,7 +2585,7 @@ async function app() {
     }
   }
 
-  let customizeToggler = getEl("customize-toggler");
+  const customizeToggler = getEl("customize-toggler");
   customizeToggler.addEventListener("click", (e) => {
     e.currentTarget.classList.toggle("active");
     if (e.currentTarget.classList.contains("active")) {
@@ -2607,7 +2607,7 @@ async function app() {
     finishBindInput(lastBindInput, true);
   }
 
-  let commonKeyboardOptions = {
+  const commonKeyboardOptions = {
     onKeyPress: (button) => onKeyPress(button),
     theme: "hg-theme-default simple-keyboard custom-kb-theme",
     physicalKeyboardHighlight: true,
@@ -2623,11 +2623,11 @@ async function app() {
       return;
     }
 
-    let Keyboard = await dkeyboard;
+    const Keyboard = await dkeyboard;
 
     inittedKeyboard = true;
 
-    let keyboard = new Keyboard(".simple-keyboard-main", {
+    const keyboard = new Keyboard(".simple-keyboard-main", {
       ...commonKeyboardOptions,
       /**
        * Layout by:
@@ -2660,7 +2660,7 @@ async function app() {
       },
     });
 
-    let keyboardControlPad = new Keyboard(".simple-keyboard-control", {
+    const keyboardControlPad = new Keyboard(".simple-keyboard-control", {
       ...commonKeyboardOptions,
       layout: {
         default: [
@@ -2671,14 +2671,14 @@ async function app() {
       },
     });
 
-    let keyboardArrows = new Keyboard(".simple-keyboard-arrows", {
+    const keyboardArrows = new Keyboard(".simple-keyboard-arrows", {
       ...commonKeyboardOptions,
       layout: {
         default: ["{arrowup}", "{arrowleft} {arrowdown} {arrowright}"],
       },
     });
 
-    let keyboardNumPad = new Keyboard(".simple-keyboard-numpad", {
+    const keyboardNumPad = new Keyboard(".simple-keyboard-numpad", {
       ...commonKeyboardOptions,
       layout: {
         default: [
@@ -2691,7 +2691,7 @@ async function app() {
       },
     });
 
-    let keyboardNumPadEnd = new Keyboard(".simple-keyboard-numpadEnd", {
+    const keyboardNumPadEnd = new Keyboard(".simple-keyboard-numpadEnd", {
       ...commonKeyboardOptions,
       layout: {
         default: ["{numpadsubtract}", "{numpadadd}", "{numpadenter}"],
@@ -2758,7 +2758,7 @@ async function app() {
   );
 
   // Capture keyboard input when bindings are shown
-  let tabEls = document.querySelectorAll(
+  const tabEls = document.querySelectorAll(
     '#customizations a[data-bs-toggle="tab"]',
   );
   for (const tabEl of tabEls) {
@@ -2813,7 +2813,7 @@ async function app() {
     });
   }
 
-  let actionMappings = {
+  const actionMappings = {
     "Move Forward": "+forward",
     "Move Back": "+back",
     "Move Left": "+moveleft",
@@ -2904,7 +2904,7 @@ async function app() {
   const bindsList = getEl("binds-list");
 
   function createBindingField(bindOptions?) {
-    let keyInput = document.createElement("input");
+    const keyInput = document.createElement("input");
     keyInput.type = "text";
     keyInput.classList.add(
       "form-control",
@@ -2914,15 +2914,15 @@ async function app() {
       "bg-dark",
     );
     keyInput.placeholder = "<Unbound>";
-    let key = bindOptions?.key;
+    const key = bindOptions?.key;
     if (key) {
       keyInput.value = key;
     }
     bindBindingField(keyInput);
-    let inputCol = document.createElement("div");
+    const inputCol = document.createElement("div");
     inputCol.classList.add("col");
     inputCol.append(keyInput);
-    let selectElement = document.createElement("select");
+    const selectElement = document.createElement("select");
     selectElement.classList.add(
       "form-select",
       "form-select-sm",
@@ -2959,9 +2959,9 @@ async function app() {
     }
 
     // Make custom command input group
-    let inputGroup = document.createElement("div");
+    const inputGroup = document.createElement("div");
     inputGroup.classList.add("input-group", "d-none");
-    let textInput = document.createElement("input");
+    const textInput = document.createElement("input");
     textInput.type = "text";
     textInput.classList.add(
       "form-control",
@@ -2972,7 +2972,7 @@ async function app() {
     textInput.placeholder = "Type a console command to run";
     textInput.ariaLabel = "Custom command to run";
     inputGroup.append(textInput);
-    let undoButton = document.createElement("button");
+    const undoButton = document.createElement("button");
     undoButton.classList.add("btn", "btn-sm", "btn-outline-secondary");
     undoButton.type = "button";
     undoButton.innerHTML = "<span class='fas fa-undo fa-fw'></span>";
@@ -2984,9 +2984,9 @@ async function app() {
 
     // Show text input when Custom is selected
     selectElement.addEventListener("input", (e) => {
-      let select = e.target;
-      let value = select.options[select.selectedIndex].value;
-      let isCustom = value === CUSTOM_ACTION_VALUE;
+      const select = e.target;
+      const value = select.options[select.selectedIndex].value;
+      const isCustom = value === CUSTOM_ACTION_VALUE;
       inputGroup.classList.toggle("d-none", !isCustom);
       selectElement.classList.toggle("d-none", isCustom);
     });
@@ -2997,15 +2997,15 @@ async function app() {
       selectElement.classList.add("d-none");
     }
 
-    let row = document.createElement("div");
+    const row = document.createElement("div");
     row.classList.add("row", "binding-field");
 
-    let layerCol = inputCol.cloneNode();
-    let selectLayer = selectElement.cloneNode();
+    const layerCol = inputCol.cloneNode();
+    const selectLayer = selectElement.cloneNode();
     // Make sure it's not cloned as invisible
     selectLayer.classList.remove("d-none");
     let index = 0;
-    let layer = bindOptions?.layer;
+    const layer = bindOptions?.layer;
     for (const key of Object.keys(bindConfigLayers)) {
       let optionName;
       if (key == "gameoverrides") {
@@ -3013,7 +3013,7 @@ async function app() {
       } else {
         optionName = capitalize(key);
       }
-      let optionElement = document.createElement("option");
+      const optionElement = document.createElement("option");
       optionElement.value = key;
       optionElement.innerText = optionName;
       selectLayer.append(optionElement);
@@ -3025,8 +3025,8 @@ async function app() {
     layerCol.append(selectLayer);
 
     selectLayer.addEventListener("input", (e) => {
-      let select = e.target;
-      let value = select.options[select.selectedIndex].value;
+      const select = e.target;
+      const value = select.options[select.selectedIndex].value;
       row.dataset.layer = value;
     });
 
@@ -3034,11 +3034,11 @@ async function app() {
       row.dataset.layer = layer;
     }
 
-    let actionCol = inputCol.cloneNode();
+    const actionCol = inputCol.cloneNode();
     actionCol.append(selectElement);
     actionCol.append(inputGroup);
 
-    let removeBtn = document.createElement("a");
+    const removeBtn = document.createElement("a");
     removeBtn.href = "#";
     removeBtn.onclick = (e) => {
       e.preventDefault();
@@ -3048,7 +3048,7 @@ async function app() {
     if (!bindOptions) {
       removeBtn.classList.add("d-none");
     }
-    let removeCol = document.createElement("div");
+    const removeCol = document.createElement("div");
     removeCol.classList.add("col-1");
     removeCol.append(removeBtn);
     row.append(inputCol, actionCol, layerCol, removeCol);
@@ -3099,7 +3099,7 @@ async function app() {
     // Stash the event so it can be triggered later.
     deferredPrompt = e;
     // Update UI to notify the user they can add to home screen
-    let addBtn = getEl("install-link");
+    const addBtn = getEl("install-link");
     addBtn.classList.remove("d-none");
 
     addBtn.addEventListener("click", (e) => {
@@ -3127,7 +3127,7 @@ async function app() {
   let ghUser;
 
   async function loginWithGitHub() {
-    let firebase = await dfirebase;
+    const firebase = await dfirebase;
     if (!ghProvider) {
       ghProvider = new firebase.auth.GithubAuthProvider();
     }
@@ -3135,14 +3135,14 @@ async function app() {
       .auth()
       .signInWithPopup(ghProvider)
       .then((result) => {
-        let credential = result.credential;
+        const credential = result.credential;
         ghToken = credential.accessToken;
         ghUser = result.user;
       })
       .catch((err) => {
         // Handle Errors here.
-        let errorCode = err.code;
-        let errorMessage = err.message;
+        const errorCode = err.code;
+        const errorMessage = err.message;
         console.error("Login failed:", errorCode, errorMessage);
       });
   }
@@ -3151,7 +3151,7 @@ async function app() {
 
   async function messaging() {
     if (!firebaseMessaging) {
-      let firebase = await dfirebase;
+      const firebase = await dfirebase;
       firebaseMessaging = firebase.messaging();
     }
     return firebaseMessaging;
@@ -3248,7 +3248,7 @@ async function app() {
 
   if (window.showDirectoryPicker) {
     getEl("game-folder-wrapper").classList.remove("d-none");
-    let directInstallCheckbox = getEl("direct-install");
+    const directInstallCheckbox = getEl("direct-install");
     directInstallCheckbox.checked = await tryDBGet("enable-direct-install");
     await updateDirectInstall();
     directInstallCheckbox.addEventListener("input", async (e) => {
