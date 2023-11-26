@@ -1,4 +1,5 @@
 <script>
+  import tradeit from "@img/third_party/tradeit.webp";
   import tf2cc from "@img/third_party/tf2cc.webp";
 
   function generateCoolString(str) {
@@ -34,6 +35,19 @@
   const r = generateId(8);
   const sponsors = [
     {
+      name: "tradeit.gg",
+      logo: tradeit.src,
+      logo_alt: "tradeit.gg logo",
+      url: "https://tradeit.gg/?aff=comfig",
+      title: "Trade, buy or sell items",
+      description:
+        "Trade items instantly for real money with the lowest fees.\n" +
+        "Fully automated. Over 45 million successful trades.\n",
+      cta: "Get started now with $5 credit and 35% off your first trade.",
+      background:
+        "linear-gradient(135deg, rgba(33,37,41, 0.01), rgba(33,37,41, 1) 60%),radial-gradient(ellipse at top left, rgba(255,255,255, 0.5), transparent 50%),radial-gradient(ellipse at top right, rgba(255,228,132, 0.5), transparent 50%),radial-gradient(ellipse at center right, rgba(112.520718,44.062154,249.437846, 0.5), transparent 50%),radial-gradient(ellipse at center left, rgba(13,110,253, 0.5), transparent 50%)",
+    },
+    {
       name: "TF2 Coaching Central",
       logo: tf2cc.src,
       logo_alt: "TF2CC logo",
@@ -41,7 +55,7 @@
       title: "Coach or get coached for competitive TF2!",
       description:
         "TF2CC is a resource hub for new comp players.\n" +
-        "Provides guides, mentoring, demo reviews, pugs, and the upcoming Newcomer's Cup!\n",
+        "Provides guides, mentoring, demo reviews, pugs, and tournaments!\n",
       cta: "Whether you're experienced or a new player, join the Discord and get involved!",
       background:
         "linear-gradient(135deg, rgba(33,37,41, 0.01), rgba(33,37,41, 1) 60%),radial-gradient(ellipse at top left, rgba(255,255,255, 0.5), transparent 50%),radial-gradient(ellipse at top right, rgb(255 174 132 / 50%), transparent 50%),radial-gradient(ellipse at center right, rgb(249 44 78 / 50%), transparent 50%),radial-gradient(ellipse at center left, rgb(253 13 13 / 50%), transparent 50%)",
