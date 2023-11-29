@@ -38,9 +38,9 @@ const { hud, expanded = false, carousel = false } = Astro.props;
                 data-bs-interval={index == 0 ? "400" : ""}
               >
                 <img
+                  loading="lazy"
                   src={resource}
                   class="object-fit-contain"
-                  loading="lazy"
                   alt={`${hud.resources[index]}`}
                 />
               </div>
