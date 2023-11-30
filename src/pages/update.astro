@@ -125,7 +125,7 @@ import lairImg from "@img/update/lair.webp";
         <li>
           Added option to reduce particle complexity with DirectX 8 versions.
         </li>
-        <li>Fixed reduce framerate when using high pollrate gaming mice.</li>
+        <li>Fixed reduced framerate when using high pollrate gaming mice.</li>
         <li>Improved thread prioritization on modern systems.</li>
         <li>Many other minor performance and stability improvements.</li>
         <li>
@@ -149,8 +149,8 @@ import lairImg from "@img/update/lair.webp";
         GAMEPLAY
       </h2>
       <p class="lead" style="font-size: 1.5rem">
-        It's no secret that Team Fortress 2 is a perfect, bug-free game. If you
-        were to somehow find a bug, you'd be able to report it to us via <a
+        It's no secret that Team Fortress 2 is a perfect, bug-free game. But if
+        you were to somehow find a bug, you'd be able to report it to us via <a
           href="https://github.com/ValveSoftware/Source-1-Games/issues?q=is%3Aopen+is%3Aissue+label%3A%22Team+Fortress+2%22"
           style="text-decoration: underline; color: inherit">our bug tracker</a
         >. And if you were to somehow find a second bug, you'd be able to report
@@ -323,15 +323,11 @@ import lairImg from "@img/update/lair.webp";
             first-person.
           </li>
           <li>
-            Add a ConVar tf_taunt_first_person_always to force taunts from
-            first-person.
-          </li>
-          <li>
-            Fixed an gameplay information exploit related to an old LCD keyboard
+            Fixed a gameplay information exploit related to an old LCD keyboard
             system.
           </li>
           <li>
-            Fixed an gameplay information exploit related to VGUI commands.
+            Fixed a gameplay information exploit related to VGUI commands.
           </li>
           <li>
             Fixed The Force-A-Nature fixed spread pattern being biased to the
@@ -397,14 +393,18 @@ import lairImg from "@img/update/lair.webp";
         </h2>
         <ul class="lead">
           <li>
-            Added a functional tf_viewmodels_offset_override (with limits).
+            Added ConVar tf_viewmodels_offset_override to adjust the position
+            (within limits!) of your viewmodel on screen beyond min viewmodels.
           </li>
           <li>Added a live player model preview to the main menu.</li>
           <li>Fixed Sniper Rifle scope being hidable with mods.</li>
-          <li>Fixed texture streaming blur lingering for too long.</li>
+          <li>
+            Fixed texture streaming blur lingering for too long (especially
+            noticeable on Engineer blueprints).
+          </li>
           <li>Fixed camera roll getting stuck when observing.</li>
           <li>Fixed sun glow being incorrect at some angles.</li>
-          <li>Added force_show to game_text_tf.</li>
+          <li>Added force_show to game_text_tf (community mapper request).</li>
         </ul>
         <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
           NETWORKING
@@ -417,7 +417,10 @@ import lairImg from "@img/update/lair.webp";
             Networking update rates now automatically align as best as possible
             to tick rate.
           </li>
-          <li>Fixed an issue with update rate being limited to 100.</li>
+          <li>
+            Fixed an issue with update rate being limited to 100 for community
+            servers with higher than default tick rates.
+          </li>
           <li>Updated the client interp limit to 200ms instead of 500ms.</li>
           <li>
             Fixed case of worse than expected packet loss on unreliable
@@ -427,8 +430,8 @@ import lairImg from "@img/update/lair.webp";
             Fixed a case where prediction could be out of date from server data.
           </li>
           <li>
-            Decreased the lag compensation window from 2 seconds to 500ms, which
-            prevents unfair advantage of high ping players and other exploits.
+            Decreased the lag compensation window from 1 second to 500ms, which
+            reduces the impact of exploits.
           </li>
           <li>Fixed many desync issues and exploits.</li>
         </ul>
@@ -461,7 +464,10 @@ import lairImg from "@img/update/lair.webp";
             Fixed a crash related to a TF damage filter and Passtime ball when
             it hasn't been thrown yet.
           </li>
-          <li>Fixed env_tonemap_controller rate not being replicated.</li>
+          <li>
+            Fixed env_tonemap_controller rate not being replicated (community
+            mapper request).
+          </li>
           <li>
             Fixed tips being changed multiple times during start of map load.
           </li>
