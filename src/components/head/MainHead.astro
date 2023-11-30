@@ -6,6 +6,7 @@ export interface Props {
   description?: string;
   url?: string;
   image?: string;
+  favicon?: string;
 }
 
 const {
@@ -14,15 +15,21 @@ const {
   noSite = false,
   description = "mastercomfig is a modern Team Fortress 2 performance and customization config.",
   image = "https://comfig.app/img/mastercomfig_banner.png",
+  favicon = "",
 } = Astro.props as Props;
 
 const canonical = Astro.url.href;
 ---
 
+{favicon && (
+<link rel="icon" href={favicon} sizes="any" />
+)}
+{!favicon && (
 <link rel="icon" href="/favicon.ico" sizes="any" />
 <link rel="icon" href="/img/mastercomfig_logo.svg" type="image/svg+xml" />
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
 <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#009688" />
+)}
 
 <title>{noSite ? title : `${title} | ${site}`}</title>
 <meta name="theme-color" content="#009688" />
