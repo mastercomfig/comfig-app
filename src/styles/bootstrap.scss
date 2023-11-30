@@ -86,11 +86,16 @@ $tooltip-color: $light;
 // Fonts
 
 // stylelint-disable-next-line value-keyword-case
-$font-family-sans-serif: Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+$font-family-sans-serif:
+  Roboto,
+  -apple-system,
+  BlinkMacSystemFont,
+  "Segoe UI",
+  "Helvetica Neue",
+  Arial,
+  sans-serif;
 $font-size-base: 1rem;
 $font-weight-base: 400;
-
-
 
 // 5. Include remainder of required parts
 @import "~bootstrap/scss/maps";
@@ -139,6 +144,6 @@ $font-weight-base: 400;
 
 // Workaround for Vite bug
 $web-font-path: "";
-@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100..900&display=swap");
 
 @import "./materia";

@@ -1,0 +1,499 @@
+---
+import Layout from "@layouts/Layout.astro";
+import BaseHead from "@components/head/BaseHead.astro";
+import PreloadHead from "@components/head/PreloadHead.astro";
+import ImportHead from "@components/head/ImportHead.astro";
+import MainHead from "@components/head/MainHead.astro";
+import Body from "@components/Body.astro";
+import Footer from "@components/Footer.astro";
+import lairOutsideImg from "@img/update/lairoutside.webp";
+import tfLogoImg from "@img/update/tf2logo.webp";
+import quicklimeImg from "@img/update/quicklime.webp";
+import lairImg from "@img/update/lair.webp";
+---
+
+<style>
+  .header-links > a {
+    color: #d5881e;
+  }
+  .header-links > a:hover {
+    color: #e2b155;
+  }
+</style>
+
+<Layout>
+  <head>
+    <BaseHead />
+    <PreloadHead />
+    <ImportHead />
+    <MainHead
+      title="The TF2 Spring Cleaning Update"
+      noSite={true}
+      description="The Team Fortress 2 Spring Cleaning Update. Performance improvements, gameplay fixes and quality of life updates. A mock update page from mastercomfig, creators of Team Comtress 2, the TF2 patchset."
+      image="https://comfig.app/img/update/springcleaning.png"
+    />
+  </head>
+  <Body>
+    <section
+      class="jumbotron jumbotron-fluid"
+      style=`background: linear-gradient(rgba(38, 50, 56, 0.7) 10%, rgba(38, 50, 56, 0.7)),url(${lairOutsideImg.src});background-size: cover; background-position: center;background-position: center;min-height: 66vh`
+    >
+      <div class="container d-flex align-items-center justify-content-center">
+        <div class="align-middle text-center">
+          <img
+            class="img-logo"
+            src={tfLogoImg.src}
+            alt="Team Fortress 2 logo"
+          />
+          <h1 class="display-1" style="letter-spacing: 0.2rem;font-weight: 900">
+            SPRING CLEANING
+          </h1>
+          <p
+            class="display-6 header-links"
+            style="margin-top: 8rem; color: #d5881e;font-weight: 100;letter-spacing: 0.3rem"
+          >
+            /
+            <a style="font-weight: 600" href="#performance">PERFORMANCE</a>
+             /
+            <a style="font-weight: 600" href="#gameplay">GAMEPLAY</a>
+             /
+            <a style="font-weight: 600" href="#qol">QUALITY OF LIFE</a>
+             /
+          </p>
+        </div>
+      </div>
+    </section>
+    <section class="text-center" style="background: rgb(255 255 255 / 5%)">
+      <p class="lead container" style="font-size: 1.5rem">
+        Bugs? They're icky and get everywhere. That's why we've tasked our
+        trusty TF2 team of engineers, demolitions experts and pyromaniacs to
+        exterminate them. And while they were at it, they've also been tuning up
+        performance and gameplay, and adding niceties for competitive and casual
+        players alike. All of which is just a fancy way of saying:<br /><strong
+          >We've got an exciting new update for you!</strong
+        >
+      </p>
+    </section>
+    <section class="text-center container" id="performance">
+      <h2
+        class="display-2"
+        style="color: #f5881e; font-weight: 700; letter-spacing: 0.2rem"
+      >
+        PERFORMANCE
+      </h2>
+      <p class="lead" style="font-size: 1.5rem">
+        We've been working hard on the engine, tightening a lot of nuts and
+        bolts and making lots of small fixes that should make the game run
+        smoother and more efficiently, eliminating many cases of stutters and
+        low framerates. We've also improved the experience for lower-end
+        machines, giving players more options to control quality, without
+        resorting to configs or lowering DirectX levels.
+      </p>
+      <hr />
+      <ul class="text-start lead">
+        <li>
+          <strong>Upgraded Team Fortress 2 to SSE2.</strong> This will take
+          advantage of new computer technology introduced in the last decade.
+          Nifty!
+        </li>
+        <li>
+          Improved backend math, particle and animation systems with more modern
+          code.
+        </li>
+        <li>Fixed overhead of econ and cosmetics on gameplay.</li>
+        <li>
+          Completely overhauled the performance of the 3D player model. It now
+          has a near zero impact on performance.
+        </li>
+        <li>Greatly optimized VGUI game HUD code.</li>
+        <li>
+          Fixed cases of stutters encountered when moving between different
+          sections of the map.
+        </li>
+        <li>Greatly improved game startup and map load time.</li>
+        <li>Significantly reduced input latency.</li>
+        <li>
+          Optimized overhead of networking, on both the server and client.
+        </li>
+        <li>Fixed fps_max not efficiently nor accurately limiting FPS.</li>
+        <li>
+          Shader Quality option now controls usage of lower quality options
+          previously only available on DirectX 8.
+        </li>
+        <li>Added option to reduce water bullet impact effects.</li>
+        <li>
+          Added option to reduce particle complexity with DirectX 8 versions.
+        </li>
+        <li>Fixed reduce framerate when using high pollrate gaming mice.</li>
+        <li>Improved thread prioritization on modern systems.</li>
+        <li>Many other minor performance and stability improvements.</li>
+        <li>
+          <strong
+            >Overall, we've found these improvements to introduce a 30-50%
+            framerate increase on most machines.</strong
+          >
+        </li>
+      </ul>
+    </section>
+    <section
+      class="jumbotron jumbotron-fluid"
+      style=`background: linear-gradient(rgba(38, 50, 56, 0.4) 10%, rgba(38, 50, 56, 0.4)),url(${quicklimeImg.src});background-size: cover; background-position: center;background-position: center;min-height: 25vh`
+    >
+    </section>
+    <section class="text-center container" id="gameplay">
+      <h2
+        class="display-2"
+        style="color: #f5881e; font-weight: 700; letter-spacing: 0.2rem"
+      >
+        GAMEPLAY
+      </h2>
+      <p class="lead" style="font-size: 1.5rem">
+        It's no secret that Team Fortress 2 is a perfect, bug-free game. If you
+        were to somehow find a bug, you'd be able to report it to us via <a
+          href="https://github.com/ValveSoftware/Source-1-Games/issues?q=is%3Aopen+is%3Aissue+label%3A%22Team+Fortress+2%22"
+          style="text-decoration: underline; color: inherit">our bug tracker</a
+        >. And if you were to somehow find a second bug, you'd be able to report
+        that one too! And if you were to somehow find a third bug... well, you
+        get the idea. As it turns out, there were a <em>few</em> bug reports.
+        Well, hundreds of them. So we've been listening to your feedback, and
+        have made changes and fixes to the game based on what we've heard.
+      </p>
+      <hr />
+      <div class="text-start">
+        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
+          CORE GAMEPLAY
+        </h2>
+        <ul class="lead">
+          <li>
+            Fixed many bugs involving Pyro's Compression Blast reflection.
+          </li>
+          <ul>
+            <li>
+              Fixed various reflected projectiles applying incorrect
+              self-damage.
+            </li>
+            <li>
+              Fixed various reflected projectiles not reversing team color.
+            </li>
+            <li>
+              Fixed reflected rockets not having the correct properties of the
+              original Rocket Launcher, like blast radius, particles, spells,
+              speed, etc.
+            </li>
+            <li>Fixed reflected Sandman balls not dealing damage</li>
+            <li>
+              Fixed reflected Wrap Assassin ornaments not dealing damage or
+              bleed properly
+            </li>
+            <li>
+              Fixed reflected Rescue Ranger bolts not healing friendly buildings
+            </li>
+            <li>
+              Fixed reflected flares not exhibiting their specific Flare Gun's
+              properties
+            </li>
+            <li>
+              Fixed many cases of incorrect application of Strange and
+              Killstreak effects for reflected projectiles.
+            </li>
+            <li>
+              Fixed reflected Huntsman arrows not applying the correct knockback
+              force.
+            </li>
+            <li>
+              Fixed enemy Snipers receiving extinguish bonus from reflected
+              Jarate.
+            </li>
+            <li>
+              Fixed reflected Loose Cannon cannonballs not applying Double Donk
+            </li>
+            <li>Fixed and restored various kill icons for many projectiles.</li>
+            <li>
+              Fixed reflecting Sentry Gun rockets resulting in the Flamethrower
+              primary fire sound to play
+            </li>
+            <li>Fixed reflected projectiles not having correct lifetimes.</li>
+          </ul>
+          <li>
+            Fixed explosions not dealing any damage when blocked by small edges
+            and surfaces in geometry.
+          </li>
+          <li>
+            Fixed blast jumping prematurely ending when sliding across some
+            slopes.
+          </li>
+          <li>
+            Fixed The Degreaser's switch from bonus only applying after it has
+            been deployed for the base deploy time (0.5 seconds), rather using
+            the deploy time with its switch bonus (0.33 seconds).
+          </li>
+          <li>Fixed The Fists of Steel holster penalty being bypassable.</li>
+          <li>
+            Fixed switch from bonuses being able to be accidentally cancelled.
+          </li>
+          <li>Fixed movement speed slows not being applied properly.</li>
+          <li>
+            Fixed the Baby Face's Blaster not properly applying boost when
+            slowed.
+          </li>
+          <li>
+            Added lag compensation for teammates, to fix issues with players
+            unexpectedly blocking bullets and the Sydney Sleeper extinguish not
+            applying as expected.
+          </li>
+          <li>
+            Players under the effect of a Quick-Fix Übercharge can now block
+            captures.
+          </li>
+          <li>
+            Fixed The Winger providing a Jump Height bonus before being fully
+            deployed.
+          </li>
+          <li>
+            Fixed Medics having an accelerated Übercharge build-rate when
+            healing Heavy who are using the Fists of Steel.
+          </li>
+          <li>
+            Fixed The Phlogistinator MMPH! taunt cancelling early if the player
+            was knocked off of a surface.
+          </li>
+          <li>Fixed Scout balls computing random critical hits incorrectly.</li>
+          <li>
+            Fixed servers hosted on Windows providing 41 metal with small ammo
+            packs.
+          </li>
+          <li>
+            Fixed The Detonator and The Scorch Shot blast jumps not working
+            during knockback immunity, like as applied by a Quick-Fix
+            Übercharge.
+          </li>
+          <li>
+            Fixed The Enforcer ignoring bullet damage vulnerability, like on the
+            Pain Train.
+          </li>
+          <li>
+            Fixed The Enforcer not piercing through the Battallion's Backup crit
+            resistance buff.
+          </li>
+          <li>
+            Fixed The Jag dealing less damage than intended to enemy Engineer
+            buildings.
+          </li>
+          <li>
+            Fixed damage to buildings rounding down instead of up like damage to
+            players.
+          </li>
+          <li>
+            Fixed The Ullapool Caber damage being affected inconsistently by
+            falloff.
+          </li>
+          <li>
+            Fixed The Ullapool Caber not receiving the Mini-Crit buff from
+            charging.
+          </li>
+          <li>
+            Fixed The Buffalo Steak Sandvich reducing speed when the Heavy
+            already has a greater speed boost.
+          </li>
+          <li>
+            Fixed The Gunslinger successive hits Crit hitreg not being lag
+            compensated.
+          </li>
+          <li>
+            Fixed the Sniper laser dot not following the Sniper's view point
+            accurately.
+          </li>
+        </ul>
+        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
+          COMPETITIVE
+        </h2>
+        <ul class="lead">
+          <li>Fixed Übercharge building during server pauses.</li>
+          <li>
+            Added a ConVar tf_pipebomb_disable_random_launch to disable
+            randomness on Demoman projectiles.
+          </li>
+          <li>
+            Fixed class limit being bypassable if two or more players switched
+            to that class during a respawn wave.
+          </li>
+          <li>
+            Add a ConVar tf_taunt_first_person_always to force taunts from
+            first-person.
+          </li>
+          <li>
+            Add a ConVar tf_taunt_first_person_always to force taunts from
+            first-person.
+          </li>
+          <li>
+            Fixed an gameplay information exploit related to an old LCD keyboard
+            system.
+          </li>
+          <li>
+            Fixed an gameplay information exploit related to VGUI commands.
+          </li>
+          <li>
+            Fixed The Force-A-Nature fixed spread pattern being biased to the
+            right side.
+          </li>
+        </ul>
+        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
+          MANN VS MACHINE
+        </h2>
+        <ul class="lead">
+          <li>Restored missing Mann vs Machine voicelines and responses.</li>
+          <li>Fixed damage to Tank not giving Critial Hit bonus chance.</li>
+          <li>Non-giants can now be tickled by The Holiday Punch.</li>
+          <li>
+            Fixed money getting stuck in robot spawn areas. This money will be
+            automatically collected, similar to money in death pits.
+          </li>
+          <li>
+            Fixed Sniper Rifle reload upgrade not fully applying without auto
+            rezoom.
+          </li>
+          <li>
+            Fixed Sniper Rifle Explosive Headshot upgrade ignoring resistances.
+            Now applies bullet damage.
+          </li>
+          <li>
+            Fixed revives on players in between waves affecting revive speed
+            penalty.
+          </li>
+          <li>
+            Fixed Strength powerup not affecting damage dealt to Tanks
+            (community request).
+          </li>
+          <li>
+            Fixed the Destroy Entity Task being non-functional in
+            func_nav_prerequisite.
+          </li>
+        </ul>
+      </div>
+    </section>
+    <section
+      class="jumbotron jumbotron-fluid"
+      style=`background: linear-gradient(rgba(38, 50, 56, 0.4) 10%, rgba(38, 50, 56, 0.4)),url(${lairImg.src});background-size: cover; background-position: center;background-position: center;min-height: 25vh`
+    >
+    </section>
+    <section class="text-center container" id="qol">
+      <h2
+        class="display-2"
+        style="color: #f5881e; font-weight: 700; letter-spacing: 0.2rem"
+      >
+        QUALITY OF LIFE
+      </h2>
+      <p class="lead" style="font-size: 1.5rem">
+        Turns out when a game has been around for over 15 years, it can get a
+        little dusty. So we've been busy polishing up TF2, tightening up the
+        nuts and bolts, and generally making things better. These are small but
+        important fixes that should improve your overall experience.
+      </p>
+      <hr />
+      <div class="text-start">
+        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
+          VISUAL
+        </h2>
+        <ul class="lead">
+          <li>
+            Added a functional tf_viewmodels_offset_override (with limits).
+          </li>
+          <li>Added a live player model preview to the main menu.</li>
+          <li>Fixed Sniper Rifle scope being hidable with mods.</li>
+          <li>Fixed texture streaming blur lingering for too long.</li>
+          <li>Fixed camera roll getting stuck when observing.</li>
+          <li>Fixed sun glow being incorrect at some angles.</li>
+          <li>Added force_show to game_text_tf.</li>
+        </ul>
+        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
+          NETWORKING
+        </h2>
+        <ul class="lead">
+          <li>
+            Upgraded the networking rates to be in sync with game update rates.
+          </li>
+          <li>
+            Networking update rates now automatically align as best as possible
+            to tick rate.
+          </li>
+          <li>Fixed an issue with update rate being limited to 100.</li>
+          <li>Updated the client interp limit to 200ms instead of 500ms.</li>
+          <li>
+            Fixed case of worse than expected packet loss on unreliable
+            connections.
+          </li>
+          <li>
+            Fixed a case where prediction could be out of date from server data.
+          </li>
+          <li>
+            Decreased the lag compensation window from 2 seconds to 500ms, which
+            prevents unfair advantage of high ping players and other exploits.
+          </li>
+          <li>Fixed many desync issues and exploits.</li>
+        </ul>
+        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
+          GENERAL
+        </h2>
+        <ul class="lead">
+          <li>
+            Fixed Demo Support automatically recording Casual matches when
+            selecting Competitive matches.
+          </li>
+          <li>Fixed Demo Support not being able to log every kill.</li>
+          <li>Fixed Noisemakers being able to be spammed.</li>
+          <li>
+            Fixed bomb carrier voiceline playing during normal Capture the Flag
+            with bots.
+          </li>
+          <li>Fixed crashes on maps with large lightmaps.</li>
+          <li>Fixed decals still spawning when disabled by player config.</li>
+          <li>
+            Fixed an invalid Steam ID being sent to clients in some cases during
+            game server connection challenge and handshake.
+          </li>
+          <li>
+            Fixed some sounds unintentionally having no cooldown between plays,
+            including the crit received sound.
+          </li>
+          <li>Fixed a crash when there are no observable entities.</li>
+          <li>
+            Fixed a crash related to a TF damage filter and Passtime ball when
+            it hasn't been thrown yet.
+          </li>
+          <li>Fixed env_tonemap_controller rate not being replicated.</li>
+          <li>
+            Fixed tips being changed multiple times during start of map load.
+          </li>
+          <li>
+            Fixed local servers experiencing incorrect game tick rates when the
+            framerate is over 1000.
+          </li>
+          <li>Fixed cvarlist command not printing float values of ConVars.</li>
+          <li>
+            Added tf_dingaling_lasthit_repeat_delay to prevent playback of
+            duplicate sounds when killing multiple players at once.
+          </li>
+          <li>
+            Added a ConVar demo_readinitialcommands to allow players to skip
+            applying settings from the demo recorder's config.
+          </li>
+          <li>
+            Fixed tf_parachute_maxspeed_onfire_z ConVar not working with the
+            B.A.S.E Jumper (community request).
+          </li>
+          <li>
+            Added a ConVar tf_skip_equip_action_hint to disable reminders to
+            equip the relevant action item.
+          </li>
+        </ul>
+      </div>
+    </section>
+    <Footer>
+      This is a mock update page for how a Team Fortress 2 Spring Cleaning could
+      look like if the <a href="https://github.com/mastercomfig/tf2-patches"
+        >mastercomfig TF2 patches (Team Comtress 2)</a
+      > were accepted.
+      <br /><br />
+    </Footer>
+  </Body>
+</Layout>
