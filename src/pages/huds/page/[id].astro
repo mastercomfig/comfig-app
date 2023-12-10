@@ -361,7 +361,7 @@ const hudDescription = hudDescBase;
                       <span class="fab fa-discord fa-fw" />
                       Discord:&nbsp;
                     </strong>
-                    <span>{hud.social.discord}</span>
+                    <span>{Number(hud.social.discord.split("#")[1]) === 0 ? hud.social.discord.split("#")[0] : hud.social.discord}</span>
                   </li>
                 )
             }

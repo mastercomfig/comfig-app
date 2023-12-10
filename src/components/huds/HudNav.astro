@@ -1,6 +1,7 @@
 ---
 import { getAllHudsHash } from "@ssg/huds";
 import HudSearch from "./HudSearch.astro";
+import NavSelector from "@components/NavSelector.astro";
 
 const hash = await getAllHudsHash();
 ---
@@ -34,7 +35,8 @@ const hash = await getAllHudsHash();
   }
   @media (min-width: 992px) {
     #search-results {
-      width: 49.5%;
+      width: max(calc(960px * 0.495), 24.5vw);
+      max-width: 653px;
       transform: translate(-50.7%, 0);
     }
     #search-input-container {
@@ -42,6 +44,8 @@ const hash = await getAllHudsHash();
       transform: translate(-50%, -50%);
       left: 50%;
       top: 50%;
+      width: max(calc(960px * 0.5), 25vw);
+      max-width: 660px;
     }
   }
 </style>
@@ -53,9 +57,9 @@ const hash = await getAllHudsHash();
 </style>
 
 <HudSearch hash={hash.substring(0, 8)} />
-<div class="container-lg g-0 g-lg-4">
+<div class="g-0 g-lg-4">
   <nav class="navbar navbar-expand navbar-dark bg-teal">
-    <div class="d-flex w-100 justify-content-between">
+    <div class="container">
       <a href="/huds/1" class="navbar-brand">
         <img
           src="/img/mastercomfig_logo_transparent_i.svg"
@@ -64,9 +68,11 @@ const hash = await getAllHudsHash();
           width="24"
           height="24"
         />
-        <span class="d-none d-md-inline"> comfig <strong>huds</strong></span>
+        <span class="d-none d-md-inline"> comfig</span>
       </a>
-      <div class="d-md-flex w-50" id="search-input-container" role="search">
+      <NavSelector pageName="huds" />
+      <div class="collapse navbar-collapse"></div>
+      <div class="flex-fill" id="search-input-container" role="search">
         <input
           id="search-input"
           class="form-control me-2"
@@ -91,7 +97,7 @@ const hash = await getAllHudsHash();
             class="nav-item"
             data-bs-toggle="tooltip"
             data-bs-placement="bottom"
-            data-bs-title="HUDs Discord"
+            data-bs-title="HUDS.TF Discord"
           >
             <a href="https://discord.gg/Hz3Q4Z8" class="nav-link"
               ><span class="fab fa-discord fa-fw" aria-hidden="true"></span></a
