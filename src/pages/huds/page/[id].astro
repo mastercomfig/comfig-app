@@ -13,6 +13,7 @@ import { fetchHuds } from "@ssg/huds";
 
 import { Markdown } from "astro-remote";
 import removeMd from "remove-markdown";
+import ResponsiveImage from "@components/ResponsiveImage.astro";
 
 export async function getStaticPaths() {
   return (await fetchHuds(true)).map((hud) => ({
@@ -505,7 +506,7 @@ const hudDescription = hudDescBase;
         {
           hud.content && (
             <div class="col-md-9">
-              <Markdown content={hud.content} />
+              <Markdown content={hud.content} components={{ img: ResponsiveImage }} />
             </div>
           )
         }
