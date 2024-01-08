@@ -33,8 +33,8 @@ const getHudDb = async () => {
   return hudDb;
 };
 
-const getHudFileInfo = async (path) => {
-  return await hudApi(`contents/${path}`);
+const getHudFileCommits = async (path) => {
+  return await hudApi(`commits?path=${path}`);
 };
 
 const getHudDbCommit = async (sha) => {
@@ -218,7 +218,7 @@ const getHuds = async () => {
         } else {
           // Not a GitHub repo, assume it's outdated
           if (!hudData.publishDate) {
-            const hudDbFile = await getHudFileInfo(hud.path);
+            const hudDbFile = await getHudFileCommits(hud.path);
             const commitHash = hudDbFile.sha;
             const commit = await getHudDbCommit(commitHash);
             hudData.publishDate = new Date(commit.author.date);
