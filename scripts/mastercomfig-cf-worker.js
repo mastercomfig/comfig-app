@@ -35,7 +35,7 @@ const reqHeaders = {
 const reqGHAPIHeaders = {
   headers: {
     Authorization: btoa("Basic " + GH_USERNAME + ":" + GH_PASSWORD),
-    Accept: "application/vnd.github.v3+json",
+    Accept: "application/vnd.github+json",
     "Content-Type": "application/json;charset=UTF-8",
     ...reqHeaders.headers,
   },
@@ -167,7 +167,7 @@ async function forceUpdate(version) {
     "}";
   await storeData(
     getVersionedKey("mastercomfig-api-response", version),
-    resBody
+    resBody,
   );
 }
 
@@ -294,7 +294,7 @@ function handleOptions(request) {
       // Allow all future content Request headers to go back to browser
       // such as Authorization (Bearer) or X-Client-Name-Version
       "Access-Control-Allow-Headers": request.headers.get(
-        "Access-Control-Request-Headers"
+        "Access-Control-Request-Headers",
       ),
     };
 
@@ -334,7 +334,7 @@ async function handleRequest(request) {
         if (slashPos !== -1) {
           versionString = versionString.substring(0, slashPos);
           let v = await MASTERCOMFIG.get(
-            getVersionedKey("mastercomfig-version", 2)
+            getVersionedKey("mastercomfig-version", 2),
           );
           let versions = JSON.parse(v);
           validDownload = versions.includes(versionString);
@@ -347,7 +347,7 @@ async function handleRequest(request) {
             let response = await fetch(
               "https://github.com/mastercomfig/mastercomfig/releases" +
                 downloadUrl,
-              reqGHReleaseHeaders
+              reqGHReleaseHeaders,
             );
             const resHeaders = response.ok
               ? resAssetHeadersSuccess
@@ -365,7 +365,7 @@ async function handleRequest(request) {
     // Get custom tag
     if (tag) {
       let v = await MASTERCOMFIG.get(
-        getVersionedKey("mastercomfig-version", version)
+        getVersionedKey("mastercomfig-version", version),
       );
       let modules = [
         `https://raw.githubusercontent.com/mastercomfig/mastercomfig/${tag}/data/modules.json`,
@@ -385,12 +385,12 @@ async function handleRequest(request) {
     }
     // Attempt cached
     let resBody = await MASTERCOMFIG.get(
-      getVersionedKey("mastercomfig-api-response", version)
+      getVersionedKey("mastercomfig-api-response", version),
     );
     resBody = null;
     if (!resBody) {
       let v = await MASTERCOMFIG.get(
-        getVersionedKey("mastercomfig-version", version)
+        getVersionedKey("mastercomfig-version", version),
       );
       let m = await MASTERCOMFIG.get("mastercomfig-modules");
       let p = await MASTERCOMFIG.get("mastercomfig-preset-modules");
@@ -402,7 +402,7 @@ async function handleRequest(request) {
       resBody = constructDataResponse(updated, version, v, m, p);
       await storeData(
         getVersionedKey("mastercomfig-api-response", version),
-        resBody
+        resBody,
       );
     }
     return new Response(resBody, resHeaders);

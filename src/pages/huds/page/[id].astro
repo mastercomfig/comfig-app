@@ -149,10 +149,10 @@ const hudDescription = hudDescBase;
         import { Tooltip } from "bootstrap";
 
         const tooltipTriggerList = document.querySelectorAll(
-          '[data-bs-toggle="tooltip"]'
+          '[data-bs-toggle="tooltip"]',
         );
         const tooltipList = [...tooltipTriggerList].map(
-          (tooltipTriggerEl) => new Tooltip(tooltipTriggerEl)
+          (tooltipTriggerEl) => new Tooltip(tooltipTriggerEl),
         );
       </script>
     </ImportHead>
@@ -255,29 +255,69 @@ const hudDescription = hudDescBase;
           </div>
         )
       }
-      <a
-        href={hud.downloadUrl ?? hud.repo}
-        class="btn btn-secondary w-100 my-3"
-        target={hud.downloadUrl ? undefined : "_blank"}
-        rel={hud.downloadUrl ? undefined : "noopener noreferrer"}
-        ><span class="h3 fw-bold"
-          ><span
-            class={`fas fa-${
-              hud.downloadUrl ? "download" : "up-right-from-square"
-            } fa-fw`}></span> Download {
-            hud.versionName ? hud.versionName : ""
-          }</span
-        >
-        <br />Last updated <strong
-          >{
-            `${hud.publishDate.toLocaleDateString("en-us", {
-              year: "numeric",
-              month: "short",
-              day: "numeric",
-            })}`
-          }</strong
-        ></a
-      >
+      <div class="row g-1">
+        <div class="col">
+          <a
+            href={hud.isGithub ? hud.versions[0].downloadUrl : hud.repo}
+            class="btn btn-secondary w-100 my-3"
+            target={hud.isGithub ? undefined : "_blank"}
+            rel={hud.isGithub ? undefined : "noopener noreferrer"}
+            ><span class="h3 fw-bold"
+              ><span
+                class={`fas fa-${
+                  hud.isGithub ? "download" : "up-right-from-square"
+                } fa-fw`}></span> Download {hud.versions[0].name ?? ""}</span
+            >
+            {
+              (hud.versions.length === 1 && (
+                <>
+                  <br />
+                  Last updated{" "}
+                  <strong>{`${hud.publishDate.toLocaleDateString("en-us", {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                  })}`}</strong>
+                </>
+              )) || (
+                <>
+                  <br />
+                  Latest stable release
+                </>
+              )
+            }
+          </a>
+        </div>
+        {
+          hud.versions.length === 2 && (
+            <div class="col-auto">
+              <a
+                href={hud.isGithub ? hud.versions[1].downloadUrl : hud.repo}
+                class="btn btn-warning w-100 my-3"
+                target={hud.isGithub ? undefined : "_blank"}
+                rel={hud.isGithub ? undefined : "noopener noreferrer"}
+              >
+                <span class="h3 fw-bold">
+                  <span
+                    class={`fas fa-${
+                      hud.isGithub ? "download" : "up-right-from-square"
+                    } fa-fw`}
+                  />{" "}
+                  Prerelease {hud.versions[1].name ?? ""}
+                </span>
+                <br />
+                Last updated{" "}
+                <strong>{`${hud.publishDate.toLocaleDateString("en-us", {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                })}`}</strong>
+              </a>
+            </div>
+          )
+        }
+      </div>
+
       <div class="row flex-md-row-reverse align-items-stretch">
         <div class={hud.content ? "col-md-3 d-md-flex flex-md-column" : ""}>
           <ul class="list-group list-group-flush">
@@ -288,7 +328,8 @@ const hudDescription = hudDescBase;
                     hud.prerelease
                       ? "fa-flask text-warning"
                       : "fa-circle-check text-success"
-                  } fa-fw`} /> Release status:&nbsp;</strong>
+                  } fa-fw`}></span> Release status:&nbsp;</strong
+              >
               {hud.prerelease ? "Pre-release" : "Stable"}
             </li>
             <li class="list-group-item">
@@ -298,17 +339,17 @@ const hudDescription = hudDescBase;
                     hud.outdated
                       ? "fa-circle-exclamation text-danger"
                       : hud.verified
-                      ? "fa-square-check verified-gold"
-                      : "fa-circle-check text-success"
-                  } fa-fw`} 
-                />
-                Compatibility:&nbsp;</strong>
+                        ? "fa-square-check verified-gold"
+                        : "fa-circle-check text-success"
+                  } fa-fw`}></span>
+                 Compatibility:&nbsp;</strong
+              >
               {
                 hud.outdated
                   ? "Incompatible"
                   : hud.verified
-                  ? "Verified"
-                  : "Up to date"
+                    ? "Verified"
+                    : "Up to date"
               }
             </li>
             {
@@ -355,30 +396,32 @@ const hudDescription = hudDescBase;
               )
             }
             {
-              hud.social.discord &&
-                hud.social.discord.includes("#") && (
-                  <li class="list-group-item">
-                    <strong></strong>
-                      <span class="fab fa-discord fa-fw" />
-                      Discord:&nbsp;
-                    </strong>
-                    <span>{Number(hud.social.discord.split("#")[1]) === 0 ? hud.social.discord.split("#")[0] : hud.social.discord}</span>
-                  </li>
-                )
+              hud.social.discord && hud.social.discord.includes("#") && (
+                <li class="list-group-item">
+                  <strong>
+                    <span class="fab fa-discord fa-fw" />
+                    Discord:&nbsp;
+                  </strong>
+                  <span>
+                    {Number(hud.social.discord.split("#")[1]) === 0
+                      ? hud.social.discord.split("#")[0]
+                      : hud.social.discord}
+                  </span>
+                </li>
+              )
             }
             {
-              hud.social.discord &&
-                !hud.social.discord.includes("#") && (
-                  <a
-                    href={`https://discord.gg/${hud.social.discord}`}
-                    class="list-group-item d-flex justify-content-between align-items-center"
-                  >
-                    <span>
-                      <span class="fab fa-discord fa-fw" /> Discord
-                    </span>
-                    <span class="fas fa-square-arrow-up-right fa-fw" />
-                  </a>
-                )
+              hud.social.discord && !hud.social.discord.includes("#") && (
+                <a
+                  href={`https://discord.gg/${hud.social.discord}`}
+                  class="list-group-item d-flex justify-content-between align-items-center"
+                >
+                  <span>
+                    <span class="fab fa-discord fa-fw" /> Discord
+                  </span>
+                  <span class="fas fa-square-arrow-up-right fa-fw" />
+                </a>
+              )
             }
             {
               hud.social.steam_group && (
@@ -506,7 +549,10 @@ const hudDescription = hudDescBase;
         {
           hud.content && (
             <div class="col-md-9">
-              <Markdown content={hud.content} components={{ img: ResponsiveImage }} />
+              <Markdown
+                content={hud.content}
+                components={{ img: ResponsiveImage }}
+              />
             </div>
           )
         }
