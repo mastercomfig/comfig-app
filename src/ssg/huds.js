@@ -111,7 +111,7 @@ const getHuds = async () => {
         }
 
         const isGithub = hudData.repo.startsWith("https://github.com/");
-        hudData.isGithub = true;
+        hudData.isGithub = isGithub;
 
         if (!hudData.social.issues && isGithub) {
           hudData.social.issues = `${hudData.repo}/issues`;
