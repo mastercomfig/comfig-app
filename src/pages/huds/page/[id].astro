@@ -255,22 +255,59 @@ const hudDescription = hudDescBase;
           </div>
         )
       }
-      <div class="row g-1">
+      <div class="row g-1 my-3">
         <div class="col">
           <a
             href={hud.isGithub ? hud.versions[0].downloadUrl : hud.repo}
-            class="btn btn-secondary w-100 my-3"
+            class="btn btn-secondary w-100 h-100 btn-lg d-flex align-items-center justify-content-center"
             target={hud.isGithub ? undefined : "_blank"}
             rel={hud.isGithub ? undefined : "noopener noreferrer"}
-            ><span class="h3 fw-bold"
-              ><span
-                class={`fas fa-${
-                  hud.isGithub ? "download" : "up-right-from-square"
-                } fa-fw`}></span> Download {hud.versions[0].name ?? ""}</span
-            >
-            {
-              (hud.versions.length === 1 && (
-                <>
+            ><div>
+              <span class="h3 fw-bold"
+                ><span
+                  class={`fas fa-${
+                    hud.isGithub ? "download" : "up-right-from-square"
+                  } fa-fw`}></span> Download {hud.versions[0].name ?? ""}</span
+              >
+              {
+                (hud.versions.length === 1 && (
+                  <>
+                    <br />
+                    Last updated{" "}
+                    <strong>{`${hud.publishDate.toLocaleDateString("en-us", {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    })}`}</strong>
+                  </>
+                )) || (
+                  <>
+                    <br />
+                    Latest stable release
+                  </>
+                )
+              }
+            </div>
+          </a>
+        </div>
+        {
+          hud.versions.length === 2 && (
+            <div class="col-lg-auto col">
+              <a
+                href={hud.isGithub ? hud.versions[1].downloadUrl : hud.repo}
+                class="btn btn-warning w-100 h-100 d-flex align-items-center justify-content-center"
+                target={hud.isGithub ? undefined : "_blank"}
+                rel={hud.isGithub ? undefined : "noopener noreferrer"}
+              >
+                <div>
+                  <span class="h3 fw-bold">
+                    <span
+                      class={`fas fa-${
+                        hud.isGithub ? "download" : "up-right-from-square"
+                      } fa-fw`}
+                    />{" "}
+                    Prerelease {hud.versions[1].name ?? ""}
+                  </span>
                   <br />
                   Last updated{" "}
                   <strong>{`${hud.publishDate.toLocaleDateString("en-us", {
@@ -278,40 +315,7 @@ const hudDescription = hudDescBase;
                     month: "short",
                     day: "numeric",
                   })}`}</strong>
-                </>
-              )) || (
-                <>
-                  <br />
-                  Latest stable release
-                </>
-              )
-            }
-          </a>
-        </div>
-        {
-          hud.versions.length === 2 && (
-            <div class="col-auto">
-              <a
-                href={hud.isGithub ? hud.versions[1].downloadUrl : hud.repo}
-                class="btn btn-warning w-100 my-3"
-                target={hud.isGithub ? undefined : "_blank"}
-                rel={hud.isGithub ? undefined : "noopener noreferrer"}
-              >
-                <span class="h3 fw-bold">
-                  <span
-                    class={`fas fa-${
-                      hud.isGithub ? "download" : "up-right-from-square"
-                    } fa-fw`}
-                  />{" "}
-                  Prerelease {hud.versions[1].name ?? ""}
-                </span>
-                <br />
-                Last updated{" "}
-                <strong>{`${hud.publishDate.toLocaleDateString("en-us", {
-                  year: "numeric",
-                  month: "short",
-                  day: "numeric",
-                })}`}</strong>
+                </div>
               </a>
             </div>
           )
