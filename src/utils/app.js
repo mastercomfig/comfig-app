@@ -2653,6 +2653,8 @@ async function app() {
   let blockKeyboard = false;
   let inittedKeyboard = false;
 
+  let handleMouseHighlight = undefined;
+
   async function initKeyboard() {
     if (inittedKeyboard) {
       return;
@@ -2732,6 +2734,62 @@ async function app() {
         default: ["{numpadsubtract}", "{numpadadd}", "{numpadenter}"],
       },
     });
+
+    let keyboardMouseExtra = new Keyboard(".simple-keyboard-mouse-extra", {
+      ...commonKeyboardOptions,
+      layout: {
+        default: ["{mouse4}", "{mouse5}"],
+      },
+      display: {
+        "{mouse4}": "Mouse 4 ↑",
+        "{mouse5}": "Mouse 5 ↓",
+      },
+    });
+
+    let keyboardMousePrimary = new Keyboard(".simple-keyboard-mouse-primary", {
+      ...commonKeyboardOptions,
+      layout: {
+        default: ["{mwheelup}", "{mouse1} {mouse3} {mouse2}", "{mwheeldown}"],
+      },
+      display: {
+        "{mouse1}": "Left",
+        "{mouse2}": "Right",
+        "{mwheelup}": "Wheel Up",
+        "{mouse3}": "Middle",
+        "{mwheeldown}": "Wheel Down",
+      },
+    });
+
+    handleMouseHighlight = (keyname, up) => {
+      const event = new Proxy(
+        {
+          code: keyname,
+          key: keyname,
+        },
+        {
+          get: function (target, name, receiver) {
+            const rv = target[name];
+            if (rv === undefined) {
+              console.error("There is no such thing as " + name + ".");
+            }
+            return rv;
+          },
+        },
+      );
+      if (keyname === "mouse4" || keyname === "mouse5") {
+        if (up) {
+          keyboardMouseExtra.physicalKeyboard.handleHighlightKeyUp(event);
+        } else {
+          keyboardMouseExtra.physicalKeyboard.handleHighlightKeyDown(event);
+        }
+      } else {
+        if (up) {
+          keyboardMousePrimary.physicalKeyboard.handleHighlightKeyUp(event);
+        } else {
+          keyboardMousePrimary.physicalKeyboard.handleHighlightKeyDown(event);
+        }
+      }
+    };
   }
 
   document.addEventListener("keydown", (e) => {
@@ -2752,8 +2810,15 @@ async function app() {
         button = 2;
       } else if (button === 2) {
         button = 1;
+      } else if (button === 3) {
+        button = 4;
+      } else if (button === 4) {
+        button = 3;
       }
       capturedMouseDown = `MOUSE${button + 1}`;
+      if (handleMouseHighlight) {
+        handleMouseHighlight(capturedMouseDown, false);
+      }
     }
   });
 
@@ -2772,6 +2837,9 @@ async function app() {
     if (blockKeyboard && lastBindInput && capturedMouseDown) {
       e.preventDefault();
       lastBindInput.value = capturedMouseDown;
+      if (handleMouseHighlight) {
+        handleMouseHighlight(capturedMouseDown, true);
+      }
       capturedMouseDown = null;
       finishBindInput(lastBindInput, true);
     }
@@ -2782,7 +2850,14 @@ async function app() {
     (e) => {
       if (blockKeyboard && lastBindInput) {
         e.preventDefault();
-        lastBindInput.value = e.wheelDelta > 0 ? "MWHEELUP" : "MWHEELDOWN";
+        const bindValue = e.wheelDelta > 0 ? "MWHEELUP" : "MWHEELDOWN";
+        lastBindInput.value = bindValue;
+        if (handleMouseHighlight) {
+          handleMouseHighlight(bindValue, false);
+          setTimeout(() => {
+            handleMouseHighlight(bindValue, true);
+          }, 200);
+        }
         finishBindInput(lastBindInput, true);
         return false;
       }
