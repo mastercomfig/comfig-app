@@ -66,10 +66,10 @@ async function app() {
           message: !arguments
             ? "undefined"
             : arguments.length === 1
-            ? `${arguments[0]}`
-            : `${arguments[0]}: ${Array.prototype.slice
-                .call(arguments, 1)
-                .join()}`,
+              ? `${arguments[0]}`
+              : `${arguments[0]}: ${Array.prototype.slice
+                  .call(arguments, 1)
+                  .join()}`,
         },
         {
           input: [...arguments],
@@ -755,9 +755,8 @@ async function app() {
       clearDirectoryInstructions();
       gameDirectory = directoryHandle;
       updatePresetDownloadButton();
-      getEl(
-        "game-folder-text",
-      ).innerText = `${gameDirectory.name} folder chosen, click to change`;
+      getEl("game-folder-text").innerText =
+        `${gameDirectory.name} folder chosen, click to change`;
     } catch (err) {
       console.error("Get directory failed:", err);
     }
@@ -1166,13 +1165,11 @@ async function app() {
       if (!fileName) {
         fileName = `layer_${bindLayer}.cfg`;
         // On key down, apply layer
-        configContents[
-          "autoexec.cfg"
-        ] += `alias +layer_${bindLayer}"exec app/${fileName}"\n`;
+        configContents["autoexec.cfg"] +=
+          `alias +layer_${bindLayer}"exec app/${fileName}"\n`;
         // On key up, reset binds
-        configContents[
-          "autoexec.cfg"
-        ] += `alias -layer_${bindLayer}"exec app/reset_game_overrides.cfg\n`;
+        configContents["autoexec.cfg"] +=
+          `alias -layer_${bindLayer}"exec app/reset_game_overrides.cfg\n`;
         customLayers.push(bindLayer);
       } else {
         customOverrideFiles.push(fileName);
@@ -1189,9 +1186,8 @@ async function app() {
         let isClassConfig = fileName !== "game_overrides.cfg";
         for (const layer of customLayers) {
           if (isClassConfig) {
-            configContents[
-              fileName
-            ] += `alias -layer_${layer}"exec app/reset_game_overrides.cfg;exec app/reset_${fileName}"\n`;
+            configContents[fileName] +=
+              `alias -layer_${layer}"exec app/reset_game_overrides.cfg;exec app/reset_${fileName}"\n`;
           }
           configContents[fileName] += `exec app/reset_${fileName}`;
         }
@@ -1664,6 +1660,7 @@ async function app() {
           blob: file,
         });
       }
+      delete configContentsRaw[fileName];
     }
     return downloads;
   }
@@ -1761,9 +1758,8 @@ async function app() {
         text = `Install mastercomfig (${presetInfo.name} preset, addons and customizations)`;
         icon = "download";
       }
-      getEl(
-        "vpk-dl",
-      ).innerHTML = `<span class="fas fa-${icon} fa-fw"></span> ${text} `; // update download text
+      getEl("vpk-dl").innerHTML =
+        `<span class="fas fa-${icon} fa-fw"></span> ${text} `; // update download text
     }
   }
 
