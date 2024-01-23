@@ -1,16 +1,16 @@
-import { get, set, del } from "idb-keyval";
-//import { registerSW } from "virtual:pwa-register";
-import { Tab, ScrollSpy } from "bootstrap";
-import { stringify } from "vdf-parser";
-import { BlobReader, BlobWriter, ZipWriter } from "@zip.js/zip.js";
-import mediumHighImg from "@img/presets/medium-high.webp";
+import highImg from "@img/presets/high.webp";
 import lowImg from "@img/presets/low.webp";
+import mediumHighImg from "@img/presets/medium-high.webp";
 import mediumLowImg from "@img/presets/medium-low.webp";
 import mediumImg from "@img/presets/medium.webp";
+import noneImg from "@img/presets/none.webp";
 import ultraImg from "@img/presets/ultra.webp";
 import veryLowImg from "@img/presets/very-low.webp";
-import highImg from "@img/presets/high.webp";
-import noneImg from "@img/presets/none.webp";
+import { BlobReader, BlobWriter, ZipWriter } from "@zip.js/zip.js";
+//import { registerSW } from "virtual:pwa-register";
+import { ScrollSpy, Tab } from "bootstrap";
+import { del, get, set } from "idb-keyval";
+import { stringify } from "vdf-parser";
 
 const idbKeyval = {
   get,
@@ -1104,7 +1104,10 @@ async function app() {
       }
     }
     // Our pending overrides are just placeholders to make sure layers don't propagate. If we have user set ones, use those.
-    const overrides = { ...pendingOverrideLayer, ...bindLayers["gameoverrides"] };
+    const overrides = {
+      ...pendingOverrideLayer,
+      ...bindLayers["gameoverrides"],
+    };
     // If we have custom layers, put them in a new binds config so we don't re-run game overrides when we reset
     if (hasCustomLayers) {
       const contents = getBindsFromBindsObject(overrides);
@@ -1583,7 +1586,10 @@ async function app() {
       for (const crosshairFile of Array.from(crosshairsToDownload)) {
         for (const ext of crosshairExtensions) {
           const src = `${crosshairSrcBase}${crosshairFile}${ext}`;
-          const crosshairResult = await writeRemoteFile(src, materialsDirectory);
+          const crosshairResult = await writeRemoteFile(
+            src,
+            materialsDirectory,
+          );
           if (crosshairResult) {
             const dst = `${crosshairTarget}${crosshairFile}${ext}`;
             crosshairResult.path = dst;
@@ -1888,11 +1894,9 @@ async function app() {
   function setModule(name, value) {
     if (!noPreviewModules.has(name)) {
       const isCurrentlyNotPreviewing =
-        !!previewModuleValues[name] && !previewModuleValues[name].has(value);
-      let shouldBeInvisible = false;
-      if (isCurrentlyNotPreviewing) {
-        shouldBeInvisible = true;
-      }
+        (!!previewModuleValues[name] &&
+          !previewModuleValues[name].has(value)) ||
+        value === "";
       let modulePreview = getEl(`module-preview-${name}`);
       if (videoModules.has(name)) {
         if (!isCurrentlyNotPreviewing) {
@@ -1990,7 +1994,7 @@ async function app() {
   };
 
   // Convenience method for creating input containers
-  function createInputContainer(name) {
+  function createInputContainer(name, values) {
     const row = document.createElement("div");
     row.classList.add("row");
     const col = document.createElement("div");
@@ -2020,9 +2024,13 @@ async function app() {
     if (!noPreviewModules.has(name)) {
       let modulePreview;
       const isCurrentlyNotPreviewing =
-        !!previewModuleValues[name] && !previewModuleValues[name].has(value);
+        (!!previewModuleValues[name] &&
+          !previewModuleValues[name].has(value)) ||
+        value === "";
       let previewValue = value;
-      if (isCurrentlyNotPreviewing) {
+      if (!previewModuleValues[name]) {
+        previewValue = values[0].value;
+      } else {
         previewValue = previewModuleValues[name].values().next().value;
       }
       if (videoModules.has(name)) {
@@ -2056,7 +2064,10 @@ async function app() {
 
   // Create a dropdown select input
   function handleModuleInputSelect(name, values) {
-    const [inputOuter, inputContainer, inputUndo] = createInputContainer(name);
+    const [inputOuter, inputContainer, inputUndo] = createInputContainer(
+      name,
+      values,
+    );
     // Create the element
     const selectElement = document.createElement("select");
     selectElement.autocomplete = "off";
@@ -2097,7 +2108,10 @@ async function app() {
 
   // Create a switch/toggle input
   function handleModuleInputSwitch(name, values) {
-    const [inputOuter, inputContainer, inputUndo] = createInputContainer(name);
+    const [inputOuter, inputContainer, inputUndo] = createInputContainer(
+      name,
+      values,
+    );
     // Create the switch element
     const switchContainer = document.createElement("div");
     switchContainer.classList.add("form-check", "form-switch");
@@ -2105,7 +2119,10 @@ async function app() {
     switchElement.value = "";
     switchContainer.append(switchElement);
     // Set default value
-    const defaultValue = getDefaultValueFromName(values, getModuleDefault(name));
+    const defaultValue = getDefaultValueFromName(
+      values,
+      getModuleDefault(name),
+    );
     if (defaultValue) {
       switchElement.checked = true;
     }
@@ -2131,10 +2148,16 @@ async function app() {
 
   // Creates a range slider
   function handleModuleInputSlider(name, values) {
-    const [inputOuter, inputContainer, inputUndo] = createInputContainer(name);
+    const [inputOuter, inputContainer, inputUndo] = createInputContainer(
+      name,
+      values,
+    );
     // Create the range element
     const rangeElement = createInputElement("range", "form-range");
-    const defaultValue = getDefaultValueFromName(values, getModuleDefault(name));
+    const defaultValue = getDefaultValueFromName(
+      values,
+      getModuleDefault(name),
+    );
     rangeElement.value = defaultValue;
     rangeElement.min = 0;
     rangeElement.max = values.length - 1;
