@@ -1924,6 +1924,30 @@ async function app() {
 
   // Set modules
   function setModule(name, value) {
+    if (!noPreviewModules.has(name)) {
+      const isCurrentlyNotPreviewing =
+        !!previewModuleValues[name] && !previewModuleValues[name].has(value);
+      let shouldBeInvisible = false;
+      if (isCurrentlyNotPreviewing) {
+        shouldBeInvisible = true;
+      }
+      let modulePreview = getEl(`module-preview-${name}`);
+      if (videoModules.has(name)) {
+        if (!isCurrentlyNotPreviewing) {
+          modulePreview.src = `/img/modules/${name}/${value}.mp4`;
+          modulePreview.parentElement.load();
+        }
+        modulePreview.parentElement.classList.toggle(
+          "invisible",
+          isCurrentlyNotPreviewing,
+        );
+      } else {
+        if (!isCurrentlyNotPreviewing) {
+          modulePreview.src = `/img/modules/${name}/${value}.webp`;
+        }
+        modulePreview.classList.toggle("invisible", isCurrentlyNotPreviewing);
+      }
+    }
     let defaultValue = getBuiltinModuleDefault(name);
     if (defaultValue === value) {
       if (selectedModules.hasOwnProperty(name)) {
@@ -1958,8 +1982,50 @@ async function app() {
 
   function updateUndoLink(name, isDefault) {
     let undoLink = getEl(`undo-${name}`);
-    undoLink.classList.toggle("d-none", isDefault);
+    undoLink.classList.toggle("invisible", isDefault);
   }
+
+  const videoModules = new Set([
+    "characters",
+    "gibs",
+    "jigglebones",
+    "ragdolls",
+    "sheens_speed",
+  ]);
+
+  const noPreviewModules = new Set([
+    "flashlight",
+    "romevision",
+    "sprays",
+    "fpscap",
+    "hud_contracts",
+    "hud_panels",
+    "hud_avatars",
+    "match_hud",
+    "messages",
+    "killfeed",
+    "killstreaks",
+    "hud_achievement",
+    "console",
+    "htmlmotd",
+    "dynamic_background",
+    "sound",
+    "voice_chat",
+    "mod_support",
+    "party_mode",
+    "logo",
+    "sourcetv",
+    "packet_rate",
+    "snapshot_buffer",
+    "packet_size",
+    "bandwidth",
+    "download",
+  ]);
+
+  const previewModuleValues = {
+    sillygibs: new Set(["on"]),
+    sheens_speed: new Set(["slow", "medium", "fast"]),
+  };
 
   // Convenience method for creating input containers
   function createInputContainer(name) {
@@ -1969,7 +2035,7 @@ async function app() {
     col.classList.add("col-sm-5");
     row.append(col);
     let undoCol = document.createElement("div");
-    undoCol.classList.add("col");
+    undoCol.classList.add("col-auto");
     let undoLink = document.createElement("a");
     undoLink.href = "#";
     undoLink.id = `undo-${name}`;
@@ -1981,13 +2047,48 @@ async function app() {
     let value = getModuleDefault(name);
     let configDefault = getBuiltinModuleDefault(name);
     if (value === configDefault) {
-      undoLink.classList.add("d-none");
+      undoLink.classList.add("invisible");
     }
     let undoIcon = document.createElement("span");
     undoIcon.classList.add("fa", "fa-undo", "fa-fw");
     undoLink.append(undoIcon);
     undoCol.append(undoLink);
     row.append(undoCol);
+
+    if (!noPreviewModules.has(name)) {
+      let modulePreview;
+      const isCurrentlyNotPreviewing =
+        !!previewModuleValues[name] && !previewModuleValues[name].has(value);
+      let previewValue = value;
+      if (isCurrentlyNotPreviewing) {
+        previewValue = previewModuleValues[name].values().next().value;
+      }
+      if (videoModules.has(name)) {
+        modulePreview = document.createElement("video");
+        modulePreview.autoplay = true;
+        modulePreview.loop = true;
+        modulePreview.muted = true;
+        modulePreview.playsInline = true;
+        modulePreview.controls = false;
+        let source = document.createElement("source");
+        source.id = `module-preview-${name}`;
+        source.src = `/img/modules/${name}/${previewValue}.mp4`;
+        modulePreview.appendChild(source);
+      } else {
+        modulePreview = document.createElement("img");
+        modulePreview.src = `/img/modules/${name}/${previewValue}.webp`;
+        modulePreview.id = `module-preview-${name}`;
+      }
+      if (isCurrentlyNotPreviewing) {
+        modulePreview.classList.add("invisible");
+      }
+      modulePreview.classList.add("module-preview");
+      const modulePreviewCol = document.createElement("div");
+      modulePreviewCol.classList.add("col");
+      modulePreviewCol.append(modulePreview);
+      row.append(modulePreviewCol);
+    }
+
     return [row, col, undoLink];
   }
 
@@ -2349,12 +2450,12 @@ async function app() {
 
     let resetButton = document.createElement("button");
     resetButton.innerHTML =
-      '<span class="fas fa-undo fa-fw"></span> Reset all modules';
+      '<span class="fas fa-trash-can fa-fw"></span> Reset all modules';
     resetButton.classList.add(
       "position-absolute",
       "bottom-0",
       "btn",
-      "btn-secondary",
+      "btn-danger",
     );
     resetButton.style.marginBottom = "0.5rem";
     resetButton.addEventListener("click", async (e) => {

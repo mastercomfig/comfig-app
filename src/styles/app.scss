@@ -17,11 +17,11 @@
   margin-right: 0.5rem;
 }
 
-#launch-options>* {
+#launch-options > * {
   float: left;
 }
 
-#launch-options>.fas {
+#launch-options > .fas {
   margin-top: 5px;
   margin-right: 5px;
 }
@@ -194,4 +194,8 @@ a.addon-card:hover {
 
 .MyDropdown__menu-list {
   scroll-behavior: auto;
+}
+
+.module-preview {
+  width: 100%;
 }
