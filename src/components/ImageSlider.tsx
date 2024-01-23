@@ -20,10 +20,10 @@ export default function ImageSlider({ srcOne, altOne, srcTwo, altTwo }) {
         />
       }
       itemOne={
-        <ReactCompareSliderImage src={srcOne} loading="lazy" alt={altOne} />
+        <ReactCompareSliderImage loading="lazy" src={srcOne} alt={altOne} />
       }
       itemTwo={
-        <ReactCompareSliderImage src={srcTwo} loading="lazy" alt={altTwo} />
+        <ReactCompareSliderImage loading="lazy" src={srcTwo} alt={altTwo} />
       }
     />
   );

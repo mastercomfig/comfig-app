@@ -94,9 +94,8 @@ function calculateCrosshairs(items) {
       }
       const crosshair = item.TextureData.crosshair;
       const crosshairKey = `_${crosshair.x}_${crosshair.y}`;
-      defaultCrosshairs[
-        item.classname
-      ] = `Valve.${crosshair.file}.${crosshairKey}`;
+      defaultCrosshairs[item.classname] =
+        `Valve.${crosshair.file}.${crosshairKey}`;
     }
   }
 
@@ -242,7 +241,7 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
                   key={`${playerClass}-${item.classname}-pane`}
                   eventKey={`${playerClass}-${item.classname}`}
                 >
-                  <div className="container py-4">
+                  <div className="container g-0 py-4">
                     <h3>Crosshairs</h3>
                     {selectedCrosshairs && (
                       <ItemsSelector
@@ -492,8 +491,8 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
                         variant="danger"
                         className="mt-5"
                       >
-                        <span className="fas fa-undo fa-fw"></span> Reset all
-                        weapons
+                        <span className="fas fa-trash-can fa-fw"></span> Reset
+                        all weapons
                       </Button>
                     )}
                   </div>

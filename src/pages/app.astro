@@ -21,6 +21,7 @@ import ultraImg from "@img/presets/ultra.webp";
 import veryLowImg from "@img/presets/very-low.webp";
 import highImg from "@img/presets/high.webp";
 import noneImg from "@img/presets/none.webp";
+import NavSelector from "@components/NavSelector.astro";
 
 const { appData, hash: appDataHash } = await getAppData();
 const appVersion = appData.v[0];
@@ -79,7 +80,7 @@ const npmVersion = getAppVersion();
   </head>
   <Body>
     <nav class="navbar navbar-expand-sm sticky-top navbar-dark bg-teal">
-      <div class="container">
+      <div class="container g-0">
         <span class="navbar-brand">
           <img
             src="/img/mastercomfig_logo_transparent_i.svg"
@@ -88,7 +89,7 @@ const npmVersion = getAppVersion();
             width="24"
             height="24"
           />
-          <span class="d-none d-md-inline"> comfig <strong>app</strong></span>
+          <span class="d-none d-md-inline"> comfig</span>
         </span>
         <button
           class="navbar-toggler"
@@ -101,6 +102,7 @@ const npmVersion = getAppVersion();
         >
           <span class="navbar-toggler-icon"></span>
         </button>
+        <NavSelector pageName="app" />
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav">
             <li class="nav-item dropdown">
@@ -158,14 +160,15 @@ const npmVersion = getAppVersion();
         </div>
       </div>
     </nav>
-    <section class="container" style="background-color: var(--bs-body-bg)">
+    <section class="container g-0" style="background-color: var(--bs-body-bg)">
       <Sponsor />
     </section>
     <section
-      class="container text-light"
+      class="row text-light"
       style="margin-bottom: 1rem;padding-bottom: 0;padding-top: 0"
     >
-      <div style="min-height: 100%">
+      <div class="col-2"></div>
+      <div class="col" style="min-height: 100%">
         <div
           class="card card-container text-light"
           style="background-color: var(--bs-body-bg)"
@@ -179,11 +182,10 @@ const npmVersion = getAppVersion();
             Update available. Hold Shift and click the refresh button to hard
             refresh the app and restore functionality.
           </div>
-          <h2 class="fw-normal">
+          <h2 class="fw-semibold mb-4">
             <span class="fas fa-box-open fa-fw" aria-hidden="true"></span>
              Choose a preset
           </h2>
-          <br />
           <ul class="nav nav-pills bg-teal-nav" id="presets" role="tablist">
             <li class="nav-item" role="presentation">
               <a class="nav-link" id="ultra" type="button" role="tab">Ultra</a>
@@ -219,192 +221,184 @@ const npmVersion = getAppVersion();
           </ul>
           <br /><img
             src=""
-            width="640"
-            height="360"
+            width="702"
+            height="395"
             id="preset-image"
-            class="my-auto d-block"
+            class="my-2 d-block"
             alt=" "
           /><br />
           <div id="preset-description">
             <h4>&#8203;</h4>
           </div>
-          <br />
-          <a
-            class="lead toggler btn btn-primary btn-lg"
-            id="customize-toggler"
-            data-bs-toggle="collapse"
-            href="#customize"
-            role="button"
-            aria-expanded="false"
-            aria-controls="customize"
-          >
-            <span class="fas fa-angles-down fa-fw"></span>
-            <strong>Click to Customize</strong>
-          </a>
-          <div class="collapse" id="customize">
-            <div class="collapse-wrapper">
-              <br />
-              <noscript>JavaScript must be enabled for customization.</noscript>
-              <ul class="nav nav-pills" id="customizations" role="tablist">
-                <li class="nav-item" role="presentation">
-                  <a
-                    class="nav-link active"
-                    id="modules"
-                    data-bs-toggle="tab"
-                    data-bs-target="#modules-tab"
-                    type="button"
-                    role="tab"
-                    aria-controls="modules-tab">Modules</a
-                  >
-                </li>
-                <li class="nav-item d-none" role="presentation">
-                  <a
-                    class="nav-link"
-                    id="config"
-                    data-bs-toggle="tab"
-                    data-bs-target="#config-tab"
-                    type="button"
-                    role="tab"
-                    aria-controls="config-tab">Configs</a
-                  >
-                </li>
-                <li class="nav-item" role="presentation">
-                  <a
-                    class="nav-link"
-                    id="bindings"
-                    data-bs-toggle="tab"
-                    data-bs-target="#bindings-tab"
-                    type="button"
-                    role="tab"
-                    aria-controls="bindings-tab">Binds</a
-                  >
-                </li>
-                <li class="nav-item" role="presentation">
-                  <a
-                    class="nav-link"
-                    id="weapons"
-                    data-bs-toggle="tab"
-                    data-bs-target="#weapons-tab"
-                    type="button"
-                    role="tab"
-                    aria-controls="weapons-tab">Weapons</a
-                  >
-                </li>
-              </ul>
-              <br />
-              <div class="tab-content" id="customizationsContent">
-                <div
-                  class="tab-pane fade show active"
-                  id="modules-tab"
-                  role="tabpanel"
-                  aria-labelledby="modules"
+          <hr />
+          <h2 class="fw-semibold mb-4">
+            <span class="fas fa-wrench fa-fw" aria-hidden="true"></span>
+             Customize
+          </h2>
+          <div id="customize">
+            <noscript>JavaScript must be enabled for customization.</noscript>
+            <ul class="nav nav-pills" id="customizations" role="tablist">
+              <li class="nav-item" role="presentation">
+                <a
+                  class="nav-link active"
+                  id="modules"
+                  data-bs-toggle="tab"
+                  data-bs-target="#modules-tab"
+                  type="button"
+                  role="tab"
+                  aria-controls="modules-tab">Modules</a
                 >
-                  <p>
-                    For more information about modules, <a
-                      href="https://docs.comfig.app/latest/customization/modules/"
-                      data-url="customization/modules"
-                      target="_blank"
-                      class="docs-link"
-                      rel="noopener">see the documentation.</a
-                    >
-                  </p>
-                  <div id="modules-root">
-                    <span class="fas fa-circle-notch fa-spin fa-fw"></span>
-                     Loading, please wait...
-                  </div>
+              </li>
+              <li class="nav-item d-none" role="presentation">
+                <a
+                  class="nav-link"
+                  id="config"
+                  data-bs-toggle="tab"
+                  data-bs-target="#config-tab"
+                  type="button"
+                  role="tab"
+                  aria-controls="config-tab">Configs</a
+                >
+              </li>
+              <li class="nav-item" role="presentation">
+                <a
+                  class="nav-link"
+                  id="bindings"
+                  data-bs-toggle="tab"
+                  data-bs-target="#bindings-tab"
+                  type="button"
+                  role="tab"
+                  aria-controls="bindings-tab">Binds</a
+                >
+              </li>
+              <li class="nav-item" role="presentation">
+                <a
+                  class="nav-link"
+                  id="weapons"
+                  data-bs-toggle="tab"
+                  data-bs-target="#weapons-tab"
+                  type="button"
+                  role="tab"
+                  aria-controls="weapons-tab">Weapons</a
+                >
+              </li>
+            </ul>
+            <br />
+            <div class="tab-content" id="customizationsContent">
+              <div
+                class="tab-pane fade show active"
+                id="modules-tab"
+                role="tabpanel"
+                aria-labelledby="modules"
+              >
+                <p>
+                  For more information about modules, <a
+                    href="https://docs.comfig.app/latest/customization/modules/"
+                    data-url="customization/modules"
+                    target="_blank"
+                    class="docs-link"
+                    rel="noopener">see the documentation.</a
+                  >
+                </p>
+                <div id="modules-root">
+                  <span class="fas fa-circle-notch fa-spin fa-fw"></span>
+                   Loading, please wait...
                 </div>
-                <div
-                  class="tab-pane fade"
-                  id="config-tab"
-                  role="tabpanel"
-                  aria-labelledby="config"
-                >
-                  <p>
-                    For more information about configs, <a
-                      href="https://docs.comfig.app/latest/customization/custom_configs/"
-                      data-url="customization/custom_configs"
-                      target="_blank"
-                      class="docs-link"
-                      rel="noopener">see the documentation.</a
-                    >
-                  </p>
-                  <div id="configs-root">
-                    <span class="fas fa-circle-notch fa-spin fa-fw"></span>
-                     Loading, please wait...
-                  </div>
+              </div>
+              <div
+                class="tab-pane fade"
+                id="config-tab"
+                role="tabpanel"
+                aria-labelledby="config"
+              >
+                <p>
+                  For more information about configs, <a
+                    href="https://docs.comfig.app/latest/customization/custom_configs/"
+                    data-url="customization/custom_configs"
+                    target="_blank"
+                    class="docs-link"
+                    rel="noopener">see the documentation.</a
+                  >
+                </p>
+                <div id="configs-root">
+                  <span class="fas fa-circle-notch fa-spin fa-fw"></span>
+                   Loading, please wait...
                 </div>
-                <div
-                  class="tab-pane fade"
-                  id="bindings-tab"
-                  role="tabpanel"
-                  aria-labelledby="bindings"
-                >
-                  <p>
-                    Bind rules:
-                    <ul>
-                      <li>
-                        Multiple binds to the same key will all execute, in
-                        order
-                      </li>
-                      <li>Binds are not shared across layers</li>
-                      <li>
-                        Commands automatically manage necessary extra commands,
-                        like spectator controls, when using multiple binds
-                      </li>
-                      <li>
-                        Custom commands support limited console syntax. Full
-                        support for quoted arguments in commands is coming soon.
-                      </li>
-                    </ul>
-                  </p>
-                  <div id="binds-root" class="inset-box">
-                    <div id="binds-list" class="container"></div>
-                    <br />
-                    <div class="keyboardContainer">
-                      <div class="simple-keyboard-main"></div>
+              </div>
+              <div
+                class="tab-pane fade"
+                id="bindings-tab"
+                role="tabpanel"
+                aria-labelledby="bindings"
+              >
+                <p>
+                  Bind rules:
+                  <ul>
+                    <li>
+                      Multiple binds to the same key will all execute, in order
+                    </li>
+                    <li>Binds to the same key are not shared across layers</li>
+                    <li>
+                      Commands automatically manage necessary extra commands,
+                      like spectator controls, when using multiple binds
+                    </li>
+                    <li>
+                      Custom commands support limited console syntax. Full
+                      support for quoted arguments in commands is coming soon
+                    </li>
+                  </ul>
+                </p>
+                <div id="binds-root" class="inset-box">
+                  <div id="binds-list" class="container"></div>
+                  <br />
+                  <div class="keyboardContainer">
+                    <div class="simple-keyboard-main"></div>
 
-                      <div class="controlArrows">
-                        <div class="simple-keyboard-control"></div>
-                        <div class="simple-keyboard-arrows"></div>
-                      </div>
+                    <div class="controlArrows">
+                      <div class="simple-keyboard-control"></div>
+                      <div class="simple-keyboard-arrows"></div>
+                    </div>
 
-                      <div class="numPad">
-                        <div class="simple-keyboard-numpad"></div>
-                        <div class="simple-keyboard-numpadEnd"></div>
-                      </div>
+                    <div class="numPad">
+                      <div class="simple-keyboard-numpad"></div>
+                      <div class="simple-keyboard-numpadEnd"></div>
                     </div>
                   </div>
+
+                  <div class="mouse">
+                    <div class="simple-keyboard-mouse-extra"></div>
+                    <div class="simple-keyboard-mouse-primary"></div>
+                  </div>
                 </div>
-                <div
-                  class="tab-pane fade"
-                  id="weapons-tab"
-                  role="tabpanel"
-                  aria-labelledby="weapons"
-                >
-                  <p>
-                    Weapon customization tips:
-                    <ul>
-                      <li>
-                        If a crosshair is chosen for Default, it will override
-                        any per weapon customizations.
-                      </li>
-                      <li>
-                        Crosshair color and scale cannot change per weapon, only
-                        per class or for all classes.
-                      </li>
-                    </ul>
-                  </p>
-                  <Items client:only hash={hash.substring(0, 8)} />
-                </div>
+              </div>
+              <div
+                class="tab-pane fade"
+                id="weapons-tab"
+                role="tabpanel"
+                aria-labelledby="weapons"
+              >
+                <p>
+                  Weapon customization tips:
+                  <ul>
+                    <li>
+                      If a crosshair is chosen for Default, it will override any
+                      per weapon customizations.
+                    </li>
+                    <li>
+                      Crosshair color and scale cannot change per weapon, only
+                      per class or for all classes.
+                    </li>
+                  </ul>
+                </p>
+                <Items client:only hash={hash.substring(0, 8)} />
               </div>
             </div>
           </div>
           <hr />
-          <h2 class="fw-normal">
-            <span class="fas fa-circle-plus fa-fw"></span> Select any addons
+          <h2 class="fw-semibold mb-4">
+            <span class="fas fa-circle-plus fa-fw"></span> Select addons
           </h2>
-          <br />
-          <h4>Official Addons</h4>
+          <h4 class="fw-medium">Official Addons</h4>
           <div class="addons-list">
             <div class="row row-cols-1 row-cols-md-3 g-4">
               <div class="col">
@@ -555,19 +549,21 @@ const npmVersion = getAppVersion();
               </div>
             </div>
           </div>
-          <div class="d-none">
-            <h4>Community Addons</h4>
-            <p><a id="submit-link">Submit</a> your own community addon!</p>
+          <div class="addons-list-community-outer d-none">
+            <h4 class="fw-medium">Community Addons</h4>
+            <p class="mb-0">
+              No community addons found. <a id="submit-link">Submit</a> your own
+              community addon!
+            </p>
             <div class="addons-list addons-list-community"></div>
           </div>
           <hr />
           <div class="row" id="downloads-section">
             <div class="col-sm-12">
-              <h2 class="fw-normal">
+              <h2 class="fw-semibold mb-4">
                 <span class="fas fa-cloud-download fa-fw"></span> Download your
                 files
               </h2>
-              <br />
               <div class="mb-3 d-none" id="game-folder-wrapper">
                 <div class="form-check">
                   <input
@@ -637,7 +633,7 @@ const npmVersion = getAppVersion();
                 </div>
                 <hr />
               </div>
-              <p class="lead">
+              <p class="lead mb-1">
                 <b
                   ><a
                     href="https://github.com/mastercomfig/mastercomfig/releases/latest"
@@ -668,7 +664,7 @@ const npmVersion = getAppVersion();
               </p>
               <hr />
               <div>
-                <p class="lead">
+                <p class="lead fw-medium">
                   <b><span class="fas fa-gears fa-fw"></span> Launch Options</b>
                 </p>
                 <p id="launch-options">
@@ -710,7 +706,8 @@ const npmVersion = getAppVersion();
                   <div class="collapse-wrapper">
                     <p>
                       Looking for something else (like config templates and
-                      alternative formats)? You can find it on GitHub <a
+                      alternative formats, like ZIP or cfg)? You can find it on
+                      GitHub <a
                         href="https://github.com/mastercomfig/mastercomfig/releases/latest"
                         class="text-light"
                         id="assets-link"
@@ -723,7 +720,7 @@ const npmVersion = getAppVersion();
               </div>
             </div>
             <div class="col-sm-12">
-              <h2 class="fw-normal">
+              <h2 class="fw-semibold">
                 <span class="fas fa-circle-right fa-fw"></span> Next steps
               </h2>
               <br />
@@ -820,10 +817,11 @@ const npmVersion = getAppVersion();
           <hr />
         </div>
       </div>
+      <div class="col-2"></div>
     </section>
     <Footer />
     <br />
-    <footer class="container">
+    <footer class="container g-0">
       Portions of this application are based upon <a
         href="https://docs.comfig.app/latest/credits"
         >free software and other projects</a

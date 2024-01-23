@@ -25,7 +25,6 @@
     transition:
       background 0.5s,
       opacity 1s;
-
     @include gradient-radial($color 10%, transparent 10.01%);
   }
 

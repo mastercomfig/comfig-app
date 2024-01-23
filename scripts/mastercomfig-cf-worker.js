@@ -35,7 +35,7 @@ const reqHeaders = {
 const reqGHAPIHeaders = {
   headers: {
     Authorization: btoa("Basic " + GH_USERNAME + ":" + GH_PASSWORD),
-    Accept: "application/vnd.github.v3+json",
+    Accept: "application/vnd.github+json",
     "Content-Type": "application/json;charset=UTF-8",
     ...reqHeaders.headers,
   },

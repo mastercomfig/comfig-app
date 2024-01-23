@@ -1,5 +1,5 @@
 ---
-
+import NavSelector from "@components/NavSelector.astro";
 ---
 
 <style>
@@ -37,7 +37,8 @@
 
   @media (width >= 992px) {
     #search-results {
-      width: 49.5%;
+      width: max(calc(960px * 0.495), 24.5vw);
+      max-width: 653px;
       transform: translate(-50.7%, 0);
     }
 
@@ -46,6 +47,8 @@
       transform: translate(-50%, -50%);
       left: 50%;
       top: 50%;
+      width: max(calc(960px * 0.5), 25vw);
+      max-width: 660px;
     }
   }
 </style>
@@ -58,7 +61,7 @@
 
 <script>
   import MiniSearch from "minisearch";
-  import { debounce } from "debounce";
+  import debounce from "debounce";
   import hitsounds from "@ssg/hitsounds.json";
 
   const fields = ["id", "type"];
@@ -171,9 +174,9 @@
   });
 </script>
 
-<div class="container-lg g-0 g-lg-4">
-  <nav class="navbar navbar-expand navbar-dark bg-teal">
-    <div class="d-flex w-100 justify-content-between">
+<div class="g-0 g-lg-4">
+  <nav class="navbar navbar-expand-sm navbar-dark bg-teal">
+    <div class="container">
       <span class="navbar-brand">
         <img
           src="/img/mastercomfig_logo_transparent_i.svg"
@@ -182,9 +185,11 @@
           width="24"
           height="24"
         />
-        <span class="d-none d-md-inline"> comfig <strong>hits</strong></span>
+        <span class="d-none d-md-inline"> comfig</span>
       </span>
-      <div class="d-md-flex w-50" id="search-input-container" role="search">
+      <NavSelector pageName="hits" />
+      <div class="collapse navbar-collapse"></div>
+      <div class="flex-fill" id="search-input-container" role="search">
         <input
           id="search-input"
           class="form-control me-2"

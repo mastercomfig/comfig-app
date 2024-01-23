@@ -8,7 +8,7 @@ let hudDb = null;
 const ghApi = async (path) => {
   const headers = {
     "User-Agent": "comfig app",
-    Accept: "application/vnd.github.v3+json",
+    Accept: "application/vnd.github+json",
   };
 
   if (import.meta.env.GITHUB_TOKEN) {
@@ -33,8 +33,8 @@ const getHudDb = async () => {
   return hudDb;
 };
 
-const getHudFileInfo = async (path) => {
-  return await hudApi(`contents/${path}`);
+const getHudFileCommits = async (path) => {
+  return await hudApi(`commits?path=${path}`);
 };
 
 const getHudDbCommit = async (sha) => {
@@ -111,6 +111,7 @@ const getHuds = async () => {
         }
 
         const isGithub = hudData.repo.startsWith("https://github.com/");
+        hudData.isGithub = isGithub;
 
         if (!hudData.social.issues && isGithub) {
           hudData.social.issues = `${hudData.repo}/issues`;
@@ -120,10 +121,56 @@ const getHuds = async () => {
           // Just the user/repo
           const ghRepo = hudData.repo.replace("https://github.com/", "");
 
-          // Query the info.vdf in the repo to get the UI version
+          // Query the tag
+          const branchTags = await fetch(
+            `https://github.com/${ghRepo}/branch_commits/${hudData.hash}`,
+          );
+          const dom = new JSDOM(await branchTags.text());
+          const tagList =
+            dom.window.document.querySelector(".branches-tag-list");
+          let isLatest = true;
+          hudData.versions = [];
+          if (tagList) {
+            const latestRelease =
+              tagList.children.item(0).lastChild.textContent;
+            if (tagList.children.length === 1) {
+              hudData.versionName = latestRelease;
+              hudData.versions.push({
+                hash: hudData.hash,
+                name: latestRelease,
+              });
+            } else {
+              console.log(
+                `HUD ${hudId} hash ${hudData.hash} is outdated, latest release is ${latestRelease}`,
+              );
+              const oldestRelease = tagList.children.item(
+                tagList.children.length - 1,
+              ).lastChild.textContent;
+              isLatest = false;
+              if (!hudData.verified) {
+                hudData.versions.push({
+                  hash: hudData.hash,
+                  name: oldestRelease,
+                });
+              }
+              hudData.versions.push({
+                hash: latestRelease,
+                name: latestRelease,
+              });
+            }
+          } else {
+            hudData.versions.push({
+              hash: hudData.hash,
+            });
+          }
+
+          const latestVersion =
+            hudData.versions[hudData.versions.length - 1].hash;
+
+          // Query the latest info.vdf in the repo to get the UI version
           try {
             const infoVdf = await fetchWithTimeout(
-              `https://raw.githubusercontent.com/${ghRepo}/${hudData.hash}/info.vdf`,
+              `https://raw.githubusercontent.com/${ghRepo}/${latestVersion}/info.vdf`,
             );
             if (infoVdf.ok) {
               try {
@@ -149,31 +196,21 @@ const getHuds = async () => {
 
           // Add download link
           //hudData.downloadUrl = `https://github.com/${ghRepo}/archive/${hudData.hash}.zip`
-          hudData.downloadUrl = `https://codeload.github.com/${ghRepo}/legacy.zip/${hudData.hash}`;
-
-          // Query the tag
-          const branchTags = await fetch(
-            `https://github.com/${ghRepo}/branch_commits/${hudData.hash}`,
-          );
-          const dom = new JSDOM(await branchTags.text());
-          const tagList =
-            dom.window.document.querySelector(".branches-tag-list");
-          if (tagList) {
-            // Get the oldest tag associated with this commit
-            hudData.versionName = tagList.children.item(
-              tagList.children.length - 1,
-            ).lastChild.textContent;
+          for (const version of hudData.versions) {
+            version.downloadUrl = `https://codeload.github.com/${ghRepo}/legacy.zip/${version.hash}`;
           }
 
           // Query the commit
           try {
-            const commit = await ghApi(
-              `repos/${ghRepo}/git/commits/${hudData.hash}`,
+            const commit = isLatest
+              ? await ghApi(`repos/${ghRepo}/git/commits/${latestVersion}`)
+              : await ghApi(`repos/${ghRepo}/releases/tags/${latestVersion}`);
+            hudData.publishDate = new Date(
+              isLatest ? commit.author.date : commit.published_at,
             );
-            hudData.publishDate = new Date(commit.author.date);
           } catch (e) {
             console.log(
-              `Failed to fetch commit ${hudData.hash} for ${hudId} (${ghRepo})`,
+              `Failed to fetch commit ${latestVersion} for ${hudId} (${ghRepo})`,
             );
             hudData.publishDate = new Date(null);
             throw e;
@@ -181,14 +218,18 @@ const getHuds = async () => {
         } else {
           // Not a GitHub repo, assume it's outdated
           if (!hudData.publishDate) {
-            const hudDbFile = getHudFileInfo(hud.path);
+            const hudDbFile = await getHudFileCommits(hud.path);
             const commitHash = hudDbFile.sha;
-            const commit = getHudDbCommit(commitHash);
+            const commit = await getHudDbCommit(commitHash);
             hudData.publishDate = new Date(commit.author.date);
           } else {
             hudData.publishDate = new Date(hudData.publishDate);
           }
-          hudData.versionName = hudData.hash;
+          hudData.versions = [
+            {
+              name: hudData.hash,
+            },
+          ];
           hudData.outdated = true;
         }
 

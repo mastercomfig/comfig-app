@@ -716,9 +716,8 @@ async function app() {
       clearDirectoryInstructions();
       gameDirectory = directoryHandle;
       updatePresetDownloadButton();
-      getEl(
-        "game-folder-text",
-      ).innerText = `${gameDirectory.name} folder chosen, click to change`;
+      getEl("game-folder-text").innerText =
+        `${gameDirectory.name} folder chosen, click to change`;
     } catch (err) {
       console.error("Get directory failed:", err);
     }
@@ -1127,13 +1126,11 @@ async function app() {
       if (!fileName) {
         fileName = `layer_${bindLayer}.cfg`;
         // On key down, apply layer
-        configContents[
-          "autoexec.cfg"
-        ] += `alias +layer_${bindLayer}"exec app/${fileName}"\n`;
+        configContents["autoexec.cfg"] +=
+          `alias +layer_${bindLayer}"exec app/${fileName}"\n`;
         // On key up, reset binds
-        configContents[
-          "autoexec.cfg"
-        ] += `alias -layer_${bindLayer}"exec app/reset_game_overrides.cfg\n`;
+        configContents["autoexec.cfg"] +=
+          `alias -layer_${bindLayer}"exec app/reset_game_overrides.cfg\n`;
         customLayers.push(bindLayer);
       } else {
         customOverrideFiles.push(fileName);
@@ -1150,9 +1147,8 @@ async function app() {
         const isClassConfig = fileName !== "game_overrides.cfg";
         for (const layer of customLayers) {
           if (isClassConfig) {
-            configContents[
-              fileName
-            ] += `alias -layer_${layer}"exec app/reset_game_overrides.cfg;exec app/reset_${fileName}"\n`;
+            configContents[fileName] +=
+              `alias -layer_${layer}"exec app/reset_game_overrides.cfg;exec app/reset_${fileName}"\n`;
           }
           configContents[fileName] += `exec app/reset_${fileName}`;
         }
@@ -1627,6 +1623,7 @@ async function app() {
           blob: file,
         });
       }
+      delete configContentsRaw[fileName];
     }
     return downloads;
   }
@@ -1724,9 +1721,8 @@ async function app() {
         text = `Install mastercomfig (${presetInfo.name} preset, addons and customizations)`;
         icon = "download";
       }
-      getEl(
-        "vpk-dl",
-      ).innerHTML = `<span class="fas fa-${icon} fa-fw"></span> ${text} `; // update download text
+      getEl("vpk-dl").innerHTML =
+        `<span class="fas fa-${icon} fa-fw"></span> ${text} `; // update download text
     }
   }
 
@@ -1782,7 +1778,6 @@ async function app() {
   }
 
   const keyBindMap = {
-    PAUSE: "NUMLOCK",
     INSERT: "INS",
     DELETE: "DEL",
     PAGEUP: "PGUP",
@@ -1891,6 +1886,30 @@ async function app() {
 
   // Set modules
   function setModule(name, value) {
+    if (!noPreviewModules.has(name)) {
+      const isCurrentlyNotPreviewing =
+        !!previewModuleValues[name] && !previewModuleValues[name].has(value);
+      let shouldBeInvisible = false;
+      if (isCurrentlyNotPreviewing) {
+        shouldBeInvisible = true;
+      }
+      let modulePreview = getEl(`module-preview-${name}`);
+      if (videoModules.has(name)) {
+        if (!isCurrentlyNotPreviewing) {
+          modulePreview.src = `/img/modules/${name}/${value}.mp4`;
+          modulePreview.parentElement.load();
+        }
+        modulePreview.parentElement.classList.toggle(
+          "invisible",
+          isCurrentlyNotPreviewing,
+        );
+      } else {
+        if (!isCurrentlyNotPreviewing) {
+          modulePreview.src = `/img/modules/${name}/${value}.webp`;
+        }
+        modulePreview.classList.toggle("invisible", isCurrentlyNotPreviewing);
+      }
+    }
     const defaultValue = getBuiltinModuleDefault(name);
     if (defaultValue === value) {
       if (selectedModules?.[name] !== undefined) {
@@ -1925,8 +1944,50 @@ async function app() {
 
   function updateUndoLink(name, isDefault) {
     const undoLink = getEl(`undo-${name}`);
-    undoLink.classList.toggle("d-none", isDefault);
+    undoLink.classList.toggle("invisible", isDefault);
   }
+
+  const videoModules = new Set([
+    "characters",
+    "gibs",
+    "jigglebones",
+    "ragdolls",
+    "sheens_speed",
+  ]);
+
+  const noPreviewModules = new Set([
+    "flashlight",
+    "romevision",
+    "sprays",
+    "fpscap",
+    "hud_contracts",
+    "hud_panels",
+    "hud_avatars",
+    "match_hud",
+    "messages",
+    "killfeed",
+    "killstreaks",
+    "hud_achievement",
+    "console",
+    "htmlmotd",
+    "dynamic_background",
+    "sound",
+    "voice_chat",
+    "mod_support",
+    "party_mode",
+    "logo",
+    "sourcetv",
+    "packet_rate",
+    "snapshot_buffer",
+    "packet_size",
+    "bandwidth",
+    "download",
+  ]);
+
+  const previewModuleValues = {
+    sillygibs: new Set(["on"]),
+    sheens_speed: new Set(["slow", "medium", "fast"]),
+  };
 
   // Convenience method for creating input containers
   function createInputContainer(name) {
@@ -1936,7 +1997,7 @@ async function app() {
     col.classList.add("col-sm-5");
     row.append(col);
     const undoCol = document.createElement("div");
-    undoCol.classList.add("col");
+    undoCol.classList.add("col-auto");
     const undoLink = document.createElement("a");
     undoLink.href = "#";
     undoLink.id = `undo-${name}`;
@@ -1948,13 +2009,48 @@ async function app() {
     const value = getModuleDefault(name);
     const configDefault = getBuiltinModuleDefault(name);
     if (value === configDefault) {
-      undoLink.classList.add("d-none");
+      undoLink.classList.add("invisible");
     }
     const undoIcon = document.createElement("span");
     undoIcon.classList.add("fa", "fa-undo", "fa-fw");
     undoLink.append(undoIcon);
     undoCol.append(undoLink);
     row.append(undoCol);
+
+    if (!noPreviewModules.has(name)) {
+      let modulePreview;
+      const isCurrentlyNotPreviewing =
+        !!previewModuleValues[name] && !previewModuleValues[name].has(value);
+      let previewValue = value;
+      if (isCurrentlyNotPreviewing) {
+        previewValue = previewModuleValues[name].values().next().value;
+      }
+      if (videoModules.has(name)) {
+        modulePreview = document.createElement("video");
+        modulePreview.autoplay = true;
+        modulePreview.loop = true;
+        modulePreview.muted = true;
+        modulePreview.playsInline = true;
+        modulePreview.controls = false;
+        let source = document.createElement("source");
+        source.id = `module-preview-${name}`;
+        source.src = `/img/modules/${name}/${previewValue}.mp4`;
+        modulePreview.appendChild(source);
+      } else {
+        modulePreview = document.createElement("img");
+        modulePreview.src = `/img/modules/${name}/${previewValue}.webp`;
+        modulePreview.id = `module-preview-${name}`;
+      }
+      if (isCurrentlyNotPreviewing) {
+        modulePreview.classList.add("invisible");
+      }
+      modulePreview.classList.add("module-preview");
+      const modulePreviewCol = document.createElement("div");
+      modulePreviewCol.classList.add("col");
+      modulePreviewCol.append(modulePreview);
+      row.append(modulePreviewCol);
+    }
+
     return [row, col, undoLink];
   }
 
@@ -1964,12 +2060,7 @@ async function app() {
     // Create the element
     const selectElement = document.createElement("select");
     selectElement.autocomplete = "off";
-    selectElement.classList.add(
-      "form-select",
-      "form-select-sm",
-      "bg-dark",
-      "text-light",
-    );
+    selectElement.classList.add("form-select", "bg-dark", "text-light");
     const defaultValue = getModuleDefault(name);
     const configDefault = getBuiltinModuleDefault(name);
     let defaultIndex = 0;
@@ -2144,7 +2235,7 @@ async function app() {
   function handleModule(module) {
     // Create element
     const moduleContainer = document.createElement("div");
-    moduleContainer.classList.add("row");
+    moduleContainer.classList.add("row", "module-row");
     moduleContainer.id = module.name + "-module-input-cont";
     // Create module title
     const moduleTitle = document.createElement("h6");
@@ -2250,11 +2341,6 @@ async function app() {
     }
   }
 
-  const customizeCollapse = getEl("customize");
-  function isCustomizeVisible() {
-    return customizeCollapse.classList.contains("show");
-  }
-
   let scrollSpy = null;
 
   function initScrollSpy(customizationsCol) {
@@ -2314,12 +2400,12 @@ async function app() {
 
     const resetButton = document.createElement("button");
     resetButton.innerHTML =
-      '<span class="fas fa-undo fa-fw"></span> Reset all modules';
+      '<span class="fas fa-trash-can fa-fw"></span> Reset all modules';
     resetButton.classList.add(
       "position-absolute",
       "bottom-0",
       "btn",
-      "btn-secondary",
+      "btn-danger",
     );
     resetButton.style.marginBottom = "0.5rem";
     resetButton.addEventListener("click", async (e) => {
@@ -2346,9 +2432,7 @@ async function app() {
     }
 
     // Init scrollspy if visible
-    if (isCustomizeVisible()) {
-      initScrollSpy(customizationsCol);
-    }
+    initScrollSpy(customizationsCol);
   }
 
   function addVersion(ver, dropdown, badge, disabled?) {
@@ -2585,18 +2669,6 @@ async function app() {
     }
   }
 
-  const customizeToggler = getEl("customize-toggler");
-  customizeToggler.addEventListener("click", (e) => {
-    e.currentTarget.classList.toggle("active");
-    if (e.currentTarget.classList.contains("active")) {
-      customizeToggler.scrollIntoView({ behavior: "smooth" });
-      // We don't init scrollspy until visible
-      if (!scrollSpy) {
-        initScrollSpy(getEl("modules-controls"));
-      }
-    }
-  });
-
   let lastBindInput = null;
 
   function onKeyPress(button) {
@@ -2610,13 +2682,23 @@ async function app() {
   const commonKeyboardOptions = {
     onKeyPress: (button) => onKeyPress(button),
     theme: "hg-theme-default simple-keyboard custom-kb-theme",
-    physicalKeyboardHighlight: true,
+    physicalKeyboardHighlight: false,
     syncInstanceInputs: true,
     mergeDisplay: true,
   };
 
   let blockKeyboard = false;
   let inittedKeyboard = false;
+
+  let handleMouseHighlight = undefined;
+  let handleKeyboardCapture = undefined;
+
+  function captureKeyboard(capture) {
+    blockKeyboard = capture;
+    if (handleKeyboardCapture) {
+      handleKeyboardCapture();
+    }
+  }
 
   async function initKeyboard() {
     if (inittedKeyboard) {
@@ -2682,7 +2764,7 @@ async function app() {
       ...commonKeyboardOptions,
       layout: {
         default: [
-          "{numpaddivide} {numpadmultiply}",
+          "{numlock} {numpaddivide} {numpadmultiply}",
           "{numpad7} {numpad8} {numpad9}",
           "{numpad4} {numpad5} {numpad6}",
           "{numpad1} {numpad2} {numpad3}",
@@ -2697,6 +2779,112 @@ async function app() {
         default: ["{numpadsubtract}", "{numpadadd}", "{numpadenter}"],
       },
     });
+
+    let keyboardMouseExtra = new Keyboard(".simple-keyboard-mouse-extra", {
+      ...commonKeyboardOptions,
+      layout: {
+        default: ["{mouse4}", "{mouse5}"],
+      },
+      display: {
+        "{mouse4}": "Mouse 4 ↑",
+        "{mouse5}": "Mouse 5 ↓",
+      },
+    });
+
+    let keyboardMousePrimary = new Keyboard(".simple-keyboard-mouse-primary", {
+      ...commonKeyboardOptions,
+      layout: {
+        default: ["{mwheelup}", "{mouse1} {mouse3} {mouse2}", "{mwheeldown}"],
+      },
+      display: {
+        "{mouse1}": "Left",
+        "{mouse2}": "Right",
+        "{mwheelup}": "Wheel Up",
+        "{mouse3}": "Middle",
+        "{mwheeldown}": "Wheel Down",
+      },
+    });
+
+    handleKeyboardCapture = () => {
+      if (blockKeyboard) {
+        keyboard.setOptions({
+          physicalKeyboardHighlight: true,
+        });
+        keyboardControlPad.setOptions({
+          physicalKeyboardHighlight: true,
+        });
+        keyboardArrows.setOptions({
+          physicalKeyboardHighlight: true,
+        });
+        keyboardNumPad.setOptions({
+          physicalKeyboardHighlight: true,
+        });
+        keyboardNumPadEnd.setOptions({
+          physicalKeyboardHighlight: true,
+        });
+        keyboardMouseExtra.setOptions({
+          physicalKeyboardHighlight: true,
+        });
+        keyboardMousePrimary.setOptions({
+          physicalKeyboardHighlight: true,
+        });
+      } else {
+        setTimeout(() => {
+          keyboard.setOptions({
+            physicalKeyboardHighlight: false,
+          });
+          keyboardControlPad.setOptions({
+            physicalKeyboardHighlight: false,
+          });
+          keyboardArrows.setOptions({
+            physicalKeyboardHighlight: false,
+          });
+          keyboardNumPad.setOptions({
+            physicalKeyboardHighlight: false,
+          });
+          keyboardNumPadEnd.setOptions({
+            physicalKeyboardHighlight: false,
+          });
+          keyboardMouseExtra.setOptions({
+            physicalKeyboardHighlight: false,
+          });
+          keyboardMousePrimary.setOptions({
+            physicalKeyboardHighlight: false,
+          });
+        }, 150);
+      }
+    };
+
+    handleMouseHighlight = (keyname, up) => {
+      const event = new Proxy(
+        {
+          code: keyname,
+          key: keyname,
+        },
+        {
+          get: function (target, name, receiver) {
+            const rv = target[name];
+            if (rv === undefined) {
+              console.error("There is no such thing as " + name + ".");
+            }
+            return rv;
+          },
+        },
+      );
+      if (keyname === "mouse4" || keyname === "mouse5") {
+        if (up) {
+          keyboardMouseExtra.physicalKeyboard.handleHighlightKeyUp(event);
+        } else {
+          keyboardMouseExtra.physicalKeyboard.handleHighlightKeyDown(event);
+        }
+      } else {
+        if (up) {
+          keyboardMousePrimary.physicalKeyboard.handleHighlightKeyUp(event);
+        } else {
+          keyboardMousePrimary.physicalKeyboard.handleHighlightKeyDown(event);
+        }
+      }
+    };
   }
 
   document.addEventListener("keydown", (e) => {
@@ -2717,8 +2905,15 @@ async function app() {
         button = 2;
       } else if (button === 2) {
         button = 1;
+      } else if (button === 3) {
+        button = 4;
+      } else if (button === 4) {
+        button = 3;
       }
       capturedMouseDown = `MOUSE${button + 1}`;
+      if (handleMouseHighlight) {
+        handleMouseHighlight(capturedMouseDown, false);
+      }
     }
   });
 
@@ -2737,6 +2932,9 @@ async function app() {
     if (blockKeyboard && lastBindInput && capturedMouseDown) {
       e.preventDefault();
       lastBindInput.value = capturedMouseDown;
+      if (handleMouseHighlight) {
+        handleMouseHighlight(capturedMouseDown, true);
+      }
       capturedMouseDown = null;
       finishBindInput(lastBindInput, true);
     }
@@ -2747,7 +2945,14 @@ async function app() {
     (e) => {
       if (blockKeyboard && lastBindInput) {
         e.preventDefault();
-        lastBindInput.value = e.wheelDelta > 0 ? "MWHEELUP" : "MWHEELDOWN";
+        const bindValue = e.wheelDelta > 0 ? "MWHEELUP" : "MWHEELDOWN";
+        lastBindInput.value = bindValue;
+        if (handleMouseHighlight) {
+          handleMouseHighlight(bindValue, false);
+          setTimeout(() => {
+            handleMouseHighlight(bindValue, true);
+          }, 150);
+        }
         finishBindInput(lastBindInput, true);
         return false;
       }
@@ -2766,7 +2971,7 @@ async function app() {
       if (e.target.id === "bindings") {
         await initKeyboard();
       } else {
-        blockKeyboard = false;
+        captureKeyboard(false);
       }
     });
   }
@@ -2777,7 +2982,7 @@ async function app() {
     }
     // HACK: contextmenu fires after input events, so we need to wait a bit
     setTimeout(() => {
-      blockKeyboard = false;
+      captureKeyboard(false);
     }, 1);
     history.back();
     element.placeholder = "<Unbound>";
@@ -2798,7 +3003,7 @@ async function app() {
 
   function bindBindingField(bindField) {
     bindField.addEventListener("focus", (e) => {
-      blockKeyboard = true;
+      captureKeyboard(true);
       lastBindInput = e.currentTarget;
       e.currentTarget.classList.remove("disabled");
       e.currentTarget.value = "";

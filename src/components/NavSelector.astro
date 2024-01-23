@@ -1,0 +1,45 @@
+---
+const { pageName } = Astro.props;
+---
+
+<script>
+  import { Dropdown } from "bootstrap";
+</script>
+
+<ul class="navbar-nav navbar-selector">
+  <li class="nav-item dropdown">
+    <a
+      class="nav-link dropdown-toggle"
+      href="#"
+      id="appDropdown"
+      role="button"
+      data-bs-toggle="dropdown"
+      aria-expanded="false"><strong>{pageName}</strong></a
+    >
+    <ul
+      class="dropdown-menu dropdown-menu-dark"
+      aria-labelledby="appDropdown"
+      id="appDropdownMenu"
+    >
+      <li>
+        <a
+          class=`dropdown-item ${pageName === "app" ? "active" : ""}`
+          href="/app/"><span class="far fa-window-maximize fa-fw"></span> app</a
+        >
+      </li>
+      <li>
+        <a
+          class=`dropdown-item ${pageName === "huds" ? "active" : ""}`
+          href="/huds/1"><span class="fas fa-display fa-fw"></span> huds</a
+        >
+      </li>
+      <li>
+        <a
+          class=`dropdown-item ${pageName === "hits" ? "active" : ""}`
+          href="/hits/hs/1"
+          ><span class="fas fa-volume-high fa-fw"></span> hits</a
+        >
+      </li>
+    </ul>
+  </li>
+</ul>

@@ -605,7 +605,7 @@ async function getGameResourceFile(path) {
 async function getGameResourceDir(path) {
   const headers = {
     "User-Agent": "comfig app",
-    Accept: "application/vnd.github.v3+json",
+    Accept: "application/vnd.github+json",
   };
 
   if (import.meta.env.GITHUB_TOKEN) {

@@ -119,9 +119,39 @@ section {
   border: $dark 1px solid;
 }
 
+// Homepage
+#action-container {
+  background: linear-gradient(
+    90deg,
+    rgba(38, 50, 56, 0.1) 10%,
+    mix(rgba(0, 150, 136, 0.9), rgba(38, 50, 56, 0.1), 50%) 30%,
+    rgba(0, 150, 136, 1) 50%,
+    mix(rgba(0, 150, 136, 0.9), rgba(38, 50, 56, 0.1), 50%) 70%,
+    rgba(38, 50, 56, 0.1) 90%
+  );
+  margin-left: -50vw;
+  margin-right: -50vw;
+  padding-top: 1.5rem;
+  padding-bottom: 0.1rem;
+}
+
+#action-container a:not(.btn) {
+  color: #fff;
+}
+
+#action-container a:not(.btn):hover {
+  color: lighten($teal, 50%);
+}
+
 // Base
 html {
   scroll-padding-top: 89px;
+}
+
+html,
+body {
+  width: 100vw;
+  overflow-x: hidden;
 }
 
 .h1,
@@ -208,6 +238,24 @@ b {
   --bs-navbar-padding-y: 0.4rem;
 
   z-index: 5;
+}
+
+.navbar-brand {
+  --bs-navbar-brand-margin-end: 0;
+}
+
+.navbar-selector {
+  margin-right: 1rem;
+  --bs-nav-link-color: #fff;
+  --bs-nav-link-font-size: var(--bs-navbar-brand-font-size);
+}
+
+.navbar-selector .dropdown-menu {
+  background-color: $teal;
+}
+
+.form-select-lg {
+  padding-left: 0.5rem;
 }
 
 // React select https://github.com/JedWatson/react-select/issues/2345#issuecomment-843674624

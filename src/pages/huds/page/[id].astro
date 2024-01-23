@@ -13,6 +13,7 @@ import { fetchHuds } from "@ssg/huds";
 
 import { Markdown } from "astro-remote";
 import removeMd from "remove-markdown";
+import ResponsiveImage from "@components/ResponsiveImage.astro";
 
 export async function getStaticPaths() {
   return (await fetchHuds(true)).map((hud) => ({
@@ -187,7 +188,7 @@ const hudDescription = hudDescBase;
   </head>
   <Body>
     <HudNav />
-    <div class="container">
+    <div class="container g-0">
       <h1 class="display-1 mt-3">
         {hud.name}
         <span class="text-muted display-4">&nbsp;by {hud.author}</span>
@@ -224,9 +225,9 @@ const hudDescription = hudDescBase;
                     />
                   )) || (
                     <img
+                      loading="lazy"
                       src={resource}
                       class="d-block w-100 position-relative translate-middle top-50 start-50"
-                      loading="lazy"
                       alt={`${hud.resources[index]}`}
                     />
                   )}
@@ -262,29 +263,73 @@ const hudDescription = hudDescBase;
           </div>
         )
       }
-      <a
-        href={hud.downloadUrl ?? hud.repo}
-        class="btn btn-secondary w-100 my-3"
-        target={hud.downloadUrl ? undefined : "_blank"}
-        rel={hud.downloadUrl ? undefined : "noopener noreferrer"}
-        ><span class="h3 fw-bold"
-          ><span
-            class={`fas fa-${
-              hud.downloadUrl ? "download" : "up-right-from-square"
-            } fa-fw`}></span> Download {
-            hud.versionName ? hud.versionName : ""
-          }</span
-        >
-        <br />Last updated <strong
-          >{
-            `${hud.publishDate.toLocaleDateString("en-us", {
-              year: "numeric",
-              month: "short",
-              day: "numeric",
-            })}`
-          }</strong
-        ></a
-      >
+      <div class="row g-1 my-3">
+        <div class="col">
+          <a
+            href={hud.isGithub ? hud.versions[0].downloadUrl : hud.repo}
+            class="btn btn-secondary w-100 h-100 btn-lg d-flex align-items-center justify-content-center"
+            target={hud.isGithub ? undefined : "_blank"}
+            rel={hud.isGithub ? undefined : "noopener noreferrer"}
+            ><div>
+              <span class="h3 fw-bold"
+                ><span
+                  class={`fas fa-${
+                    hud.isGithub ? "download" : "up-right-from-square"
+                  } fa-fw`}></span> Download {hud.versions[0].name ?? ""}</span
+              >
+              {
+                (hud.versions.length === 1 && (
+                  <>
+                    <br />
+                    Last updated{" "}
+                    <strong>{`${hud.publishDate.toLocaleDateString("en-us", {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    })}`}</strong>
+                  </>
+                )) || (
+                  <>
+                    <br />
+                    Latest stable release
+                  </>
+                )
+              }
+            </div>
+          </a>
+        </div>
+        {
+          hud.versions.length === 2 && (
+            <div class="col-lg-auto col">
+              <a
+                href={hud.isGithub ? hud.versions[1].downloadUrl : hud.repo}
+                class="btn btn-warning w-100 h-100 d-flex align-items-center justify-content-center"
+                target={hud.isGithub ? undefined : "_blank"}
+                rel={hud.isGithub ? undefined : "noopener noreferrer"}
+              >
+                <div>
+                  <span class="h3 fw-bold">
+                    <span
+                      class={`fas fa-${
+                        hud.isGithub ? "download" : "up-right-from-square"
+                      } fa-fw`}
+                    />{" "}
+                    Prerelease {hud.versions[1].name ?? ""}
+                  </span>
+                  <br />
+                  Last updated{" "}
+                  <strong>{`${hud.publishDate.toLocaleDateString("en-us", {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                  })}`}</strong>
+                </div>
+              </a>
+            </div>
+          )
+        }
+      </div>
+
       <div class="row flex-md-row-reverse align-items-stretch">
         <div class={hud.content ? "col-md-3 d-md-flex flex-md-column" : ""}>
           <ul class="list-group list-group-flush">
@@ -306,8 +351,8 @@ const hudDescription = hudDescBase;
                     hud.outdated
                       ? "fa-circle-exclamation text-danger"
                       : hud.verified
-                      ? "fa-square-check verified-gold"
-                      : "fa-circle-check text-success"
+                        ? "fa-square-check verified-gold"
+                        : "fa-circle-check text-success"
                   } fa-fw`}></span>
                  Compatibility:&nbsp;</strong
               >
@@ -315,8 +360,8 @@ const hudDescription = hudDescBase;
                 hud.outdated
                   ? "Incompatible"
                   : hud.verified
-                  ? "Verified"
-                  : "Up to date"
+                    ? "Verified"
+                    : "Up to date"
               }
             </li>
             {
@@ -332,23 +377,33 @@ const hudDescription = hudDescBase;
                 </a>
               )
             }
-            <a
-              href={`${hud.repo}/tree/${hud.hash}`}
-              class="list-group-item d-flex justify-content-between align-items-center"
-            >
-              <span><span class="fab fa-github fa-fw"></span> GitHub</span>
-              <span class="fas fa-square-arrow-up-right fa-fw"></span>
-            </a>
-            <a
-              href={hud.social.issues}
-              class="list-group-item d-flex justify-content-between align-items-center"
-            >
-              <span
-                ><span class="fas fa-circle-question fa-fw"></span>
-                 Help/Requests</span
-              >
-              <span class="fas fa-square-arrow-up-right fa-fw"></span>
-            </a>
+            {
+              hud.isGithub && (
+                <a
+                  href={`${hud.repo}/tree/${hud.versions[0].hash}`}
+                  class="list-group-item d-flex justify-content-between align-items-center"
+                >
+                  <span>
+                    <span class="fab fa-github fa-fw" /> GitHub
+                  </span>
+                  <span class="fas fa-square-arrow-up-right fa-fw" />
+                </a>
+              )
+            }
+            {
+              hud.social.issues && (
+                <a
+                  href={hud.social.issues}
+                  class="list-group-item d-flex justify-content-between align-items-center"
+                >
+                  <span>
+                    <span class="fas fa-circle-question fa-fw" />
+                    Help/Requests
+                  </span>
+                  <span class="fas fa-square-arrow-up-right fa-fw" />
+                </a>
+              )
+            }
             {
               hud.social.support && (
                 <a
@@ -369,7 +424,11 @@ const hudDescription = hudDescBase;
                     <span class="fab fa-discord fa-fw" />
                     Discord:&nbsp;
                   </strong>
-                  <span>{hud.social.discord}</span>
+                  <span>
+                    {Number(hud.social.discord.split("#")[1]) === 0
+                      ? hud.social.discord.split("#")[0]
+                      : hud.social.discord}
+                  </span>
                 </li>
               )
             }
@@ -512,7 +571,10 @@ const hudDescription = hudDescBase;
         {
           hud.content && (
             <div class="col-md-9">
-              <Markdown content={hud.content} />
+              <Markdown
+                content={hud.content}
+                components={{ img: ResponsiveImage }}
+              />
             </div>
           )
         }
@@ -529,7 +591,7 @@ const hudDescription = hudDescBase;
           <>
             <hr />
             <h3>Features</h3>
-            <div class="container">
+            <div class="container g-0">
               <div class="card-group row">
                 {hud.flags.map((f) => (
                   <div class="col-6 col-md-3">
@@ -552,7 +614,7 @@ const hudDescription = hudDescBase;
         hud.traits?.gamemode && (
           <>
             <h3 class="mt-3">Gamemodes</h3>
-            <div class="container">
+            <div class="container g-0">
               <div class="card-group row">
                 {hud.traits.gamemode.map((gm) => (
                   <div class="col-6 col-md-3 col-lg-2">
@@ -589,7 +651,7 @@ const hudDescription = hudDescBase;
       <hr />
     </div>
     <Footer />
-    <footer class="container">
+    <footer class="container g-0">
       <br />
       <p>
         <a href="https://github.com/mastercomfig/comfig-app"

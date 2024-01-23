@@ -39,7 +39,7 @@ import networkImg from "@img/network.webp";
   </head>
   <Body>
     <header
-      class="jumbotron jumbotron-fluid text-light"
+      class="jumbotron jumbotron-fluid"
       style=`background: linear-gradient(rgba(38, 50, 56, 0.7) 10%, rgba(38, 50, 56, 0.7)), url(${badlandsImg.src}); background-size: cover; background-position: center`
     >
       <div
@@ -47,29 +47,39 @@ import networkImg from "@img/network.webp";
         style="min-height: 100vh"
       >
         <div class="align-middle">
-          <div class="text-center">
+          <div id="action-container" class="text-center">
             <img
               class="img-logo"
               src="/img/mastercomfig_logo_transparent_i.svg"
               alt="logo"
             />
-            <h1 class="display-1">mastercomfig</h1>
-            <p class="lead display-6">a modern customization framework</p>
+            <h1 class="display-1" style="font-weight: 600">mastercomfig</h1>
+            <p
+              class="lead display-6"
+              style="letter-spacing: 0.25rem;font-weight: 100"
+            >
+              a modern customization framework
+            </p>
             <a class="btn btn-outline-secondary btn-lg" href="/app/">
-              <span class="far fa-window-maximize fa-fw"></span> Launch
+              <span class="far fa-window-maximize fa-fw"></span> App
+            </a>
+            <a class="btn btn-outline-secondary btn-lg" href="/huds/1">
+              <span class="fas fa-display fa-fw"></span> HUDs
+            </a>
+            <a class="btn btn-outline-secondary btn-lg" href="/hits/hs/1">
+              <span class="fas fa-volume-high fa-fw"></span> Hits
             </a>
             <br /><br />
-            <p class="lead fw-normal">
-              <a href="https://docs.comfig.app/">Docs</a> &bull;
+            <p class="lead fw-light">
+              <a href="https://docs.comfig.app/"
+                >Docs <span class="fas fa-book"></span></a
+              > &bull;
               <a href="https://discord.gg/mastercomfig-389089828249010188"
-                >Discord</a
+                >Discord <span class="fab fa-discord"></span></a
               > &bull;
               <a href="https://docs.comfig.app/latest/support_me/"
-                >Support Me &hearts;</a
+                >Support Me <span class="fas fa-heart"></span></a
               >
-               &bull;
-              <a href="/huds/1">HUDs</a> &bull;
-              <a href="/hits/hs/1">Hits</a>
             </p>
           </div>
           <br />
@@ -97,7 +107,7 @@ import networkImg from "@img/network.webp";
                 aria-valuemin={0}
                 aria-valuemax={100}
               >
-                <b>322FPS</b>
+                <b style="font-weight: 900">322FPS</b>
               </div>
             </div>
             <p>mastercomfig low</p>
@@ -111,7 +121,7 @@ import networkImg from "@img/network.webp";
                 aria-valuemin={0}
                 aria-valuemax={100}
               >
-                <b>291FPS</b>
+                <b style="font-weight: 800">291FPS</b>
               </div>
             </div>
             <p>Comanglia's config</p>
@@ -125,7 +135,7 @@ import networkImg from "@img/network.webp";
                 aria-valuemin={0}
                 aria-valuemax={100}
               >
-                <b>290FPS</b>
+                <b style="font-weight: 800">290FPS</b>
               </div>
             </div>
             <p>m0re highfps</p>
@@ -139,7 +149,7 @@ import networkImg from "@img/network.webp";
                 aria-valuemin={0}
                 aria-valuemax={100}
               >
-                <b>270FPS</b>
+                <b style="font-weight: 800">270FPS</b>
               </div>
             </div>
             <p>Chris maxframes</p>
@@ -153,7 +163,7 @@ import networkImg from "@img/network.webp";
                 aria-valuemin={0}
                 aria-valuemax={100}
               >
-                <b>257FPS</b>
+                <b style="font-weight: 800">257FPS</b>
               </div>
             </div>
             <p>Rhapsody's config</p>
@@ -169,7 +179,7 @@ import networkImg from "@img/network.webp";
             </p>
           </div>
           <div class="col-md align-middle">
-            <h1 class="display-5">
+            <h1 class="display-5 fw-bolder">
               <span class="fas fa-bolt fa-fw"></span> Performance
             </h1>
             <p class="lead">
@@ -200,7 +210,7 @@ import networkImg from "@img/network.webp";
             style="height: 100%"
           >
             <div class="col-md-6 align-middle">
-              <h1 class="display-5">
+              <h1 class="display-5 fw-bolder">
                 <span class="fas fa-crosshairs fa-fw"></span> Hitreg
               </h1>
               <p class="lead">
@@ -246,7 +256,7 @@ import networkImg from "@img/network.webp";
             <br />
           </div>
           <div class="col-md align-middle">
-            <h1 class="display-5">
+            <h1 class="display-5 fw-bolder">
               <span class="fas fa-eye fa-fw"></span> Quality
             </h1>
             <p class="lead">
@@ -272,7 +282,7 @@ import networkImg from "@img/network.webp";
           style="height: 100%"
         >
           <div class="col-lg-6 align-middle">
-            <h1 class="display-5">
+            <h1 class="display-5 fw-bolder">
               <span class="fas fa-sliders fa-fw"></span> Customization
             </h1>
             <p class="lead">
@@ -330,7 +340,11 @@ tf_item_inspect_model_spin_rate 30 // Rate at which items spin in the inspect vi
     </section>
     <section class="container text-center text-light">
       <div class="jumbotron">
-        <h1 class="display-4">Get frames. Get master&shy;comfig.</h1>
+        <h1 class="display-4 fw-light">
+          Get <strong class="fw-semibold">frames</strong>. Get <strong
+            class="fw-semibold">master&shy;comfig</strong
+          >.
+        </h1>
         <br />
         <a class="btn btn-primary btn-lg" href="/app/">
           <span class="fas fa-window-maximize fa-fw"></span> Launch mastercomfig

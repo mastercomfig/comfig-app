@@ -12,6 +12,11 @@
   margin-bottom: 1rem;
 }
 
+#preset-image {
+  max-width: 100%;
+  height: auto;
+}
+
 // Launch options
 #launch-options code {
   margin-top: 2px;
@@ -28,15 +33,6 @@
 }
 
 // Customize
-#customize-toggler.active span {
-  transform: rotate(180deg);
-}
-
-#customize-toggler .fa-angles-down {
-  transition: 0.2s;
-  transition-timing-function: ease-in-out;
-}
-
 #customizations {
   background: rgb(255 255 255 / 10%);
 }
@@ -44,12 +40,13 @@
 // Modules
 .module-title {
   margin-top: 0.8rem !important;
-  font-size: 1.1rem;
+  font-size: 1.3rem;
 }
 
 .module-category-title {
   margin-top: 1rem !important;
   font-size: 1.8rem;
+  margin-left: 1rem;
 }
 
 .module-category {
@@ -60,6 +57,22 @@
   height: 65vh;
   overflow: hidden scroll;
   position: relative;
+}
+
+#modules-controls.inset-box {
+  padding: 0;
+}
+
+.module-row {
+  padding: 0 0.5rem 0.5rem 1.5rem;
+  transition:
+    background 0.2s,
+    box-shadow 0.2s;
+}
+
+.module-row:hover {
+  background: mix(#000, #fff, 90%);
+  box-shadow: 0 0 5px #000;
 }
 
 .inset-box {
@@ -85,16 +98,14 @@
 }
 
 // Addon cards
-.addons-list {
-  margin-top: 2rem;
-  margin-bottom: 2rem;
+.addons-list-community-outer {
+  margin-top: 1rem;
 }
 
 .addons-list-community > .row {
   display: flex;
   flex-wrap: nowrap;
   overflow-x: auto;
-  padding-bottom: 1rem;
   min-height: 30vh;
 }
 
@@ -195,4 +206,8 @@ a.addon-card:hover {
 
 .MyDropdown__menu-list {
   scroll-behavior: auto;
+}
+
+.module-preview {
+  width: 100%;
 }

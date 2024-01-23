@@ -6,7 +6,7 @@ const { hash } = Astro.props;
 
 <script>
   import MiniSearch from "minisearch";
-  import { debounce } from "debounce";
+  import debounce from "debounce";
 
   class HudSearch extends HTMLElement {
     async connectedCallback() {

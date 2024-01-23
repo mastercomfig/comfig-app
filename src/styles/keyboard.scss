@@ -144,3 +144,47 @@
 #root .simple-keyboard.custom-kb-theme + .simple-keyboard-preview {
   background: #009688;
 }
+
+.mouse {
+  display: flex;
+  align-items: stretch;
+  text-align: center;
+  width: 350px;
+  background-color: rgba(0, 0, 0, 0.6);
+  justify-content: center;
+  margin: 0 auto;
+  margin-top: 1rem;
+  border-radius: 5px;
+
+  .simple-keyboard-mouse-extra {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 40%;
+
+    .hg-button-mouseextra1,
+    .hg-button-mouseextra2 {
+      height: 100%;
+    }
+  }
+
+  .simple-keyboard-mouse-primary {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    .hg-button-mwheelup,
+    .hg-button-mwheeldown {
+      height: 100% !important;
+      flex-grow: 0.25;
+      margin-left: auto;
+      margin-right: auto !important;
+    }
+
+    .hg-button-mouse1,
+    .hg-button-mouse2,
+    .hg-button-mouse3 {
+      height: 80px;
+    }
+  }
+}

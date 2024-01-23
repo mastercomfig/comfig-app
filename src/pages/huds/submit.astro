@@ -218,14 +218,20 @@ const form = schemaProps.flatMap(([prop, propSchema]) =>
   </head>
   <Body>
     <HudNav />
-    <div class="container">
+    <div class="container g-0">
       <br />
       <div class="text-light">
         <h1>How to submit a HUD</h1>
         <p class="lead">
-          To submit a HUD to this site, use the <a
-            href="https://github.com/mastercomfig/hud-db">hud-db GitHub repo</a
-          >. Visit the repo for more instructions and format details.
+          <strong
+            >To submit a HUD to this site, use the <a
+              href="https://github.com/mastercomfig/hud-db"
+              >hud-db GitHub repo</a
+            >. <span class="fw-bold"
+              >Visit the repo for more instructions and details, like how to get
+              the hash, add a description, and upload images.</span
+            ></strong
+          >
         </p>
         <p class="lead">
           For those not familiar with JSON, or wanting more assistance, use the
@@ -285,14 +291,16 @@ const form = schemaProps.flatMap(([prop, propSchema]) =>
                   </>
                 )}
                 {entry.type === "boolean" && (
-                  <div class="form-check form-switch">
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      role="switch"
-                      id={entry.prop}
-                    />
-                  </div>
+                  <>
+                    <div class="form-check form-switch">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        role="switch"
+                        id={entry.prop}
+                      />
+                    </div>
+                  </>
                 )}
                 {entry.type === "array" && entry.choices && (
                   <div id={entry.prop} class="form-wrapper">
@@ -346,7 +354,7 @@ const form = schemaProps.flatMap(([prop, propSchema]) =>
       <hr />
     </div>
     <Footer />
-    <footer class="container">
+    <footer class="container g-0">
       <br />
       <p>
         <a href="https://github.com/mastercomfig/comfig-app"
