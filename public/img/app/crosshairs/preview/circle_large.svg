@@ -1,1 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" transform="rotate(57 0 0) scale(2)"><circle width="400" height="400" class="circle" cx="400" cy="400" r="100" fill="none" stroke-dasharray="140, 10" stroke="#fff" stroke-width="10" /></svg>
+<svg xmlns="http://www.w3.org/2000/svg" transform="rotate(57 0 0) scale(2)" viewBox="0 0 800 800"><circle width="400" height="400" cx="400" cy="400" r="100" fill="none" stroke="#fff" stroke-dasharray="140 10" stroke-width="10" class="circle"/></svg>
