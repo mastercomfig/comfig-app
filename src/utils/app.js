@@ -1815,7 +1815,6 @@ async function app() {
   }
 
   let keyBindMap = {
-    PAUSE: "NUMLOCK",
     INSERT: "INS",
     DELETE: "DEL",
     PAGEUP: "PGUP",
@@ -2741,7 +2740,7 @@ async function app() {
   let commonKeyboardOptions = {
     onKeyPress: (button) => onKeyPress(button),
     theme: "hg-theme-default simple-keyboard custom-kb-theme",
-    physicalKeyboardHighlight: true,
+    physicalKeyboardHighlight: false,
     syncInstanceInputs: true,
     mergeDisplay: true,
   };
@@ -2750,6 +2749,14 @@ async function app() {
   let inittedKeyboard = false;
 
   let handleMouseHighlight = undefined;
+  let handleKeyboardCapture = undefined;
+
+  function captureKeyboard(capture) {
+    blockKeyboard = capture;
+    if (handleKeyboardCapture) {
+      handleKeyboardCapture();
+    }
+  }
 
   async function initKeyboard() {
     if (inittedKeyboard) {
@@ -2815,7 +2822,7 @@ async function app() {
       ...commonKeyboardOptions,
       layout: {
         default: [
-          "{numpaddivide} {numpadmultiply}",
+          "{numlock} {numpaddivide} {numpadmultiply}",
           "{numpad7} {numpad8} {numpad9}",
           "{numpad4} {numpad5} {numpad6}",
           "{numpad1} {numpad2} {numpad3}",
@@ -2855,6 +2862,56 @@ async function app() {
         "{mwheeldown}": "Wheel Down",
       },
     });
+
+    handleKeyboardCapture = () => {
+      if (blockKeyboard) {
+        keyboard.setOptions({
+          physicalKeyboardHighlight: true,
+        });
+        keyboardControlPad.setOptions({
+          physicalKeyboardHighlight: true,
+        });
+        keyboardArrows.setOptions({
+          physicalKeyboardHighlight: true,
+        });
+        keyboardNumPad.setOptions({
+          physicalKeyboardHighlight: true,
+        });
+        keyboardNumPadEnd.setOptions({
+          physicalKeyboardHighlight: true,
+        });
+        keyboardMouseExtra.setOptions({
+          physicalKeyboardHighlight: true,
+        });
+        keyboardMousePrimary.setOptions({
+          physicalKeyboardHighlight: true,
+        });
+      } else {
+        setTimeout(() => {
+          keyboard.setOptions({
+            physicalKeyboardHighlight: false,
+          });
+          keyboardControlPad.setOptions({
+            physicalKeyboardHighlight: false,
+          });
+          keyboardArrows.setOptions({
+            physicalKeyboardHighlight: false,
+          });
+          keyboardNumPad.setOptions({
+            physicalKeyboardHighlight: false,
+          });
+          keyboardNumPadEnd.setOptions({
+            physicalKeyboardHighlight: false,
+          });
+          keyboardMouseExtra.setOptions({
+            physicalKeyboardHighlight: false,
+          });
+          keyboardMousePrimary.setOptions({
+            physicalKeyboardHighlight: false,
+          });
+        }, 150);
+      }
+    };
 
     handleMouseHighlight = (keyname, up) => {
       const event = new Proxy(
@@ -2952,7 +3009,7 @@ async function app() {
           handleMouseHighlight(bindValue, false);
           setTimeout(() => {
             handleMouseHighlight(bindValue, true);
-          }, 200);
+          }, 150);
         }
         finishBindInput(lastBindInput, true);
         return false;
@@ -2972,7 +3029,7 @@ async function app() {
       if (e.target.id === "bindings") {
         await initKeyboard();
       } else {
-        blockKeyboard = false;
+        captureKeyboard(false);
       }
     });
   }
@@ -2983,7 +3040,7 @@ async function app() {
     }
     // HACK: contextmenu fires after input events, so we need to wait a bit
     setTimeout(() => {
-      blockKeyboard = false;
+      captureKeyboard(false);
     }, 1);
     history.back();
     element.placeholder = "<Unbound>";
@@ -3004,7 +3061,7 @@ async function app() {
 
   function bindBindingField(bindField) {
     bindField.addEventListener("focus", (e) => {
-      blockKeyboard = true;
+      captureKeyboard(true);
       lastBindInput = e.currentTarget;
       e.currentTarget.classList.remove("disabled");
       e.currentTarget.value = "";
