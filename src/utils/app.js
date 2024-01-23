@@ -1925,11 +1925,9 @@ async function app() {
   function setModule(name, value) {
     if (!noPreviewModules.has(name)) {
       const isCurrentlyNotPreviewing =
-        !!previewModuleValues[name] && !previewModuleValues[name].has(value);
-      let shouldBeInvisible = false;
-      if (isCurrentlyNotPreviewing) {
-        shouldBeInvisible = true;
-      }
+        (!!previewModuleValues[name] &&
+          !previewModuleValues[name].has(value)) ||
+        value === "";
       let modulePreview = getEl(`module-preview-${name}`);
       if (videoModules.has(name)) {
         if (!isCurrentlyNotPreviewing) {
@@ -2027,7 +2025,7 @@ async function app() {
   };
 
   // Convenience method for creating input containers
-  function createInputContainer(name) {
+  function createInputContainer(name, values) {
     let row = document.createElement("div");
     row.classList.add("row");
     let col = document.createElement("div");
@@ -2057,9 +2055,13 @@ async function app() {
     if (!noPreviewModules.has(name)) {
       let modulePreview;
       const isCurrentlyNotPreviewing =
-        !!previewModuleValues[name] && !previewModuleValues[name].has(value);
+        (!!previewModuleValues[name] &&
+          !previewModuleValues[name].has(value)) ||
+        value === "";
       let previewValue = value;
-      if (isCurrentlyNotPreviewing) {
+      if (!previewModuleValues[name]) {
+        previewValue = values[0].value;
+      } else {
         previewValue = previewModuleValues[name].values().next().value;
       }
       if (videoModules.has(name)) {
@@ -2093,7 +2095,10 @@ async function app() {
 
   // Create a dropdown select input
   function handleModuleInputSelect(name, values) {
-    let [inputOuter, inputContainer, inputUndo] = createInputContainer(name);
+    let [inputOuter, inputContainer, inputUndo] = createInputContainer(
+      name,
+      values,
+    );
     // Create the element
     let selectElement = document.createElement("select");
     selectElement.autocomplete = "off";
@@ -2134,7 +2139,10 @@ async function app() {
 
   // Create a switch/toggle input
   function handleModuleInputSwitch(name, values) {
-    let [inputOuter, inputContainer, inputUndo] = createInputContainer(name);
+    let [inputOuter, inputContainer, inputUndo] = createInputContainer(
+      name,
+      values,
+    );
     // Create the switch element
     let switchContainer = document.createElement("div");
     switchContainer.classList.add("form-check", "form-switch");
@@ -2168,7 +2176,10 @@ async function app() {
 
   // Creates a range slider
   function handleModuleInputSlider(name, values) {
-    let [inputOuter, inputContainer, inputUndo] = createInputContainer(name);
+    let [inputOuter, inputContainer, inputUndo] = createInputContainer(
+      name,
+      values,
+    );
     // Create the range element
     let rangeElement = createInputElement("range", "form-range");
     let defaultValue = getDefaultValueFromName(values, getModuleDefault(name));
