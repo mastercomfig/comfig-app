@@ -180,7 +180,7 @@ const hudDescription = hudDescBase;
   </head>
   <Body>
     <HudNav />
-    <div class="container">
+    <div class="container g-0">
       <h1 class="display-1 mt-3">
         {hud.name}
         <span class="text-muted display-4">&nbsp;by {hud.author}</span>
@@ -583,7 +583,7 @@ const hudDescription = hudDescBase;
           <>
             <hr />
             <h3>Features</h3>
-            <div class="container">
+            <div class="container g-0">
               <div class="card-group row">
                 {hud.flags.map((f) => (
                   <div class="col-6 col-md-3">
@@ -606,7 +606,7 @@ const hudDescription = hudDescBase;
         hud.traits?.gamemode && (
           <>
             <h3 class="mt-3">Gamemodes</h3>
-            <div class="container">
+            <div class="container g-0">
               <div class="card-group row">
                 {hud.traits.gamemode.map((gm) => (
                   <div class="col-6 col-md-3 col-lg-2">
@@ -643,7 +643,7 @@ const hudDescription = hudDescBase;
       <hr />
     </div>
     <Footer />
-    <footer class="container">
+    <footer class="container g-0">
       <br />
       <p>
         <a href="https://github.com/mastercomfig/comfig-app"

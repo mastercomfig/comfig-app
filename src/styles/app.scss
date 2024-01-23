@@ -11,6 +11,11 @@
   margin-bottom: 1rem;
 }
 
+#preset-image {
+  max-width: 100%;
+  height: auto;
+}
+
 // Launch options
 #launch-options code {
   margin-top: 2px;
@@ -27,15 +32,6 @@
 }
 
 // Customize
-#customize-toggler.active span {
-  transform: rotate(180deg);
-}
-
-#customize-toggler .fa-angles-down {
-  transition: 0.2s;
-  transition-timing-function: ease-in-out;
-}
-
 #customizations {
   background: rgba(255, 255, 255, 0.1);
 }
@@ -102,16 +98,14 @@
 }
 
 // Addon cards
-.addons-list {
-  margin-top: 2rem;
-  margin-bottom: 2rem;
+.addons-list-community-outer {
+  margin-top: 1rem;
 }
 
 .addons-list-community > .row {
   display: flex;
   flex-wrap: nowrap;
   overflow-x: auto;
-  padding-bottom: 1rem;
   min-height: 30vh;
 }
 

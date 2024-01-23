@@ -2380,11 +2380,6 @@ async function app() {
     }
   }
 
-  let customizeCollapse = getEl("customize");
-  function isCustomizeVisible() {
-    return customizeCollapse.classList.contains("show");
-  }
-
   let scrollSpy = null;
 
   function initScrollSpy(customizationsCol) {
@@ -2476,9 +2471,7 @@ async function app() {
     }
 
     // Init scrollspy if visible
-    if (isCustomizeVisible()) {
-      initScrollSpy(customizationsCol);
-    }
+    initScrollSpy(customizationsCol);
   }
 
   function addVersion(ver, dropdown, badge, disabled) {
@@ -2714,18 +2707,6 @@ async function app() {
       await setAddon(id, await tryDBGet(id), true);
     }
   }
-
-  let customizeToggler = getEl("customize-toggler");
-  customizeToggler.addEventListener("click", (e) => {
-    e.currentTarget.classList.toggle("active");
-    if (e.currentTarget.classList.contains("active")) {
-      customizeToggler.scrollIntoView({ behavior: "smooth" });
-      // We don't init scrollspy until visible
-      if (!scrollSpy) {
-        initScrollSpy(getEl("modules-controls"));
-      }
-    }
-  });
 
   let lastBindInput = null;
 

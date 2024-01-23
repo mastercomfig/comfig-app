@@ -240,7 +240,7 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
                   key={`${playerClass}-${item.classname}-pane`}
                   eventKey={`${playerClass}-${item.classname}`}
                 >
-                  <div className="container py-4">
+                  <div className="container g-0 py-4">
                     <h3>Crosshairs</h3>
                     {selectedCrosshairs && (
                       <ItemsSelector
