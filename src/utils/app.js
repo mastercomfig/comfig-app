@@ -2098,12 +2098,7 @@ async function app() {
     // Create the element
     let selectElement = document.createElement("select");
     selectElement.autocomplete = "off";
-    selectElement.classList.add(
-      "form-select",
-      "form-select-sm",
-      "bg-dark",
-      "text-light",
-    );
+    selectElement.classList.add("form-select", "bg-dark", "text-light");
     let defaultValue = getModuleDefault(name);
     let configDefault = getBuiltinModuleDefault(name);
     let defaultIndex = 0;
@@ -2278,7 +2273,7 @@ async function app() {
   function handleModule(module) {
     // Create element
     let moduleContainer = document.createElement("div");
-    moduleContainer.classList.add("row");
+    moduleContainer.classList.add("row", "module-row");
     moduleContainer.id = module.name + "-module-input-cont";
     // Create module title
     let moduleTitle = document.createElement("h6");

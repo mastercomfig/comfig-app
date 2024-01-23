@@ -245,6 +245,10 @@ b {
   background-color: $teal;
 }
 
+.form-select-lg {
+  padding-left: 0.5rem;
+}
+
 // React select https://github.com/JedWatson/react-select/issues/2345#issuecomment-843674624
 :root {
   --bs-select-padding-y: #{$form-select-padding-y}; //

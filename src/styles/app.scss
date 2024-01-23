@@ -43,12 +43,13 @@
 // Modules
 .module-title {
   margin-top: 0.8rem !important;
-  font-size: 1.1rem;
+  font-size: 1.3rem;
 }
 
 .module-category-title {
   margin-top: 1rem !important;
   font-size: 1.8rem;
+  margin-left: 1rem;
 }
 
 .module-category {
@@ -60,6 +61,22 @@
   overflow-y: scroll;
   overflow-x: hidden;
   position: relative;
+}
+
+#modules-controls.inset-box {
+  padding: 0;
+}
+
+.module-row {
+  padding: 0 0.5rem 0.5rem 1.5rem;
+  transition:
+    background 0.2s,
+    box-shadow 0.2s;
+}
+
+.module-row:hover {
+  background: mix(#000, #fff, 90%);
+  box-shadow: 0 0 5px #000;
 }
 
 .inset-box {
