@@ -1,0 +1,97 @@
+---
+import Layout from "@layouts/Layout.astro";
+import BaseHead from "@components/head/BaseHead.astro";
+import PreloadHead from "@components/head/PreloadHead.astro";
+import ImportHead from "@components/head/ImportHead.astro";
+import MainHead from "@components/head/MainHead.astro";
+import Body from "@components/Body.astro";
+import Footer from "@components/Footer.astro";
+import Sponsor from "@components/Sponsor.astro";
+import { getHudEditData, sharedDataName } from "@ssg/hudEditData";
+
+const hudEditData = await getHudEditData();
+
+console.log(hudEditData);
+
+const shared = hudEditData[sharedDataName];
+console.log(shared);
+const sharedControls = shared.Controls;
+---
+
+<Layout>
+  <head>
+    <BaseHead />
+    <PreloadHead />
+    <ImportHead />
+    <MainHead
+      title="comfig huds"
+      description="comfig huds by mastercomfig is a modern Team Fortress 2 HUD directory. You can find HUDs to customize the look of your menus and in-game UI, and easily install them to your game after finding the one that suits your style and needs."
+    />
+  </head>
+  <Body>
+    <div class="container g-0">
+      <br />
+      <Sponsor />
+      <h1 class="display-2">comfig huds customizer</h1>
+      {
+        Object.entries(hudEditData).map(([hud, data]) => {
+          return (
+            <div>
+              <h2>{hud}</h2>
+              {Object.entries(data.Controls).map(([controlName, options]) => {
+                return (
+                  <div>
+                    <h3 class="fw-semibold">{controlName}</h3>
+                    {options.map((option) => {
+                      let {
+                        Name,
+                        Label,
+                        Type,
+                        Special,
+                        ToolTip,
+                        Restart,
+                        Value,
+                        ...rest
+                      } = option;
+
+                      if (Type === "IntegerUpDown") {
+                        let { Minimum, Maximum, Increment, ...rest2 } = rest;
+                      }
+
+                      return (
+                        <div>
+                          <h5>{Label}</h5>
+                          <p>
+                            {Type ?? "No Type"} | {Special ?? "No Special"} |{" "}
+                            {ToolTip ?? "No ToolTip"} |{" "}
+                            {Restart === undefined
+                              ? "No Restart"
+                              : JSON.stringify(Restart)}{" "}
+                            |{" "}
+                            {Value === undefined
+                              ? "No Value"
+                              : JSON.stringify(Value)}
+                          </p>
+                          <pre>{JSON.stringify(rest, undefined, 2)}</pre>
+                        </div>
+                      );
+                    })}
+                  </div>
+                );
+              })}
+            </div>
+          );
+        })
+      }
+      <Footer />
+      <footer class="container g-0">
+        <br />
+        <p>
+          <a href="https://github.com/mastercomfig/comfig-app"
+            ><span class="fab fa-github fa-fw"></span> Source code</a
+          >
+        </p>
+      </footer>
+    </div>
+  </Body>
+</Layout>
