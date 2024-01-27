@@ -2059,7 +2059,7 @@ async function app() {
           !previewModuleValues[name].has(value)) ||
         value === "";
       let previewValue = value;
-      if (!isCurrentlyNotPreviewing) {
+      if (isCurrentlyNotPreviewing) {
         if (!previewModuleValues[name]) {
           previewValue = values[0].value;
         } else {
