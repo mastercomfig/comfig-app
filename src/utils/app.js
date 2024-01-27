@@ -2059,10 +2059,12 @@ async function app() {
           !previewModuleValues[name].has(value)) ||
         value === "";
       let previewValue = value;
-      if (!previewModuleValues[name]) {
-        previewValue = values[0].value;
-      } else {
-        previewValue = previewModuleValues[name].values().next().value;
+      if (!isCurrentlyNotPreviewing) {
+        if (!previewModuleValues[name]) {
+          previewValue = values[0].value;
+        } else {
+          previewValue = previewModuleValues[name].values().next().value;
+        }
       }
       if (videoModules.has(name)) {
         modulePreview = document.createElement("video");
