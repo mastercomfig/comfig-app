@@ -10,17 +10,22 @@ import HudListItem from "@components/huds/HudListItem.astro";
 import HudNav from "@components/huds/HudNav.astro";
 import Sponsor from "@components/Sponsor.astro";
 
-import { fetchHuds } from "@ssg/huds";
+import { getHuds } from "@ssg/huds";
 
-export async function getStaticPaths({ paginate }) {
-  let pages = paginate(await fetchHuds(), {
-    pageSize: 12,
-  });
-  return pages;
-}
+const huds = await getHuds();
 
-const { page } = Astro.props;
-const currentPage = page.currentPage ?? 1;
+const featuredHudIds = [
+  "budhud",
+  "flawhud",
+  "rayshud",
+  "m0rehud",
+  "ahud",
+  "overwatch-hud",
+  "7hud",
+  "kbnhud",
+];
+
+const featuredHuds = featuredHudIds.map((id) => huds.get(id));
 ---
 
 <Layout>
@@ -67,7 +72,7 @@ const currentPage = page.currentPage ?? 1;
       </script>
     </ImportHead>
     <MainHead
-      title="comfig huds"
+      title="Editor's Choice | comfig huds"
       description="comfig huds by mastercomfig is a modern Team Fortress 2 HUD directory. You can find HUDs to customize the look of your menus and in-game UI, and easily install them to your game after finding the one that suits your style and needs."
     />
   </head>
@@ -78,61 +83,25 @@ const currentPage = page.currentPage ?? 1;
       <Sponsor />
       <br />
       <nav class="nav nav-pills nav-fill">
-        <a class="nav-link active" aria-current="page" href="/huds/1"
+        <a class="nav-link" aria-current="page" href="/huds/1"
           ><span class="fas fa-clock-rotate-left fa-fw"></span> Updated</a
         >
         <a class="nav-link" aria-current="page" href="/huds/alphabetical/1"
           ><span class="fas fa-arrow-down-a-z fa-fw"></span> Alphabetical</a
         >
-        <a class="nav-link" aria-current="page" href="/huds/featured"
+        <a class="nav-link active" aria-current="page" href="/huds/featured"
           ><span class="fas fa-trophy fa-fw"></span> Editor's Choice</a
         >
       </nav>
       <div class="row">
         {
-          page.data.map((hud) => (
-            <div class="col-12 col-md-6 col-lg-4 mt-4">
+          featuredHuds.map((hud) => (
+            <div class="col-12 col-md-6 mt-4">
               <HudListItem hud={hud} expanded={true} carousel={true} />
             </div>
           ))
         }
       </div>
-      {
-        (page.url.prev || page.url.next) && (
-          <div class="mt-4 d-flex justify-content-between">
-            <a
-              href="/huds/1"
-              class={`btn btn-secondary ${
-                currentPage === 1 ? "invisible" : ""
-              }`}
-            >
-              <span class="fas fa-angles-left fa-fw" />
-            </a>
-            <div>
-              <a
-                href={page.url.prev}
-                class={`btn btn-secondary ${!page.url.prev ? "invisible" : ""}`}
-              >
-                <span class="fas fa-angle-left fa-fw" />
-              </a>
-              <a
-                href={page.url.next}
-                class={`btn btn-secondary ${!page.url.next ? "invisible" : ""}`}
-              >
-                <span class="fas fa-angle-right fa-fw" />
-              </a>
-            </div>
-            <a
-              href={`/huds/${page.lastPage}`}
-              class={`btn btn-secondary ${
-                currentPage === page.lastPage ? "invisible" : ""
-              }`}
-            >
-              <span class="fas fa-angles-right fa-fw" />
-            </a>
-          </div>
-        )
-      }
       <hr />
     </div>
     <Footer />

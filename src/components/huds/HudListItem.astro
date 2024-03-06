@@ -26,29 +26,33 @@ const { hud, expanded = false, carousel = false } = Astro.props;
 
 <div class="card text-start">
   {
-    (carousel && hud.resources.length > 1 && (
-      <div class="card-img-top">
-        <div class="carousel slide carousel-fade h-100">
-          <div class="carousel-inner h-100">
-            {hud.resourceUrls.map((resource, index) => (
-              <div
-                class={`carousel-item h-100 ratio ratio-16x9 ${
-                  index == 0 ? "active" : ""
-                }`}
-                data-bs-interval={index == 0 ? "400" : ""}
-              >
-                <img
-                  loading="lazy"
-                  src={resource}
-                  class="object-fit-contain"
-                  alt={`${hud.resources[index]}`}
-                />
-              </div>
-            ))}
+    (carousel &&
+      hud.resourceUrls.filter((resource) => resource.endsWith("webp")).length >
+        1 && (
+        <div class="card-img-top">
+          <div class="carousel slide carousel-fade h-100">
+            <div class="carousel-inner h-100">
+              {hud.resourceUrls
+                .filter((resource) => resource.endsWith("webp"))
+                .map((resource, index) => (
+                  <div
+                    class={`carousel-item h-100 ratio ratio-16x9 ${
+                      index == 0 ? "active" : ""
+                    }`}
+                    data-bs-interval={index == 0 ? "400" : ""}
+                  >
+                    <img
+                      loading="lazy"
+                      src={resource}
+                      class="object-fit-contain"
+                      alt={`${hud.resources[index]}`}
+                    />
+                  </div>
+                ))}
+            </div>
           </div>
         </div>
-      </div>
-    )) || (
+      )) || (
       <div
         class="card-img-top"
         style={`background-image: url('${hud.bannerUrl}')`}

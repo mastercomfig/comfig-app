@@ -81,6 +81,13 @@ $form-select-border-radius-lg: $input-border-radius-lg;
 
 $tooltip-color: $light;
 
+[data-bs-theme="dark"] .carousel.carousel-light .carousel-control-prev-icon,
+[data-bs-theme="dark"] .carousel.carousel-light .carousel-control-next-icon,
+[data-bs-theme="dark"].carousel.carousel-light .carousel-control-prev-icon,
+[data-bs-theme="dark"].carousel.carousel-light .carousel-control-next-icon {
+  filter: initial !important;
+}
+
 // Materia
 
 // Fonts

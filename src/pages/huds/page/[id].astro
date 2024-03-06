@@ -186,8 +186,8 @@ const hudDescription = hudDescBase;
         <span class="text-muted display-4">&nbsp;by {hud.author}</span>
       </h1>
       {
-        ((hud.resources.length > 1 || true) && (
-          <div id="hudScreenshots" class="carousel slide">
+        (hud.resources.length > 1 && (
+          <div id="hudScreenshots" class="carousel carousel-light slide">
             <div class="carousel-indicators carousel-hidable">
               {hud.resources.map((resource, index) => (
                 <button
@@ -346,7 +346,7 @@ const hudDescription = hudDescBase;
                         ? "fa-square-check verified-gold"
                         : "fa-circle-check text-success"
                   } fa-fw`}></span>
-                 Compatibility:&nbsp;</strong
+                Compatibility:&nbsp;</strong
               >
               {
                 hud.outdated

@@ -13,7 +13,9 @@ import Sponsor from "@components/Sponsor.astro";
 import { fetchHuds } from "@ssg/huds";
 
 export async function getStaticPaths({ paginate }) {
-  let pages = paginate(await fetchHuds(), {
+  const huds = await fetchHuds(true);
+  const hudsSorted = huds.sort((a, b) => a.name.localeCompare(b.name));
+  let pages = paginate(hudsSorted, {
     pageSize: 12,
   });
   return pages;
@@ -78,10 +80,13 @@ const currentPage = page.currentPage ?? 1;
       <Sponsor />
       <br />
       <nav class="nav nav-pills nav-fill">
-        <a class="nav-link active" aria-current="page" href="/huds/1"
+        <a class="nav-link" aria-current="page" href="/huds/1"
           ><span class="fas fa-clock-rotate-left fa-fw"></span> Updated</a
         >
-        <a class="nav-link" aria-current="page" href="/huds/alphabetical/1"
+        <a
+          class="nav-link active"
+          aria-current="page"
+          href="/huds/alphabetical/1"
           ><span class="fas fa-arrow-down-a-z fa-fw"></span> Alphabetical</a
         >
         <a class="nav-link" aria-current="page" href="/huds/featured"

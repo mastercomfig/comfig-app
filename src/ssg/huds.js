@@ -70,7 +70,7 @@ let hudChildren = new Map();
 // TODO: Sync with tf_ui_version
 const CURRENT_HUD_VERSION = 3;
 
-const getHuds = async () => {
+export const getHuds = async () => {
   if (!hudMap) {
     const db = await getHudDb();
     // Filter to only hud-data JSON files
