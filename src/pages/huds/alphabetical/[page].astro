@@ -106,7 +106,7 @@ const currentPage = page.currentPage ?? 1;
         (page.url.prev || page.url.next) && (
           <div class="mt-4 d-flex justify-content-between">
             <a
-              href="/huds/1"
+              href="/huds/alphabetical/1"
               class={`btn btn-secondary ${
                 currentPage === 1 ? "invisible" : ""
               }`}
@@ -128,7 +128,7 @@ const currentPage = page.currentPage ?? 1;
               </a>
             </div>
             <a
-              href={`/huds/${page.lastPage}`}
+              href={`/huds/alphabetical/${page.lastPage}`}
               class={`btn btn-secondary ${
                 currentPage === page.lastPage ? "invisible" : ""
               }`}
