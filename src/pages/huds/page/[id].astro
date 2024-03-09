@@ -99,7 +99,19 @@ const languageNames = new Intl.DisplayNames(["en"], {
 const { hud } = Astro.props;
 
 const cleanContent = hud.content ? removeMd(hud.content) : "";
-let hudDescBase = cleanContent.split("\n")[0].substring(0, 297);
+let hudDescBase = "";
+for (const potentialBase of cleanContent.split("\n")) {
+  // Empty newlines are useless...
+  const trimmed = potentialBase.trim();
+  if (trimmed.length) {
+    // If it's only a few words, then it's useless...
+    const words = trimmed.split(/\s+/);
+    if (words.length > 2) {
+      hudDescBase = trimmed;
+      break;
+    }
+  }
+}
 if (hudDescBase.length < cleanContent.length) {
   hudDescBase += "...";
 }
@@ -162,7 +174,7 @@ const hudDescription = hudDescBase;
       description={`${
         hud.name
       } on comfig huds, a modern Team Fortress 2 HUD directory.${
-        hud.content ? ` About ${hud.name}: ${hudDescription}` : ``
+        hudDescription ? ` About ${hud.name}: ${hudDescription}` : ``
       }`}
       image={hud.resourceUrls[0]}
     />
