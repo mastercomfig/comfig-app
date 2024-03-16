@@ -16,13 +16,65 @@ const schema = await schemaReq.json();
 
 const schemaProps = Object.entries(schema.properties);
 
+const nameIndex = schemaProps.findIndex(([prop, propSchema]) => {
+  return prop === "name";
+});
+
+schemaProps.splice(
+  nameIndex + 1,
+  0,
+  [
+    "id",
+    {
+      title: "HUD ID",
+      description:
+        "The ID for your HUD. This should be a unique, all lowercase, dashed name.",
+      type: "string",
+      examples: ["myhud-name"],
+    },
+  ],
+  [
+    "description",
+    {
+      title: "Description",
+      description: "A full description of your HUD. (supports Markdown)",
+      type: "text",
+      rows: 25,
+      examples: [
+        "# Description\n\nA **really** cool HUD\n\n# Credits\n\nCool person #2 helped a lot with getting the coolness up to 11\n\n# Special Thanks\n\nI'd like to thank _all_ the cool peeps out there!",
+      ],
+    },
+  ],
+);
+
+schema.required.push("id");
+
 const requiredProps = new Set(schema.required);
 
 const excludedProps = new Set(["verified"]);
+const excludedSections = new Set(["traits"]);
 
 const nameMappings = {
   "traits.os": "OS",
   "social.youtube": "YouTube",
+};
+
+const enumMappings = {
+  "traits.gamemode": {
+    comp: "Competitive",
+    ad: "Attack/Defend",
+    ctf: "Capture the Flag",
+    cp: "Control Points",
+    koth: "King of the Hill",
+    mvm: "Mann vs. Machine",
+    pass: "Pass Time",
+    pl: "Payload",
+    plr: "Payload Race",
+    pd: "Player Destruction",
+    rd: "Robot Destruction",
+    sd: "Special Delivery",
+    tc: "Territorial Control",
+  },
 };
 
 function getPropName(prop) {
@@ -37,31 +89,70 @@ function getPropName(prop) {
     .replace(/^./, (str) => str.toUpperCase());
 }
 
+function capitalizeString(str) {
+  str = str.replaceAll("-", " ");
+  return str.split(" ").map((word, index) => {
+    return (
+      word[0].toUpperCase() +
+      word.slice(1) +
+      (index === str.length - 1 ? "" : " ")
+    );
+  });
+}
+
 function parseProp(prop, propSchema) {
   if (excludedProps.has(prop)) {
     return [];
   }
   const type = propSchema.type;
   const required = requiredProps.has(prop);
+  const title = propSchema.title;
   const description = propSchema.description;
   if (type === "object") {
     const props = Object.entries(propSchema.properties);
-    return props.flatMap(([childProp, childPropSchema]) =>
-      parseProp(`${prop}.${childProp}`, childPropSchema),
-    );
-  } else {
-    const example = propSchema.examples?.[0];
-    return {
+    const section = {
       prop,
-      name: getPropName(prop),
+      name: title ?? getPropName(prop),
       description,
       type,
-      required,
-      example,
-      choices: propSchema.items?.enum,
     };
+    const children = props.flatMap(([childProp, childPropSchema]) =>
+      parseProp(`${prop}.${childProp}`, childPropSchema),
+    );
+    if (!excludedSections.has(prop)) {
+      children.splice(0, 0, section);
+    }
+    return children;
+  } else {
+    const example = propSchema.examples?.[0];
+    if (propSchema.items?.enum) {
+      console.log(prop, enumMappings[prop], propSchema.items?.enum);
+    }
+    return [
+      {
+        prop,
+        name: title ?? getPropName(prop),
+        description,
+        type,
+        required,
+        example,
+        choices: propSchema.items?.enum
+          ? enumMappings[prop]
+            ? propSchema.items?.enum.map((v) => ({
+                id: v,
+                name: enumMappings[prop][v] ?? capitalizeString(v),
+              }))
+            : propSchema.items?.enum.map((v) => ({
+                id: v,
+                name: capitalizeString(v),
+              }))
+          : undefined,
+      },
+    ];
   }
 }
+
+const specialDescriptions = new Set(["hash", "resources", "description"]);
 
 const form = schemaProps.flatMap(([prop, propSchema]) =>
   parseProp(prop, propSchema),
@@ -126,6 +217,27 @@ const form = schemaProps.flatMap(([prop, propSchema]) =>
           return formObject;
         }
 
+        function downloadFile(file, filename) {
+          let url = URL.createObjectURL(file);
+
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = filename;
+          document.body.append(link);
+          link.dispatchEvent(
+            new MouseEvent("click", {
+              bubbles: true,
+              cancelable: true,
+              view: window,
+            }),
+          );
+          link.remove();
+          setTimeout(() => {
+            URL.revokeObjectURL(url);
+            url = null;
+          }, 120000);
+        }
+
         formElement.addEventListener(
           "submit",
           (e) => {
@@ -181,33 +293,50 @@ const form = schemaProps.flatMap(([prop, propSchema]) =>
             const id = formObject.id;
             delete formObject.id;
 
+            const description = formObject.description;
+            delete formObject.description;
+
             const json = JSON.stringify(formObject, null, 2);
 
             const file = new File([json], `${id}.json`, {
               type: "application/octet-stream",
             });
 
-            let url = URL.createObjectURL(file);
+            downloadFile(file, `${id}.json`);
 
-            const link = document.createElement("a");
-            link.href = url;
-            link.download = `${id}.json`;
-            document.body.append(link);
-            link.dispatchEvent(
-              new MouseEvent("click", {
-                bubbles: true,
-                cancelable: true,
-                view: window,
-              }),
-            );
-            link.remove();
-            setTimeout(() => {
-              URL.revokeObjectURL(url);
-              url = null;
-            }, 120000);
+            if (description) {
+              const descriptionFile = new File([description], `${id}.md`, {
+                type: "text/markdown",
+              });
+              setTimeout(() => {
+                downloadFile(descriptionFile, `${id}.md`);
+              }, 2000);
+            }
           },
           false,
         );
+
+        const nameElement = document.getElementById("name");
+        const idElement = document.getElementById("id");
+
+        let modifiedId = false;
+        idElement.addEventListener("input", (e) => {
+          if (idElement.value === nameElement.value) {
+            modifiedId = false;
+          } else if (!idElement.value) {
+            modifiedId = false;
+          } else {
+            modifiedId = true;
+          }
+        });
+        nameElement.addEventListener("input", (e) => {
+          if (!modifiedId) {
+            idElement.value = nameElement.value
+              .toLowerCase()
+              .replace(/[^a-z0-9-]/g, "-")
+              .replace(/-+/g, "-");
+          }
+        });
       </script>
     </ImportHead>
     <MainHead
@@ -221,58 +350,26 @@ const form = schemaProps.flatMap(([prop, propSchema]) =>
     <div class="container g-0">
       <br />
       <div class="text-light">
-        <h1>How to submit a HUD</h1>
-        <p class="lead">
-          <strong
-            >To submit a HUD to this site, use the <a
-              href="https://github.com/mastercomfig/hud-db"
-              >hud-db GitHub repo</a
-            >. <span class="fw-bold"
-              >Visit the repo for more instructions and details, like how to get
-              the hash, add a description, and upload images.</span
-            ></strong
-          >
-        </p>
-        <p class="lead">
-          For those not familiar with JSON, or wanting more assistance, use the
-          form on this page to generate a HUD JSON file for you. You can upload
-          this file to the GitHub. Let me know if there's anything else I can do
-          to make the process easier for you!
-        </p>
+        <h1>Submit a HUD</h1>
       </div>
       <form id="hud-form" class="needs-validation" novalidate>
-        <div class="mb-3">
-          <label for="id" class="form-label">
-            HUD ID
-            <span class="text-danger">*</span></label
-          >
-          <input
-            type="text"
-            class="form-control"
-            id="id"
-            aria-describedby="id-help"
-            placeholder="myhud-name"
-            required
-          />
-          <div class="valid-feedback"></div>
-          <div class="invalid-feedback" id="id-invalid"></div>
-          <div id="id-help" class="form-text">
-            The ID for your HUD. This should be a unique, all lowercase, dashed
-            name.
-          </div>
-        </div>
         {
           form.map((entry) => {
             return (
               <div class="mb-3">
-                <label for={entry.prop} class="form-label">
-                  {entry.name}
-                  {entry.required && <span class="text-danger">*</span>}
-                  {entry.type === "array" && !entry.choices && (
-                    <small>(Comma-separated list)</small>
-                  )}
-                </label>
-                <br />
+                {entry.type === "object" && <h2>{entry.name}</h2>}
+                {entry.type !== "object" && (
+                  <>
+                    <label for={entry.prop} class="form-label">
+                      {entry.name}
+                      {entry.required && <span class="text-danger">*</span>}
+                      {entry.type === "array" && !entry.choices && (
+                        <small>(Comma-separated list)</small>
+                      )}
+                    </label>
+                    <br />
+                  </>
+                )}
                 {entry.type === "string" && (
                   <>
                     <input
@@ -309,14 +406,14 @@ const form = schemaProps.flatMap(([prop, propSchema]) =>
                         <input
                           class="form-check-input"
                           type="checkbox"
-                          id={`${entry.prop}:${choice}`}
+                          id={`${entry.prop}:${choice.id}`}
                           value="on"
                         />
                         <label
                           class="form-check-label"
-                          for={`${entry.prop}:${choice}`}
+                          for={`${entry.prop}:${choice.id}`}
                         >
-                          {choice}
+                          {choice.name}
                         </label>
                       </div>
                     ))}
@@ -340,8 +437,60 @@ const form = schemaProps.flatMap(([prop, propSchema]) =>
                     />
                   </>
                 )}
+                {entry.type === "text" && (
+                  <>
+                    <textarea
+                      class="form-control"
+                      id={entry.prop}
+                      rows={15}
+                      aria-describedby={`${entry.prop}-help`}
+                      placeholder={entry.example}
+                      required={entry.required ? true : undefined}
+                    />
+                    <div class="valid-feedback" />
+                    <div
+                      class="invalid-feedback"
+                      id={`${entry.prop}-invalid`}
+                    />
+                  </>
+                )}
                 <div id={`${entry.prop}-help`} class="form-text">
-                  {entry.description}
+                  {!specialDescriptions.has(entry.prop) && entry.description}
+                  {entry.prop === "hash" && (
+                    <>
+                      {entry.description.split(" (")[0]}.
+                      <a
+                        href="https://github.com/mastercomfig/hud-db?tab=readme-ov-file#how-to-retrieve-the-hash"
+                        target="_blank"
+                      >
+                        Learn how to retrieve this.
+                      </a>
+                      {" ("}
+                      {entry.description.split(" (")[1]}
+                    </>
+                  )}
+                  {entry.prop === "resources" && (
+                    <>
+                      {entry.description}
+                      <a
+                        href="https://github.com/mastercomfig/hud-db?tab=readme-ov-file#hud-resources"
+                        target="_blank"
+                      >
+                        Learn more here.
+                      </a>
+                    </>
+                  )}
+                  {entry.prop === "description" && (
+                    <>
+                      {entry.description}
+                      <a
+                        href="https://github.com/mastercomfig/hud-db?tab=readme-ov-file#hud-pages"
+                        target="_blank"
+                      >
+                        Learn more here.
+                      </a>
+                    </>
+                  )}
                 </div>
               </div>
             );
@@ -351,16 +500,28 @@ const form = schemaProps.flatMap(([prop, propSchema]) =>
           >Generate</button
         >
       </form>
-      <hr />
-    </div>
-    <Footer />
-    <footer class="container g-0">
       <br />
-      <p>
-        <a href="https://github.com/mastercomfig/comfig-app"
-          ><span class="fab fa-github fa-fw"></span> Source code</a
-        >
-      </p>
-    </footer>
+      <div class="text-light">
+        <p class="lead">
+          <strong
+            >Once you've generated your HUD files, use the <a
+              href="https://github.com/mastercomfig/hud-db"
+              >hud-db GitHub repo</a
+            > to submit your HUD.
+          </strong>
+        </p>
+        You can find additional information on how to upload there.
+        <hr />
+      </div>
+      <Footer />
+      <footer class="container g-0">
+        <br />
+        <p>
+          <a href="https://github.com/mastercomfig/comfig-app"
+            ><span class="fab fa-github fa-fw"></span> Source code</a
+          >
+        </p>
+      </footer>
+    </div>
   </Body>
 </Layout>
