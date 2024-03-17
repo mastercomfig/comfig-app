@@ -12,7 +12,7 @@ import "easymde/dist/easymde.min.css";
 import "@styles/mde.scss";
 
 const schemaReq = await fetch(
-  "https://raw.githubusercontent.com/mastercomfig/hud-db/main/utils/hud-data.schema.json",
+  "https://raw.githubusercontent.com/mastercomfig/hud-db/main/utils/hud-data.schema.json"
 );
 
 const schema = await schemaReq.json();
@@ -44,10 +44,36 @@ schemaProps.splice(
       type: "text",
       rows: 25,
     },
-  ],
+  ]
 );
 
 schema.required.push("id");
+
+const featuresIndex = schemaProps.findIndex(([prop, propSchema]) => {
+  return prop === "flags";
+});
+
+schemaProps.splice(featuresIndex, 0, [
+  "options",
+  {
+    title: "Additional Options",
+    description: "Additional options for your HUD.",
+    type: "object",
+  },
+]);
+
+const repoIndex = schemaProps.findIndex(([prop, propSchema]) => {
+  return prop === "repo";
+});
+
+schemaProps.splice(repoIndex, 0, [
+  "release",
+  {
+    title: "Release Info",
+    description: "Where to download your HUD and its version.",
+    type: "object",
+  },
+]);
 
 const requiredProps = new Set(schema.required);
 
@@ -109,7 +135,7 @@ function parseProp(prop, propSchema) {
   const title = propSchema.title;
   const description = propSchema.description;
   if (type === "object") {
-    const props = Object.entries(propSchema.properties);
+    const props = Object.entries(propSchema.properties ?? {});
     const section = {
       prop,
       name: title ?? getPropName(prop),
@@ -117,7 +143,7 @@ function parseProp(prop, propSchema) {
       type,
     };
     const children = props.flatMap(([childProp, childPropSchema]) =>
-      parseProp(`${prop}.${childProp}`, childPropSchema),
+      parseProp(`${prop}.${childProp}`, childPropSchema)
     );
     if (!excludedSections.has(prop)) {
       children.splice(0, 0, section);
@@ -152,7 +178,7 @@ function parseProp(prop, propSchema) {
 const specialDescriptions = new Set(["hash", "resources", "description"]);
 
 const form = schemaProps.flatMap(([prop, propSchema]) =>
-  parseProp(prop, propSchema),
+  parseProp(prop, propSchema)
 );
 ---
 
@@ -165,10 +191,10 @@ const form = schemaProps.flatMap(([prop, propSchema]) =>
         import { Tooltip } from "bootstrap";
 
         const tooltipTriggerList = document.querySelectorAll(
-          '[data-bs-toggle="tooltip"]',
+          '[data-bs-toggle="tooltip"]'
         );
         const tooltipList = [...tooltipTriggerList].map(
-          (tooltipTriggerEl) => new Tooltip(tooltipTriggerEl),
+          (tooltipTriggerEl) => new Tooltip(tooltipTriggerEl)
         );
       </script>
       <script>
@@ -226,7 +252,7 @@ const form = schemaProps.flatMap(([prop, propSchema]) =>
               bubbles: true,
               cancelable: true,
               view: window,
-            }),
+            })
           );
           link.remove();
           setTimeout(() => {
@@ -310,7 +336,7 @@ const form = schemaProps.flatMap(([prop, propSchema]) =>
               }, 2000);
             }
           },
-          false,
+          false
         );
 
         const nameElement = document.getElementById("name");
