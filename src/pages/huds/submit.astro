@@ -380,177 +380,185 @@ const form = schemaProps.flatMap(([prop, propSchema]) =>
       <br />
       <div class="text-light">
         <h1>Submit a HUD</h1>
-      </div>
-      <form id="hud-form" class="needs-validation" novalidate>
-        {
-          form.map((entry) => {
-            return (
-              <div class="mb-3">
-                {entry.type === "object" && <h2>{entry.name}</h2>}
-                {entry.type !== "object" && (
-                  <>
-                    <label for={entry.prop} class="form-label">
-                      {entry.name}
-                      {entry.required && <span class="text-danger">*</span>}
-                      {entry.type === "array" && !entry.choices && (
-                        <small>(Comma-separated list)</small>
-                      )}
-                    </label>
-                    <br />
-                  </>
-                )}
-                {entry.type === "string" && (
-                  <>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id={entry.prop}
-                      aria-describedby={`${entry.prop}-help`}
-                      placeholder={entry.example}
-                      required={entry.required ? true : undefined}
-                    />
-                    <div class="valid-feedback" />
-                    <div
-                      class="invalid-feedback"
-                      id={`${entry.prop}-invalid`}
-                    />
-                  </>
-                )}
-                {entry.type === "boolean" && (
-                  <>
-                    <div class="form-check form-switch">
-                      <input
-                        class="form-check-input"
-                        type="checkbox"
-                        role="switch"
-                        id={entry.prop}
-                      />
-                    </div>
-                  </>
-                )}
-                {entry.type === "array" && entry.choices && (
-                  <div id={entry.prop} class="form-wrapper">
-                    {entry.choices.map((choice) => (
-                      <div class="form-check form-check-inline">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          id={`${entry.prop}:${choice.id}`}
-                          value="on"
-                        />
-                        <label
-                          class="form-check-label"
-                          for={`${entry.prop}:${choice.id}`}
-                        >
-                          {choice.name}
-                        </label>
-                      </div>
-                    ))}
-                  </div>
-                )}
-                {entry.type === "array" && !entry.choices && (
-                  <>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id={entry.prop}
-                      aria-describedby={`${entry.prop}-help`}
-                      placeholder={entry.example}
-                      required={entry.required ? true : undefined}
-                      data-array="true"
-                    />
-                    <div class="valid-feedback" />
-                    <div
-                      class="invalid-feedback"
-                      id={`${entry.prop}-invalid`}
-                    />
-                  </>
-                )}
-                {entry.type === "text" && (
-                  <>
-                    <textarea
-                      class="form-control"
-                      id={entry.prop}
-                      rows={15}
-                      aria-describedby={`${entry.prop}-help`}
-                      placeholder={entry.example}
-                      required={entry.required ? true : undefined}
-                    />
-                    <div class="valid-feedback" />
-                    <div
-                      class="invalid-feedback"
-                      id={`${entry.prop}-invalid`}
-                    />
-                  </>
-                )}
-                <div id={`${entry.prop}-help`} class="form-text">
-                  {!specialDescriptions.has(entry.prop) && entry.description}
-                  {entry.prop === "hash" && (
-                    <>
-                      {entry.description.split(" (")[0]}.
-                      <a
-                        href="https://github.com/mastercomfig/hud-db?tab=readme-ov-file#how-to-retrieve-the-hash"
-                        target="_blank"
-                      >
-                        Learn how to retrieve this.
-                      </a>
-                      {" ("}
-                      {entry.description.split(" (")[1]}
-                    </>
-                  )}
-                  {entry.prop === "resources" && (
-                    <>
-                      {entry.description}
-                      <a
-                        href="https://github.com/mastercomfig/hud-db?tab=readme-ov-file#hud-resources"
-                        target="_blank"
-                      >
-                        Learn more here.
-                      </a>
-                    </>
-                  )}
-                  {entry.prop === "description" && (
-                    <>
-                      {entry.description}
-                      <a
-                        href="https://github.com/mastercomfig/hud-db?tab=readme-ov-file#hud-pages"
-                        target="_blank"
-                      >
-                        Learn more here.
-                      </a>
-                    </>
-                  )}
-                </div>
-              </div>
-            );
-          })
-        }
-        <button type="submit" class="btn btn-primary text-light"
-          >Generate</button
-        >
-      </form>
-      <br />
-      <div class="text-light">
         <p class="lead">
-          <strong
-            >Once you've generated your HUD files, use the <a
-              href="https://github.com/mastercomfig/hud-db"
-              >hud-db GitHub repo</a
-            > to submit your HUD.
-          </strong>
+          We require HUDs to be published on GitHub. For more information about
+          the process, visit the <a
+            href="https://github.com/mastercomfig/hud-db?tab=readme-ov-file#hud-db"
+            >hud-db GitHub repo</a
+          >.
+          <form id="hud-form" class="needs-validation" novalidate>
+            {
+              form.map((entry) => {
+                return (
+                  <div class="mb-3">
+                    {entry.type === "object" && <h2>{entry.name}</h2>}
+                    {entry.type !== "object" && (
+                      <>
+                        <label for={entry.prop} class="form-label">
+                          {entry.name}
+                          {entry.required && <span class="text-danger">*</span>}
+                          {entry.type === "array" && !entry.choices && (
+                            <small>(Comma-separated list)</small>
+                          )}
+                        </label>
+                        <br />
+                      </>
+                    )}
+                    {entry.type === "string" && (
+                      <>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id={entry.prop}
+                          aria-describedby={`${entry.prop}-help`}
+                          placeholder={entry.example}
+                          required={entry.required ? true : undefined}
+                        />
+                        <div class="valid-feedback" />
+                        <div
+                          class="invalid-feedback"
+                          id={`${entry.prop}-invalid`}
+                        />
+                      </>
+                    )}
+                    {entry.type === "boolean" && (
+                      <>
+                        <div class="form-check form-switch">
+                          <input
+                            class="form-check-input"
+                            type="checkbox"
+                            role="switch"
+                            id={entry.prop}
+                          />
+                        </div>
+                      </>
+                    )}
+                    {entry.type === "array" && entry.choices && (
+                      <div id={entry.prop} class="form-wrapper">
+                        {entry.choices.map((choice) => (
+                          <div class="form-check form-check-inline">
+                            <input
+                              class="form-check-input"
+                              type="checkbox"
+                              id={`${entry.prop}:${choice.id}`}
+                              value="on"
+                            />
+                            <label
+                              class="form-check-label"
+                              for={`${entry.prop}:${choice.id}`}
+                            >
+                              {choice.name}
+                            </label>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    {entry.type === "array" && !entry.choices && (
+                      <>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id={entry.prop}
+                          aria-describedby={`${entry.prop}-help`}
+                          placeholder={entry.example}
+                          required={entry.required ? true : undefined}
+                          data-array="true"
+                        />
+                        <div class="valid-feedback" />
+                        <div
+                          class="invalid-feedback"
+                          id={`${entry.prop}-invalid`}
+                        />
+                      </>
+                    )}
+                    {entry.type === "text" && (
+                      <>
+                        <textarea
+                          class="form-control"
+                          id={entry.prop}
+                          rows={15}
+                          aria-describedby={`${entry.prop}-help`}
+                          placeholder={entry.example}
+                          required={entry.required ? true : undefined}
+                        />
+                        <div class="valid-feedback" />
+                        <div
+                          class="invalid-feedback"
+                          id={`${entry.prop}-invalid`}
+                        />
+                      </>
+                    )}
+                    <div id={`${entry.prop}-help`} class="form-text">
+                      {!specialDescriptions.has(entry.prop) &&
+                        entry.description}
+                      {entry.prop === "hash" && (
+                        <>
+                          {entry.description.split(" (")[0]}.
+                          <a
+                            href="https://github.com/mastercomfig/hud-db?tab=readme-ov-file#how-to-retrieve-the-hash"
+                            target="_blank"
+                          >
+                            Learn how to retrieve this.
+                          </a>
+                          {" ("}
+                          {entry.description.split(" (")[1]}
+                        </>
+                      )}
+                      {entry.prop === "resources" && (
+                        <>
+                          {entry.description}
+                          <a
+                            href="https://github.com/mastercomfig/hud-db?tab=readme-ov-file#hud-resources"
+                            target="_blank"
+                          >
+                            Learn more here.
+                          </a>
+                        </>
+                      )}
+                      {entry.prop === "description" && (
+                        <>
+                          {entry.description}
+                          <a
+                            href="https://github.com/mastercomfig/hud-db?tab=readme-ov-file#hud-pages"
+                            target="_blank"
+                          >
+                            Learn more here.
+                          </a>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                );
+              })
+            }
+            <button type="submit" class="btn btn-primary text-light"
+              >Generate</button
+            >
+          </form>
+          <br />
+          <div class="text-light">
+            <p class="lead">
+              <strong
+                >Once you've generated your HUD files, use the <a
+                  href="https://github.com/mastercomfig/hud-db"
+                  >hud-db GitHub repo</a
+                > to submit your HUD.
+              </strong>
+            </p>
+            You can find additional information on how to upload there.
+            <hr />
+          </div>
+          <Footer />
+          <footer class="container g-0">
+            <br />
+            <p>
+              <a href="https://github.com/mastercomfig/comfig-app"
+                ><span class="fab fa-github fa-fw"></span> Source code</a
+              >
+            </p>
+          </footer>
         </p>
-        You can find additional information on how to upload there.
-        <hr />
       </div>
-      <Footer />
-      <footer class="container g-0">
-        <br />
-        <p>
-          <a href="https://github.com/mastercomfig/comfig-app"
-            ><span class="fab fa-github fa-fw"></span> Source code</a
-          >
-        </p>
-      </footer>
     </div>
   </Body>
 </Layout>
