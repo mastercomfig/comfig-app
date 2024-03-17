@@ -8,6 +8,9 @@ import Body from "@components/Body.astro";
 import Footer from "@components/Footer.astro";
 import HudNav from "@components/huds/HudNav.astro";
 
+import "easymde/dist/easymde.min.css";
+import "@styles/mde.scss";
+
 const schemaReq = await fetch(
   "https://raw.githubusercontent.com/mastercomfig/hud-db/main/utils/hud-data.schema.json",
 );
@@ -40,9 +43,6 @@ schemaProps.splice(
       description: "A full description of your HUD. (supports Markdown)",
       type: "text",
       rows: 25,
-      examples: [
-        "# Description\n\nA **really** cool HUD\n\n# Credits\n\nCool person #2 helped a lot with getting the coolness up to 11\n\n# Special Thanks\n\nI'd like to thank _all_ the cool peeps out there!",
-      ],
     },
   ],
 );
@@ -125,9 +125,6 @@ function parseProp(prop, propSchema) {
     return children;
   } else {
     const example = propSchema.examples?.[0];
-    if (propSchema.items?.enum) {
-      console.log(prop, enumMappings[prop], propSchema.items?.enum);
-    }
     return [
       {
         prop,
@@ -336,6 +333,12 @@ const form = schemaProps.flatMap(([prop, propSchema]) =>
               .replace(/[^a-z0-9-]/g, "-")
               .replace(/-+/g, "-");
           }
+        });
+      </script>
+      <script>
+        import EasyMDE from "easymde";
+        const descriptionEditor = new EasyMDE({
+          element: document.getElementById("description"),
         });
       </script>
     </ImportHead>
