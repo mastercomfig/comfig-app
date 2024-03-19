@@ -14,7 +14,7 @@ import { fetchHuds } from "@ssg/huds";
 
 export async function getStaticPaths({ paginate }) {
   const huds = await fetchHuds(true);
-  const hudsSorted = huds.sort((a, b) => a.id.localeCompare(b.id));
+  const hudsSorted = huds.sort((a, b) => a.code.localeCompare(b.code));
   let pages = paginate(hudsSorted, {
     pageSize: 12,
   });
