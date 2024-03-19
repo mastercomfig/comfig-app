@@ -679,6 +679,8 @@ const blockedItems = [
   "tf_weapon_invis",
   "tf_weapon_objectselection",
   "tf_weapon_parachute",
+  "tf_weapon_parachute_secondary",
+  "tf_weapon_parachute_primary",
 ];
 
 // TODO: really should use item schema API for this
@@ -700,7 +702,6 @@ const itemUsedBy = {
   soldier: [
     "tf_weapon_buff_item",
     "tf_weapon_katana",
-    "tf_weapon_parachute_secondary",
     "tf_weapon_particle_cannon",
     "tf_weapon_raygun",
     "tf_weapon_rocketlauncher",
@@ -726,7 +727,6 @@ const itemUsedBy = {
     "tf_weapon_cannon",
     "tf_weapon_grenadelauncher",
     "tf_weapon_katana",
-    "tf_weapon_parachute_primary",
     "tf_weapon_pipebomblauncher",
     "tf_weapon_stickbomb",
     "tf_weapon_sword",
