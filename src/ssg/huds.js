@@ -257,12 +257,12 @@ export const getHuds = async () => {
   // Add children to parents
   for (const [parent, children] of hudChildren.entries()) {
     hudMap.get(parent).variants = children.map((child) => hudMap.get(child));
-    const variants = [parent];
     for (const child of children) {
       const siblings = children.filter((sibling) => sibling !== child);
-      hudMap.get(child).variants = variants
-        .concat(siblings)
-        .map((variant) => hudMap.get(variant));
+      hudMap.get(child).parentHud = hudMap.get(parent);
+      hudMap.get(child).variants = siblings.map((variant) =>
+        hudMap.get(variant),
+      );
     }
   }
 

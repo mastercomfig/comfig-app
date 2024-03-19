@@ -161,10 +161,10 @@ const hudDescription = hudDescBase;
         import { Tooltip } from "bootstrap";
 
         const tooltipTriggerList = document.querySelectorAll(
-          '[data-bs-toggle="tooltip"]',
+          '[data-bs-toggle="tooltip"]'
         );
         const tooltipList = [...tooltipTriggerList].map(
-          (tooltipTriggerEl) => new Tooltip(tooltipTriggerEl),
+          (tooltipTriggerEl) => new Tooltip(tooltipTriggerEl)
         );
       </script>
     </ImportHead>
@@ -641,14 +641,29 @@ const hudDescription = hudDescBase;
         hud.variants && (
           <>
             <hr />
-            <h1>Variants</h1>
-            <div class="row">
-              {hud.variants.map((variant) => (
-                <div class="col-12 col-md-2 col-lg-4 mt-3">
-                  <HudListItem hud={variant} />
+            {hud.parent && (
+              <>
+                <h1>Based on</h1>
+                <div class="row">
+                  <div class="col-12 col-md-2 col-lg-4 mt-3">
+                    <HudListItem hud={hud.parentHud} />
+                  </div>
                 </div>
-              ))}
-            </div>
+              </>
+            )}
+            {hud.variants.length > 0 && (
+              <>
+                <hr />
+                <h1>{hud.parent ? "Other Variants" : "Variants"}</h1>
+                <div class="row">
+                  {hud.variants.map((variant) => (
+                    <div class="col-12 col-md-2 col-lg-4 mt-3">
+                      <HudListItem hud={variant} />
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
           </>
         )
       }
