@@ -14,7 +14,7 @@ import { fetchHuds } from "@ssg/huds";
 
 export async function getStaticPaths({ paginate }) {
   const huds = await fetchHuds(true);
-  const hudsSorted = huds.sort((a, b) => a.name.localeCompare(b.name));
+  const hudsSorted = huds.sort((a, b) => a.id.localeCompare(b.id));
   let pages = paginate(hudsSorted, {
     pageSize: 12,
   });
@@ -39,21 +39,21 @@ const currentPage = page.currentPage ?? 1;
             new Carousel(carouselTriggerEl, {
               interval: 350,
               touch: false,
-            }),
+            })
         );
         for (let i = 0; i < carouselList.length; i++) {
           const carouselEl = carouselTriggerList[i];
           const carousel = carouselList[i];
           carouselEl.parentNode.parentNode.parentNode.addEventListener(
             "mouseenter",
-            () => carousel.cycle(),
+            () => carousel.cycle()
           );
           carouselEl.parentNode.parentNode.parentNode.addEventListener(
             "mouseleave",
             () => {
               carousel.pause();
               carousel.to(0);
-            },
+            }
           );
         }
       </script>
@@ -61,10 +61,10 @@ const currentPage = page.currentPage ?? 1;
         import { Tooltip } from "bootstrap";
 
         const tooltipTriggerList = document.querySelectorAll(
-          '[data-bs-toggle="tooltip"]',
+          '[data-bs-toggle="tooltip"]'
         );
         const tooltipList = [...tooltipTriggerList].map(
-          (tooltipTriggerEl) => new Tooltip(tooltipTriggerEl),
+          (tooltipTriggerEl) => new Tooltip(tooltipTriggerEl)
         );
       </script>
     </ImportHead>
