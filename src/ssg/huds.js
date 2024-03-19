@@ -87,7 +87,7 @@ export const getHuds = async () => {
         const fileName = hud.path.split("/").reverse()[0];
         const hudId = fileName.substr(0, fileName.lastIndexOf("."));
         hudData.id = hudId;
-        hudData.code = hudId.replaceAll("-hud", "hud");
+        hudData.code = hudId.replaceAll("-", "");
 
         // Query markdown
         try {
