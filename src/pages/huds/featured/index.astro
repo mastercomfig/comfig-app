@@ -17,12 +17,12 @@ const huds = await getHuds();
 const featuredHudIds = [
   "budhud",
   "flawhud",
-  "rayshud",
   "m0rehud",
-  "ahud",
-  "overwatch-hud",
-  "7hud",
+  "hypnotizehud",
+  "rayshud",
+  "lighthud",
   "kbnhud",
+  "7hud",
 ];
 
 const featuredHuds = featuredHudIds.map((id) => huds.get(id));
@@ -42,21 +42,21 @@ const featuredHuds = featuredHudIds.map((id) => huds.get(id));
             new Carousel(carouselTriggerEl, {
               interval: 350,
               touch: false,
-            }),
+            })
         );
         for (let i = 0; i < carouselList.length; i++) {
           const carouselEl = carouselTriggerList[i];
           const carousel = carouselList[i];
           carouselEl.parentNode.parentNode.parentNode.addEventListener(
             "mouseenter",
-            () => carousel.cycle(),
+            () => carousel.cycle()
           );
           carouselEl.parentNode.parentNode.parentNode.addEventListener(
             "mouseleave",
             () => {
               carousel.pause();
               carousel.to(0);
-            },
+            }
           );
         }
       </script>
@@ -64,10 +64,10 @@ const featuredHuds = featuredHudIds.map((id) => huds.get(id));
         import { Tooltip } from "bootstrap";
 
         const tooltipTriggerList = document.querySelectorAll(
-          '[data-bs-toggle="tooltip"]',
+          '[data-bs-toggle="tooltip"]'
         );
         const tooltipList = [...tooltipTriggerList].map(
-          (tooltipTriggerEl) => new Tooltip(tooltipTriggerEl),
+          (tooltipTriggerEl) => new Tooltip(tooltipTriggerEl)
         );
       </script>
     </ImportHead>
