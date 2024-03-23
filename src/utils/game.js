@@ -681,6 +681,13 @@ const blockedItems = [
   "tf_weapon_parachute",
   "tf_weapon_parachute_secondary",
   "tf_weapon_parachute_primary",
+  "tf_weapon_jar_milk",
+  "tf_weapon_jar_gas",
+  "tf_weapon_cleaver",
+  "tf_weapon_pda_spy",
+  "tf_weapon_sapper",
+  "tf_weapon_pda_engineer_build",
+  "tf_weapon_pda_engineer_destroy",
 ];
 
 // TODO: really should use item schema API for this
@@ -1154,6 +1161,7 @@ const zoomable = new Set([
   "tf_weapon_sniperrifle_decap",
 ]);
 
+globalThis.blockedItems = blockedItems;
 globalThis.classes = classes;
 globalThis.crosshairPacks = crosshairPacks;
 globalThis.crosshairPackGroups = crosshairPackGroups;
