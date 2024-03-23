@@ -1439,12 +1439,16 @@ async function app() {
         }
       } else {
         for (const classname of Object.keys(crosshairs)) {
+          let item = items[classname];
+          if (!item) {
+            console.log("missing crosshair item", classname);
+            continue;
+          }
           let [crosshairGroup, crosshairFile, crosshairKey] = crosshairs[
             classname
           ].split(".", 3);
           let crosshairPack = crosshairPacks[crosshairFile];
           let crosshairInfo = crosshairPack[crosshairKey];
-          let item = items[classname];
           let itemCrosshair = item.TextureData.crosshair;
           if (crosshairFile.indexOf("/") === -1) {
             itemCrosshair.file = `${crosshairTargetBase}${crosshairFile}`;
@@ -1460,12 +1464,16 @@ async function app() {
         }
       }
       for (const classname of Object.keys(zoomCrosshairs)) {
+        let item = items[classname];
+        if (!item) {
+          console.log("missing zoom item", classname);
+          continue;
+        }
         let [crosshairGroup, crosshairFile, crosshairKey] = zoomCrosshairs[
           classname
         ].split(".", 3);
         let crosshairPack = crosshairPacks[crosshairFile];
         let crosshairInfo = crosshairPack[crosshairKey];
-        let item = items[classname];
         let itemCrosshair = item.TextureData.zoom;
         if (!itemCrosshair) {
           itemCrosshair = item.TextureData.zoom = {};
@@ -1500,6 +1508,10 @@ async function app() {
             continue;
           }
           let item = items[classname];
+          if (!item) {
+            console.log("missing muzzleflash item", classname);
+            continue;
+          }
           item.MuzzleFlashParticleEffect = "";
           itemsToDownload.add(classname);
         }
@@ -1516,6 +1528,10 @@ async function app() {
       } else {
         for (const classname of Array.from(brassmodels)) {
           let item = items[classname];
+          if (!item) {
+            console.log("missing brassmodel item", classname);
+            continue;
+          }
           item.BrassModel = "";
           itemsToDownload.add(classname);
         }
@@ -1538,6 +1554,10 @@ async function app() {
             continue;
           }
           let item = items[classname];
+          if (!item) {
+            console.log("missing tracer item", classname);
+            continue;
+          }
           item.TracerEffect = "";
           itemsToDownload.add(classname);
         }
@@ -1563,6 +1583,10 @@ async function app() {
             continue;
           }
           let item = items[classname];
+          if (!item) {
+            console.log("missing explosion item", classname);
+            continue;
+          }
           let effect = selectedExplosionEffects[classname];
           if (!item.ExplosionEffect) {
             continue;
@@ -1592,6 +1616,10 @@ async function app() {
             continue;
           }
           let item = items[classname];
+          if (!item) {
+            console.log("missing player explosion item", classname);
+            continue;
+          }
           let effect = selectedPlayerExplosions[classname];
           if (!item.ExplosionEffect) {
             continue;
