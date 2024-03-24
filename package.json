@@ -28,6 +28,7 @@
     "bootstrap": "^5.3.3",
     "bootswatch": "^5.3.3",
     "canvas": "^2.11.2",
+    "d3-scale-chromatic": "^3.1.0",
     "debounce": "^2.0.0",
     "easymde": "^2.18.0",
     "eslint": "^8.57.0",

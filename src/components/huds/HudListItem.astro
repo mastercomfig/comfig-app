@@ -1,5 +1,24 @@
 ---
-const { hud, expanded = false, carousel = false } = Astro.props;
+import { interpolateSpectral } from "d3-scale-chromatic";
+
+import { getMaxHype } from "@ssg/huds";
+
+const {
+  hud,
+  expanded = false,
+  carousel = false,
+  hype = undefined,
+} = Astro.props;
+
+const MAX_HYPE = await getMaxHype();
+
+function expOut(t) {
+  return 1.0 - Math.pow(2.0, -10.0 * t);
+}
+
+function getHypeGrad(hype) {
+  return 1.0 - expOut(hype / MAX_HYPE);
+}
 ---
 
 <style>
@@ -81,7 +100,7 @@ const { hud, expanded = false, carousel = false } = Astro.props;
             class="d-inline-block position-relative text-warning"
             style="z-index: 2"
             data-bs-toggle="tooltip"
-            data-bs-title="Preview release"
+            data-bs-title="Preview"
           >
             &nbsp;
             <span class="fas fa-flask fa-fw" />
@@ -94,7 +113,7 @@ const { hud, expanded = false, carousel = false } = Astro.props;
   </div>
   {
     expanded && (
-      <div class="card-footer">
+      <div class="card-footer d-flex justify-content-between">
         <span class="text-muted">
           Last updated{" "}
           <strong>
@@ -105,6 +124,16 @@ const { hud, expanded = false, carousel = false } = Astro.props;
             })}
           </strong>
         </span>
+        {hype !== undefined && (
+          <span
+            style={{
+              color: interpolateSpectral(getHypeGrad(hype)),
+              textShadow: `0 0 ${(1.0 - getHypeGrad(hype)) * 8}px ${interpolateSpectral(getHypeGrad(hype)).replaceAll(",", " ").replaceAll(")", "")} / ${(1.0 - getHypeGrad(hype)) * 0.8})`,
+            }}
+          >
+            {hype} <span class="fas fa-fire-flame-curved" /> Hype
+          </span>
+        )}
       </div>
     )
   }
