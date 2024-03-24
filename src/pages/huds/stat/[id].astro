@@ -1,0 +1,20 @@
+---
+import { fetchHuds } from "@ssg/huds";
+
+export async function getStaticPaths() {
+  return (await fetchHuds(true)).map((hud) => ({
+    params: {
+      id: hud.id,
+    },
+    props: { hud },
+  }));
+}
+---
+
+<!doctype html>
+<html>
+  <head>
+    <meta name="robots" content="noindex" />
+  </head>
+  <body>200 OK</body>
+</html>

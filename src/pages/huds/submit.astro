@@ -10,12 +10,11 @@ import HudNav from "@components/huds/HudNav.astro";
 
 import "easymde/dist/easymde.min.css";
 import "@styles/mde.scss";
+import { fetchCache } from "@ssg/fetchCache";
 
-const schemaReq = await fetch(
+const schema = await fetchCache(
   "https://raw.githubusercontent.com/mastercomfig/hud-db/main/utils/hud-data.schema.json"
 );
-
-const schema = await schemaReq.json();
 
 const schemaProps = Object.entries(schema.properties);
 

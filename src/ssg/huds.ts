@@ -2,6 +2,11 @@ import { parse } from "vdf-parser";
 
 import { JSDOM } from "jsdom";
 import { sha256 } from "./appData";
+import {
+  fetchCache,
+  fetchCacheText,
+  fetchCacheTextWithTimeout,
+} from "./fetchCache";
 
 let hudDb = null;
 
@@ -15,10 +20,9 @@ const ghApi = async (path) => {
     headers["Authorization"] = `token ${import.meta.env.GITHUB_TOKEN}`;
   }
 
-  const resp = await fetch(`https://api.github.com/${path}`, {
+  return fetchCache(`https://api.github.com/${path}`, {
     headers,
   });
-  return await resp.json();
 };
 
 const hudApi = async (path) => {
@@ -51,19 +55,6 @@ const getHudResource = (id, name) => {
   return `https://raw.githubusercontent.com/mastercomfig/hud-db/main/hud-resources/${id}/${name}.webp`;
 };
 
-async function fetchWithTimeout(resource, options = {}) {
-  const { timeout = 10000 } = options;
-
-  const controller = new AbortController();
-  const id = setTimeout(() => controller.abort(), timeout);
-  const response = await fetch(resource, {
-    ...options,
-    signal: controller.signal,
-  });
-  clearTimeout(id);
-  return response;
-}
-
 let hudMap = null;
 const hudChildren = new Map();
 
@@ -78,10 +69,10 @@ export const getHuds = async () => {
     const hudEntries = await Promise.all(
       huds.map(async (hud) => {
         // Fetch and parse JSON from db
-        const data = await fetch(
+        const data = await fetchCacheText(
           `https://raw.githubusercontent.com/mastercomfig/hud-db/main/${hud.path}`,
         );
-        const hudData = JSON.parse(await data.text());
+        const hudData = JSON.parse(data);
 
         // Get HUD ID from json basename
         const fileName = hud.path.split("/").reverse()[0];
@@ -91,11 +82,11 @@ export const getHuds = async () => {
 
         // Query markdown
         try {
-          const markdownData = await fetchWithTimeout(
+          const markdownData = await fetchCacheTextWithTimeout(
             `https://raw.githubusercontent.com/mastercomfig/hud-db/main/hud-pages/${hudId}.md`,
           );
-          if (markdownData.ok) {
-            hudData.content = await markdownData.text();
+          if (markdownData !== null) {
+            hudData.content = markdownData;
           }
         } catch {
           // Ignore
@@ -123,10 +114,10 @@ export const getHuds = async () => {
           const ghRepo = hudData.repo.replace("https://github.com/", "");
 
           // Query the tag
-          const branchTags = await fetch(
+          const branchTags = await fetchCacheText(
             `https://github.com/${ghRepo}/branch_commits/${hudData.hash}`,
           );
-          const dom = new JSDOM(await branchTags.text());
+          const dom = new JSDOM(branchTags);
           const tagList =
             dom.window.document.querySelector(".branches-tag-list");
           let isLatest = true;
@@ -170,12 +161,12 @@ export const getHuds = async () => {
 
           // Query the latest info.vdf in the repo to get the UI version
           try {
-            const infoVdf = await fetchWithTimeout(
+            const infoVdf = await fetchCacheTextWithTimeout(
               `https://raw.githubusercontent.com/${ghRepo}/${latestVersion}/info.vdf`,
             );
-            if (infoVdf.ok) {
+            if (infoVdf !== null) {
               try {
-                const infoVdfJson = parse(await infoVdf.text());
+                const infoVdfJson = parse(infoVdf);
                 const tfUiVersion = parseInt(
                   Object.entries(infoVdfJson)[0][1].ui_version,
                   10,
@@ -294,6 +285,13 @@ export async function getAllHudsHash() {
   return hash;
 }
 
+const debugPopularity = false;
+function logPopularity(...args) {
+  if (debugPopularity) {
+    console.log(...args);
+  }
+}
+
 let popularityLookup = null;
 let maxHype = 0;
 export async function getPopularity() {
@@ -306,9 +304,10 @@ export async function getPopularity() {
         Authorization: `Bearer ${import.meta.env.CLOUDFLARE_AUTH}`,
       };
       const now = Date.now();
-      const dayAgo = new Date(now - 86400000).toISOString();
-      const weekAgo = new Date(now - 691200000).toISOString().split("T")[0];
-      const monthAgo = new Date(Date.now() - 2678400000)
+      const DAY = 24 * 60 * 60 * 1000;
+      const dayAgo = new Date(now - DAY).toISOString();
+      const weekAgo = new Date(now - 7 * DAY).toISOString().split("T")[0];
+      const monthAgo = new Date(Date.now() - 30 * DAY)
         .toISOString()
         .split("T")[0];
       const popularityQuery = await fetch(
@@ -323,7 +322,7 @@ export async function getPopularity() {
                         topMonth: rumPageloadEventsAdaptiveGroups(
                           filter: {
                             AND: [
-                              { date_gt: "${monthAgo}" }
+                              { date_geq: "${monthAgo}" }
                               { bot: 0 }
                               { requestPath_like: "/huds/page%/" }
                             ]
@@ -331,6 +330,7 @@ export async function getPopularity() {
                           limit: 1000
                           orderBy: [sum_visits_DESC]
                         ) {
+                          count
                           sum {
                             visits
                           }
@@ -338,10 +338,106 @@ export async function getPopularity() {
                             path: requestPath
                           }
                         }
+                        topWeekSearch: rumPageloadEventsAdaptiveGroups(
+                          filter: {
+                            AND: [
+                              { date_geq: "2024-03-17" }
+                              { bot: 0 }
+                              { requestPath_like: "/huds/page%/" }
+                              {
+                                OR: [
+                                  { refererHost_like: "www.google.%" }
+                                  { refererHost_like: "yandex.%" }
+                                  { refererHost_like: "%bing.com" }
+                                  { refererHost_like: "%search.yahoo.com" }
+                                  { refererHost: "duckduckgo.com" }
+                                  { refererHost: "www.libhunt.com" }
+                                  { refererHost: "gamebanana.com" }
+                                  { refererHost: "github.com" }
+                                ]
+                              }
+                            ]
+                          }
+                          limit: 1000
+                          orderBy: [sum_visits_DESC]
+                        ) {
+                          count
+                          sum {
+                            visits
+                          }
+                          dimensions {
+                            path: requestPath
+                          }
+                        }
+                        topWeekDiscovery: rumPageloadEventsAdaptiveGroups(
+                          filter: {
+                            AND: [
+                              { date_geq: "${weekAgo}" }
+                              { bot: 0 }
+                              { requestPath_like: "/huds/page%/" }
+                              { refererHost: "" }
+                            ]
+                          }
+                          limit: 1000
+                          orderBy: [sum_visits_DESC]
+                        ) {
+                          count
+                          sum {
+                            visits
+                          }
+                          dimensions {
+                            path: requestPath
+                          }
+                        }
+                        topWeekSocial: rumPageloadEventsAdaptiveGroups(
+                          filter: {
+                            AND: [
+                              { date_geq: "${weekAgo}" }
+                              { bot: 0 }
+                              { requestPath_like: "/huds/page%/" }
+                              {
+                                OR: [
+                                  { refererHost_like: "%instagram.com" }
+                                  { refererHost_like: "%facebook.%" }
+                                  { refererHost: "www.youtube.%" }
+                                  { refererHost: "www.reddit.com" }
+                                  { refererHost: "steamcommunity.com" }
+                                  { refererHost: "t.co" }
+                                ]
+                              }
+                            ]
+                          }
+                          limit: 1000
+                          orderBy: [sum_visits_DESC]
+                        ) {
+                          count
+                          sum {
+                            visits
+                          }
+                          dimensions {
+                            path: requestPath
+                          }
+                        }
+                        topWeekDownloads: rumPageloadEventsAdaptiveGroups(
+                          filter: {
+                            AND: [
+                              { date_geq: "${weekAgo}" }
+                              { bot: 0 }
+                              { requestPath_like: "/huds/stat%/" }
+                            ]
+                          }
+                          limit: 1000
+                          orderBy: [count_DESC]
+                        ) {
+                          count
+                          dimensions {
+                            path: requestPath
+                          }
+                        }
                         topWeek: rumPageloadEventsAdaptiveGroups(
                           filter: {
                             AND: [
-                              { date_gt: "${weekAgo}" }
+                              { date_geq: "${weekAgo}" }
                               { bot: 0 }
                               { requestPath_like: "/huds/page%/" }
                             ]
@@ -349,6 +445,7 @@ export async function getPopularity() {
                           limit: 1000
                           orderBy: [sum_visits_DESC]
                         ) {
+                          count
                           sum {
                             visits
                           }
@@ -367,6 +464,7 @@ export async function getPopularity() {
                           limit: 1000
                           orderBy: [sum_visits_DESC]
                         ) {
+                          count
                           sum {
                             visits
                           }
@@ -382,25 +480,134 @@ export async function getPopularity() {
       );
       const popularityData = await popularityQuery.json();
       const metrics = popularityData.data.viewer.accounts[0];
+      logPopularity("TOP MONTH");
       for (const metric of metrics.topMonth) {
         const hudId = metric.dimensions.path.split("/")[3];
-        popularityLookup[hudId] = metric.sum.visits;
+        const monthlyVisits = metric.sum.visits;
+        const monthlyViews = metric.count;
+        const viewCap = monthlyVisits * monthlyVisits;
+        let viewActivity = 0;
+        if (viewCap > 0) {
+          const activityMultCap = 4;
+          const activityBoost = 1.5;
+          viewActivity = Math.min(
+            Math.min(viewCap, monthlyViews) / monthlyVisits,
+            activityMultCap,
+          );
+          viewActivity /= activityMultCap;
+          viewActivity *= viewActivity;
+          viewActivity *= activityBoost;
+        }
+        const activityProportion = 0.8;
+        const totalViewDegradation = 0.125;
+        popularityLookup[hudId] = Math.round(
+          totalViewDegradation *
+            (metric.sum.visits * (1 - activityProportion) +
+              metric.sum.visits * activityProportion * viewActivity),
+        );
+        logPopularity(hudId, popularityLookup[hudId], popularityLookup[hudId]);
         if (popularityLookup[hudId] > maxHype) {
           maxHype = popularityLookup[hudId];
         }
       }
+      logPopularity("TOP DOWNLOADS");
+      let totalDownloads = 0;
+      for (const metric of metrics.topWeekDownloads) {
+        totalDownloads += metric.count;
+      }
+      const downloadPot = 500;
+      for (const metric of metrics.topWeekDownloads) {
+        if (metric.count < 1) {
+          continue;
+        }
+        const hudId = metric.dimensions.path.split("/")[3];
+        popularityLookup[hudId] =
+          (popularityLookup[hudId] ?? 0) +
+          Math.round((metric.count / totalDownloads) * downloadPot);
+        logPopularity(
+          hudId,
+          Math.round((metric.count / totalDownloads) * downloadPot),
+          popularityLookup[hudId],
+        );
+        if (popularityLookup[hudId] > maxHype) {
+          maxHype = popularityLookup[hudId];
+        }
+      }
+      logPopularity("TOP SEARCH");
+      for (const metric of metrics.topWeekSearch) {
+        const hudId = metric.dimensions.path.split("/")[3];
+        popularityLookup[hudId] =
+          (popularityLookup[hudId] ?? 0) + metric.sum.visits * 4;
+        logPopularity(hudId, metric.sum.visits * 4, popularityLookup[hudId]);
+        if (popularityLookup[hudId] > maxHype) {
+          maxHype = popularityLookup[hudId];
+        }
+      }
+      logPopularity("TOP SOCIAL");
+      for (const metric of metrics.topWeekSocial) {
+        const hudId = metric.dimensions.path.split("/")[3];
+        popularityLookup[hudId] =
+          (popularityLookup[hudId] ?? 0) + metric.sum.visits * 4;
+        logPopularity(hudId, metric.sum.visits * 4, popularityLookup[hudId]);
+        if (popularityLookup[hudId] > maxHype) {
+          maxHype = popularityLookup[hudId];
+        }
+      }
+      logPopularity("TOP DISCOVERY");
+      for (const metric of metrics.topWeekDiscovery) {
+        const hudId = metric.dimensions.path.split("/")[3];
+        popularityLookup[hudId] =
+          (popularityLookup[hudId] ?? 0) + metric.sum.visits;
+        logPopularity(hudId, metric.sum.visits, popularityLookup[hudId]);
+        if (popularityLookup[hudId] > maxHype) {
+          maxHype = popularityLookup[hudId];
+        }
+      }
+      logPopularity("TOP WEEK");
       for (const metric of metrics.topWeek) {
         const hudId = metric.dimensions.path.split("/")[3];
+        const popularity = popularityLookup[hudId] ?? 0;
         popularityLookup[hudId] =
-          (popularityLookup[hudId] ?? 0) + metric.sum.visits * 3;
+          popularity +
+          Math.round(
+            metric.sum.visits *
+              0.25 *
+              Math.max(1 - popularity / (maxHype + 1), 1 / 3),
+          );
+        logPopularity(
+          hudId,
+          Math.round(
+            metric.sum.visits *
+              0.25 *
+              Math.max(1 - popularity / (maxHype + 1), 1 / 3),
+          ),
+          popularityLookup[hudId],
+        );
         if (popularityLookup[hudId] > maxHype) {
           maxHype = popularityLookup[hudId];
         }
       }
+      logPopularity("TOP DAY");
       for (const metric of metrics.topDay) {
         const hudId = metric.dimensions.path.split("/")[3];
+        const popularity = popularityLookup[hudId] ?? 0;
         popularityLookup[hudId] =
-          (popularityLookup[hudId] ?? 0) + metric.sum.visits * 28;
+          popularity +
+          Math.round(
+            metric.sum.visits *
+              5 *
+              Math.pow(Math.max(1 - popularity / (maxHype + 1), 1 / 2), 2),
+          );
+        logPopularity(
+          hudId,
+          Math.round(
+            metric.sum.visits *
+              5 *
+              Math.pow(Math.max(1 - popularity / (maxHype + 1), 1 / 2), 2),
+          ),
+          metric.sum.visits,
+          popularityLookup[hudId],
+        );
         if (popularityLookup[hudId] > maxHype) {
           maxHype = popularityLookup[hudId];
         }

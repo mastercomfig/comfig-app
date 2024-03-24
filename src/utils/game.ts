@@ -6,6 +6,7 @@ import eotlPyroPoolImg from "@img/app/explosions/eotl_pyro_pool_explosion_flash.
 import electrocutedRedImg from "@img/app/explosions/electrocuted_red_flash.webp";
 import electrocutedBlueImg from "@img/app/explosions/electrocuted_blue_flash.webp";
 import duckCollectTrailImg from "@img/app/explosions/duck_collect_trail_special_red.webp";
+import { fetchCache, fetchCacheText } from "@ssg/fetchCache";
 
 const classes = [
   "scout",
@@ -584,10 +585,9 @@ async function getGameResourceFile(path) {
   if (resourceCache[path]) {
     return resourceCache[path];
   }
-  const response = await fetch(
+  const rawContent = await fetchCacheText(
     `https://raw.githubusercontent.com/SteamDatabase/GameTracking-TF2/efd8e5d79c690b33675c41227c33754fbf3e5800/${path}`,
   );
-  const rawContent = await response.text();
   const content = parse<any>(rawContent);
   // kind of a hack, but works for now
   if (content.fWeaponData) {
@@ -612,13 +612,12 @@ async function getGameResourceDir(path) {
     headers["Authorization"] = `token ${import.meta.env.GITHUB_TOKEN}`;
   }
 
-  const response = await fetch(
+  const contents = await fetchCache(
     `https://api.github.com/repos/SteamDatabase/GameTracking-TF2/contents/${path}?ref=efd8e5d79c690b33675c41227c33754fbf3e5800`,
     {
       headers,
     },
   );
-  const contents = await response.json();
   const result = [];
   for (const file of contents) {
     if (file.type === "file") {

@@ -173,6 +173,17 @@ const hudDescription = hudDescBase;
           (tooltipTriggerEl) => new Tooltip(tooltipTriggerEl)
         );
       </script>
+      <script>
+        const downloadButtonList = document.querySelectorAll(".download-btn");
+        for (const downloadButton of downloadButtonList) {
+          downloadButton.addEventListener("click", async () => {
+            const id = window.location.pathname.replaceAll("/huds/page/", "");
+            setTimeout(async () => {
+              await fetch(`/huds/stat/${id}`);
+            }, 1000);
+          });
+        }
+      </script>
     </ImportHead>
     <MainHead
       title={`${hud.name}`}
@@ -279,9 +290,14 @@ const hudDescription = hudDescBase;
         <div class="col">
           <a
             href={hud.isGithub ? hud.versions[0].downloadUrl : hud.repo}
-            class="btn btn-secondary w-100 h-100 btn-lg d-flex align-items-center justify-content-center"
+            class=`btn ${hud.isGithub ? "btn-secondary" : "btn-warning"} download-btn w-100 h-100 btn-lg d-flex align-items-center justify-content-center`
             target={hud.isGithub ? undefined : "_blank"}
             rel={hud.isGithub ? undefined : "noopener noreferrer"}
+            data-bs-toggle={hud.isGithub ? undefined : "tooltip"}
+            data-bs-placement={hud.isGithub ? undefined : "top"}
+            data-bs-title={hud.isGithub
+              ? undefined
+              : "This external HUD has not been reviewed!"}
             ><div>
               <span class="h3 fw-bold"
                 ><span
@@ -315,18 +331,17 @@ const hudDescription = hudDescBase;
             <div class="col-lg-auto col">
               <a
                 href={hud.isGithub ? hud.versions[1].downloadUrl : hud.repo}
-                class="btn btn-warning w-100 h-100 d-flex align-items-center justify-content-center"
+                class="btn btn-warning download-btn w-100 h-100 d-flex align-items-center justify-content-center"
                 target={hud.isGithub ? undefined : "_blank"}
                 rel={hud.isGithub ? undefined : "noopener noreferrer"}
+                data-bs-toggle="tooltip"
+                data-bs-placement="top"
+                data-bs-title="This version has not yet been reviewed!"
               >
                 <div>
                   <span class="h3 fw-bold">
-                    <span
-                      class={`fas fa-${
-                        hud.isGithub ? "download" : "up-right-from-square"
-                      } fa-fw`}
-                    />{" "}
-                    Prerelease {hud.versions[1].name ?? ""}
+                    <span class={`fas fa-warning fa-fw`} /> Prerelease{" "}
+                    {hud.versions[1].name ?? ""}
                   </span>
                   <br />
                   Last updated{" "}
