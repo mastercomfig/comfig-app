@@ -1,4 +1,5 @@
 import gm from "@utils/game.js";
+import { fetchCache } from "./fetchCache";
 
 export function getAppVersion() {
   const npmVersion = process.env.npm_package_version;
@@ -19,8 +20,7 @@ export async function sha256(str) {
 
 export async function getAppData() {
   if (!appData) {
-    const appResponse = await fetch("https://api.comfig.app/");
-    appData = await appResponse.json();
+    appData = await fetchCache("https://api.comfig.app/");
   }
 
   const hash = await sha256(JSON.stringify(appData));

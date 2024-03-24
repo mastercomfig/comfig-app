@@ -1,3 +1,5 @@
+import { fetchCacheText } from "./fetchCache";
+
 const supportedHuds = [
   "berryhud",
   "budhud",
@@ -24,7 +26,7 @@ const baseDataUrl =
 const hudDataUrl = (hud) => `${baseDataUrl}${hud}.json`;
 
 async function getEditData(hud) {
-  const response = await fetch(hudDataUrl(hud));
+  const response = await fetchCacheText(hudDataUrl(hud));
   const textData = await response.text();
   // https://stackoverflow.com/a/62945875
   const data = JSON.parse(
