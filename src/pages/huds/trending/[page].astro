@@ -10,14 +10,30 @@ import HudListItem from "@components/huds/HudListItem.astro";
 import HudNav from "@components/huds/HudNav.astro";
 import Sponsor from "@components/Sponsor.astro";
 
-import { fetchHuds } from "@ssg/huds";
+import { fetchHuds, getPopularity } from "@ssg/huds";
 
 export async function getStaticPaths({ paginate }) {
-  let pages = paginate(await fetchHuds(), {
+  let hudList = await fetchHuds();
+  const popularityLookup = await getPopularity();
+  if (Object.keys(popularityLookup).length > 0) {
+    hudList = [...hudList].sort((a, b) => {
+      if (a.id === "noto-kn" || b.id === "noto-kn") {
+        console.log(popularityLookup[a.id], popularityLookup[b.id], a.id, b.id);
+      }
+      const aPopularity = popularityLookup[a.id] ?? 0;
+      const bPopularity = popularityLookup[b.id] ?? 0;
+      return bPopularity - aPopularity;
+    });
+  } else {
+    hudList = [];
+  }
+  let pages = paginate(hudList, {
     pageSize: 12,
   });
   return pages;
 }
+
+const popularityLookup = await getPopularity();
 
 const { page } = Astro.props;
 const currentPage = page.currentPage ?? 1;
@@ -67,7 +83,7 @@ const currentPage = page.currentPage ?? 1;
       </script>
     </ImportHead>
     <MainHead
-      title="comfig huds"
+      title="Trending | comfig huds"
       description="comfig huds by mastercomfig is a modern Team Fortress 2 HUD directory. You can find HUDs to customize the look of your menus and in-game UI, and easily install them to your game after finding the one that suits your style and needs."
     />
   </head>
@@ -78,10 +94,10 @@ const currentPage = page.currentPage ?? 1;
       <Sponsor />
       <br />
       <nav class="nav nav-pills nav-fill">
-        <a class="nav-link active" aria-current="page" href="/huds/1"
+        <a class="nav-link" aria-current="page" href="/huds/1"
           ><span class="fas fa-clock-rotate-left fa-fw"></span> Updated</a
         >
-        <a class="nav-link" aria-current="page" href="/huds/trending/1"
+        <a class="nav-link active" aria-current="page" href="/huds/trending/1"
           ><span class="fas fa-fire-flame-curved fa-fw"></span> Trending</a
         >
         <a class="nav-link" aria-current="page" href="/huds/alphabetical/1"
@@ -95,7 +111,12 @@ const currentPage = page.currentPage ?? 1;
         {
           page.data.map((hud) => (
             <div class="col-12 col-md-6 col-lg-4 mt-4">
-              <HudListItem hud={hud} expanded={true} carousel={true} />
+              <HudListItem
+                hud={hud}
+                expanded={true}
+                carousel={true}
+                hype={popularityLookup[hud.id] ?? 0}
+              />
             </div>
           ))
         }
@@ -104,7 +125,7 @@ const currentPage = page.currentPage ?? 1;
         (page.url.prev || page.url.next) && (
           <div class="mt-4 d-flex justify-content-between">
             <a
-              href="/huds/1"
+              href="/huds/trending/1"
               class={`btn btn-secondary ${
                 currentPage === 1 ? "invisible" : ""
               }`}
@@ -126,7 +147,7 @@ const currentPage = page.currentPage ?? 1;
               </a>
             </div>
             <a
-              href={`/huds/${page.lastPage}`}
+              href={`/huds/trending/${page.lastPage}`}
               class={`btn btn-secondary ${
                 currentPage === page.lastPage ? "invisible" : ""
               }`}

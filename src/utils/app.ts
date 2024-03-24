@@ -1405,12 +1405,16 @@ async function app() {
         }
       } else {
         for (const classname of Object.keys(crosshairs)) {
+          const item = items[classname];
+          if (!item) {
+            console.log("missing crosshair item", classname);
+            continue;
+          }
           const [crosshairGroup, crosshairFile, crosshairKey] = crosshairs[
             classname
           ].split(".", 3);
           const crosshairPack = crosshairPacks[crosshairFile];
           const crosshairInfo = crosshairPack[crosshairKey];
-          const item = items[classname];
           const itemCrosshair = item.TextureData.crosshair;
           if (crosshairFile.indexOf("/") === -1) {
             itemCrosshair.file = `${crosshairTargetBase}${crosshairFile}`;
@@ -1426,12 +1430,16 @@ async function app() {
         }
       }
       for (const classname of Object.keys(zoomCrosshairs)) {
+        const item = items[classname];
+        if (!item) {
+          console.log("missing zoom item", classname);
+          continue;
+        }
         const [crosshairGroup, crosshairFile, crosshairKey] = zoomCrosshairs[
           classname
         ].split(".", 3);
         const crosshairPack = crosshairPacks[crosshairFile];
         const crosshairInfo = crosshairPack[crosshairKey];
-        const item = items[classname];
         let itemCrosshair = item.TextureData.zoom;
         if (!itemCrosshair) {
           itemCrosshair = item.TextureData.zoom = {};
@@ -1466,6 +1474,10 @@ async function app() {
             continue;
           }
           const item = items[classname];
+          if (!item) {
+            console.log("missing muzzleflash item", classname);
+            continue;
+          }
           item.MuzzleFlashParticleEffect = "";
           itemsToDownload.add(classname);
         }
@@ -1482,6 +1494,10 @@ async function app() {
       } else {
         for (const classname of Array.from(brassmodels)) {
           const item = items[classname];
+          if (!item) {
+            console.log("missing brassmodel item", classname);
+            continue;
+          }
           item.BrassModel = "";
           itemsToDownload.add(classname);
         }
@@ -1504,6 +1520,10 @@ async function app() {
             continue;
           }
           const item = items[classname];
+          if (!item) {
+            console.log("missing tracer item", classname);
+            continue;
+          }
           item.TracerEffect = "";
           itemsToDownload.add(classname);
         }
@@ -1529,6 +1549,10 @@ async function app() {
             continue;
           }
           const item = items[classname];
+          if (!item) {
+            console.log("missing explosion item", classname);
+            continue;
+          }
           const effect = selectedExplosionEffects[classname];
           if (!item.ExplosionEffect) {
             continue;
@@ -1558,6 +1582,10 @@ async function app() {
             continue;
           }
           const item = items[classname];
+          if (!item) {
+            console.log("missing player explosion item", classname);
+            continue;
+          }
           const effect = selectedPlayerExplosions[classname];
           if (!item.ExplosionEffect) {
             continue;
@@ -2028,10 +2056,12 @@ async function app() {
           !previewModuleValues[name].has(value)) ||
         value === "";
       let previewValue = value;
-      if (!previewModuleValues[name]) {
-        previewValue = values[0].value;
-      } else {
-        previewValue = previewModuleValues[name].values().next().value;
+      if (isCurrentlyNotPreviewing) {
+        if (!previewModuleValues[name]) {
+          previewValue = values[0].value;
+        } else {
+          previewValue = previewModuleValues[name].values().next().value;
+        }
       }
       if (videoModules.has(name)) {
         modulePreview = document.createElement("video");

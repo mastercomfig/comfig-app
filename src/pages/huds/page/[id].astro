@@ -99,7 +99,19 @@ const languageNames = new Intl.DisplayNames(["en"], {
 const { hud } = Astro.props;
 
 const cleanContent = hud.content ? removeMd(hud.content) : "";
-let hudDescBase = cleanContent.split("\n")[0].substring(0, 297);
+let hudDescBase = "";
+for (const potentialBase of cleanContent.split("\n")) {
+  // Empty newlines are useless...
+  const trimmed = potentialBase.trim();
+  if (trimmed.length) {
+    // If it's only a few words, then it's useless...
+    const words = trimmed.split(/\s+/);
+    if (words.length > 2) {
+      hudDescBase = trimmed;
+      break;
+    }
+  }
+}
 if (hudDescBase.length < cleanContent.length) {
   hudDescBase += "...";
 }
@@ -155,10 +167,10 @@ const hudDescription = hudDescBase;
         import { Tooltip } from "bootstrap";
 
         const tooltipTriggerList = document.querySelectorAll(
-          '[data-bs-toggle="tooltip"]',
+          '[data-bs-toggle="tooltip"]'
         );
         const tooltipList = [...tooltipTriggerList].map(
-          (tooltipTriggerEl) => new Tooltip(tooltipTriggerEl),
+          (tooltipTriggerEl) => new Tooltip(tooltipTriggerEl)
         );
       </script>
     </ImportHead>
@@ -168,7 +180,7 @@ const hudDescription = hudDescBase;
       description={`${
         hud.name
       } on comfig huds, a modern Team Fortress 2 HUD directory.${
-        hud.content ? ` About ${hud.name}: ${hudDescription}` : ``
+        hudDescription ? ` About ${hud.name}: ${hudDescription}` : ``
       }`}
       image={hud.resourceUrls[0]}
     />
@@ -194,8 +206,8 @@ const hudDescription = hudDescBase;
         <span class="text-muted display-4">&nbsp;by {hud.author}</span>
       </h1>
       {
-        ((hud.resources.length > 1 || true) && (
-          <div id="hudScreenshots" class="carousel slide">
+        (hud.resources.length > 1 && (
+          <div id="hudScreenshots" class="carousel carousel-light slide">
             <div class="carousel-indicators carousel-hidable">
               {hud.resources.map((resource, index) => (
                 <button
@@ -342,7 +354,7 @@ const hudDescription = hudDescBase;
                       : "fa-circle-check text-success"
                   } fa-fw`}></span> Release status:&nbsp;</strong
               >
-              {hud.prerelease ? "Pre-release" : "Stable"}
+              {hud.prerelease ? "Preview" : "Stable"}
             </li>
             <li class="list-group-item">
               <strong>
@@ -354,7 +366,7 @@ const hudDescription = hudDescBase;
                         ? "fa-square-check verified-gold"
                         : "fa-circle-check text-success"
                   } fa-fw`}></span>
-                 Compatibility:&nbsp;</strong
+                Compatibility:&nbsp;</strong
               >
               {
                 hud.outdated
@@ -636,15 +648,30 @@ const hudDescription = hudDescBase;
       {
         hud.variants && (
           <>
-            <hr />
-            <h1>Variants</h1>
-            <div class="row">
-              {hud.variants.map((variant) => (
-                <div class="col-12 col-md-2 col-lg-4 mt-3">
-                  <HudListItem hud={variant} />
+            {hud.parent && (
+              <>
+                <hr />
+                <h1>Based on</h1>
+                <div class="row">
+                  <div class="col-12 col-md-2 col-lg-4 mt-3">
+                    <HudListItem hud={hud.parentHud} />
+                  </div>
                 </div>
-              ))}
-            </div>
+              </>
+            )}
+            {hud.variants.length > 0 && (
+              <>
+                <hr />
+                <h1>{hud.parent ? "Other Variants" : "Variants"}</h1>
+                <div class="row">
+                  {hud.variants.map((variant) => (
+                    <div class="col-12 col-md-2 col-lg-4 mt-3">
+                      <HudListItem hud={variant} />
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
           </>
         )
       }

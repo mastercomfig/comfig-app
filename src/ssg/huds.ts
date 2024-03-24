@@ -70,7 +70,7 @@ const hudChildren = new Map();
 // TODO: Sync with tf_ui_version
 const CURRENT_HUD_VERSION = 3;
 
-const getHuds = async () => {
+export const getHuds = async () => {
   if (!hudMap) {
     const db = await getHudDb();
     // Filter to only hud-data JSON files
@@ -87,6 +87,7 @@ const getHuds = async () => {
         const fileName = hud.path.split("/").reverse()[0];
         const hudId = fileName.substr(0, fileName.lastIndexOf("."));
         hudData.id = hudId;
+        hudData.code = hudId.replaceAll("-", "");
 
         // Query markdown
         try {
@@ -257,12 +258,12 @@ const getHuds = async () => {
   // Add children to parents
   for (const [parent, children] of hudChildren.entries()) {
     hudMap.get(parent).variants = children.map((child) => hudMap.get(child));
-    const variants = [parent];
     for (const child of children) {
       const siblings = children.filter((sibling) => sibling !== child);
-      hudMap.get(child).variants = variants
-        .concat(siblings)
-        .map((variant) => hudMap.get(variant));
+      hudMap.get(child).parentHud = hudMap.get(parent);
+      hudMap.get(child).variants = siblings.map((variant) =>
+        hudMap.get(variant),
+      );
     }
   }
 
@@ -291,4 +292,127 @@ export async function getAllHudsHash() {
   const hash = await sha256(hudsJson);
 
   return hash;
+}
+
+let popularityLookup = null;
+let maxHype = 0;
+export async function getPopularity() {
+  if (!popularityLookup) {
+    popularityLookup = {};
+    if (import.meta.env.CLOUDFLARE_AUTH && import.meta.env.CF_ACCOUNT_TAG) {
+      let headers = {
+        "User-Agent": "comfig app",
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${import.meta.env.CLOUDFLARE_AUTH}`,
+      };
+      const now = Date.now();
+      const dayAgo = new Date(now - 86400000).toISOString();
+      const weekAgo = new Date(now - 691200000).toISOString().split("T")[0];
+      const monthAgo = new Date(Date.now() - 2678400000)
+        .toISOString()
+        .split("T")[0];
+      const popularityQuery = await fetch(
+        "https://api.cloudflare.com/client/v4/graphql",
+        {
+          method: "POST",
+          headers,
+          body: JSON.stringify({
+            query: `query GetRumAnalyticsTopNs {
+                    viewer {
+                      accounts(filter: { accountTag: "${import.meta.env.CF_ACCOUNT_TAG}" }) {
+                        topMonth: rumPageloadEventsAdaptiveGroups(
+                          filter: {
+                            AND: [
+                              { date_gt: "${monthAgo}" }
+                              { bot: 0 }
+                              { requestPath_like: "/huds/page%/" }
+                            ]
+                          }
+                          limit: 1000
+                          orderBy: [sum_visits_DESC]
+                        ) {
+                          sum {
+                            visits
+                          }
+                          dimensions {
+                            path: requestPath
+                          }
+                        }
+                        topWeek: rumPageloadEventsAdaptiveGroups(
+                          filter: {
+                            AND: [
+                              { date_gt: "${weekAgo}" }
+                              { bot: 0 }
+                              { requestPath_like: "/huds/page%/" }
+                            ]
+                          }
+                          limit: 1000
+                          orderBy: [sum_visits_DESC]
+                        ) {
+                          sum {
+                            visits
+                          }
+                          dimensions {
+                            path: requestPath
+                          }
+                        }
+                        topDay: rumPageloadEventsAdaptiveGroups(
+                          filter: {
+                            AND: [
+                              { datetime_gt: "${dayAgo}" }
+                              { bot: 0 }
+                              { requestPath_like: "/huds/page%/" }
+                            ]
+                          }
+                          limit: 1000
+                          orderBy: [sum_visits_DESC]
+                        ) {
+                          sum {
+                            visits
+                          }
+                          dimensions {
+                            path: requestPath
+                          }
+                        }
+                      }
+                    }
+                  }`,
+          }),
+        },
+      );
+      const popularityData = await popularityQuery.json();
+      const metrics = popularityData.data.viewer.accounts[0];
+      for (const metric of metrics.topMonth) {
+        const hudId = metric.dimensions.path.split("/")[3];
+        popularityLookup[hudId] = metric.sum.visits;
+        if (popularityLookup[hudId] > maxHype) {
+          maxHype = popularityLookup[hudId];
+        }
+      }
+      for (const metric of metrics.topWeek) {
+        const hudId = metric.dimensions.path.split("/")[3];
+        popularityLookup[hudId] =
+          (popularityLookup[hudId] ?? 0) + metric.sum.visits * 3;
+        if (popularityLookup[hudId] > maxHype) {
+          maxHype = popularityLookup[hudId];
+        }
+      }
+      for (const metric of metrics.topDay) {
+        const hudId = metric.dimensions.path.split("/")[3];
+        popularityLookup[hudId] =
+          (popularityLookup[hudId] ?? 0) + metric.sum.visits * 28;
+        if (popularityLookup[hudId] > maxHype) {
+          maxHype = popularityLookup[hudId];
+        }
+      }
+    }
+  }
+  return popularityLookup;
+}
+
+export async function getMaxHype() {
+  if (!popularityLookup) {
+    await getPopularity();
+  }
+  return maxHype;
 }

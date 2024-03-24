@@ -653,6 +653,15 @@ const blockedItems = [
   "tf_weapon_invis",
   "tf_weapon_objectselection",
   "tf_weapon_parachute",
+  "tf_weapon_parachute_secondary",
+  "tf_weapon_parachute_primary",
+  "tf_weapon_jar_milk",
+  "tf_weapon_jar_gas",
+  "tf_weapon_cleaver",
+  "tf_weapon_pda_spy",
+  "tf_weapon_sapper",
+  "tf_weapon_pda_engineer_build",
+  "tf_weapon_pda_engineer_destroy",
 ];
 
 // TODO: really should use item schema API for this
@@ -665,7 +674,6 @@ const itemUsedBy = {
     "tf_weapon_jar",
     "tf_weapon_handgun_scout_primary",
     "tf_weapon_handgun_scout_secondary",
-    "tf_weapon_jar_milk",
     "tf_weapon_lunchbox_drink",
     "tf_weapon_pep_brawler_blaster",
     "tf_weapon_pistol_scout",
@@ -675,7 +683,6 @@ const itemUsedBy = {
   soldier: [
     "tf_weapon_buff_item",
     "tf_weapon_katana",
-    "tf_weapon_parachute_secondary",
     "tf_weapon_particle_cannon",
     "tf_weapon_raygun",
     "tf_weapon_rocketlauncher",
@@ -690,7 +697,7 @@ const itemUsedBy = {
     "tf_weapon_flamethrower",
     "tf_weapon_flaregun",
     "tf_weapon_flaregun_revenge",
-    "tf_weapon_jar_gas",
+    "tf_weapon_jar",
     "tf_weapon_rocketlauncher_fireball",
     "tf_weapon_rocketpack",
     "tf_weapon_shotgun_pyro",
@@ -701,7 +708,6 @@ const itemUsedBy = {
     "tf_weapon_cannon",
     "tf_weapon_grenadelauncher",
     "tf_weapon_katana",
-    "tf_weapon_parachute_primary",
     "tf_weapon_pipebomblauncher",
     "tf_weapon_stickbomb",
     "tf_weapon_sword",
@@ -781,7 +787,6 @@ const classNameToName = {
   ],
   tf_weapon_builder: ["Toolbox", "#TF_Weapon_Spy_Sapper"],
   tf_weapon_charged_smg: "#TF_Pro_SMG",
-  tf_weapon_cleaver: "#TF_SD_Cleaver",
   tf_weapon_club: [
     "#TF_Weapon_Club",
     "#TF_Unique_TribalmanKukri",
@@ -822,9 +827,12 @@ const classNameToName = {
   tf_weapon_handgun_scout_primary: "#TF_TheShortstop",
   tf_weapon_handgun_scout_secondary: ["#TF_Winger", "#TF_Weapon_PEP_Pistol"],
   //tf_weapon_invis: ["#TF_Weapon_Watch", "#TF_Unique_Achievement_FeignWatch", "#TF_Unique_Achievement_CloakWatch", "#TF_TTG_Watch", "#TF_HM_Watch"],
-  tf_weapon_jar: ["#TF_Unique_Achievement_Jar", "#TF_SD_Cleaver"],
-  tf_weapon_jar_gas: "#TF_GasPasser",
-  tf_weapon_jar_milk: "#TF_MadMilk",
+  tf_weapon_jar: [
+    "#TF_Unique_Achievement_Jar",
+    "#TF_SD_Cleaver",
+    "#TF_MadMilk",
+    "#TF_GasPasser",
+  ],
   tf_weapon_katana: "#TF_SoldierKatana",
   //tf_weapon_knife: ["#TF_Weapon_Knife", "#TF_EternalReward", "#TF_Kunai", "#TF_BigEarner", "#TF_VoodooPin", "#TF_SharpDresser", "#TF_SpyCicle", "#TF_BlackRose"],
   tf_weapon_laser_pointer: "#TF_Unique_Achievement_Laser_Pointer",
@@ -949,7 +957,6 @@ const customItemSlot = {
   tf_weapon_buff_item: "Secondary",
   tf_weapon_compound_bow: "Primary",
   tf_weapon_grapplinghook: "Action Item",
-  tf_weapon_jar_gas: "Secondary",
   tf_weapon_parachute_primary: "Primary",
   tf_weapon_parachute_secondary: "Secondary",
   tf_weapon_passtime_gun: "Utility",
@@ -1128,6 +1135,7 @@ const zoomable = new Set([
   "tf_weapon_sniperrifle_decap",
 ]);
 
+globalThis.blockedItems = blockedItems;
 globalThis.classes = classes;
 globalThis.crosshairPacks = crosshairPacks;
 globalThis.crosshairPackGroups = crosshairPackGroups;

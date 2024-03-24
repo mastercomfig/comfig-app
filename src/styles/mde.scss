@@ -1,0 +1,75 @@
+.EasyMDEContainer .CodeMirror {
+  color: var(--bs-body-color);
+  border-color: var(--bs-border-color);
+  background-color: var(--bs-backdrop);
+}
+.EasyMDEContainer .cm-s-easymde .CodeMirror-cursor {
+  border-color: var(--bs-body-color);
+}
+
+.CodeMirror-cursor {
+  border-left: 1px solid var(--bs-body-color);
+  border-right: none;
+  width: 0;
+}
+
+.EasyMDEContainer .editor-toolbar > * {
+  border-color: var(--bs-body-bg);
+}
+
+.editor-toolbar {
+  border-top: 1px solid var(--bs-border-color);
+  border-left: 1px solid var(--bs-border-color);
+  border-right: 1px solid var(--bs-border-color);
+}
+
+.editor-toolbar i.separator {
+  border-left: 1px solid var(--bs-border-color);
+  border-right: 1px solid var(--bs-border-color);
+}
+
+.EasyMDEContainer .editor-toolbar > .active,
+.editor-toolbar > button:hover,
+.editor-preview pre,
+.cm-s-easymde .cm-comment {
+  background-color: var(--bs-body-bg);
+}
+
+.EasyMDEContainer .CodeMirror-fullscreen {
+  background: var(--bs-body-bg);
+}
+.editor-toolbar.fullscreen {
+  background: var(--bs-body-bg);
+}
+
+.editor-preview {
+  background: var(--bs-body-bg);
+}
+
+.editor-preview-side {
+  border-color: var(--bs-border-color);
+}
+
+.CodeMirror-selected {
+  background: rgba(var(--bs-primary-rgb), 0.5);
+}
+
+.CodeMirror-focused .CodeMirror-selected {
+  background: rgba(var(--bs-primary-rgb), 0.5);
+}
+
+.CodeMirror-line::selection,
+.CodeMirror-line > span::selection,
+.CodeMirror-line > span > span::selection {
+  background: rgba(var(--bs-primary-rgb), 0.5);
+}
+
+.CodeMirror-line::-moz-selection,
+.CodeMirror-line > span::-moz-selection,
+.CodeMirror-line > span > span::-moz-selection {
+  background: rgba(var(--bs-primary-rgb), 0.5);
+}
+
+.EasyMDEContainer .CodeMirror-focused .CodeMirror-selected {
+  background: rgba(var(--bs-primary-rgb), 0.5);
+}

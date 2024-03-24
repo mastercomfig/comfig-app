@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import idbStorage from "@utils/idbstorage";
+import "@utils/game.js";
 
 const useStore = create(
   persist(
@@ -113,7 +114,7 @@ const useStore = create(
     }),
     idbStorage(
       "items",
-      5,
+      6,
       (persistedState, version) => {
         // Explosion effects were wrong order
         if (version === 0) {
@@ -137,6 +138,20 @@ const useStore = create(
         if (version < 4) {
           for (const [key, val] of Object.entries(persistedState.crosshairs)) {
             persistedState.crosshairs[key] = `Valve.${val}`;
+          }
+        }
+        // Removing blocked items which were added post release
+        if (version < 6) {
+          for (const blockedItem of blockedItems) {
+            delete persistedState.crosshairs[blockedItem];
+            delete persistedState.crosshairColors[blockedItem];
+            delete persistedState.crosshairScales[blockedItem];
+            delete persistedState.zoomCrosshairs[blockedItem];
+            persistedState.muzzleflashes.delete(blockedItem);
+            persistedState.brassmodels.delete(blockedItem);
+            persistedState.tracers.delete(blockedItem);
+            delete persistedState.explosioneffects[blockedItem];
+            delete persistedState.playerexplosions[blockedItem];
           }
         }
         return persistedState;
