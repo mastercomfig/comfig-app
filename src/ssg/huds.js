@@ -306,9 +306,10 @@ export async function getPopularity() {
         Authorization: `Bearer ${import.meta.env.CLOUDFLARE_AUTH}`,
       };
       const now = Date.now();
-      const dayAgo = new Date(now - 86400000).toISOString();
-      const weekAgo = new Date(now - 691200000).toISOString().split("T")[0];
-      const monthAgo = new Date(Date.now() - 2678400000)
+      const DAY = 24 * 60 * 60 * 1000;
+      const dayAgo = new Date(now - DAY).toISOString();
+      const weekAgo = new Date(now - 7 * DAY).toISOString().split("T")[0];
+      const monthAgo = new Date(Date.now() - 30 * DAY)
         .toISOString()
         .split("T")[0];
       const popularityQuery = await fetch(
@@ -323,7 +324,7 @@ export async function getPopularity() {
                         topMonth: rumPageloadEventsAdaptiveGroups(
                           filter: {
                             AND: [
-                              { date_gt: "${monthAgo}" }
+                              { date_geq: "${monthAgo}" }
                               { bot: 0 }
                               { requestPath_like: "/huds/page%/" }
                             ]
@@ -331,6 +332,7 @@ export async function getPopularity() {
                           limit: 1000
                           orderBy: [sum_visits_DESC]
                         ) {
+                          count
                           sum {
                             visits
                           }
@@ -338,10 +340,106 @@ export async function getPopularity() {
                             path: requestPath
                           }
                         }
+                        topWeekSearch: rumPageloadEventsAdaptiveGroups(
+                          filter: {
+                            AND: [
+                              { date_geq: "2024-03-17" }
+                              { bot: 0 }
+                              { requestPath_like: "/huds/page%/" }
+                              {
+                                OR: [
+                                  { refererHost_like: "www.google.%" }
+                                  { refererHost_like: "yandex.%" }
+                                  { refererHost_like: "%bing.com" }
+                                  { refererHost_like: "%search.yahoo.com" }
+                                  { refererHost: "duckduckgo.com" }
+                                  { refererHost: "www.libhunt.com" }
+                                  { refererHost: "gamebanana.com" }
+                                  { refererHost: "github.com" }
+                                ]
+                              }
+                            ]
+                          }
+                          limit: 1000
+                          orderBy: [sum_visits_DESC]
+                        ) {
+                          count
+                          sum {
+                            visits
+                          }
+                          dimensions {
+                            path: requestPath
+                          }
+                        }
+                        topWeekDiscovery: rumPageloadEventsAdaptiveGroups(
+                          filter: {
+                            AND: [
+                              { date_geq: "${weekAgo}" }
+                              { bot: 0 }
+                              { requestPath_like: "/huds/page%/" }
+                              { refererHost: "" }
+                            ]
+                          }
+                          limit: 1000
+                          orderBy: [sum_visits_DESC]
+                        ) {
+                          count
+                          sum {
+                            visits
+                          }
+                          dimensions {
+                            path: requestPath
+                          }
+                        }
+                        topWeekSocial: rumPageloadEventsAdaptiveGroups(
+                          filter: {
+                            AND: [
+                              { date_geq: "${weekAgo}" }
+                              { bot: 0 }
+                              { requestPath_like: "/huds/page%/" }
+                              {
+                                OR: [
+                                  { refererHost_like: "%instagram.com" }
+                                  { refererHost_like: "%facebook.%" }
+                                  { refererHost: "www.youtube.%" }
+                                  { refererHost: "www.reddit.com" }
+                                  { refererHost: "steamcommunity.com" }
+                                  { refererHost: "t.co" }
+                                ]
+                              }
+                            ]
+                          }
+                          limit: 1000
+                          orderBy: [sum_visits_DESC]
+                        ) {
+                          count
+                          sum {
+                            visits
+                          }
+                          dimensions {
+                            path: requestPath
+                          }
+                        }
+                        topWeekDownloads: rumPageloadEventsAdaptiveGroups(
+                          filter: {
+                            AND: [
+                              { date_geq: "${weekAgo}" }
+                              { bot: 0 }
+                              { requestPath_like: "/huds/stat%/" }
+                            ]
+                          }
+                          limit: 1000
+                          orderBy: [count_DESC]
+                        ) {
+                          count
+                          dimensions {
+                            path: requestPath
+                          }
+                        }
                         topWeek: rumPageloadEventsAdaptiveGroups(
                           filter: {
                             AND: [
-                              { date_gt: "${weekAgo}" }
+                              { date_geq: "${weekAgo}" }
                               { bot: 0 }
                               { requestPath_like: "/huds/page%/" }
                             ]
@@ -349,6 +447,7 @@ export async function getPopularity() {
                           limit: 1000
                           orderBy: [sum_visits_DESC]
                         ) {
+                          count
                           sum {
                             visits
                           }
@@ -367,6 +466,7 @@ export async function getPopularity() {
                           limit: 1000
                           orderBy: [sum_visits_DESC]
                         ) {
+                          count
                           sum {
                             visits
                           }
@@ -384,7 +484,56 @@ export async function getPopularity() {
       const metrics = popularityData.data.viewer.accounts[0];
       for (const metric of metrics.topMonth) {
         const hudId = metric.dimensions.path.split("/")[3];
-        popularityLookup[hudId] = metric.sum.visits;
+        const monthlyVisits = metric.sum.visits;
+        const monthlyViews = metric.count;
+        const viewCap = monthlyVisits * monthlyVisits;
+        let viewActivity = 0;
+        if (viewCap > 0) {
+          const activityMultCap = 2.5;
+          const activityBoost = 1.225;
+          viewActivity = Math.min(
+            Math.min(viewCap, monthlyViews) / monthlyVisits,
+            activityMultCap,
+          );
+          viewActivity /= activityMultCap;
+          viewActivity *= viewActivity;
+          viewActivity *= activityBoost;
+        }
+        const activityProportion = 0.4;
+        const totalViewDegradation = 0.25;
+        popularityLookup[hudId] = Math.round(
+          totalViewDegradation *
+            (metric.sum.visits * (1 - activityProportion) +
+              metric.sum.visits * activityProportion * viewActivity),
+        );
+        console.log(hudId, popularityLookup[hudId]);
+        if (popularityLookup[hudId] > maxHype) {
+          maxHype = popularityLookup[hudId];
+        }
+      }
+      for (const metric of metrics.topWeekSearch) {
+        const hudId = metric.dimensions.path.split("/")[3];
+        popularityLookup[hudId] =
+          (popularityLookup[hudId] ?? 0) + metric.sum.visits * 4;
+        console.log(hudId, metric.sum.visits * 4);
+        if (popularityLookup[hudId] > maxHype) {
+          maxHype = popularityLookup[hudId];
+        }
+      }
+      for (const metric of metrics.topWeekSocial) {
+        const hudId = metric.dimensions.path.split("/")[3];
+        popularityLookup[hudId] =
+          (popularityLookup[hudId] ?? 0) + metric.sum.visits * 4;
+        console.log(hudId, metric.sum.visits * 4);
+        if (popularityLookup[hudId] > maxHype) {
+          maxHype = popularityLookup[hudId];
+        }
+      }
+      for (const metric of metrics.topWeekDiscovery) {
+        const hudId = metric.dimensions.path.split("/")[3];
+        popularityLookup[hudId] =
+          (popularityLookup[hudId] ?? 0) + metric.sum.visits;
+        console.log(hudId, metric.sum.visits * 4);
         if (popularityLookup[hudId] > maxHype) {
           maxHype = popularityLookup[hudId];
         }
@@ -392,7 +541,13 @@ export async function getPopularity() {
       for (const metric of metrics.topWeek) {
         const hudId = metric.dimensions.path.split("/")[3];
         popularityLookup[hudId] =
-          (popularityLookup[hudId] ?? 0) + metric.sum.visits * 3;
+          (popularityLookup[hudId] ?? 0) +
+          Math.round(
+            metric.sum.visits *
+              3 *
+              Math.max(1 - popularityLookup[hudId] / maxHype, 1 / 3),
+          );
+        console.log(hudId, metric.sum.visits * 2);
         if (popularityLookup[hudId] > maxHype) {
           maxHype = popularityLookup[hudId];
         }
@@ -400,7 +555,13 @@ export async function getPopularity() {
       for (const metric of metrics.topDay) {
         const hudId = metric.dimensions.path.split("/")[3];
         popularityLookup[hudId] =
-          (popularityLookup[hudId] ?? 0) + metric.sum.visits * 28;
+          (popularityLookup[hudId] ?? 0) +
+          Math.round(
+            metric.sum.visits *
+              28 *
+              Math.max(1 - popularityLookup[hudId] / maxHype, 1 / 28),
+          );
+        console.log(hudId, metric.sum.visits * 28);
         if (popularityLookup[hudId] > maxHype) {
           maxHype = popularityLookup[hudId];
         }

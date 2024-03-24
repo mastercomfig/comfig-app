@@ -17,9 +17,6 @@ export async function getStaticPaths({ paginate }) {
   const popularityLookup = await getPopularity();
   if (Object.keys(popularityLookup).length > 0) {
     hudList = [...hudList].sort((a, b) => {
-      if (a.id === "noto-kn" || b.id === "noto-kn") {
-        console.log(popularityLookup[a.id], popularityLookup[b.id], a.id, b.id);
-      }
       const aPopularity = popularityLookup[a.id] ?? 0;
       const bPopularity = popularityLookup[b.id] ?? 0;
       return bPopularity - aPopularity;

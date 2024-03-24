@@ -128,7 +128,7 @@ function getHypeGrad(hype) {
           <span
             style={{
               color: interpolateSpectral(getHypeGrad(hype)),
-              textShadow: `0 0 ${(1.0 - getHypeGrad(hype)) * 8}px ${interpolateSpectral(getHypeGrad(hype)).replaceAll(",", " ").replaceAll(")", "")} / ${(1.0 - getHypeGrad(hype)) * 0.8})`,
+              textShadow: `0 0 ${(1.0 - getHypeGrad(hype)) * 8}px ${interpolateSpectral(0).replaceAll(",", " ").replaceAll(")", "")} / ${1.0 - getHypeGrad(hype)})`,
             }}
           >
             {hype} <span class="fas fa-fire-flame-curved" /> Hype

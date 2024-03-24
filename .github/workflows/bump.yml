@@ -8,6 +8,8 @@ on:
         required: true
         type: string
         default: "bump comfig web"
+  schedule:
+    - cron: "0 12 * * *"
 
 jobs:
   bump:
@@ -17,9 +19,10 @@ jobs:
         with:
           token: ${{ secrets.REPO_TOKEN }}
           fetch-depth: 0
+          ref: main
       - name: Commit bump
         run: |
           git config user.email "support@mastercomfig.com"
           git config user.name "mastercoms"
-          git commit --allow-empty -m "web data update: ${{ github.event.inputs.reason }}"
+          git commit --allow-empty -m "web data update: ${{ github.event.inputs.reason || 'daily update' }}"
           git push
