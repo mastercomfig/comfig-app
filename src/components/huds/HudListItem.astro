@@ -140,7 +140,8 @@ function getHypeGrad() {
               textShadow: `0 0 ${easeIn(getHype()) * 16}px ${interpolateSpectral(0.15).replaceAll(",", " ").replaceAll(")", "")} / ${easeIn(getHype())})`,
             }}
           >
-            {hype} <span class="fas fa-fire-flame-curved" /> Hype
+            <strong>{hype}</strong> <span class="fas fa-fire-flame-curved" />{" "}
+            Hype
           </span>
         )}
       </div>
