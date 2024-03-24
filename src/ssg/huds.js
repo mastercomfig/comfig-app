@@ -512,10 +512,12 @@ export async function getPopularity() {
       }
       logPopularity("TOP DOWNLOADS");
       let totalDownloads = 0;
+      let downloadedHuds = 0;
       for (const metric of metrics.topWeekDownloads) {
         totalDownloads += metric.count;
+        downloadedHuds++;
       }
-      const downloadPot = 500;
+      const downloadPot = 100 * downloadedHuds;
       for (const metric of metrics.topWeekDownloads) {
         if (metric.count < 1) {
           continue;
