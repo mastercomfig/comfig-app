@@ -418,22 +418,6 @@ export async function getPopularity() {
                             path: requestPath
                           }
                         }
-                        topWeekDownloads: rumPageloadEventsAdaptiveGroups(
-                          filter: {
-                            AND: [
-                              { date_geq: "${weekAgo}" }
-                              { bot: 0 }
-                              { requestPath_like: "/huds/stat%/" }
-                            ]
-                          }
-                          limit: 1000
-                          orderBy: [count_DESC]
-                        ) {
-                          count
-                          dimensions {
-                            path: requestPath
-                          }
-                        }
                         topWeek: rumPageloadEventsAdaptiveGroups(
                           filter: {
                             AND: [
@@ -510,29 +494,31 @@ export async function getPopularity() {
           maxHype = popularityLookup[hudId];
         }
       }
-      logPopularity("TOP DOWNLOADS");
-      let totalDownloads = 0;
-      let downloadedHuds = 0;
-      for (const metric of metrics.topWeekDownloads) {
-        totalDownloads += metric.count;
-        downloadedHuds++;
-      }
-      const downloadPot = 100 * downloadedHuds;
-      for (const metric of metrics.topWeekDownloads) {
-        if (metric.count < 1) {
-          continue;
+      if (metrics.topWeekDownloads) {
+        logPopularity("TOP DOWNLOADS");
+        let totalDownloads = 0;
+        let downloadedHuds = 0;
+        for (const metric of metrics.topWeekDownloads) {
+          totalDownloads += metric.count;
+          downloadedHuds++;
         }
-        const hudId = metric.dimensions.path.split("/")[3];
-        popularityLookup[hudId] =
-          (popularityLookup[hudId] ?? 0) +
-          Math.round((metric.count / totalDownloads) * downloadPot);
-        logPopularity(
-          hudId,
-          Math.round((metric.count / totalDownloads) * downloadPot),
-          popularityLookup[hudId],
-        );
-        if (popularityLookup[hudId] > maxHype) {
-          maxHype = popularityLookup[hudId];
+        const downloadPot = 100 * downloadedHuds;
+        for (const metric of metrics.topWeekDownloads) {
+          if (metric.count < 1) {
+            continue;
+          }
+          const hudId = metric.dimensions.path.split("/")[3];
+          popularityLookup[hudId] =
+            (popularityLookup[hudId] ?? 0) +
+            Math.round((metric.count / totalDownloads) * downloadPot);
+          logPopularity(
+            hudId,
+            Math.round((metric.count / totalDownloads) * downloadPot),
+            popularityLookup[hudId],
+          );
+          if (popularityLookup[hudId] > maxHype) {
+            maxHype = popularityLookup[hudId];
+          }
         }
       }
       logPopularity("TOP SEARCH");
