@@ -481,7 +481,7 @@ export async function getPopularity() {
           viewActivity /= activityMultCap;
           if (viewActivity < 1) {
             viewActivity = 1;
-          else {
+          } else {
             //viewActivity *= viewActivity;
             viewActivity *= activityBoost;
           }
