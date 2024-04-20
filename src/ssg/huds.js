@@ -472,15 +472,19 @@ export async function getPopularity() {
         const viewCap = monthlyVisits * monthlyVisits;
         let viewActivity = 0;
         if (viewCap > 0) {
-          const activityMultCap = 4;
-          const activityBoost = 1.5;
+          const activityMultCap = 2.666;
+          const activityBoost = 1.25;
           viewActivity = Math.min(
             Math.min(viewCap, monthlyViews) / monthlyVisits,
             activityMultCap,
           );
           viewActivity /= activityMultCap;
-          viewActivity *= viewActivity;
-          viewActivity *= activityBoost;
+          if (viewActivity < 1) {
+            viewActivity = 1;
+          else {
+            //viewActivity *= viewActivity;
+            viewActivity *= activityBoost;
+          }
         }
         const activityProportion = 0.8;
         const totalViewDegradation = 0.125;
