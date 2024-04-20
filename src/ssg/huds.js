@@ -341,7 +341,7 @@ export async function getPopularity() {
                         topWeekSearch: rumPageloadEventsAdaptiveGroups(
                           filter: {
                             AND: [
-                              { date_geq: "2024-03-17" }
+                              { date_geq: "${weekAgo}" }
                               { bot: 0 }
                               { requestPath_like: "/huds/page%/" }
                               {
