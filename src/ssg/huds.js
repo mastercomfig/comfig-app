@@ -285,7 +285,7 @@ export async function getAllHudsHash() {
   return hash;
 }
 
-const debugPopularity = false;
+const debugPopularity = true;
 function logPopularity(...args) {
   if (debugPopularity) {
     console.log(...args);
