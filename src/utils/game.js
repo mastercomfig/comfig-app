@@ -612,7 +612,7 @@ async function getGameResourceFile(path) {
     return resourceCache[path];
   }
   let content = await fetchCacheText(
-    `https://raw.githubusercontent.com/ReplayCoding/gametracking-tf2/main/${path}`,
+    `https://raw.githubusercontent.com/ReplayCoding/gametracking-tf2/main/Content/${path}`,
   );
   content = parse(content);
   // kind of a hack, but works for now
@@ -639,7 +639,7 @@ async function getGameResourceDir(path) {
   }
 
   let contents = await fetchCache(
-    `https://api.github.com/repos/ReplayCoding/gametracking-tf2/contents/${path}`,
+    `https://api.github.com/repos/ReplayCoding/gametracking-tf2/contents/Content/${path}`,
     {
       headers,
     },
