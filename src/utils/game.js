@@ -612,7 +612,7 @@ async function getGameResourceFile(path) {
     return resourceCache[path];
   }
   let content = await fetchCacheText(
-    `https://raw.githubusercontent.com/SteamDatabase/GameTracking-TF2/efd8e5d79c690b33675c41227c33754fbf3e5800/${path}`,
+    `https://raw.githubusercontent.com/ReplayCoding/gametracking-tf2/main/${path}`,
   );
   content = parse(content);
   // kind of a hack, but works for now
@@ -639,7 +639,7 @@ async function getGameResourceDir(path) {
   }
 
   let contents = await fetchCache(
-    `https://api.github.com/repos/SteamDatabase/GameTracking-TF2/contents/${path}?ref=efd8e5d79c690b33675c41227c33754fbf3e5800`,
+    `https://api.github.com/repos/ReplayCoding/gametracking-tf2/contents/${path}`,
     {
       headers,
     },
