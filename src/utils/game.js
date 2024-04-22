@@ -606,13 +606,14 @@ const crosshairPackGroups = {
 let resourceCache = {};
 let language = "English";
 let languageCache = {};
+const contentPath = "Content/";
 
 async function getGameResourceFile(path) {
   if (resourceCache[path]) {
     return resourceCache[path];
   }
   let content = await fetchCacheText(
-    `https://raw.githubusercontent.com/ReplayCoding/gametracking-tf2/main/Content/${path}`,
+    `https://raw.githubusercontent.com/ReplayCoding/gametracking-tf2/main/${contentPath}${path}`,
   );
   content = parse(content);
   // kind of a hack, but works for now
@@ -639,7 +640,7 @@ async function getGameResourceDir(path) {
   }
 
   let contents = await fetchCache(
-    `https://api.github.com/repos/ReplayCoding/gametracking-tf2/contents/Content/${path}`,
+    `https://api.github.com/repos/ReplayCoding/gametracking-tf2/contents/${contentPath}${path}`,
     {
       headers,
     },
@@ -647,9 +648,9 @@ async function getGameResourceDir(path) {
   let result = [];
   for (const file of contents) {
     if (file.type === "file") {
-      result.push(file.path);
+      result.push(file.path.substring(contentPath.length));
     } else if (file.type === "symlink") {
-      result.push(file.target);
+      result.push(file.target.substring(contentPath.length));
     }
   }
   return result;
