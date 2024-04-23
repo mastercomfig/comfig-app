@@ -2,6 +2,8 @@ import * as Sentry from "@sentry/browser";
 import {
   captureConsoleIntegration,
   extraErrorDataIntegration,
+  httpClientIntegration,
+  reportingObserverIntegration,
 } from "@sentry/integrations";
 
 Sentry.init({
@@ -11,5 +13,7 @@ Sentry.init({
       levels: ["warn", "error", "assert"],
     }),
     extraErrorDataIntegration(),
+    httpClientIntegration(),
+    reportingObserverIntegration(),
   ],
 });
