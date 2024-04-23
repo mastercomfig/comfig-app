@@ -580,6 +580,7 @@ const crosshairPackGroups = {
 const resourceCache = {};
 const language = "English";
 const languageCache = {};
+const contentPath = "Content/";
 
 async function getGameResourceFile(path) {
   if (resourceCache[path]) {
@@ -587,7 +588,7 @@ async function getGameResourceFile(path) {
   }
   try {
     const rawContent = await fetchCacheText(
-      `https://raw.githubusercontent.com/SteamDatabase/GameTracking-TF2/efd8e5d79c690b33675c41227c33754fbf3e5800/${path}`,
+      `https://raw.githubusercontent.com/ReplayCoding/gametracking-tf2/main/${contentPath}${path}`,
     );
     const content = parse<any>(rawContent);
     // kind of a hack, but works for now
@@ -617,7 +618,7 @@ async function getGameResourceDir(path) {
   }
 
   const contents = await fetchCache(
-    `https://api.github.com/repos/SteamDatabase/GameTracking-TF2/contents/${path}?ref=efd8e5d79c690b33675c41227c33754fbf3e5800`,
+    `https://api.github.com/repos/ReplayCoding/gametracking-tf2/contents/${contentPath}${path}`,
     {
       headers,
     },
@@ -625,9 +626,9 @@ async function getGameResourceDir(path) {
   const result = [];
   for (const file of contents) {
     if (file.type === "file") {
-      result.push(file.path);
+      result.push(file.path.substring(contentPath.length));
     } else if (file.type === "symlink") {
-      result.push(file.target);
+      result.push(file.target.substring(contentPath.length));
     }
   }
   return result;

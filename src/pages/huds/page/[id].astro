@@ -179,7 +179,7 @@ const hudDescription = hudDescBase;
           downloadButton.addEventListener("click", async () => {
             const id = window.location.pathname.replaceAll("/huds/page/", "");
             setTimeout(async () => {
-              await fetch(`/huds/stat/${id}`);
+              //await fetch(`/huds/stat/${id}`);
             }, 1000);
           });
         }
