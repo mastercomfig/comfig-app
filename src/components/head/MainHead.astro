@@ -1,4 +1,6 @@
 ---
+import { pwaInfo } from "virtual:pwa-info";
+
 export interface Props {
   title?: string;
   site?: string;
@@ -21,24 +23,40 @@ const {
 const canonical = Astro.url.href;
 ---
 
-{favicon && (
-<link rel="icon" href={favicon} sizes="any" />
-)}
-{!favicon && (
-<link rel="icon" href="/favicon.ico" sizes="any" />
-<link rel="icon" href="/img/mastercomfig_logo.svg" type="image/svg+xml" />
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#009688" />
-)}
+{favicon && <link rel="icon" href={favicon} sizes="any" />}
+{
+  !favicon && (
+    <>
+      <link rel="icon" href="/favicon.ico" sizes="any" />
+      <link rel="icon" href="/img/mastercomfig_logo.svg" type="image/svg+xml" />
+      <link
+        rel="apple-touch-icon"
+        sizes="180x180"
+        href="/apple-touch-icon.png"
+      />
+      <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#009688" />
+    </>
+  )
+}
 
 <title>{noSite ? title : `${title} | ${site}`}</title>
 <meta name="theme-color" content="#009688" />
 <meta name="msapplication-TileColor" content="#009688" />
 <!--<link rel="manifest" href="/manifest.webmanifest" />-->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,100;8..144,200;8..144,300;8..144,400;8..144,500;8..144,600;8..144,700;8..144,800;8..144,900;8..144,1000&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,100;8..144,200;8..144,300;8..144,400;8..144,500;8..144,600;8..144,700;8..144,800;8..144,900;8..144,1000&display=swap" rel="stylesheet"></noscript>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  rel="preload"
+  href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,100;8..144,200;8..144,300;8..144,400;8..144,500;8..144,600;8..144,700;8..144,800;8..144,900;8..144,1000&display=swap"
+  as="style"
+  onload="this.onload=null;this.rel='stylesheet'"
+/>
+<noscript
+  ><link
+    href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,100;8..144,200;8..144,300;8..144,400;8..144,500;8..144,600;8..144,700;8..144,800;8..144,900;8..144,1000&display=swap"
+    rel="stylesheet"
+  /></noscript
+>
 <slot />
 
 <meta property="og:site_name" content={site} />
@@ -56,3 +74,6 @@ const canonical = Astro.url.href;
 <meta property="og:image" content={image} />
 <meta itemprop="image" content={image} />
 <meta name="twitter:image" content={image} />
+
+<script src="/src/pwa.ts"></script>
+{pwaInfo && <Fragment set:html={pwaInfo.webManifest.linkTag} />}

@@ -1,6 +1,6 @@
+import { JSDOM } from "jsdom";
 import { parse } from "vdf-parser";
 
-import { JSDOM } from "jsdom";
 import { sha256 } from "./appData";
 import {
   fetchCache,

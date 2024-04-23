@@ -1,63 +1,20 @@
+import react from "@astrojs/react";
+import sentry from "@sentry/astro";
+import AstroPWA from "@vite-pwa/astro";
 import { defineConfig } from "astro/config";
 import crypto from "crypto";
 import fs from "fs";
 import url from "url";
 
-import react from "@astrojs/react";
-import { VitePWA } from "vite-plugin-pwa";
-
 const pwaOptions = {
   registerType: "autoUpdate",
-  includeAssets: ["favicon.ico"],
-  manifest: {
-    name: "mastercomfig",
-    short_name: "mastercomfig",
-    categories: ["games", "utilities", "personalization"],
-    lang: "en-US",
-    dir: "ltr",
-    orientation: "any",
-    icons: [
-      {
-        src: "/android-chrome-192x192.png",
-        type: "image/png",
-        sizes: "192x192",
-        purpose: "maskable",
-      },
-      {
-        src: "/android-chrome-512x512.png",
-        type: "image/png",
-        sizes: "512x512",
-        purpose: "maskable",
-      },
-      {
-        src: "/img/mastercomfig_logo_192x.png",
-        type: "image/png",
-        sizes: "192x192",
-        purpose: "any",
-      },
-      {
-        src: "/img/mastercomfig_logo_512x.png",
-        type: "image/png",
-        sizes: "512x512",
-        purpose: "any",
-      },
-    ],
-    start_url: "/app?source=pwa",
-    background_color: "#212121",
-    display: "standalone",
-    scope: "/",
-    theme_color: "#009688",
-    description: "Manage your mastercomfig installation",
-  },
   devOptions: {
     enabled: process.env.SW_DEV === "true",
     /* when using generateSW the PWA plugin will switch to classic */
     type: "module",
   },
 };
-
 let pwaPlugin;
-
 let pwa = {
   name: "@astrojs/pwa",
   hooks: {
@@ -124,7 +81,70 @@ let pwa = {
 // https://astro.build/config
 export default defineConfig({
   site: "https://comfig.app",
-  integrations: [react()],
+  integrations: [
+    sentry({
+      dsn: "https://42c25ee2fb084eb5a832ee92d97057d5@o182209.ingest.us.sentry.io/6265934",
+      sourceMapsUploadOptions: {
+        project: "mastercomfig-app",
+        authToken: process.env.SENTRY_AUTH_TOKEN ?? "",
+      },
+    }),
+    react(),
+    AstroPWA({
+      devOptions: {
+        type: "module",
+      },
+      registerType: "autoUpdate",
+      workbox: {
+        navigateFallback: "/404",
+        globPatterns: ["**/*.{css,js,html,webp,svg,png,ico,txt}"],
+      },
+      includeAssets: ["favicon.ico", "favicon.png"],
+      manifest: {
+        name: "mastercomfig",
+        short_name: "mastercomfig",
+        categories: ["games", "utilities", "personalization"],
+        lang: "en-US",
+        dir: "ltr",
+        orientation: "any",
+        icons: [
+          {
+            src: "/android-chrome-192x192.png",
+            type: "image/png",
+            sizes: "192x192",
+            purpose: "maskable",
+          },
+          {
+            src: "/android-chrome-512x512.png",
+            type: "image/png",
+            sizes: "512x512",
+            purpose: "maskable",
+          },
+          {
+            src: "/img/mastercomfig_logo_192x.png",
+            type: "image/png",
+            sizes: "192x192",
+            purpose: "any",
+          },
+          {
+            src: "/img/mastercomfig_logo_512x.png",
+            type: "image/png",
+            sizes: "512x512",
+            purpose: "any",
+          },
+        ],
+        start_url: "/app?source=pwa",
+        background_color: "#212121",
+        display: "standalone",
+        scope: "/",
+        theme_color: "#009688",
+        description: "Manage your mastercomfig installation",
+      },
+      experimental: {
+        directoryAndTrailingSlashHandler: true,
+      },
+    }),
+  ],
   vite: {
     resolve: {
       alias: {

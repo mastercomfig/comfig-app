@@ -1,12 +1,12 @@
 ---
-import Layout from "@layouts/Layout.astro";
-import BaseHead from "@components/head/BaseHead.astro";
-import PreloadHead from "@components/head/PreloadHead.astro";
-import ImportHead from "@components/head/ImportHead.astro";
-import MainHead from "@components/head/MainHead.astro";
 import Body from "@components/Body.astro";
 import Footer from "@components/Footer.astro";
+import BaseHead from "@components/head/BaseHead.astro";
+import ImportHead from "@components/head/ImportHead.astro";
+import MainHead from "@components/head/MainHead.astro";
+import PreloadHead from "@components/head/PreloadHead.astro";
 import Sponsor from "@components/Sponsor.astro";
+import Layout from "@layouts/Layout.astro";
 import { getHudEditData, sharedDataName } from "@ssg/hudEditData";
 
 const hudEditData = await getHudEditData();
@@ -56,6 +56,7 @@ const sharedControls = shared.Controls;
 
                       if (Type === "IntegerUpDown") {
                         let { Minimum, Maximum, Increment, ...rest2 } = rest;
+                        rest = rest2;
                       }
 
                       return (

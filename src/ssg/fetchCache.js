@@ -9,6 +9,15 @@ export async function fetchCache(...args) {
     return apiCache[key].data;
   }
   const res = await fetch(...args);
+  if (res.status >= 500) {
+    const text = await res.text();
+    throw Error(text);
+  }
+  if (res.status >= 400) {
+    const text = await res.text();
+    console.error(text);
+    return null;
+  }
   const json = await res.json();
   apiCache[key] = {};
   apiCache[key].data = json;
@@ -25,6 +34,15 @@ export async function fetchCacheText(...args) {
     return apiCache[key].data;
   }
   const res = await fetch(...args);
+  if (res.status >= 500) {
+    const text = await res.text();
+    throw Error(text);
+  }
+  if (res.status >= 400) {
+    const text = await res.text();
+    console.error(text);
+    return null;
+  }
   const text = await res.text();
   apiCache[key] = {};
   apiCache[key].data = text;
@@ -63,9 +81,19 @@ export async function fetchCacheTextWithTimeout(resource, options = {}) {
   }
   let text = null;
   try {
-    const response = await fetchWithTimeout(resource, options);
-    if (response.ok) {
-      text = await response.text();
+    const res = await fetchWithTimeout(resource, options);
+    if (res.ok) {
+      text = await res.text();
+    } else {
+      if (res.status >= 500) {
+        const text = await res.text();
+        throw Error(text);
+      }
+      if (res.status >= 400) {
+        const text = await res.text();
+        console.error(text);
+        return null;
+      }
     }
   } catch {
     // Ignored

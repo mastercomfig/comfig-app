@@ -1,12 +1,12 @@
-import { parse } from "vdf-parser";
-import defaultExplosionImg from "@img/app/explosions/default.webp";
 import sapperDestroyedImg from "@img/app/explosions/ExplosionCore_sapperdestroyed.webp";
-import minigunStarFlashImg from "@img/app/explosions/muzzle_minigun_starflash01.webp";
-import eotlPyroPoolImg from "@img/app/explosions/eotl_pyro_pool_explosion_flash.webp";
-import electrocutedRedImg from "@img/app/explosions/electrocuted_red_flash.webp";
-import electrocutedBlueImg from "@img/app/explosions/electrocuted_blue_flash.webp";
+import defaultExplosionImg from "@img/app/explosions/default.webp";
 import duckCollectTrailImg from "@img/app/explosions/duck_collect_trail_special_red.webp";
+import electrocutedBlueImg from "@img/app/explosions/electrocuted_blue_flash.webp";
+import electrocutedRedImg from "@img/app/explosions/electrocuted_red_flash.webp";
+import eotlPyroPoolImg from "@img/app/explosions/eotl_pyro_pool_explosion_flash.webp";
+import minigunStarFlashImg from "@img/app/explosions/muzzle_minigun_starflash01.webp";
 import { fetchCache, fetchCacheText } from "@ssg/fetchCache";
+import { parse } from "vdf-parser";
 
 const classes = [
   "scout",
@@ -585,21 +585,25 @@ async function getGameResourceFile(path) {
   if (resourceCache[path]) {
     return resourceCache[path];
   }
-  const rawContent = await fetchCacheText(
-    `https://raw.githubusercontent.com/SteamDatabase/GameTracking-TF2/efd8e5d79c690b33675c41227c33754fbf3e5800/${path}`,
-  );
-  const content = parse<any>(rawContent);
-  // kind of a hack, but works for now
-  if (content.fWeaponData) {
-    content.WeaponData = content.fWeaponData;
-    delete content.fWeaponData;
+  try {
+    const rawContent = await fetchCacheText(
+      `https://raw.githubusercontent.com/SteamDatabase/GameTracking-TF2/efd8e5d79c690b33675c41227c33754fbf3e5800/${path}`,
+    );
+    const content = parse<any>(rawContent);
+    // kind of a hack, but works for now
+    if (content.fWeaponData) {
+      content.WeaponData = content.fWeaponData;
+      delete content.fWeaponData;
+    }
+    if (path.includes("tf_weapon")) {
+      const parents = path.split("/");
+      content.WeaponData.classname = parents[parents.length - 1].split(".")[0];
+    }
+    resourceCache[path] = content;
+    return content;
+  } catch (e) {
+    console.error(`Failed reading ${path}`, e);
   }
-  if (path.includes("tf_weapon")) {
-    const parents = path.split("/");
-    content.WeaponData.classname = parents[parents.length - 1].split(".")[0];
-  }
-  resourceCache[path] = content;
-  return content;
 }
 
 async function getGameResourceDir(path) {

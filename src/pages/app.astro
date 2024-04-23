@@ -12,7 +12,6 @@ import "simple-keyboard/build/css/index.css";
 import "@styles/app.scss";
 import "@styles/keyboard.scss";
 import { getAppData, getAppVersion, getGameData } from "@ssg/appData";
-import SentryWrapper from "@components/SentryWrapper.astro";
 import mediumHighImg from "@img/presets/medium-high.webp";
 import lowImg from "@img/presets/low.webp";
 import mediumLowImg from "@img/presets/medium-low.webp";
@@ -76,7 +75,6 @@ const npmVersion = getAppVersion();
       noSite={true}
       description="mastercomfig is a modern Team Fortress 2 performance and customization config. Use the app to easily customize various graphics and gameplay options. mastercomfig is the most popular config, with millions of downloads, and has been highly tuned and researched for the best performance."
     />
-    <SentryWrapper version={npmVersion} />
   </head>
   <Body>
     <nav class="navbar navbar-expand-sm sticky-top navbar-dark bg-teal">
@@ -390,7 +388,7 @@ const npmVersion = getAppVersion();
                     </li>
                   </ul>
                 </p>
-                <Items client:only hash={hash.substring(0, 8)} />
+                <Items client:only="react" hash={hash.substring(0, 8)} />
               </div>
             </div>
           </div>
