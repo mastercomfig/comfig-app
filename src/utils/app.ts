@@ -457,16 +457,21 @@ async function app() {
 
   async function downloadUrls(urls, id, fnGatherUrls) {
     updateDownloadProgress(20, "Downloading files...");
-    const downloadFailures = [];
+    const downloadFailures: {
+      url: { blob: Blob; name: string };
+      err: Error;
+    }[] = [];
     if (customDirectory) {
       try {
         await Promise.all(
-          urls.map((url) => url.blob.catch(() => downloadFailures.push(url))),
+          urls.map((url) =>
+            url.blob.catch((err) => downloadFailures.push({ url, err })),
+          ),
         );
         if (downloadFailures.length) {
           throw new Error(
             `Download failures detected: ${downloadFailures
-              .map((url) => url.name)
+              .map(({ url, err }) => `(${url.name}, ${err.toString()})`)
               .join(",")}`,
           );
         } else {
@@ -479,7 +484,7 @@ async function app() {
           (downloadFailures.length > 3
             ? `Failed to download ${downloadFailures.length} files`
             : `Failed to download ${downloadFailures
-                .map((url) => url.name)
+                .map(({ url }) => url.name)
                 .join(", ")}`) + ". Please try again later.",
         );
       }
@@ -496,7 +501,7 @@ async function app() {
                 zipWriter.add(url.path, new BlobReader(blob));
                 wroteFile = true;
               })
-              .catch(() => downloadFailures.push(url)),
+              .catch((err) => downloadFailures.push({ url, err })),
           ),
         );
         if (wroteFile) {
@@ -519,7 +524,7 @@ async function app() {
         if (downloadFailures.length) {
           throw new Error(
             `Download failures detected: ${downloadFailures
-              .map((url) => url.name)
+              .map(({ url, err }) => `(${url.name}, ${err.toString()})`)
               .join(",")}`,
           );
         } else {
@@ -532,7 +537,7 @@ async function app() {
           (downloadFailures.length > 3
             ? `Failed to download ${downloadFailures.length} files`
             : `Failed to download ${downloadFailures
-                .map((url) => url.name)
+                .map(({ url, err }) => url.name)
                 .join(", ")}`) + ". Please try again later.",
         );
       }
