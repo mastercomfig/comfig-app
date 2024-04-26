@@ -5,7 +5,17 @@
 /sw.js
   ! Cache-Control
 
+/registerSW.js
+  ! Cache-Control
+
+/manifest.webmanifest
+  ! Cache-Control
+  Content-Type: application/manifest+json
+
 /_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/workbox-*
   Cache-Control: public, max-age=31536000, immutable
 
 /*.cached.json
