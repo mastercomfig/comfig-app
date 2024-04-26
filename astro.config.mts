@@ -97,7 +97,11 @@ export default defineConfig({
       registerType: "autoUpdate",
       workbox: {
         navigateFallback: "/404",
-        globPatterns: ["**/*.{css,js,html,webp,svg,png,ico,txt}"],
+        globPatterns: [
+          "**/*.{css,js,json,webp,svg,png,ico}",
+          "/app/index.html",
+          "/index.html",
+        ],
       },
       includeAssets: ["favicon.ico", "favicon.png"],
       manifest: {
