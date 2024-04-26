@@ -140,6 +140,9 @@ export default defineConfig({
         theme_color: "#009688",
         description: "Manage your mastercomfig installation",
       },
+      experimental: {
+        directoryAndTrailingSlashHandler: true,
+      },
     }),
   ],
   vite: {
