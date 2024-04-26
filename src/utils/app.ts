@@ -7,7 +7,6 @@ import noneImg from "@img/presets/none.webp";
 import ultraImg from "@img/presets/ultra.webp";
 import veryLowImg from "@img/presets/very-low.webp";
 import { BlobReader, BlobWriter, ZipWriter } from "@zip.js/zip.js";
-//import { registerSW } from "virtual:pwa-register";
 import { ScrollSpy, Tab } from "bootstrap";
 import { del, get, set } from "idb-keyval";
 import { stringify } from "vdf-parser";
