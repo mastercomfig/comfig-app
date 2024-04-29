@@ -3519,4 +3519,4 @@ async function app() {
     });
   }
 }
-window.addEventListener("load", app);
+document.addEventListener("astro:page-load", app);

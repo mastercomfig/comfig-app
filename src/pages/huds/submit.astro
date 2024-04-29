@@ -13,7 +13,7 @@ import "@styles/mde.scss";
 import { fetchCache } from "@ssg/fetchCache";
 
 const schema = await fetchCache(
-  "https://raw.githubusercontent.com/mastercomfig/hud-db/main/utils/hud-data.schema.json"
+  "https://raw.githubusercontent.com/mastercomfig/hud-db/main/utils/hud-data.schema.json",
 );
 
 const schemaProps = Object.entries(schema.properties);
@@ -43,7 +43,7 @@ schemaProps.splice(
       type: "text",
       rows: 25,
     },
-  ]
+  ],
 );
 
 schema.required.push("id");
@@ -142,7 +142,7 @@ function parseProp(prop, propSchema) {
       type,
     };
     const children = props.flatMap(([childProp, childPropSchema]) =>
-      parseProp(`${prop}.${childProp}`, childPropSchema)
+      parseProp(`${prop}.${childProp}`, childPropSchema),
     );
     if (!excludedSections.has(prop)) {
       children.splice(0, 0, section);
@@ -177,7 +177,7 @@ function parseProp(prop, propSchema) {
 const specialDescriptions = new Set(["hash", "resources", "description"]);
 
 const form = schemaProps.flatMap(([prop, propSchema]) =>
-  parseProp(prop, propSchema)
+  parseProp(prop, propSchema),
 );
 ---
 
@@ -189,181 +189,188 @@ const form = schemaProps.flatMap(([prop, propSchema]) =>
       <script>
         import { Tooltip } from "bootstrap";
 
-        const tooltipTriggerList = document.querySelectorAll(
-          '[data-bs-toggle="tooltip"]'
-        );
-        const tooltipList = [...tooltipTriggerList].map(
-          (tooltipTriggerEl) => new Tooltip(tooltipTriggerEl)
-        );
+        document.addEventListener("astro:page-load", () => {
+          const tooltipTriggerList = document.querySelectorAll(
+            '[data-bs-toggle="tooltip"]',
+          );
+          const tooltipList = [...tooltipTriggerList].map(
+            (tooltipTriggerEl) => new Tooltip(tooltipTriggerEl),
+          );
+        });
       </script>
       <script>
-        const formElement = document.getElementById("hud-form");
+        document.addEventListener("astro:page-load", () => {
+          const formElement = document.getElementById("hud-form");
 
-        function generateFormObject(elements) {
-          const formObject = {};
-          for (const element of elements) {
-            if (!element.value && element.type !== "checkbox") {
-              continue;
-            }
-            let id = element.id.split(".");
-            if (id.length === 2) {
-              id = id[1];
-            } else if (id.length === 1) {
-              id = id[0];
-            } else {
-              console.error("Invalid id split length");
-            }
-            if (element.type === "checkbox") {
-              const checkListSplit = id.split(":");
-              if (checkListSplit.length == 2) {
-                if (!element.checked) {
-                  continue;
-                }
-                if (!formObject[checkListSplit[0]]) {
-                  formObject[checkListSplit[0]] = [];
-                }
-                formObject[checkListSplit[0]].push(checkListSplit[1]);
-              } else if (checkListSplit.length == 1) {
-                formObject[id] = element.checked;
-              } else {
-                console.error("Invalid checklist split length");
-              }
-            } else if (element.dataset?.array) {
-              formObject[id] = element.value.split(",").map((value) => {
-                return value.trim();
-              });
-            } else {
-              formObject[id] = element.value;
-            }
-          }
-          return formObject;
-        }
-
-        function downloadFile(file, filename) {
-          let url = URL.createObjectURL(file);
-
-          const link = document.createElement("a");
-          link.href = url;
-          link.download = filename;
-          document.body.append(link);
-          link.dispatchEvent(
-            new MouseEvent("click", {
-              bubbles: true,
-              cancelable: true,
-              view: window,
-            })
-          );
-          link.remove();
-          setTimeout(() => {
-            URL.revokeObjectURL(url);
-            url = null;
-          }, 120000);
-        }
-
-        formElement.addEventListener(
-          "submit",
-          (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-
-            const isValid = formElement.checkValidity();
-            const validatedElements =
-              formElement.querySelectorAll(".form-control");
-            for (const element of validatedElements) {
-              if (element.value || element.required) {
-                element.parentNode.classList.add("was-validated");
-              }
-            }
-
-            if (!isValid) {
-              return;
-            }
-
-            const form = formElement.elements;
-
-            let formObject = {};
-            for (const element of form) {
-              const subObjectSplit = element.id.split(".");
-              if (subObjectSplit.length === 2) {
-                if (!formObject[subObjectSplit[0]]) {
-                  formObject[subObjectSplit[0]] = [];
-                }
-                formObject[subObjectSplit[0]].push(element);
-              } else if (subObjectSplit.length === 1) {
-                if (!formObject["__default"]) {
-                  formObject["__default"] = [];
-                }
-                formObject["__default"].push(element);
-              } else {
-                console.error("Invalid subobject split length");
-              }
-            }
-
-            for (const [name, elements] of Object.entries(formObject)) {
-              formObject[name] = generateFormObject(elements);
-            }
-
-            for (const [name, formSubObject] of Object.entries(formObject)) {
-              if (name === "__default") {
+          function generateFormObject(elements) {
+            const formObject = {};
+            for (const element of elements) {
+              if (!element.value && element.type !== "checkbox") {
                 continue;
               }
-              formObject.__default[name] = formSubObject;
+              let id = element.id.split(".");
+              if (id.length === 2) {
+                id = id[1];
+              } else if (id.length === 1) {
+                id = id[0];
+              } else {
+                console.error("Invalid id split length");
+              }
+              if (element.type === "checkbox") {
+                const checkListSplit = id.split(":");
+                if (checkListSplit.length == 2) {
+                  if (!element.checked) {
+                    continue;
+                  }
+                  if (!formObject[checkListSplit[0]]) {
+                    formObject[checkListSplit[0]] = [];
+                  }
+                  formObject[checkListSplit[0]].push(checkListSplit[1]);
+                } else if (checkListSplit.length == 1) {
+                  formObject[id] = element.checked;
+                } else {
+                  console.error("Invalid checklist split length");
+                }
+              } else if (element.dataset?.array) {
+                formObject[id] = element.value.split(",").map((value) => {
+                  return value.trim();
+                });
+              } else {
+                formObject[id] = element.value;
+              }
             }
+            return formObject;
+          }
 
-            formObject = formObject.__default;
+          function downloadFile(file, filename) {
+            let url = URL.createObjectURL(file);
 
-            const id = formObject.id;
-            delete formObject.id;
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = filename;
+            document.body.append(link);
+            link.dispatchEvent(
+              new MouseEvent("click", {
+                bubbles: true,
+                cancelable: true,
+                view: window,
+              }),
+            );
+            link.remove();
+            setTimeout(() => {
+              URL.revokeObjectURL(url);
+              url = null;
+            }, 120000);
+          }
 
-            const description = formObject.description;
-            delete formObject.description;
+          formElement.addEventListener(
+            "submit",
+            (e) => {
+              e.preventDefault();
+              e.stopPropagation();
 
-            const json = JSON.stringify(formObject, null, 2);
+              const isValid = formElement.checkValidity();
+              const validatedElements =
+                formElement.querySelectorAll(".form-control");
+              for (const element of validatedElements) {
+                if (element.value || element.required) {
+                  element.parentNode.classList.add("was-validated");
+                }
+              }
 
-            const file = new File([json], `${id}.json`, {
-              type: "application/octet-stream",
-            });
+              if (!isValid) {
+                return;
+              }
 
-            downloadFile(file, `${id}.json`);
+              const form = formElement.elements;
 
-            if (description) {
-              const descriptionFile = new File([description], `${id}.md`, {
-                type: "text/markdown",
+              let formObject = {};
+              for (const element of form) {
+                const subObjectSplit = element.id.split(".");
+                if (subObjectSplit.length === 2) {
+                  if (!formObject[subObjectSplit[0]]) {
+                    formObject[subObjectSplit[0]] = [];
+                  }
+                  formObject[subObjectSplit[0]].push(element);
+                } else if (subObjectSplit.length === 1) {
+                  if (!formObject["__default"]) {
+                    formObject["__default"] = [];
+                  }
+                  formObject["__default"].push(element);
+                } else {
+                  console.error("Invalid subobject split length");
+                }
+              }
+
+              for (const [name, elements] of Object.entries(formObject)) {
+                formObject[name] = generateFormObject(elements);
+              }
+
+              for (const [name, formSubObject] of Object.entries(formObject)) {
+                if (name === "__default") {
+                  continue;
+                }
+                formObject.__default[name] = formSubObject;
+              }
+
+              formObject = formObject.__default;
+
+              const id = formObject.id;
+              delete formObject.id;
+
+              const description = formObject.description;
+              delete formObject.description;
+
+              const json = JSON.stringify(formObject, null, 2);
+
+              const file = new File([json], `${id}.json`, {
+                type: "application/octet-stream",
               });
-              setTimeout(() => {
-                downloadFile(descriptionFile, `${id}.md`);
-              }, 2000);
+
+              downloadFile(file, `${id}.json`);
+
+              if (description) {
+                const descriptionFile = new File([description], `${id}.md`, {
+                  type: "text/markdown",
+                });
+                setTimeout(() => {
+                  downloadFile(descriptionFile, `${id}.md`);
+                }, 2000);
+              }
+            },
+            false,
+          );
+
+          const nameElement = document.getElementById("name");
+          const idElement = document.getElementById("id");
+
+          let modifiedId = false;
+          idElement.addEventListener("input", (e) => {
+            if (idElement.value === nameElement.value) {
+              modifiedId = false;
+            } else if (!idElement.value) {
+              modifiedId = false;
+            } else {
+              modifiedId = true;
             }
-          },
-          false
-        );
-
-        const nameElement = document.getElementById("name");
-        const idElement = document.getElementById("id");
-
-        let modifiedId = false;
-        idElement.addEventListener("input", (e) => {
-          if (idElement.value === nameElement.value) {
-            modifiedId = false;
-          } else if (!idElement.value) {
-            modifiedId = false;
-          } else {
-            modifiedId = true;
-          }
-        });
-        nameElement.addEventListener("input", (e) => {
-          if (!modifiedId) {
-            idElement.value = nameElement.value
-              .toLowerCase()
-              .replace(/[^a-z0-9-]/g, "-")
-              .replace(/-+/g, "-");
-          }
+          });
+          nameElement.addEventListener("input", (e) => {
+            if (!modifiedId) {
+              idElement.value = nameElement.value
+                .toLowerCase()
+                .replace(/[^a-z0-9-]/g, "-")
+                .replace(/-+/g, "-");
+            }
+          });
         });
       </script>
       <script>
         import EasyMDE from "easymde";
-        const descriptionEditor = new EasyMDE({
-          element: document.getElementById("description"),
+
+        document.addEventListener("astro:page-load", () => {
+          const descriptionEditor = new EasyMDE({
+            element: document.getElementById("description"),
+          });
         });
       </script>
     </ImportHead>

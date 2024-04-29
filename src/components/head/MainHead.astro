@@ -1,4 +1,5 @@
 ---
+import { ViewTransitions } from "astro:transitions";
 import { pwaInfo } from "virtual:pwa-info";
 
 export interface Props {
@@ -77,3 +78,4 @@ const canonical = Astro.url.href;
 
 <script src="/src/pwa.ts"></script>
 {pwaInfo && <Fragment set:html={pwaInfo.webManifest.linkTag} />}
+<ViewTransitions fallback="swap" />

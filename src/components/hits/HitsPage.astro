@@ -23,7 +23,9 @@ const currentPage = page.currentPage ?? 1;
     <ImportHead>
       <script>
         import fitty from "fitty";
-        fitty(".card-title");
+        document.addEventListener("astro:page-load", () => {
+          fitty(".card-title");
+        });
       </script>
       <script>
         import "@utils/hits.ts";

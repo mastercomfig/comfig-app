@@ -1,4 +1,5 @@
 import react from "@astrojs/react";
+import sitemap from "@astrojs/sitemap";
 import sentry from "@sentry/astro";
 import AstroPWA from "@vite-pwa/astro";
 import { defineConfig } from "astro/config";
@@ -93,6 +94,7 @@ export default defineConfig({
     AstroPWA({
       devOptions: {
         type: "module",
+        enabled: true,
       },
       registerType: "autoUpdate",
       workbox: {
@@ -148,6 +150,7 @@ export default defineConfig({
         directoryAndTrailingSlashHandler: true,
       },
     }),
+    sitemap(),
   ],
   vite: {
     resolve: {
@@ -160,5 +163,14 @@ export default defineConfig({
         ),
       },
     },
+  },
+  prefetch: {
+    prefetchAll: true,
+    defaultStrategy: "viewport",
+  },
+  experimental: {
+    directRenderScript: true,
+    clientPrerender: true,
+    globalRoutePriority: true,
   },
 });

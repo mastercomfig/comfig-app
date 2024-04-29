@@ -33,39 +33,43 @@ const currentPage = page.currentPage ?? 1;
       <script>
         import { Carousel } from "bootstrap";
 
-        const carouselTriggerList = document.querySelectorAll(".carousel");
-        const carouselList = [...carouselTriggerList].map(
-          (carouselTriggerEl) =>
-            new Carousel(carouselTriggerEl, {
-              interval: 350,
-              touch: false,
-            })
-        );
-        for (let i = 0; i < carouselList.length; i++) {
-          const carouselEl = carouselTriggerList[i];
-          const carousel = carouselList[i];
-          carouselEl.parentNode.parentNode.parentNode.addEventListener(
-            "mouseenter",
-            () => carousel.cycle()
+        document.addEventListener("astro:page-load", () => {
+          const carouselTriggerList = document.querySelectorAll(".carousel");
+          const carouselList = [...carouselTriggerList].map(
+            (carouselTriggerEl) =>
+              new Carousel(carouselTriggerEl, {
+                interval: 350,
+                touch: false,
+              }),
           );
-          carouselEl.parentNode.parentNode.parentNode.addEventListener(
-            "mouseleave",
-            () => {
-              carousel.pause();
-              carousel.to(0);
-            }
-          );
-        }
+          for (let i = 0; i < carouselList.length; i++) {
+            const carouselEl = carouselTriggerList[i];
+            const carousel = carouselList[i];
+            carouselEl.parentNode.parentNode.parentNode.addEventListener(
+              "mouseenter",
+              () => carousel.cycle(),
+            );
+            carouselEl.parentNode.parentNode.parentNode.addEventListener(
+              "mouseleave",
+              () => {
+                carousel.pause();
+                carousel.to(0);
+              },
+            );
+          }
+        });
       </script>
       <script>
         import { Tooltip } from "bootstrap";
 
-        const tooltipTriggerList = document.querySelectorAll(
-          '[data-bs-toggle="tooltip"]'
-        );
-        const tooltipList = [...tooltipTriggerList].map(
-          (tooltipTriggerEl) => new Tooltip(tooltipTriggerEl)
-        );
+        document.addEventListener("astro:page-load", () => {
+          const tooltipTriggerList = document.querySelectorAll(
+            '[data-bs-toggle="tooltip"]',
+          );
+          const tooltipList = [...tooltipTriggerList].map(
+            (tooltipTriggerEl) => new Tooltip(tooltipTriggerEl),
+          );
+        });
       </script>
     </ImportHead>
     <MainHead

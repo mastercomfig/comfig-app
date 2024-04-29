@@ -158,31 +158,37 @@ const hudDescription = hudDescBase;
       <script>
         import { Carousel } from "bootstrap";
 
-        const carouselEl = document.getElementById("hudScreenshots");
-        if (carouselEl) {
-          const carousel = new Carousel(carouselEl);
-        }
+        document.addEventListener("astro:page-load", () => {
+          const carouselEl = document.getElementById("hudScreenshots");
+          if (carouselEl) {
+            const carousel = new Carousel(carouselEl);
+          }
+        });
       </script>
       <script>
         import { Tooltip } from "bootstrap";
 
-        const tooltipTriggerList = document.querySelectorAll(
-          '[data-bs-toggle="tooltip"]'
-        );
-        const tooltipList = [...tooltipTriggerList].map(
-          (tooltipTriggerEl) => new Tooltip(tooltipTriggerEl)
-        );
+        document.addEventListener("astro:page-load", () => {
+          const tooltipTriggerList = document.querySelectorAll(
+            '[data-bs-toggle="tooltip"]',
+          );
+          const tooltipList = [...tooltipTriggerList].map(
+            (tooltipTriggerEl) => new Tooltip(tooltipTriggerEl),
+          );
+        });
       </script>
       <script>
-        const downloadButtonList = document.querySelectorAll(".download-btn");
-        for (const downloadButton of downloadButtonList) {
-          downloadButton.addEventListener("click", async () => {
-            const id = window.location.pathname.replaceAll("/huds/page/", "");
-            setTimeout(async () => {
-              //await fetch(`/huds/stat/${id}`);
-            }, 1000);
-          });
-        }
+        document.addEventListener("astro:page-load", () => {
+          const downloadButtonList = document.querySelectorAll(".download-btn");
+          for (const downloadButton of downloadButtonList) {
+            downloadButton.addEventListener("click", async () => {
+              const id = window.location.pathname.replaceAll("/huds/page/", "");
+              setTimeout(async () => {
+                //await fetch(`/huds/stat/${id}`);
+              }, 1000);
+            });
+          }
+        });
       </script>
     </ImportHead>
     <MainHead
