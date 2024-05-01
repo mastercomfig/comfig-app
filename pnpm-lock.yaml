@@ -35,6 +35,9 @@ dependencies:
   '@types/bootstrap':
     specifier: ^5.2.10
     version: 5.2.10
+  '@types/browser-update':
+    specifier: ^3.3.3
+    version: 3.3.3
   '@types/react':
     specifier: ^18.2.74
     version: 18.2.74
@@ -71,6 +74,9 @@ dependencies:
   bootswatch:
     specifier: ^5.3.3
     version: 5.3.3
+  browser-update:
+    specifier: ^3.3.51
+    version: 3.3.51
   canvas:
     specifier: ^2.11.2
     version: 2.11.2
@@ -3417,6 +3423,10 @@ packages:
       '@popperjs/core': 2.11.8
     dev: false
 
+  /@types/browser-update@3.3.3:
+    resolution: {integrity: sha512-Z4md0/aRo5sWrDddCzDtU4YOLb5QXoXR1aT9z3Qehxp7KfP4ED32QyMRZmAl+gAIRZ+Ht6QKkU3VYSBzOTaKZA==}
+    dev: false
+
   /@types/codemirror@5.60.15:
     resolution: {integrity: sha512-dTOvwEQ+ouKJ/rE9LT1Ue2hmP6H1mZv5+CCnNWu2qtiOe2LQa9lCprEY20HxiDmV/Bxh+dXjywmy5aKvoGjULA==}
     dependencies:
@@ -4353,6 +4363,10 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       fill-range: 7.0.1
+    dev: false
+
+  /browser-update@3.3.51:
+    resolution: {integrity: sha512-ayU0gqovwp3PYwuv+B5heIlgAGdjRgaj6a8hsJQmfxLoBDXwouzqbpQ80J4xjVSzPiKIVJR/oTy5Lb7u/bhZpQ==}
     dev: false
 
   /browserslist@4.23.0:
