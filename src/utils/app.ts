@@ -851,7 +851,8 @@ async function app() {
 
   function checkFetch(response) {
     if (!response.ok) {
-      throw new Error(response.statusText);
+      const text = response.text();
+      throw new Error(`${response.statusText}: ${text}`);
     }
     return response;
   }
