@@ -214,6 +214,8 @@ function readWav(arr) {
   }
 }
 
+const playerLookup = {};
+
 async function createPlayer(player) {
   const wave = WaveSurfer.create({
     container: player,
@@ -251,13 +253,21 @@ async function createPlayer(player) {
     playLink.onclick = (e) => {
       e.preventDefault();
       const ratio = wave.getCurrentTime() / wave.getDuration();
-      if (ratio < 0.5) {
-        wave.playPause();
+      if (ratio < 0.8) {
+        if (playerLookup[hash]) {
+          playerLookup[hash] = playerLookup[hash].then(() => wave.playPause());
+        } else {
+          playerLookup[hash] = wave.playPause();
+        }
       } else {
         if (wave.isPlaying()) {
           wave.seekTo(0);
         } else {
-          wave.play();
+          if (playerLookup[hash]) {
+            playerLookup[hash] = playerLookup[hash].then(() => wave.play());
+          } else {
+            playerLookup[hash] = wave.play();
+          }
         }
       }
     };
