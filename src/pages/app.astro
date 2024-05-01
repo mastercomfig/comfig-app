@@ -44,18 +44,18 @@ const npmVersion = getAppVersion();
     </PreloadHead>
     <ImportHead>
       <script>
-        var $buoop = {
-          required: { e: 0, f: 0, o: 0, s: 0, c: 0 },
+        import browserUpdate from "browser-update";
+        browserUpdate({
+          required: { e: -6, f: -6, o: -3, s: 0, c: -6 },
           insecure: true,
-          unsupported: true,
-          api: 2022.04,
-        };
-        function $buo_f() {
-          var e = document.createElement("script");
-          e.src = "//browser-update.org/update.min.js";
-          document.body.appendChild(e);
-        }
-        document.addEventListener("DOMContentLoaded", $buo_f, false);
+          notify_esr: true,
+          noclose: true,
+          no_permanent_hide: true,
+          text: {
+            msgmore:
+              "Update your browser for more security, speed and the best experience on this site. You may encounter problems using this site with an outdated browser.",
+          },
+        });
       </script>
 
       <script define:vars={{ appHash, appVersion }}>
