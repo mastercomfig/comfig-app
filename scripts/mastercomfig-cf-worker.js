@@ -395,7 +395,7 @@ async function handleRequest(request) {
       let resBody = constructDataResponse(updated, version, v);
       return new Response(resBody, resHeaders);
     }
-    const resBody = getApiData(version);
+    const resBody = await getApiData(version);
     return new Response(resBody, resHeaders);
   }
   return new Response(null, deniedOptions);
