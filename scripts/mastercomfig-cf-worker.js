@@ -278,7 +278,6 @@ const validNames = new Set([
   "mastercomfig-very-low-preset.vpk",
   "mastercomfig-none-preset.vpk",
   "mastercomfig-null-canceling-movement-addon.vpk",
-  "mastercomfig-opengl-addon.vpk",
   "mastercomfig-flat-mouse-addon.vpk",
   "mastercomfig-no-tutorial-addon.vpk",
   "mastercomfig-disable-pyroland-addon.vpk",
