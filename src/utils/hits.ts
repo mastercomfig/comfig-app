@@ -272,7 +272,7 @@ async function createPlayer(player) {
       }
     };
   } catch (err) {
-    console.error("Create player failed:", err);
+    console.error("Create player failed:", err, hash);
   }
 }
 
