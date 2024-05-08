@@ -871,9 +871,10 @@ async function app() {
       if (!triesLeft) {
         throw err;
       }
-      return wait(delay).then(() =>
-        fetchRetry(url, delay * 2, triesLeft, fetchOptions),
-      );
+      return wait(delay).then(() => {
+        url = url.endsWith(".vpk") ? url + "?v=2" : url;
+        return fetchRetry(url, delay * 2, triesLeft, fetchOptions);
+      });
     }
     return fetch(url, fetchOptions).then(checkFetch).catch(onError);
   }
