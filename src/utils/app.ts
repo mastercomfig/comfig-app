@@ -857,10 +857,10 @@ async function app() {
     return new Promise((resolve) => setTimeout(resolve, delay));
   }
 
-  function checkFetch(response) {
+  async function checkFetch(response) {
     if (!response.ok) {
-      const text = response.text();
-      throw new Error(`${response.statusText}: ${text}`);
+      const text = await response.text();
+      throw new Error(`${response.status}: ${text}`);
     }
     return response;
   }
