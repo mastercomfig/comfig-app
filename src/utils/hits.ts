@@ -1,5 +1,5 @@
-import WaveSurfer from "wavesurfer.js";
 import { WaveFile } from "wavefile";
+import WaveSurfer from "wavesurfer.js";
 
 // Adapted from MS-ADPCM decoder
 // https://github.com/Snack-X/node-ms-adpcm
@@ -214,6 +214,8 @@ function readWav(arr) {
   }
 }
 
+const playerLookup = {};
+
 async function createPlayer(player) {
   const wave = WaveSurfer.create({
     container: player,
@@ -226,40 +228,52 @@ async function createPlayer(player) {
     player.classList.remove("loading-bg");
   });
   const hash = player.dataset.hash;
-  const response = await fetch(`https://hits.mastercomfig.com/${hash}.wav`);
-  const buffer = await response.arrayBuffer();
-  const wav = readWav(buffer);
-  const samples = decodeMsAdpcm(wav);
-  // TODO: manually encode wav file again
-  const wavFile = new WaveFile();
-  wavFile.fromScratch(
-    wav.format.channels,
-    wav.format.sampleRate,
-    "16",
-    samples,
-  );
-  const duration =
-    wavFile.data.chunkSize /
-    wavFile.fmt.numChannels /
-    wavFile.fmt.sampleRate /
-    (wavFile.fmt.bitsPerSample / 8);
-  const buf = wavFile.toBuffer().buffer;
-  const audioBlob = new Blob([buf], { type: "audio/wav" });
-  wave.loadBlob(audioBlob, samples, duration);
-  const playLink = document.getElementById(`play-${hash}`);
-  playLink.onclick = (e) => {
-    e.preventDefault();
-    const ratio = wave.getCurrentTime() / wave.getDuration();
-    if (ratio < 0.5) {
-      wave.playPause();
-    } else {
-      if (wave.isPlaying()) {
-        wave.seekTo(0);
+  try {
+    const response = await fetch(`https://hits.mastercomfig.com/${hash}.wav`);
+    const buffer = await response.arrayBuffer();
+    const wav = readWav(buffer);
+    const samples = decodeMsAdpcm(wav);
+    // TODO: manually encode wav file again
+    const wavFile = new WaveFile();
+    wavFile.fromScratch(
+      wav.format.channels,
+      wav.format.sampleRate,
+      "16",
+      samples,
+    );
+    const duration =
+      wavFile.data.chunkSize /
+      wavFile.fmt.numChannels /
+      wavFile.fmt.sampleRate /
+      (wavFile.fmt.bitsPerSample / 8);
+    const buf = wavFile.toBuffer().buffer;
+    const audioBlob = new Blob([buf], { type: "audio/wav" });
+    wave.loadBlob(audioBlob, samples, duration);
+    const playLink = document.getElementById(`play-${hash}`);
+    playLink.onclick = (e) => {
+      e.preventDefault();
+      const ratio = wave.getCurrentTime() / wave.getDuration();
+      if (ratio < 0.8) {
+        if (playerLookup[hash]) {
+          playerLookup[hash] = playerLookup[hash].then(() => wave.playPause());
+        } else {
+          playerLookup[hash] = wave.playPause();
+        }
       } else {
-        wave.play();
+        if (wave.isPlaying()) {
+          wave.seekTo(0);
+        } else {
+          if (playerLookup[hash]) {
+            playerLookup[hash] = playerLookup[hash].then(() => wave.play());
+          } else {
+            playerLookup[hash] = wave.play();
+          }
+        }
       }
-    }
-  };
+    };
+  } catch (err) {
+    console.error("Create player failed:", err, hash);
+  }
 }
 
 const players = document.querySelectorAll(".hs-container");

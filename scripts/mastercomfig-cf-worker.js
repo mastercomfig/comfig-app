@@ -153,28 +153,6 @@ const rp = [
   stringify,
 ];
 
-async function forceUpdate(version) {
-  let updated = await updateData([rv, rm, rp]);
-  let resBody =
-    '{"v":' +
-    updated[0] +
-    "," +
-    '"m":' +
-    updated[1] +
-    "," +
-    '"p":' +
-    updated[2] +
-    "}";
-  await storeData(
-    getVersionedKey("mastercomfig-api-response", version),
-    resBody,
-  );
-}
-
-addEventListener("scheduled", (event) => {
-  event.waitUntil(forceUpdate(2));
-});
-
 async function storeData(key, value) {
   return MASTERCOMFIG.put(key, value, cacheOpt);
 }
@@ -252,6 +230,42 @@ function constructDataResponse(updated, version, v, m, p) {
   return resBody;
 }
 
+async function getApiData(version, force) {
+  // Attempt cached
+  let resBody = null;
+  if (!force) {
+    resBody = await MASTERCOMFIG.get(
+      getVersionedKey("mastercomfig-api-response", version),
+    );
+  }
+  if (!resBody) {
+    let v = await MASTERCOMFIG.get(
+      getVersionedKey("mastercomfig-version", version),
+    );
+    let m = await MASTERCOMFIG.get("mastercomfig-modules");
+    let p = await MASTERCOMFIG.get("mastercomfig-preset-modules");
+    let updated = await updateData([
+      v ? null : rv,
+      m ? null : rm,
+      p ? null : rp,
+    ]);
+    resBody = constructDataResponse(updated, version, v, m, p);
+    await storeData(
+      getVersionedKey("mastercomfig-api-response", version),
+      resBody,
+    );
+  }
+  return resBody;
+}
+
+async function forceUpdate(version) {
+  await getApiData(version, true);
+}
+
+addEventListener("scheduled", (event) => {
+  event.waitUntil(forceUpdate(2));
+});
+
 const webhookPathname = "/" + GH_WEBHOOK_ID;
 
 const validNames = new Set([
@@ -264,7 +278,6 @@ const validNames = new Set([
   "mastercomfig-very-low-preset.vpk",
   "mastercomfig-none-preset.vpk",
   "mastercomfig-null-canceling-movement-addon.vpk",
-  "mastercomfig-opengl-addon.vpk",
   "mastercomfig-flat-mouse-addon.vpk",
   "mastercomfig-no-tutorial-addon.vpk",
   "mastercomfig-disable-pyroland-addon.vpk",
@@ -333,10 +346,8 @@ async function handleRequest(request) {
         let slashPos = versionString.indexOf("/");
         if (slashPos !== -1) {
           versionString = versionString.substring(0, slashPos);
-          let v = await MASTERCOMFIG.get(
-            getVersionedKey("mastercomfig-version", 2),
-          );
-          let versions = JSON.parse(v);
+          let data = await getApiData(2);
+          let versions = JSON.parse(data).v;
           validDownload = versions.includes(versionString);
         }
       }
@@ -383,28 +394,7 @@ async function handleRequest(request) {
       let resBody = constructDataResponse(updated, version, v);
       return new Response(resBody, resHeaders);
     }
-    // Attempt cached
-    let resBody = await MASTERCOMFIG.get(
-      getVersionedKey("mastercomfig-api-response", version),
-    );
-    resBody = null;
-    if (!resBody) {
-      let v = await MASTERCOMFIG.get(
-        getVersionedKey("mastercomfig-version", version),
-      );
-      let m = await MASTERCOMFIG.get("mastercomfig-modules");
-      let p = await MASTERCOMFIG.get("mastercomfig-preset-modules");
-      let updated = await updateData([
-        v ? null : rv,
-        m ? null : rm,
-        p ? null : rp,
-      ]);
-      resBody = constructDataResponse(updated, version, v, m, p);
-      await storeData(
-        getVersionedKey("mastercomfig-api-response", version),
-        resBody,
-      );
-    }
+    const resBody = await getApiData(version);
     return new Response(resBody, resHeaders);
   }
   return new Response(null, deniedOptions);

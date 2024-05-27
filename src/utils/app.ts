@@ -800,6 +800,9 @@ async function app() {
     "state had changed since it was read from disk": () => {
       filesInUse = true;
     },
+    "modifications are not allowed": () => {
+      filesInUse = true;
+    },
   };
 
   async function safeUnlink(name, directory) {
@@ -819,14 +822,19 @@ async function app() {
 
   async function getWritable(name, directory, skipDelete?) {
     if (!directory) {
-      return;
+      return null;
     }
     if (!skipDelete) {
       await safeUnlink(name, directory);
     }
     const file = await directory.getFileHandle(name, { create: true });
-    const writable = await file.createWritable();
-    return writable;
+    try {
+      const writable = await file.createWritable();
+      return writable;
+    } catch (err) {
+      console.error(`getWritable for ${name} failed`, err);
+      return null;
+    }
   }
 
   function newFile(contents, name, directory) {
@@ -849,10 +857,10 @@ async function app() {
     return new Promise((resolve) => setTimeout(resolve, delay));
   }
 
-  function checkFetch(response) {
+  async function checkFetch(response) {
     if (!response.ok) {
-      const text = response.text();
-      throw new Error(`${response.statusText}: ${text}`);
+      const text = await response.text();
+      throw new Error(`${response.status}: ${text}`);
     }
     return response;
   }
@@ -863,9 +871,10 @@ async function app() {
       if (!triesLeft) {
         throw err;
       }
-      return wait(delay).then(() =>
-        fetchRetry(url, delay * 2, triesLeft, fetchOptions),
-      );
+      return wait(delay).then(() => {
+        url = url.endsWith(".vpk") ? url + "?v=2" : url;
+        return fetchRetry(url, delay * 2, triesLeft, fetchOptions);
+      });
     }
     return fetch(url, fetchOptions).then(checkFetch).catch(onError);
   }
@@ -1299,20 +1308,28 @@ async function app() {
         try {
           overridesDirectory.removeEntry("modules.cfg");
         } catch (err) {
-          //console.log("Failed deleting modules.cfg", err);
+          console.log("Failed deleting modules.cfg", err);
         }
       }
     }
     // Clear out old scripts directory
     if (scriptsDirectory) {
-      for await (const key of scriptsDirectory.keys()) {
-        scriptsDirectory.removeEntry(key);
+      try {
+        for await (const key of scriptsDirectory.keys()) {
+          scriptsDirectory.removeEntry(key);
+        }
+      } catch (err) {
+        console.error("Iterating through scripts directory failed", err);
       }
     }
     // Clear out old materials directory
     if (materialsDirectory) {
-      for await (const key of materialsDirectory.keys()) {
-        materialsDirectory.removeEntry(key);
+      try {
+        for await (const key of materialsDirectory.keys()) {
+          materialsDirectory.removeEntry(key);
+        }
+      } catch (err) {
+        console.error("Iterating through materials directory failed", err);
       }
     }
     if (globalThis.items) {
@@ -1636,8 +1653,12 @@ async function app() {
     }
     // Clear out old app directory
     if (appDirectory) {
-      for await (const key of appDirectory.keys()) {
-        appDirectory.removeEntry(key);
+      try {
+        for await (const key of appDirectory.keys()) {
+          appDirectory.removeEntry(key);
+        }
+      } catch (err) {
+        console.error("Iterating through app directory failed", err);
       }
     }
     // Create the autoexec.cfg file
@@ -2677,8 +2698,8 @@ async function app() {
             target.classList.remove("text-success");
           }, 1000);
         })
-        .catch(() => {
-          console.error("Failed to copy text");
+        .catch((err) => {
+          console.error("Failed to copy text", err);
           const status = target.children[2];
           status.innerText = "Please copy manually";
           target.classList.add("text-danger");

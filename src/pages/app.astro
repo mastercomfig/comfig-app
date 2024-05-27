@@ -44,19 +44,17 @@ const npmVersion = getAppVersion();
     </PreloadHead>
     <ImportHead>
       <script>
-        document.addEventListener("astro:page-load", () => {
-          var $buoop = {
-            required: { e: 0, f: 0, o: 0, s: 0, c: 0 },
-            insecure: true,
-            unsupported: true,
-            api: 2022.04,
-          };
-          function $buo_f() {
-            var e = document.createElement("script");
-            e.src = "https://browser-update.org/update.min.js";
-            document.body.appendChild(e);
-          }
-          $buo_f();
+        import browserUpdate from "browser-update";
+        browserUpdate({
+          required: { e: -6, f: -6, o: -3, s: 0, c: -6 },
+          insecure: true,
+          notify_esr: true,
+          noclose: true,
+          no_permanent_hide: true,
+          text: {
+            msgmore:
+              "Update your browser for more security, speed and the best experience on this site. You may encounter problems using this site with an outdated browser.",
+          },
         });
       </script>
 
@@ -448,21 +446,6 @@ const npmVersion = getAppVersion();
                     <h5 class="card-title">No Tutorial</h5>
                     <p class="card-text">
                       Disables tutorial messages and other popups
-                    </p>
-                  </div>
-                </a>
-              </div>
-              <div class="col">
-                <a
-                  class="card text-start addon-card h-100"
-                  href="#"
-                  id="opengl"
-                >
-                  <div class="card-body">
-                    <h5 class="card-title">OpenGL</h5>
-                    <p class="card-text">
-                      Provides additional optimizations for OpenGL (macOS and
-                      Linux)
                     </p>
                   </div>
                 </a>
