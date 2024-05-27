@@ -26,7 +26,7 @@ import NavSelector from "@components/NavSelector.astro";
     background: rgb(0 206 187 / 50%);
   }
 
-  #search-results {
+  #hits-search-results {
     max-height: 90vh;
     box-shadow: 0 0 1rem 1rem rgb(0 0 0 / 50%);
     width: 100%;
@@ -36,7 +36,7 @@ import NavSelector from "@components/NavSelector.astro";
   }
 
   @media (width >= 992px) {
-    #search-results {
+    #hits-search-results {
       width: max(calc(960px * 0.495), 24.5vw);
       max-width: 653px;
       transform: translate(-50.7%, 0);
@@ -65,6 +65,11 @@ import NavSelector from "@components/NavSelector.astro";
   import MiniSearch from "minisearch";
 
   document.addEventListener("astro:page-load", () => {
+    const searchResults = document.getElementById("hits-search-results");
+    if (!searchResults) {
+      return;
+    }
+
     const fields = ["id", "type"];
 
     const existingIds = new Map();
@@ -97,8 +102,6 @@ import NavSelector from "@components/NavSelector.astro";
       storeFields: [...fields, "hash"],
     });
     miniSearch.addAll(documents);
-
-    const searchResults = document.getElementById("search-results");
 
     const emptySearch = '<p class="lead m-0">Type to search for sounds!</p>';
     const noResults = '<p class="lead m-0">No results found.</p>';
@@ -205,7 +208,7 @@ import NavSelector from "@components/NavSelector.astro";
   </nav>
   <div class="position-relative">
     <div
-      id="search-results"
+      id="hits-search-results"
       class="d-none position-absolute top-0 start-50 bg-dark p-3"
     >
       <p class="lead m-0">Type to search for sounds!</p>

@@ -1,0 +1,17 @@
+---
+const { className } = Astro.props;
+---
+
+<fitty-text data-class-name={className}></fitty-text>
+
+<script>
+  import fitty from "fitty";
+
+  class FittyText extends HTMLElement {
+    connectedCallback() {
+      fitty(this.dataset.className as string);
+    }
+  }
+
+  customElements.define("fitty-text", FittyText);
+</script>

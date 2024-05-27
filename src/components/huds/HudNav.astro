@@ -1,7 +1,7 @@
 ---
+import NavSelector from "@components/NavSelector.astro";
 import { getAllHudsHash } from "@ssg/huds";
 import HudSearch from "./HudSearch.astro";
-import NavSelector from "@components/NavSelector.astro";
 
 const hash = await getAllHudsHash();
 ---
@@ -30,7 +30,7 @@ const hash = await getAllHudsHash();
     background: rgb(0 206 187 / 50%);
   }
 
-  #search-results {
+  #huds-search-results {
     max-height: 90vh;
     box-shadow: 0 0 1rem 1rem rgb(0 0 0 / 50%);
     width: 100%;
@@ -40,7 +40,7 @@ const hash = await getAllHudsHash();
   }
 
   @media (width >= 992px) {
-    #search-results {
+    #huds-search-results {
       width: max(calc(960px * 0.495), 24.5vw);
       max-width: 653px;
       transform: translate(-50.7%, 0);
@@ -126,7 +126,7 @@ const hash = await getAllHudsHash();
   </nav>
   <div class="position-relative">
     <div
-      id="search-results"
+      id="huds-search-results"
       class="d-none position-absolute top-0 start-50 bg-dark p-3"
     >
       <p class="lead mt-0 mb-2">Type to search for HUDs!</p>
