@@ -1,0 +1,42 @@
+---
+
+---
+
+<hud-preview-carousel-loader></hud-preview-carousel-loader>
+
+<script>
+  import { Carousel } from "bootstrap";
+
+  class HudPreviewCarouselLoader extends HTMLElement {
+    async connectedCallback() {
+      const carouselTriggerList = document.querySelectorAll(".carousel");
+      const carouselList = [...carouselTriggerList].map(
+        (carouselTriggerEl) =>
+          new Carousel(carouselTriggerEl, {
+            interval: 350,
+            touch: false,
+          }),
+      );
+      for (let i = 0; i < carouselList.length; i++) {
+        const carouselEl = carouselTriggerList[i];
+        const carousel = carouselList[i];
+        carouselEl.parentNode.parentNode.parentNode.addEventListener(
+          "mouseenter",
+          () => carousel.cycle(),
+        );
+        carouselEl.parentNode.parentNode.parentNode.addEventListener(
+          "mouseleave",
+          () => {
+            carousel.pause();
+            carousel.to(0);
+          },
+        );
+      }
+    }
+  }
+
+  customElements.define(
+    "hud-preview-carousel-loader",
+    HudPreviewCarouselLoader,
+  );
+</script>

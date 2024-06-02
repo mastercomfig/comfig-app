@@ -1,0 +1,22 @@
+---
+
+---
+
+<tooltip-loader></tooltip-loader>
+
+<script>
+  import { Tooltip } from "bootstrap";
+
+  class TooltipLoader extends HTMLElement {
+    async connectedCallback() {
+      const tooltipTriggerList = document.querySelectorAll(
+        '[data-bs-toggle="tooltip"]',
+      );
+      const tooltipList = [...tooltipTriggerList].map(
+        (tooltipTriggerEl) => new Tooltip(tooltipTriggerEl),
+      );
+    }
+  }
+
+  customElements.define("tooltip-loader", TooltipLoader);
+</script>

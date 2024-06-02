@@ -1,14 +1,16 @@
 ---
-import Layout from "@layouts/Layout.astro";
-import BaseHead from "@components/head/BaseHead.astro";
-import PreloadHead from "@components/head/PreloadHead.astro";
-import ImportHead from "@components/head/ImportHead.astro";
-import MainHead from "@components/head/MainHead.astro";
 import Body from "@components/Body.astro";
 import Footer from "@components/Footer.astro";
+import BaseHead from "@components/head/BaseHead.astro";
+import ImportHead from "@components/head/ImportHead.astro";
+import MainHead from "@components/head/MainHead.astro";
+import PreloadHead from "@components/head/PreloadHead.astro";
+import HudPreviewCarouselLoader from "@components/HudPreviewCarouselLoader.astro";
 import HudListItem from "@components/huds/HudListItem.astro";
 import HudNav from "@components/huds/HudNav.astro";
 import Sponsor from "@components/Sponsor.astro";
+import TooltipLoader from "@components/TooltipLoader.astro";
+import Layout from "@layouts/Layout.astro";
 
 import { getHuds } from "@ssg/huds";
 
@@ -32,55 +34,15 @@ const featuredHuds = featuredHudIds.map((id) => huds.get(id));
   <head>
     <BaseHead />
     <PreloadHead />
-    <ImportHead>
-      <script>
-        import { Carousel } from "bootstrap";
-
-        document.addEventListener("astro:page-load", () => {
-          const carouselTriggerList = document.querySelectorAll(".carousel");
-          const carouselList = [...carouselTriggerList].map(
-            (carouselTriggerEl) =>
-              new Carousel(carouselTriggerEl, {
-                interval: 350,
-                touch: false,
-              }),
-          );
-          for (let i = 0; i < carouselList.length; i++) {
-            const carouselEl = carouselTriggerList[i];
-            const carousel = carouselList[i];
-            carouselEl.parentNode.parentNode.parentNode.addEventListener(
-              "mouseenter",
-              () => carousel.cycle(),
-            );
-            carouselEl.parentNode.parentNode.parentNode.addEventListener(
-              "mouseleave",
-              () => {
-                carousel.pause();
-                carousel.to(0);
-              },
-            );
-          }
-        });
-      </script>
-      <script>
-        import { Tooltip } from "bootstrap";
-
-        document.addEventListener("astro:page-load", () => {
-          const tooltipTriggerList = document.querySelectorAll(
-            '[data-bs-toggle="tooltip"]',
-          );
-          const tooltipList = [...tooltipTriggerList].map(
-            (tooltipTriggerEl) => new Tooltip(tooltipTriggerEl),
-          );
-        });
-      </script>
-    </ImportHead>
+    <ImportHead />
     <MainHead
       title="Editor's Choice | comfig huds"
       description="comfig huds by mastercomfig is a modern Team Fortress 2 HUD directory. You can find HUDs to customize the look of your menus and in-game UI, and easily install them to your game after finding the one that suits your style and needs."
     />
   </head>
   <Body>
+    <HudPreviewCarouselLoader />
+    <TooltipLoader />
     <HudNav />
     <div class="container g-0">
       <br />

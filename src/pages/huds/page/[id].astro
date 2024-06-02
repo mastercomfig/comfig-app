@@ -166,20 +166,9 @@ const hudDescription = hudDescBase;
         });
       </script>
       <script>
-        import { Tooltip } from "bootstrap";
-
         document.addEventListener("astro:page-load", () => {
-          const tooltipTriggerList = document.querySelectorAll(
-            '[data-bs-toggle="tooltip"]',
-          );
-          const tooltipList = [...tooltipTriggerList].map(
-            (tooltipTriggerEl) => new Tooltip(tooltipTriggerEl),
-          );
-        });
-      </script>
-      <script>
-        document.addEventListener("astro:page-load", () => {
-          const downloadButtonList = document.querySelectorAll(".download-btn");
+          const downloadButtonList =
+            document.querySelectorAll(".hud-download-btn");
           for (const downloadButton of downloadButtonList) {
             downloadButton.addEventListener("click", async () => {
               const id = window.location.pathname.replaceAll("/huds/page/", "");
@@ -296,7 +285,7 @@ const hudDescription = hudDescBase;
         <div class="col">
           <a
             href={hud.isGithub ? hud.versions[0].downloadUrl : hud.repo}
-            class=`btn ${hud.isGithub ? "btn-secondary" : "btn-warning"} download-btn w-100 h-100 btn-lg d-flex align-items-center justify-content-center`
+            class=`btn ${hud.isGithub ? "btn-secondary" : "btn-warning"} hud-download-btn w-100 h-100 btn-lg d-flex align-items-center justify-content-center`
             target={hud.isGithub ? undefined : "_blank"}
             rel={hud.isGithub ? undefined : "noopener noreferrer"}
             data-bs-toggle={hud.isGithub ? undefined : "tooltip"}
@@ -337,7 +326,7 @@ const hudDescription = hudDescBase;
             <div class="col-lg-auto col">
               <a
                 href={hud.isGithub ? hud.versions[1].downloadUrl : hud.repo}
-                class="btn btn-warning download-btn w-100 h-100 d-flex align-items-center justify-content-center"
+                class="btn btn-warning hud-download-btn w-100 h-100 d-flex align-items-center justify-content-center"
                 target={hud.isGithub ? undefined : "_blank"}
                 rel={hud.isGithub ? undefined : "noopener noreferrer"}
                 data-bs-toggle="tooltip"

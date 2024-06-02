@@ -17,7 +17,8 @@ const idbKeyval = {
   del,
 };
 
-async function app() {
+export async function app() {
+  console.log("App loading...");
   const downloadStatusEl = document.getElementById("download-status");
   if (downloadStatusEl) {
     downloadStatusEl.innerHTML = "";
@@ -3507,5 +3508,5 @@ async function app() {
       await updateDirectInstall();
     });
   }
+  console.log("App loaded.");
 }
-document.addEventListener("astro:page-load", app);
