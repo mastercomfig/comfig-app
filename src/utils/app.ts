@@ -17,7 +17,8 @@ const idbKeyval = {
   del,
 };
 
-async function app() {
+export async function app() {
+  console.log("App loading...");
   const downloadStatusEl = document.getElementById("download-status");
   if (downloadStatusEl) {
     downloadStatusEl.innerHTML = "";
@@ -353,6 +354,9 @@ async function app() {
 
   function handleConnectivityChange() {
     const element = getEl("vpk-dl");
+    if (!element) {
+      return;
+    }
     // HACK: we are currently using a hack, by using the "downloading" variable
     // to block downloads and track blocked download state.
     if (navigator.onLine) {
@@ -3487,45 +3491,9 @@ async function app() {
     //getEl("subscribe-link").classList.remove("d-none");
   }
 
-  /*
-  function registerServiceWorker() {
-    const updateSW = registerSW({
-      immediate: true,
-      onRegisterError(e) {
-        console.error("Error during service worker registration:", e);
-      },
-      onOfflineReady() {
-        console.log("Offline ready");
-      },
-    });
-
-    updateSW();
-  }
-  */
-
-  /*
-  if ("serviceWorker" in navigator) {
-    let bFoundSW = false;
-
-    navigator.serviceWorker.getRegistrations().then((registrations) => {
-      for (let registration of registrations) {
-        if (true || registration.active?.scriptURL.endsWith("/service-worker.js")) {
-          bFoundSW = true;
-          registration.unregister().then(() => {
-            registerServiceWorker();
-          })
-        }
-      }
-
-      if (!bFoundSW) {
-        registerServiceWorker();
-      }
-    });
-  }
-  */
-
   window.addEventListener("online", handleConnectivityChange);
   window.addEventListener("offline", handleConnectivityChange);
+
   if (!navigator.onLine) {
     handleConnectivityChange();
   }
@@ -3540,5 +3508,5 @@ async function app() {
       await updateDirectInstall();
     });
   }
+  console.log("App loaded.");
 }
-window.addEventListener("load", app);

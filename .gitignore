@@ -2,6 +2,7 @@
 /dev-dist/
 /.idea/
 /.vscode/
+/.astro/
 
 # build output
 dist/

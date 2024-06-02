@@ -114,6 +114,7 @@ export const getHuds = async () => {
           const ghRepo = hudData.repo.replace("https://github.com/", "");
 
           // Query the tag
+          // TODO: this may be flagged as abuse by GitHub.
           const branchTags = await fetchCacheText(
             `https://github.com/${ghRepo}/branch_commits/${hudData.hash}`,
           );

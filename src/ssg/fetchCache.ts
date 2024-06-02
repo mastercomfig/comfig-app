@@ -15,7 +15,7 @@ export async function fetchCache(...args) {
   }
   if (res.status >= 400) {
     const text = await res.text();
-    console.error(text);
+    console.error(args[0], text);
     return null;
   }
   const json = await res.json();
@@ -40,7 +40,7 @@ export async function fetchCacheText(...args) {
   }
   if (res.status >= 400) {
     const text = await res.text();
-    console.error(text);
+    console.error(args[0], text);
     return null;
   }
   const text = await res.text();
@@ -91,7 +91,7 @@ export async function fetchCacheTextWithTimeout(resource, options = {}) {
       }
       if (res.status >= 400) {
         const text = await res.text();
-        console.error(text);
+        console.error(resource, text);
         return null;
       }
     }

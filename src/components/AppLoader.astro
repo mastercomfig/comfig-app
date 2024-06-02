@@ -1,0 +1,18 @@
+---
+
+---
+
+<app-loader></app-loader>
+
+<script>
+  import "@utils/game.ts";
+  import { app } from "@utils/app.ts";
+
+  class AppLoader extends HTMLElement {
+    async connectedCallback() {
+      await app();
+    }
+  }
+
+  customElements.define("app-loader", AppLoader);
+</script>
