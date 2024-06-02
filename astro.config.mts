@@ -25,13 +25,12 @@ export default defineConfig({
       },
       registerType: "autoUpdate",
       workbox: {
-        navigateFallback: "/offline/index.html",
+        navigateFallback: "offline/index.html",
         globPatterns: [
           "**/*.{css,js,json,webp,svg,png,ico,woff2,mp4,vtf,vmt}",
-          "/app/*",
-          "/",
-          "/index.html",
-          "/offline/*",
+          "app/index.html",
+          "index.html",
+          "offline/index.html",
         ],
       },
       includeAssets: ["**/*.{png,xml,ico,svg,webp,mp4,vtf,vmt}"],

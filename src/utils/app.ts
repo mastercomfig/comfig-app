@@ -3384,10 +3384,13 @@ export async function app() {
   window.addEventListener("beforeinstallprompt", (e) => {
     // Prevent Chrome 67 and earlier from automatically showing the prompt
     e.preventDefault();
-    // Stash the event so it can be triggered later.
-    deferredPrompt = e;
     // Update UI to notify the user they can add to home screen
     const addBtn = getEl("install-link");
+    if (!addBtn) {
+      return;
+    }
+    // Stash the event so it can be triggered later.
+    deferredPrompt = e;
     addBtn.classList.remove("d-none");
 
     addBtn.addEventListener("click", (e) => {
