@@ -28,9 +28,10 @@ export default defineConfig({
         navigateFallback: "/offline/index.html",
         globPatterns: [
           "**/*.{css,js,json,webp,svg,png,ico,woff2,mp4,vtf,vmt}",
-          "app/index.html",
-          "index.html",
-          "offline/index.html",
+          "/app/*",
+          "/",
+          "/index.html",
+          "/offline/*",
         ],
       },
       includeAssets: ["**/*.{png,xml,ico,svg,webp,mp4,vtf,vmt}"],
