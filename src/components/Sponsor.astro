@@ -1,87 +1,92 @@
 <script>
-  import tradeit from "@img/third_party/tradeit.webp";
   import tf2cc from "@img/third_party/tf2cc.webp";
+  import tradeit from "@img/third_party/tradeit.webp";
 
-  function generateCoolString(str) {
-    const count = Math.floor(Math.random() * 10);
-    for (let i = 0; i < count; i++) {
-      const index = Math.floor(Math.random() * str.length);
-      str = str.substring(0, index) + "​" + str.substring(index);
+  document.addEventListener("astro:page-load", () => {
+    const linkElement = document.querySelector(
+      "a[href='https://comfig.app/?aff=comfig']",
+    );
+
+    if (!linkElement) {
+      return;
     }
-    return str;
-  }
 
-  function dec2hex(dec) {
-    return dec.toString(16).padStart(2, "0");
-  }
-
-  function isLetter(c) {
-    return c.toLowerCase() != c.toUpperCase();
-  }
-
-  function generateId(len) {
-    var arr = new Uint8Array(len / 2);
-    window.crypto.getRandomValues(arr);
-    let id = Array.from(arr, dec2hex).join("");
-    if (!isLetter(id.charAt(0))) {
-      const randomLetter = String.fromCharCode(
-        97 + Math.floor(Math.random() * 26),
-      );
-      id = randomLetter + id.substring(1);
+    function generateCoolString(str) {
+      const count = Math.floor(Math.random() * 10);
+      for (let i = 0; i < count; i++) {
+        const index = Math.floor(Math.random() * str.length);
+        str = str.substring(0, index) + "​" + str.substring(index);
+      }
+      return str;
     }
-    return id;
-  }
 
-  const r = generateId(8);
-  const sponsors = [
-    {
-      name: "tradeit.gg",
-      logo: tradeit.src,
-      logo_alt: "tradeit.gg logo",
-      url: "https://tradeit.gg/?aff=comfig",
-      title: "Trade, buy or sell items",
-      description:
-        "Trade items instantly for real money with the lowest fees.\n" +
-        "Fully automated. Over 45 million successful trades.\n",
-      cta: "Get started now with $5 credit and 35% off your first trade.",
-      background:
-        "linear-gradient(135deg, rgba(33,37,41, 0.01), rgba(33,37,41, 1) 60%),radial-gradient(ellipse at top left, rgba(255,255,255, 0.5), transparent 50%),radial-gradient(ellipse at top right, rgba(255,228,132, 0.5), transparent 50%),radial-gradient(ellipse at center right, rgba(112.520718,44.062154,249.437846, 0.5), transparent 50%),radial-gradient(ellipse at center left, rgba(13,110,253, 0.5), transparent 50%)",
-    },
-    {
-      name: "TF2 Coaching Central",
-      logo: tf2cc.src,
-      logo_alt: "TF2CC logo",
-      url: "https://discord.gg/tf2-coaching-central-tf2cc-727627956058325052",
-      title: "Coach or get coached for competitive TF2!",
-      description:
-        "TF2CC is a resource hub for new comp players.\n" +
-        "Provides guides, mentoring, demo reviews, pugs, and tournaments!\n",
-      cta: "Whether you're experienced or a new player, join the Discord and get involved!",
-      background:
-        "linear-gradient(135deg, rgba(33,37,41, 0.01), rgba(33,37,41, 1) 60%),radial-gradient(ellipse at top left, rgba(255,255,255, 0.5), transparent 50%),radial-gradient(ellipse at top right, rgb(255 174 132 / 50%), transparent 50%),radial-gradient(ellipse at center right, rgb(249 44 78 / 50%), transparent 50%),radial-gradient(ellipse at center left, rgb(253 13 13 / 50%), transparent 50%)",
-    },
-  ];
-  const sponsor = sponsors[Math.floor(Math.random() * sponsors.length)];
-  const name = generateCoolString(sponsor.name);
-  const background = sponsor.background;
-  const logo = sponsor.logo;
-  const logo_alt = generateCoolString(sponsor.logo_alt);
-  const title = generateCoolString(sponsor.title);
-  const description = sponsor.description
-    .split("\n")
-    .map((d) => generateCoolString(d))
-    .join("<br/>");
-  const cta = generateCoolString(sponsor.cta);
-  const url = sponsor.url;
+    function dec2hex(dec) {
+      return dec.toString(16).padStart(2, "0");
+    }
 
-  const linkElement = document.querySelector(
-    "a[href='https://comfig.app/?aff=comfig']",
-  );
+    function isLetter(c) {
+      return c.toLowerCase() != c.toUpperCase();
+    }
 
-  const card = linkElement.closest(".card");
-  card.classList.add(r);
-  const stylesheet = new CSSStyleSheet();
-  stylesheet.replaceSync(`
+    function generateId(len) {
+      var arr = new Uint8Array(len / 2);
+      window.crypto.getRandomValues(arr);
+      let id = Array.from(arr, dec2hex).join("");
+      if (!isLetter(id.charAt(0))) {
+        const randomLetter = String.fromCharCode(
+          97 + Math.floor(Math.random() * 26),
+        );
+        id = randomLetter + id.substring(1);
+      }
+      return id;
+    }
+
+    const r = generateId(8);
+    const sponsors = [
+      {
+        name: "tradeit.gg",
+        logo: tradeit.src,
+        logo_alt: "tradeit.gg logo",
+        url: "https://tradeit.gg/?aff=comfig",
+        title: "Trade, buy or sell items",
+        description:
+          "Trade items instantly for real money with the lowest fees.\n" +
+          "Fully automated. Over 45 million successful trades.\n",
+        cta: "Get started now with $5 credit and 35% off your first trade.",
+        background:
+          "linear-gradient(135deg, rgba(33,37,41, 0.01), rgba(33,37,41, 1) 60%),radial-gradient(ellipse at top left, rgba(255,255,255, 0.5), transparent 50%),radial-gradient(ellipse at top right, rgba(255,228,132, 0.5), transparent 50%),radial-gradient(ellipse at center right, rgba(112.520718,44.062154,249.437846, 0.5), transparent 50%),radial-gradient(ellipse at center left, rgba(13,110,253, 0.5), transparent 50%)",
+      },
+      {
+        name: "TF2 Coaching Central",
+        logo: tf2cc.src,
+        logo_alt: "TF2CC logo",
+        url: "https://discord.gg/tf2-coaching-central-tf2cc-727627956058325052",
+        title: "Coach or get coached for competitive TF2!",
+        description:
+          "TF2CC is a resource hub for new comp players.\n" +
+          "Provides guides, mentoring, demo reviews, pugs, and tournaments!\n",
+        cta: "Whether you're experienced or a new player, join the Discord and get involved!",
+        background:
+          "linear-gradient(135deg, rgba(33,37,41, 0.01), rgba(33,37,41, 1) 60%),radial-gradient(ellipse at top left, rgba(255,255,255, 0.5), transparent 50%),radial-gradient(ellipse at top right, rgb(255 174 132 / 50%), transparent 50%),radial-gradient(ellipse at center right, rgb(249 44 78 / 50%), transparent 50%),radial-gradient(ellipse at center left, rgb(253 13 13 / 50%), transparent 50%)",
+      },
+    ];
+    const sponsor = sponsors[Math.floor(Math.random() * sponsors.length)];
+    const name = generateCoolString(sponsor.name);
+    const background = sponsor.background;
+    const logo = sponsor.logo;
+    const logo_alt = generateCoolString(sponsor.logo_alt);
+    const title = generateCoolString(sponsor.title);
+    const description = sponsor.description
+      .split("\n")
+      .map((d) => generateCoolString(d))
+      .join("<br/>");
+    const cta = generateCoolString(sponsor.cta);
+    const url = sponsor.url;
+
+    const card = linkElement.closest(".card");
+    card.classList.add(r);
+    const stylesheet = new CSSStyleSheet();
+    stylesheet.replaceSync(`
     .${r} {
       text-align: left !important;
       background: ${background};
@@ -97,26 +102,27 @@
       content: "";
     }
   `);
-  document.adoptedStyleSheets = [...document.adoptedStyleSheets, stylesheet];
+    document.adoptedStyleSheets = [...document.adoptedStyleSheets, stylesheet];
 
-  const img = card.querySelector("img");
-  img.src = logo;
-  img.alt = logo_alt;
+    const img = card.querySelector("img");
+    img.src = logo;
+    img.alt = logo_alt;
 
-  const footer = card.querySelector(".card-footer");
-  const sponsoredBy = generateCoolString("Partnered with");
-  footer.innerHTML = `${sponsoredBy} <strong>${name}</strong>`;
+    const footer = card.querySelector(".card-footer");
+    const sponsoredBy = generateCoolString("Partnered with");
+    footer.innerHTML = `${sponsoredBy} <strong>${name}</strong>`;
 
-  const row = card.querySelector(".row");
-  const col2 = row.querySelector(".col-auto:nth-child(2)");
-  col2.classList.remove("text-muted");
-  col2.classList.add("text-white");
-  col2.innerHTML = `<strong class="fw-bold h5">${title}</strong><br/>${description}<strong>${cta}</strong>`;
+    const row = card.querySelector(".row");
+    const col2 = row.querySelector(".col-auto:nth-child(2)");
+    col2.classList.remove("text-muted");
+    col2.classList.add("text-white");
+    col2.innerHTML = `<strong class="fw-bold h5">${title}</strong><br/>${description}<strong>${cta}</strong>`;
 
-  linkElement.removeAttribute("href");
-  linkElement.addEventListener("click", function (e) {
-    e.preventDefault();
-    window.open(url, "_blank");
+    linkElement.removeAttribute("href");
+    linkElement.addEventListener("click", function (e) {
+      e.preventDefault();
+      window.open(url, "_blank");
+    });
   });
 </script>
 <div class="card">
@@ -134,8 +140,8 @@
       </div>
       <div class="col-auto text-muted">
         <strong class="fw-bold h5">█████████</strong><br />
-         █████████████████████████████<br />
-         ████████████████████████<br />
+        █████████████████████████████<br />
+        ████████████████████████<br />
         <strong>███████████████████████████████████</strong>
       </div>
       <a href="https://comfig.app/?aff=comfig"></a>

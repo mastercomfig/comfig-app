@@ -26,7 +26,7 @@ import NavSelector from "@components/NavSelector.astro";
     background: rgb(0 206 187 / 50%);
   }
 
-  #search-results {
+  #hits-search-results {
     max-height: 90vh;
     box-shadow: 0 0 1rem 1rem rgb(0 0 0 / 50%);
     width: 100%;
@@ -36,7 +36,7 @@ import NavSelector from "@components/NavSelector.astro";
   }
 
   @media (width >= 992px) {
-    #search-results {
+    #hits-search-results {
       width: max(calc(960px * 0.495), 24.5vw);
       max-width: 653px;
       transform: translate(-50.7%, 0);
@@ -60,117 +60,122 @@ import NavSelector from "@components/NavSelector.astro";
 </style>
 
 <script>
-  import MiniSearch from "minisearch";
-  import debounce from "debounce";
   import hitsounds from "@ssg/hitsounds.json";
+  import debounce from "debounce";
+  import MiniSearch from "minisearch";
 
-  const fields = ["id", "type"];
-
-  const existingIds = new Map();
-
-  const hs = hitsounds.hitsounds.map((s) => {
-    s.type = "hitsound";
-    return s;
-  });
-  const ks = hitsounds.killsounds.map((s) => {
-    s.type = "killsound";
-    return s;
-  });
-
-  const documents = hs.concat(ks).map((hitsound) => {
-    if (existingIds.has(hitsound.name)) {
-      const curr = existingIds.get(hitsound.name);
-      existingIds.set(hitsound.name, curr + 1);
-      hitsound.name = hitsound.name + curr;
-    } else {
-      existingIds.set(hitsound.name, 1);
-    }
-    return {
-      id: hitsound.name,
-      type: hitsound.type,
-      hash: hitsound.hash,
-    };
-  });
-  const miniSearch = new MiniSearch({
-    fields,
-    storeFields: [...fields, "hash"],
-  });
-  miniSearch.addAll(documents);
-
-  const searchResults = document.getElementById("search-results");
-
-  const emptySearch = '<p class="lead m-0">Type to search for sounds!</p>';
-  const noResults = '<p class="lead m-0">No results found.</p>';
-
-  let currentInput = "";
-  function searchInternal(query) {
-    currentInput = query;
-    if (!query || query.length === 0) {
-      searchResults.innerHTML = emptySearch;
+  document.addEventListener("astro:page-load", () => {
+    const searchResults = document.getElementById("hits-search-results");
+    if (!searchResults) {
       return;
     }
-    const results = miniSearch.search(query, {
-      prefix: true,
+
+    const fields = ["id", "type"];
+
+    const existingIds = new Map();
+
+    const hs = hitsounds.hitsounds.map((s) => {
+      s.type = "hitsound";
+      return s;
     });
-    if (!results || results.length === 0) {
-      searchResults.innerHTML = noResults;
-      return;
-    }
-    searchResults.innerHTML = "";
-    for (const result of results) {
-      const resultDiv = document.createElement("div");
-      resultDiv.classList.add("card", "mb-2", "text-start");
-      const resultBody = document.createElement("div");
-      resultBody.classList.add("card-body");
-      const resultTitle = document.createElement("h5");
-      resultTitle.classList.add("card-title");
-      resultTitle.innerHTML = `${result.id} <span class="fas fa-${
-        result.type === "hitsound" ? "bullseye" : "skull-crossbones"
-      } fa-fw"></span>`;
-      resultBody.appendChild(resultTitle);
-      const resultLink = document.createElement("a");
-      resultLink.classList.add("stretched-link");
-      resultLink.href = `https://hits.mastercomfig.com/${result.hash}.wav`;
-      resultLink.download = `${result.type}.wav`;
-      resultLink.innerHTML = '<span class="fas fa-download fa-fw"></span>';
-      resultBody.appendChild(resultLink);
-      resultDiv.appendChild(resultBody);
-      searchResults.appendChild(resultDiv);
-    }
-  }
+    const ks = hitsounds.killsounds.map((s) => {
+      s.type = "killsound";
+      return s;
+    });
 
-  // TODO: 145ms may be too low, investigate to adjust
-  const search = debounce(searchInternal, 145);
+    const documents = hs.concat(ks).map((hitsound) => {
+      if (existingIds.has(hitsound.name)) {
+        const curr = existingIds.get(hitsound.name);
+        existingIds.set(hitsound.name, curr + 1);
+        hitsound.name = hitsound.name + curr;
+      } else {
+        existingIds.set(hitsound.name, 1);
+      }
+      return {
+        id: hitsound.name,
+        type: hitsound.type,
+        hash: hitsound.hash,
+      };
+    });
+    const miniSearch = new MiniSearch({
+      fields,
+      storeFields: [...fields, "hash"],
+    });
+    miniSearch.addAll(documents);
 
-  const searchInput = document.getElementById("search-input");
-  searchInput.addEventListener("input", (event) => {
-    const query = event.target.value;
-    search(query);
-  });
-  let isFocused = false;
-  let clickedOut = true;
-  searchInput.addEventListener("focus", (event) => {
-    const query = event.target.value;
-    if (query !== currentInput) {
-      search(query);
-      search.flush();
-    }
-    searchResults.classList.remove("d-none");
-    isFocused = true;
-    clickedOut = false;
-  });
-  // Only remove search results if not clicking the search results
-  searchInput.addEventListener("blur", () => {
-    isFocused = false;
-  });
-  window.addEventListener("click", (event) => {
-    if (!isFocused && !searchResults.contains(event.target)) {
-      searchResults.classList.add("d-none");
-      if (!clickedOut && !isFocused) {
-        event.preventDefault();
-        clickedOut = true;
+    const emptySearch = '<p class="lead m-0">Type to search for sounds!</p>';
+    const noResults = '<p class="lead m-0">No results found.</p>';
+
+    let currentInput = "";
+    function searchInternal(query) {
+      currentInput = query;
+      if (!query || query.length === 0) {
+        searchResults.innerHTML = emptySearch;
+        return;
+      }
+      const results = miniSearch.search(query, {
+        prefix: true,
+      });
+      if (!results || results.length === 0) {
+        searchResults.innerHTML = noResults;
+        return;
+      }
+      searchResults.innerHTML = "";
+      for (const result of results) {
+        const resultDiv = document.createElement("div");
+        resultDiv.classList.add("card", "mb-2", "text-start");
+        const resultBody = document.createElement("div");
+        resultBody.classList.add("card-body");
+        const resultTitle = document.createElement("h5");
+        resultTitle.classList.add("card-title");
+        resultTitle.innerHTML = `${result.id} <span class="fas fa-${
+          result.type === "hitsound" ? "bullseye" : "skull-crossbones"
+        } fa-fw"></span>`;
+        resultBody.appendChild(resultTitle);
+        const resultLink = document.createElement("a");
+        resultLink.classList.add("stretched-link");
+        resultLink.href = `https://hits.mastercomfig.com/${result.hash}.wav`;
+        resultLink.download = `${result.type}.wav`;
+        resultLink.innerHTML = '<span class="fas fa-download fa-fw"></span>';
+        resultBody.appendChild(resultLink);
+        resultDiv.appendChild(resultBody);
+        searchResults.appendChild(resultDiv);
       }
     }
+
+    // TODO: 145ms may be too low, investigate to adjust
+    const search = debounce(searchInternal, 145);
+
+    const searchInput = document.getElementById("search-input");
+    searchInput.addEventListener("input", (event) => {
+      const query = event.target.value;
+      search(query);
+    });
+    let isFocused = false;
+    let clickedOut = true;
+    searchInput.addEventListener("focus", (event) => {
+      const query = event.target.value;
+      if (query !== currentInput) {
+        search(query);
+        search.flush();
+      }
+      searchResults.classList.remove("d-none");
+      isFocused = true;
+      clickedOut = false;
+    });
+    // Only remove search results if not clicking the search results
+    searchInput.addEventListener("blur", () => {
+      isFocused = false;
+    });
+    window.addEventListener("click", (event) => {
+      if (!isFocused && !searchResults.contains(event.target)) {
+        searchResults.classList.add("d-none");
+        if (!clickedOut && !isFocused) {
+          event.preventDefault();
+          clickedOut = true;
+        }
+      }
+    });
   });
 </script>
 
@@ -203,7 +208,7 @@ import NavSelector from "@components/NavSelector.astro";
   </nav>
   <div class="position-relative">
     <div
-      id="search-results"
+      id="hits-search-results"
       class="d-none position-absolute top-0 start-50 bg-dark p-3"
     >
       <p class="lead m-0">Type to search for sounds!</p>

@@ -1,82 +1,9 @@
 import react from "@astrojs/react";
+import sitemap from "@astrojs/sitemap";
 import sentry from "@sentry/astro";
 import AstroPWA from "@vite-pwa/astro";
 import { defineConfig } from "astro/config";
-import crypto from "crypto";
-import fs from "fs";
 import url from "url";
-
-const pwaOptions = {
-  registerType: "autoUpdate",
-  devOptions: {
-    enabled: process.env.SW_DEV === "true",
-    /* when using generateSW the PWA plugin will switch to classic */
-    type: "module",
-  },
-};
-let pwaPlugin;
-let pwa = {
-  name: "@astrojs/pwa",
-  hooks: {
-    "astro:config:setup": ({ config, updateConfig }) => {
-      updateConfig({
-        vite: {
-          plugins: [VitePWA(pwaOptions)],
-        },
-      });
-    },
-    "astro:config:done": ({ config }) => {
-      const plugins = config.vite.plugins ?? [];
-      for (const p of plugins) {
-        if (Array.isArray(p)) {
-          pwaPlugin = p.find(
-            (p1) => p1 && !Array.isArray(p1) && p1.name === "vite-plugin-pwa",
-          );
-          break;
-        }
-      }
-    },
-    "astro:build:done": async ({ dir, routes }) => {
-      const api = pwaPlugin?.api;
-      if (routes && api && !api.disabled) {
-        // todo@userquin: rn we only add the static pages, we should exclude dynamic routes
-        const addRoutes = await Promise.all(
-          routes
-            .filter((r) => r.type === "page" && r.pathname && r.distURL)
-            .map(
-              (r) =>
-                new Promise((resolve, reject) => {
-                  let url = r.pathname;
-                  let path = r.distURL;
-                  const cHash = crypto.createHash("MD5");
-                  const stream = fs.createReadStream(path);
-                  stream.on("error", (err) => {
-                    reject(err);
-                  });
-                  stream.on("data", (chunk) => {
-                    cHash.update(chunk);
-                  });
-                  stream.on("end", () => {
-                    return resolve({
-                      url,
-                      revision: `${cHash.digest("hex")}`,
-                    });
-                  });
-                }),
-            ),
-        );
-        api.extendManifestEntries((manifestEntries) => {
-          manifestEntries.push(...addRoutes);
-          return manifestEntries;
-        });
-        // generate the manifest.webmanifest file
-        api.generateBundle();
-        // regenerate the sw
-        await api.generateSW();
-      }
-    },
-  },
-};
 
 // https://astro.build/config
 export default defineConfig({
@@ -94,17 +21,19 @@ export default defineConfig({
     AstroPWA({
       devOptions: {
         type: "module",
+        enabled: true,
       },
       registerType: "autoUpdate",
       workbox: {
-        navigateFallback: "/404",
+        navigateFallback: "/offline/index.html",
         globPatterns: [
-          "**/*.{css,js,json,webp,svg,png,ico}",
-          "/app/index.html",
-          "/index.html",
+          "**/*.{css,js,json,webp,svg,png,ico,woff2,mp4,vtf,vmt}",
+          "app/index.html",
+          "index.html",
+          "offline/index.html",
         ],
       },
-      includeAssets: ["favicon.ico", "favicon.png"],
+      includeAssets: ["**/*.{png,xml,ico,svg,webp,mp4,vtf,vmt}"],
       manifest: {
         name: "mastercomfig",
         short_name: "mastercomfig",
@@ -149,6 +78,7 @@ export default defineConfig({
         directoryAndTrailingSlashHandler: true,
       },
     }),
+    sitemap(),
   ],
   vite: {
     build: {
@@ -164,5 +94,14 @@ export default defineConfig({
         ),
       },
     },
+  },
+  prefetch: {
+    prefetchAll: true,
+    defaultStrategy: "viewport",
+  },
+  experimental: {
+    directRenderScript: true,
+    clientPrerender: true,
+    globalRoutePriority: true,
   },
 });

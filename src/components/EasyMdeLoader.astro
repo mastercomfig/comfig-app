@@ -1,0 +1,23 @@
+---
+
+---
+
+<easymde-loader></easymde-loader>
+
+<script>
+  import EasyMDE from "easymde";
+
+  class EasyMdeLoader extends HTMLElement {
+    async connectedCallback() {
+      const description = document.getElementById("description");
+      if (!description) {
+        return;
+      }
+      const descriptionEditor = new EasyMDE({
+        element: description,
+      });
+    }
+  }
+
+  customElements.define("easymde-loader", EasyMdeLoader);
+</script>

@@ -10,6 +10,7 @@ import HitsNav from "@components/hits/HitsNav.astro";
 import Sponsor from "@components/Sponsor.astro";
 
 import "@styles/hits.scss";
+import FittyText from "@components/FittyText.astro";
 
 const { page, hitsounds } = Astro.props;
 
@@ -22,10 +23,6 @@ const currentPage = page.currentPage ?? 1;
     <PreloadHead />
     <ImportHead>
       <script>
-        import fitty from "fitty";
-        fitty(".card-title");
-      </script>
-      <script>
         import "@utils/hits.ts";
       </script>
     </ImportHead>
@@ -36,6 +33,7 @@ const currentPage = page.currentPage ?? 1;
     />
   </head>
   <Body>
+    <FittyText className=".card-title" />
     <HitsNav />
     <div class="container g-0">
       <br />
