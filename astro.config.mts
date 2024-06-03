@@ -78,7 +78,6 @@ export default defineConfig({
       },
     }),
     react(),
-    pwa,
     sitemap(),
   ],
   vite: {
