@@ -13,9 +13,7 @@ const pwa = AstroPWA({
   registerType: "autoUpdate",
   workbox: {
     globPatterns: [
-      "**/*.{css,js,json,webp,svg,png,ico,woff2,mp4,vtf,vmt}",
-      "app/index.html",
-      "index.html",
+      "**/*.{css,js,json,webp,svg,png,ico,woff2,mp4,vtf,vmt,html}",
     ],
   },
   includeAssets: ["**/*.{png,xml,ico,svg,webp,mp4,vtf,vmt}"],
@@ -78,6 +76,7 @@ export default defineConfig({
       },
     }),
     react(),
+    pwa,
     sitemap(),
   ],
   vite: {
