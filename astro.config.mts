@@ -8,7 +8,7 @@ import url from "url";
 const pwa = AstroPWA({
   devOptions: {
     type: "module",
-    enabled: true,
+    enabled: false,
   },
   registerType: "autoUpdate",
   workbox: {

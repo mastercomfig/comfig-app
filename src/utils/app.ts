@@ -18,12 +18,16 @@ const idbKeyval = {
 };
 
 export async function app() {
-  console.log("App loading...");
   const downloadStatusEl = document.getElementById("download-status");
   if (downloadStatusEl) {
+    // HACK: skip loading app if download status is mutated
+    if (downloadStatusEl.innerHTML === "") {
+      return;
+    }
     downloadStatusEl.innerHTML = "";
     downloadStatusEl.classList.remove("download-status-fill");
   }
+  console.log("App loading...");
 
   const dfirebase = import("firebase/compat/app")
     .then(async (firebase) => {
@@ -3067,7 +3071,8 @@ export async function app() {
     setTimeout(() => {
       captureKeyboard(false);
     }, 1);
-    history.back();
+    // TODO: Unfortunately with view transitions this hack for mouse4/5 doesn't work...
+    //history.back();
     element.placeholder = "<Unbound>";
     element.classList.add("disabled");
     if (removeInput) {
@@ -3090,7 +3095,8 @@ export async function app() {
       lastBindInput = e.currentTarget;
       e.currentTarget.classList.remove("disabled");
       e.currentTarget.value = "";
-      history.pushState(null, document.title, location.href);
+      // Unfortunately with view transitions this hack for mouse4/5 doesn't work...
+      //history.pushState(null, document.title, location.href);
       e.currentTarget.placeholder = "<Press key or mouse button to bind>";
     });
     bindField.addEventListener("input", (e) => {
