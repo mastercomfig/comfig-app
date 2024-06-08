@@ -184,12 +184,11 @@ export const getHuds = async () => {
                 const infoVdfJson = parse(infoVdf);
                 const hudVdfInfo = Object.entries(infoVdfJson)[0][1];
                 const vdfEntry = hudVdfInfo.ui_version ?? hudVdfInfo.UI_VERSION;
-                console.log(infoVdf, vdfEntry);
                 const tfUiVersion = parseInt(vdfEntry, 10);
                 hudData.outdated = tfUiVersion !== CURRENT_HUD_VERSION;
               } catch (e) {
                 // info.vdf exists but is invalid
-                console.log(`Invalid info.vdf for ${hudId} (${ghRepo})`, e);
+                console.log(`Invalid info.vdf for ${hudId} (${ghRepo})`);
                 hudData.outdated = true;
               }
             } else if (infoVdf.status == 404) {
