@@ -229,18 +229,20 @@ const authors = await fetchAuthors();
     <div class="container g-0">
       <h1 class="display-1 mt-3">
         {hud.name}<span class="text-muted display-4"
-          >&nbsp;by <a href=`/huds/author/${hud.authorId}`
-            >{
-              hud.ghAuthor && (
-                <img
-                  class="title-author-icon rounded-circle"
-                  src={`https://avatars.githubusercontent.com/${hud.ghAuthor}`}
-                  alt="i"
-                />
-              )
-            }
-            <span class="hud-author-link">{hud.author}</span></a
-          ></span
+          >&nbsp;by {hud.authorId === "unknown" && "Unknown"}{
+            hud.authorId !== "unknown" && (
+              <a href={`/huds/author/${hud.authorId}`}>
+                {hud.ghAuthor && (
+                  <img
+                    class="title-author-icon rounded-circle"
+                    src={`https://avatars.githubusercontent.com/${hud.ghAuthor}`}
+                    alt="i"
+                  />
+                )}
+                <span class="hud-author-link">{hud.author}</span>
+              </a>
+            )
+          }</span
         >
       </h1>
       {
@@ -583,9 +585,12 @@ const authors = await fetchAuthors();
                   {hud.contributors.map((contributor, i) => (
                     <>
                       <span>
-                        {i > 0 && " |\u00A0"}
+                        {i > 0 && " |"}
                         {authors[transformName(contributor)] ? (
-                          <span class="inline-contributor">
+                          <a
+                            class="inline-contributor"
+                            href={`/huds/author/${transformName(contributor)}`}
+                          >
                             {authors[transformName(contributor)].ghAuthor && (
                               <img
                                 class="inline-author-icon rounded-circle"
@@ -593,12 +598,8 @@ const authors = await fetchAuthors();
                                 alt="i"
                               />
                             )}
-                            <a
-                              href={`/huds/author/${transformName(contributor)}`}
-                            >
-                              {contributor}
-                            </a>
-                          </span>
+                            {contributor}
+                          </a>
                         ) : (
                           contributor
                         )}
