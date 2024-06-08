@@ -182,10 +182,9 @@ export const getHuds = async () => {
             if (infoVdf !== null) {
               try {
                 const infoVdfJson = parse(infoVdf);
-                const tfUiVersion = parseInt(
-                  Object.entries(infoVdfJson)[0][1].ui_version,
-                  10,
-                );
+                const infoVdf = Object.entries(infoVdfJson)[0][1];
+                const vdfEntry = infoVdf.ui_version ?? infoVdf.UI_VERSION;
+                const tfUiVersion = parseInt(vdfEntry, 10);
                 hudData.outdated = tfUiVersion !== CURRENT_HUD_VERSION;
               } catch (e) {
                 // info.vdf exists but is invalid
