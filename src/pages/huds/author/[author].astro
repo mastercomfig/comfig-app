@@ -1,0 +1,220 @@
+---
+import Body from "@components/Body.astro";
+import Footer from "@components/Footer.astro";
+import BaseHead from "@components/head/BaseHead.astro";
+import ImportHead from "@components/head/ImportHead.astro";
+import MainHead from "@components/head/MainHead.astro";
+import PreloadHead from "@components/head/PreloadHead.astro";
+import HudListItem from "@components/huds/HudListItem.astro";
+import HudNav from "@components/huds/HudNav.astro";
+import Layout from "@layouts/Layout.astro";
+
+import { fetchAuthors } from "@ssg/huds";
+
+export async function getStaticPaths() {
+  const authors = await fetchAuthors();
+  return Object.entries(authors).map(([author, props]) => {
+    return {
+      params: {
+        author,
+      },
+      props: {
+        authorName: props.authorName,
+        ghAuthor: props.ghAuthor,
+        huds: props.huds,
+        contributing: props.contributing,
+        socials: props.socials,
+      },
+    };
+  });
+}
+
+const {
+  huds,
+  contributing,
+  authorName: author,
+  ghAuthor,
+  socials: social,
+} = Astro.props;
+---
+
+<Layout>
+  <head>
+    <BaseHead />
+    <PreloadHead />
+    <ImportHead>
+      <style>
+        .author-icon {
+          height: 6rem;
+          vertical-align: middle;
+        }
+
+        .author-title {
+          vertical-align: middle;
+        }
+      </style>
+    </ImportHead>
+    <MainHead
+      title={`${author}`}
+      site="comfig huds - mastercomfig"
+      description={`${
+        author
+      }${author.slice(-1).toLowerCase() === "s" ? "'" : "'s"} HUDs on comfig huds, a modern Team Fortress 2 HUD directory.`}
+    />
+  </head>
+  <Body>
+    <HudNav />
+    <div class="container g-0">
+      <h1 class="display-1 mt-3">
+        {
+          (ghAuthor && (
+            <img
+              class="author-icon rounded-circle"
+              src={`https://avatars.githubusercontent.com/${ghAuthor}`}
+              alt="i"
+            />
+          )) || <span class="fas fa-user fa-fw author-icon" />
+        }
+        <span class={ghAuthor ? "author-title" : undefined}>{author}</span>
+      </h1>
+      {Object.keys(social).length > 0 && <br />}
+      <ul class="list-group list-group-horizontal">
+        {
+          social.support && (
+            <a
+              href={social.support}
+              class="list-group-item d-flex justify-content-between align-items-center support-pink"
+            >
+              <span>
+                <span class="fas fa-hand-holding-heart fa-fw" /> Support
+              </span>
+            </a>
+          )
+        }
+        {
+          social.discord && social.discord.includes("#") && (
+            <li class="list-group-item">
+              <strong>
+                <span class="fab fa-discord fa-fw" />
+                Discord:&nbsp;
+              </strong>
+              <span>
+                {Number(social.discord.split("#")[1]) === 0
+                  ? social.discord.split("#")[0]
+                  : social.discord}
+              </span>
+            </li>
+          )
+        }
+        {
+          social.discord && !social.discord.includes("#") && (
+            <a
+              href={`https://discord.gg/${social.discord}`}
+              class="list-group-item d-flex justify-content-between align-items-center"
+            >
+              <span>
+                <span class="fab fa-discord fa-fw" /> Discord
+              </span>
+            </a>
+          )
+        }
+        {
+          social.steam_group && (
+            <a
+              href={`https://steamcommunity.com/groups/${social.steam_group}`}
+              class="list-group-item d-flex justify-content-between align-items-center"
+            >
+              <span>
+                <span class="fab fa-steam fa-fw" /> Steam Group
+              </span>
+            </a>
+          )
+        }
+        {
+          social.steam_profile && (
+            <a
+              href={`https://steamcommunity.com/profiles/${social.steam_profile}`}
+              class="list-group-item d-flex justify-content-between align-items-center"
+            >
+              <span>
+                <span class="fab fa-steam fa-fw" /> Steam Profile
+              </span>
+            </a>
+          )
+        }
+        {
+          social.twitter && (
+            <a
+              href={`https://twitter.com/${social.twitter}`}
+              class="list-group-item d-flex justify-content-between align-items-center"
+            >
+              <span>
+                <span class="fab fa-twitter fa-fw" /> Twitter
+              </span>
+            </a>
+          )
+        }
+        {
+          social.youtube && (
+            <a
+              href={`https://www.youtube.com/${social.youtube}`}
+              class="list-group-item d-flex justify-content-between align-items-center"
+            >
+              <span>
+                <span class="fab fa-youtube fa-fw" /> YouTube
+              </span>
+            </a>
+          )
+        }
+        {
+          social.twitch && (
+            <a
+              href={`https://twitch.tv/${social.twitch}`}
+              class="list-group-item d-flex justify-content-between align-items-center"
+            >
+              <span>
+                <span class="fab fa-twitch fa-fw" /> Twitch
+              </span>
+            </a>
+          )
+        }
+      </ul>
+      <hr />
+      <h2 class="display-5">HUDs</h2>
+      <div class="row">
+        {
+          huds.map((hud) => (
+            <div class="col-12 col-md-6 col-lg-4 mt-4">
+              <HudListItem hud={hud} expanded={true} carousel={true} />
+            </div>
+          ))
+        }
+      </div>
+      {
+        contributing.length > 0 && (
+          <>
+            <hr />
+            <h2 class="display-5">Contributed to</h2>
+            <div class="row">
+              {contributing.map((hud) => (
+                <div class="col-12 col-md-6 col-lg-4 mt-4">
+                  <HudListItem hud={hud} expanded={true} carousel={true} />
+                </div>
+              ))}
+            </div>
+          </>
+        )
+      }
+      <hr />
+    </div>
+    <Footer />
+    <footer class="container g-0">
+      <br />
+      <p>
+        <a href="https://github.com/mastercomfig/comfig-app"
+          ><span class="fab fa-github fa-fw"></span> Source code</a
+        >
+      </p>
+    </footer>
+  </Body>
+</Layout>

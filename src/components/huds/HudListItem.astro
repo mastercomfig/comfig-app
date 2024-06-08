@@ -48,6 +48,11 @@ function getHypeGrad() {
     z-index: 2;
   }
 
+  .inline-author-icon {
+    height: 1.2rem;
+    vertical-align: text-top;
+  }
+
   .btn-outline-secondary:hover {
     color: var(--bs-btn-hover-color);
   }
@@ -118,7 +123,18 @@ function getHypeGrad() {
         )
       }
     </h5>
-    <h6 class="card-subtitle mb-2 text-muted">{hud.author}</h6>
+    <h6 class="card-subtitle mb-2 text-muted">
+      {
+        hud.ghAuthor && (
+          <img
+            class="inline-author-icon rounded-circle"
+            src={`https://avatars.githubusercontent.com/${hud.ghAuthor}`}
+            alt="i"
+          />
+        )
+      }
+      {hud.author}
+    </h6>
     <a href={`/huds/page/${hud.id}/`} class="stretched-link"></a>
   </div>
   {

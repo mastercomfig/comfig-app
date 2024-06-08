@@ -9,7 +9,7 @@ import Footer from "@components/Footer.astro";
 import HudListItem from "@components/huds/HudListItem.astro";
 import HudNav from "@components/huds/HudNav.astro";
 
-import { fetchHuds } from "@ssg/huds";
+import { fetchHuds, fetchAuthors, transformName } from "@ssg/huds";
 
 import { Markdown } from "astro-remote";
 import removeMd from "remove-markdown";
@@ -116,6 +116,8 @@ if (hudDescBase.length < cleanContent.length) {
   hudDescBase += "...";
 }
 const hudDescription = hudDescBase;
+
+const authors = await fetchAuthors();
 ---
 
 <Layout>
@@ -126,6 +128,24 @@ const hudDescription = hudDescBase;
       <style>
         .verified-gold {
           color: #c5b358;
+        }
+
+        .title-author-icon {
+          height: 4.125rem;
+          vertical-align: text-top;
+        }
+
+        .inline-author-icon {
+          height: 1.2rem;
+          vertical-align: text-top;
+        }
+
+        .inline-contributor {
+          white-space: nowrap;
+        }
+
+        .hud-author-link {
+          color: var(--bs-body-color) !important;
         }
 
         .support-pink {
@@ -208,8 +228,20 @@ const hudDescription = hudDescBase;
     <HudNav />
     <div class="container g-0">
       <h1 class="display-1 mt-3">
-        {hud.name}
-        <span class="text-muted display-4">&nbsp;by {hud.author}</span>
+        {hud.name}<span class="text-muted display-4"
+          >&nbsp;by <a href=`/huds/author/${hud.authorId}`
+            >{
+              hud.ghAuthor && (
+                <img
+                  class="title-author-icon rounded-circle"
+                  src={`https://avatars.githubusercontent.com/${hud.ghAuthor}`}
+                  alt="i"
+                />
+              )
+            }
+            <span class="hud-author-link">{hud.author}</span></a
+          ></span
+        >
       </h1>
       {
         (hud.resources.length > 1 && (
@@ -548,7 +580,31 @@ const hudDescription = hudDescBase;
               hud.contributors && (
                 <li class="list-group-item">
                   <strong>Contributors:&nbsp;</strong>
-                  {hud.contributors.join(", ")}
+                  {hud.contributors.map((contributor, i) => (
+                    <>
+                      <span>
+                        {i > 0 && " |\u00A0"}
+                        {authors[transformName(contributor)] ? (
+                          <span class="inline-contributor">
+                            {authors[transformName(contributor)].ghAuthor && (
+                              <img
+                                class="inline-author-icon rounded-circle"
+                                src={`https://avatars.githubusercontent.com/${authors[transformName(contributor)].ghAuthor}`}
+                                alt="i"
+                              />
+                            )}
+                            <a
+                              href={`/huds/author/${transformName(contributor)}`}
+                            >
+                              {contributor}
+                            </a>
+                          </span>
+                        ) : (
+                          contributor
+                        )}
+                      </span>
+                    </>
+                  ))}
                 </li>
               )
             }

@@ -78,6 +78,10 @@ export const getHuds = async () => {
         const fileName = hud.path.split("/").reverse()[0];
         const hudId = fileName.substr(0, fileName.lastIndexOf("."));
         hudData.id = hudId;
+        hudData.authorId = hudData.author
+          .replace(/[^\p{L}\p{N}]+/gu, "-")
+          .replace(/-+/g, "-")
+          .toLowerCase();
         hudData.code = hudId.replaceAll("-", "");
 
         // Query markdown
@@ -109,9 +113,19 @@ export const getHuds = async () => {
           hudData.social.issues = `${hudData.repo}/issues`;
         }
 
+        if (hudData.githubAuthor) {
+          hudData.ghAuthor = hudData.githubAuthor;
+        }
+
         if (isGithub) {
           // Just the user/repo
           const ghRepo = hudData.repo.replace("https://github.com/", "");
+          if (
+            hudData.githubAuthor === undefined &&
+            hudData.author !== "Unknown"
+          ) {
+            hudData.ghAuthor = ghRepo.split("/")[0];
+          }
 
           // Query the tag
           // TODO: this may be flagged as abuse by GitHub.
@@ -276,6 +290,93 @@ export const fetchHuds = async function (all) {
   return results;
 };
 
+let hudAuthors = null;
+
+export const transformName = function (name) {
+  return name
+    .replace(/[^\p{L}\p{N}]+/gu, "-")
+    .replace(/-+/g, "-")
+    .toLowerCase();
+};
+
+export const fetchAuthors = async function () {
+  if (hudAuthors) {
+    return hudAuthors;
+  }
+
+  const authorHuds = {};
+  const contributorHuds = {};
+
+  const huds = await fetchHuds(true);
+
+  for (const hud of huds) {
+    const author = hud.authorId;
+    if (authorHuds[author]) {
+      authorHuds[author].push(hud);
+    } else {
+      authorHuds[author] = [hud];
+    }
+    for (const contributor of hud.contributors ?? []) {
+      const contributorId = transformName(contributor);
+      if (contributorHuds[contributorId]) {
+        contributorHuds[contributorId].push(hud);
+      } else {
+        contributorHuds[contributorId] = [hud];
+      }
+    }
+  }
+
+  hudAuthors = Object.fromEntries(
+    Object.entries(authorHuds)
+      .filter(([author, huds]) => author !== "Unknown")
+      .map(([author, huds]) => {
+        const authorName = huds[0].author;
+        const ghAuthor = huds[0].ghAuthor;
+        const socials = {
+          support: undefined,
+          steam_profile: undefined,
+          steam_group: undefined,
+          twitter: undefined,
+          discord: undefined,
+          youtube: undefined,
+          twitch: undefined,
+        };
+        for (const hud of huds) {
+          for (const social of Object.keys(socials)) {
+            const socialLink = hud.social?.[social] ?? null;
+            if (socials[social] === undefined) {
+              socials[social] = socialLink;
+            } else {
+              if (socials[social] !== socialLink) {
+                socials[social] = null;
+              }
+            }
+          }
+        }
+        for (const social of Object.keys(socials)) {
+          if (!socials[social]) {
+            delete socials[social];
+          }
+        }
+        const contributing = contributorHuds[author] ?? [];
+        return [
+          author,
+          {
+            authorName,
+            ghAuthor,
+            huds: huds.sort((a, b) => a.code.localeCompare(b.code)),
+            contributing: contributing.sort((a, b) =>
+              a.code.localeCompare(b.code),
+            ),
+            socials,
+          },
+        ];
+      }),
+  );
+
+  return hudAuthors;
+};
+
 export async function getAllHudsHash() {
   const allHuds = await getHudDb();
 
@@ -286,7 +387,7 @@ export async function getAllHudsHash() {
   return hash;
 }
 
-const debugPopularity = true;
+const debugPopularity = false;
 function logPopularity(...args) {
   if (debugPopularity) {
     console.log(...args);
