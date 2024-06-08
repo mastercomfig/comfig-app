@@ -5,5 +5,16 @@
 <html lang="en-US" data-bs-theme="dark" transition:animate="none">
   <slot />
 
+  <script>
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    document.addEventListener("astro:page-load", () => {
+      if (!mediaQuery.matches) {
+        setTimeout(() => {
+          document.documentElement.style.scrollBehavior = "smooth";
+        }, 33);
+      }
+    });
+  </script>
+
 
 </html>

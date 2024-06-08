@@ -22,6 +22,10 @@
   * {
     scroll-behavior: smooth;
   }
+
+  html {
+    scroll-behavior: auto;
+  }
 }
 
 ::-webkit-scrollbar-track {
