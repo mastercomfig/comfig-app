@@ -79,7 +79,7 @@ schemaProps.splice(repoIndex, 0, [
 
 const requiredProps = new Set(schema.required);
 
-const excludedProps = new Set(["verified"]);
+const excludedProps = new Set(["verified", "usesReleases", "githubAuthor"]);
 const excludedSections = new Set(["traits"]);
 
 const nameMappings = {
