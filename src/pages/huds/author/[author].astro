@@ -179,17 +179,21 @@ const {
           )
         }
       </ul>
-      <hr />
-      <h2 class="display-5">HUDs</h2>
-      <div class="row">
-        {
-          huds.map((hud) => (
-            <div class="col-12 col-md-6 col-lg-4 mt-4">
-              <HudListItem hud={hud} expanded={true} carousel={true} />
+      {
+        huds.length > 0 && (
+          <>
+            <hr />
+            <h2 class="display-5">HUDs</h2>
+            <div class="row">
+              {huds.map((hud) => (
+                <div class="col-12 col-md-6 col-lg-4 mt-4">
+                  <HudListItem hud={hud} expanded={true} carousel={true} />
+                </div>
+              ))}
             </div>
-          ))
-        }
-      </div>
+          </>
+        )
+      }
       {
         contributing.length > 0 && (
           <>

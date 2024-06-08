@@ -182,13 +182,14 @@ export const getHuds = async () => {
             if (infoVdf !== null) {
               try {
                 const infoVdfJson = parse(infoVdf);
-                const infoVdf = Object.entries(infoVdfJson)[0][1];
-                const vdfEntry = infoVdf.ui_version ?? infoVdf.UI_VERSION;
+                const hudVdfInfo = Object.entries(infoVdfJson)[0][1];
+                const vdfEntry = hudVdfInfo.ui_version ?? hudVdfInfo.UI_VERSION;
+                console.log(infoVdf, vdfEntry);
                 const tfUiVersion = parseInt(vdfEntry, 10);
                 hudData.outdated = tfUiVersion !== CURRENT_HUD_VERSION;
               } catch (e) {
                 // info.vdf exists but is invalid
-                console.log(`Invalid info.vdf for ${hudId} (${ghRepo})`);
+                console.log(`Invalid info.vdf for ${hudId} (${ghRepo})`, e);
                 hudData.outdated = true;
               }
             } else if (infoVdf.status == 404) {
@@ -305,6 +306,8 @@ export const fetchAuthors = async function () {
 
   const authorHuds = {};
   const contributorHuds = {};
+  const creatorName = {};
+  const creatorGithub = {};
 
   const huds = await fetchHuds(true);
 
@@ -314,6 +317,12 @@ export const fetchAuthors = async function () {
       authorHuds[author].push(hud);
     } else {
       authorHuds[author] = [hud];
+      if (!creatorName[author]) {
+        creatorName[author] = hud.author;
+      }
+      if (!creatorGithub[author]) {
+        creatorGithub[author] = hud.ghAuthor;
+      }
     }
     for (const contributor of hud.contributors ?? []) {
       const contributorId = transformName(contributor);
@@ -321,56 +330,65 @@ export const fetchAuthors = async function () {
         contributorHuds[contributorId].push(hud);
       } else {
         contributorHuds[contributorId] = [hud];
+        if (!creatorName[contributorId]) {
+          creatorName[contributorId] = contributor;
+        }
       }
     }
   }
 
+  const anyCreatorSet = new Set(Object.keys(authorHuds));
+  anyCreatorSet.delete("unknown");
+  for (const contributor of Object.keys(contributorHuds)) {
+    anyCreatorSet.add(contributor);
+  }
+  const anyCreator = Array.from(anyCreatorSet);
+
   hudAuthors = Object.fromEntries(
-    Object.entries(authorHuds)
-      .filter(([author, huds]) => author !== "Unknown")
-      .map(([author, huds]) => {
-        const authorName = huds[0].author;
-        const ghAuthor = huds[0].ghAuthor;
-        const socials = {
-          support: undefined,
-          steam_profile: undefined,
-          steam_group: undefined,
-          twitter: undefined,
-          discord: undefined,
-          youtube: undefined,
-          twitch: undefined,
-        };
-        for (const hud of huds) {
-          for (const social of Object.keys(socials)) {
-            const socialLink = hud.social?.[social] ?? null;
-            if (socials[social] === undefined) {
-              socials[social] = socialLink;
-            } else {
-              if (socials[social] !== socialLink) {
-                socials[social] = null;
-              }
+    anyCreator.map((creatorId) => {
+      const authorName = creatorName[creatorId];
+      const ghAuthor = creatorGithub[creatorId];
+      const socials = {
+        support: undefined,
+        steam_profile: undefined,
+        steam_group: undefined,
+        twitter: undefined,
+        discord: undefined,
+        youtube: undefined,
+        twitch: undefined,
+      };
+      const myHuds = authorHuds[creatorId] ?? [];
+      for (const hud of myHuds) {
+        for (const social of Object.keys(socials)) {
+          const socialLink = hud.social?.[social] ?? null;
+          if (socials[social] === undefined) {
+            socials[social] = socialLink;
+          } else {
+            if (socials[social] !== socialLink) {
+              socials[social] = null;
             }
           }
         }
-        for (const social of Object.keys(socials)) {
-          if (!socials[social]) {
-            delete socials[social];
-          }
+      }
+      for (const social of Object.keys(socials)) {
+        if (!socials[social]) {
+          delete socials[social];
         }
-        const contributing = contributorHuds[author] ?? [];
-        return [
-          author,
-          {
-            authorName,
-            ghAuthor,
-            huds: huds.sort((a, b) => a.code.localeCompare(b.code)),
-            contributing: contributing.sort((a, b) =>
-              a.code.localeCompare(b.code),
-            ),
-            socials,
-          },
-        ];
-      }),
+      }
+      const contributing = contributorHuds[creatorId] ?? [];
+      return [
+        creatorId,
+        {
+          authorName,
+          ghAuthor,
+          huds: myHuds.sort((a, b) => a.code.localeCompare(b.code)),
+          contributing: contributing.sort((a, b) =>
+            a.code.localeCompare(b.code),
+          ),
+          socials,
+        },
+      ];
+    }),
   );
 
   return hudAuthors;
