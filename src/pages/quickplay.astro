@@ -78,7 +78,16 @@ const gamemodes = [
 <Layout>
   <head>
     <BaseHead />
-    <PreloadHead />
+    <PreloadHead>
+      <link rel="preload" as="image" href={payloadImg.src} />
+      <link rel="preload" as="image" href={kothImg.src} />
+      <link rel="preload" as="image" href={adImg.src} />
+      <link rel="preload" as="image" href={ctfImg.src} />
+      <link rel="preload" as="image" href={cpImg.src} />
+      <link rel="preload" as="image" href={plrImg.src} />
+      <link rel="preload" as="image" href={miscImg.src} />
+      <link rel="preload" as="image" href={randomImg.src} />
+    </PreloadHead>
     <ImportHead>
       <style>
         .carousel {
