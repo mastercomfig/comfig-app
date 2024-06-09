@@ -1,0 +1,262 @@
+---
+import Body from "@components/Body.astro";
+import Footer from "@components/Footer.astro";
+import BaseHead from "@components/head/BaseHead.astro";
+import ImportHead from "@components/head/ImportHead.astro";
+import MainHead from "@components/head/MainHead.astro";
+import PreloadHead from "@components/head/PreloadHead.astro";
+import NavSelector from "@components/NavSelector.astro";
+import Layout from "@layouts/Layout.astro";
+import payloadImg from "@img/gamemodes/pl.png";
+import kothImg from "@img/gamemodes/koth.png";
+import adImg from "@img/gamemodes/ad.png";
+import ctfImg from "@img/gamemodes/ctf.png";
+import cpImg from "@img/gamemodes/cp.png";
+import plrImg from "@img/gamemodes/plr.png";
+import miscImg from "@img/gamemodes/sd.png";
+import randomImg from "@img/gamemodes/random.png";
+
+const gamemodes = [
+  {
+    name: "Payload",
+    code: "pl",
+    description: "BLU pushes the cart down the track. RED need to stop them.",
+    skill: 0,
+    img: payloadImg,
+  },
+  {
+    name: "King of the Hill",
+    code: "koth",
+    description: "One team must control a single point until time runs out.",
+    skill: 0,
+    img: kothImg,
+  },
+  {
+    name: "Attack / Defense",
+    code: "ad",
+    description: "BLU wins by capturing all points. RED wins by stopping them.",
+    skill: 0,
+    img: adImg,
+  },
+  {
+    name: "Capture the Flag",
+    code: "ctf",
+    description: "And by flag we mean a glowing briefcase.",
+    skill: 1,
+    img: ctfImg,
+  },
+  {
+    name: "Capture Points",
+    code: "cp",
+    description: "Capture all points to win.",
+    skill: 1,
+    img: cpImg,
+  },
+  {
+    name: "Payload Race",
+    code: "plr",
+    description: "Two teams. Two bombs. Two tracks. Hilarity ensues.",
+    skill: 1,
+    img: plrImg,
+  },
+  {
+    name: "Misc",
+    code: "misc",
+    description: "Game modes that don't fit into one of the other categories.",
+    skill: 2,
+    img: miscImg,
+  },
+  {
+    name: "Random",
+    description: "We'll match you into the best game we can find.",
+    skill: 2,
+    img: randomImg,
+  },
+];
+---
+
+<Layout>
+  <head>
+    <BaseHead />
+    <PreloadHead>
+      <link rel="preload" as="image" href={payloadImg.src} />
+      <link rel="preload" as="image" href={kothImg.src} />
+      <link rel="preload" as="image" href={adImg.src} />
+      <link rel="preload" as="image" href={ctfImg.src} />
+      <link rel="preload" as="image" href={cpImg.src} />
+      <link rel="preload" as="image" href={plrImg.src} />
+      <link rel="preload" as="image" href={miscImg.src} />
+      <link rel="preload" as="image" href={randomImg.src} />
+    </PreloadHead>
+    <ImportHead>
+      <style>
+        .carousel {
+          aspect-ratio: 4 / 3;
+          height: 70vh;
+        }
+        .carousel-item {
+          transition: none !important;
+        }
+        .carousel .carousel-control-prev-icon.carousel-dark-buttons,
+        .carousel .carousel-control-next-icon.carousel-dark-buttons {
+          filter: invert(1) grayscale(100) !important;
+        }
+      </style>
+      <script>
+        import { Carousel } from "bootstrap";
+
+        document.addEventListener("astro:page-load", () => {
+          const carouselEl = document.getElementById("quickplayGamemodes");
+          if (carouselEl) {
+            const carousel = new Carousel(carouselEl);
+          }
+        });
+      </script>
+    </ImportHead>
+    <MainHead title="Quickplay" />
+  </head>
+  <Body>
+    <nav class="navbar navbar-expand-sm sticky-top navbar-dark bg-teal">
+      <div class="container g-0">
+        <span class="navbar-brand">
+          <img
+            src="/img/mastercomfig_logo_transparent_i.svg"
+            alt=""
+            class="d-inline-block align-text-top"
+            width="24"
+            height="24"
+          />
+          <span class="d-none d-md-inline"> comfig</span>
+        </span>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <NavSelector pageName="quickplay" />
+        <div class="collapse navbar-collapse"></div>
+      </div>
+    </nav>
+    <header class="jumbotron jumbotron-fluid home-header mt-3">
+      <div
+        class="container d-flex align-items-center justify-content-center"
+        style="height: 100%"
+      >
+        <div class="align-middle text-center">
+          <h1 class="display-1" style="letter-spacing: 0.2rem;font-weight: 600">
+            START PLAYING
+          </h1>
+          <div
+            id="quickplayGamemodes"
+            class="carousel carousel-light slide carousel-fade p-4"
+            style="background: #ece9d7"
+          >
+            <div class="carousel-indicators carousel-hidable d-none">
+              {
+                gamemodes.map((resource, index) => (
+                  <button
+                    type="button"
+                    data-bs-target="#hudScreenshots"
+                    data-bs-slide-to={index}
+                    class={`${index == 0 ? "active" : ""}`}
+                    aria-current="true"
+                    aria-label={`Slide ${index + 1} ${resource}`}
+                  />
+                ))
+              }
+            </div>
+            <div class="carousel-inner h-100">
+              {
+                gamemodes.map((resource, index) => (
+                  <div
+                    class={`carousel-item h-100 ${index == 0 ? "active" : ""}`}
+                  >
+                    <div
+                      class="h-100 d-flex flex-column justify-content-between"
+                      style={`background-image: url('${resource.img.src}'); background-position: center; background-size: contain;background-repeat: no-repeat`}
+                    >
+                      <h2
+                        class="display-2"
+                        style="color: #915315; font-weight: 700; letter-spacing: 0.2rem"
+                      >
+                        {resource.name}
+                      </h2>
+                      <div style="color: #2b2f32">
+                        <p class="lead m-0" style="font-size: 2.5rem">
+                          <strong>{resource.description}</strong>
+                        </p>
+                        <div
+                          class="text-danger-emphasis"
+                          style="font-size: 1.2rem"
+                        >
+                          {resource.skill === 0 && (
+                            <p class="m-0">Recommended For All Skill Levels</p>
+                          )}
+                          {resource.skill === 1 && (
+                            <p class="m-0">Recommended For Advanced Players</p>
+                          )}
+                          {resource.skill === 2 && (
+                            <p class="m-0">Recommended For Expert Players</p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              }
+            </div>
+            <button
+              class="carousel-control-prev carousel-hidable"
+              type="button"
+              data-bs-target="#quickplayGamemodes"
+              data-bs-slide="prev"
+            >
+              <span
+                class="carousel-control-prev-icon carousel-dark-buttons"
+                aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button
+              class="carousel-control-next carousel-hidable"
+              type="button"
+              data-bs-target="#quickplayGamemodes"
+              data-bs-slide="next"
+            >
+              <span
+                class="carousel-control-next-icon carousel-dark-buttons"
+                aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+            </button>
+          </div>
+          <div class="row g-0">
+            <div class="col">
+              <button
+                class="btn btn-success w-100"
+                style="font-size: 2.5rem; font-weight: 800">PLAY NOW!</button
+              >
+            </div>
+            <div class="col">
+              <button
+                class="btn btn-dark w-100"
+                style="font-size: 2.5rem; font-weight: 600">SHOW SERVERS</button
+              >
+            </div>
+          </div>
+          <br />
+          <button
+            class="btn btn-dark w-100"
+            style="font-size: 2.5rem; font-weight: 800">Customize</button
+          >
+        </div>
+      </div>
+      <section></section>
+      <Footer />
+    </header>
+  </Body>
+</Layout>

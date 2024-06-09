@@ -1,7 +1,8 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import idbStorage from "@utils/idbstorage";
+
 import "@utils/game.js";
+import idbStorage from "@utils/idbstorage";
 
 const useStore = create(
   persist(
