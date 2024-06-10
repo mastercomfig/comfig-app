@@ -276,6 +276,8 @@ async function createPlayer(player) {
   }
 }
 
-const players = document.querySelectorAll(".hs-container");
-const playerPromises = Array.from(players).map(createPlayer);
-await Promise.all(playerPromises);
+export default async function initHits() {
+  const players = document.querySelectorAll(".hs-container");
+  const playerPromises = Array.from(players).map(createPlayer);
+  await Promise.all(playerPromises);
+}

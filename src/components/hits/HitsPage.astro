@@ -1,16 +1,17 @@
 ---
-import Layout from "@layouts/Layout.astro";
-import BaseHead from "@components/head/BaseHead.astro";
-import PreloadHead from "@components/head/PreloadHead.astro";
-import ImportHead from "@components/head/ImportHead.astro";
-import MainHead from "@components/head/MainHead.astro";
 import Body from "@components/Body.astro";
 import Footer from "@components/Footer.astro";
+import BaseHead from "@components/head/BaseHead.astro";
+import ImportHead from "@components/head/ImportHead.astro";
+import MainHead from "@components/head/MainHead.astro";
+import PreloadHead from "@components/head/PreloadHead.astro";
 import HitsNav from "@components/hits/HitsNav.astro";
 import Sponsor from "@components/Sponsor.astro";
+import Layout from "@layouts/Layout.astro";
 
-import "@styles/hits.scss";
 import FittyText from "@components/FittyText.astro";
+import HitsLoader from "@components/HitsLoader.astro";
+import "@styles/hits.scss";
 
 const { page, hitsounds } = Astro.props;
 
@@ -21,11 +22,7 @@ const currentPage = page.currentPage ?? 1;
   <head>
     <BaseHead />
     <PreloadHead />
-    <ImportHead>
-      <script>
-        import "@utils/hits.ts";
-      </script>
-    </ImportHead>
+    <ImportHead />
     <MainHead
       title={`${hitsounds ? "hitsounds" : "killsounds"}`}
       site="comfig hits - mastercomfig"
@@ -33,6 +30,7 @@ const currentPage = page.currentPage ?? 1;
     />
   </head>
   <Body>
+    <HitsLoader />
     <FittyText className=".card-title" />
     <HitsNav />
     <div class="container g-0">
