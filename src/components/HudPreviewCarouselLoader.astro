@@ -35,8 +35,10 @@
     }
   }
 
-  customElements.define(
-    "hud-preview-carousel-loader",
-    HudPreviewCarouselLoader,
-  );
+  if (!customElements.get("app-loader")) {
+    customElements.define(
+      "hud-preview-carousel-loader",
+      HudPreviewCarouselLoader,
+    );
+  }
 </script>

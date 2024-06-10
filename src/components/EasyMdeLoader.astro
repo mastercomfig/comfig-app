@@ -19,5 +19,7 @@
     }
   }
 
-  customElements.define("easymde-loader", EasyMdeLoader);
+  if (!customElements.get("app-loader")) {
+    customElements.define("easymde-loader", EasyMdeLoader);
+  }
 </script>

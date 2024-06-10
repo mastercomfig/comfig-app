@@ -13,5 +13,7 @@ const { className } = Astro.props;
     }
   }
 
-  customElements.define("fitty-text", FittyText);
+  if (!customElements.get("app-loader")) {
+    customElements.define("fitty-text", FittyText);
+  }
 </script>
