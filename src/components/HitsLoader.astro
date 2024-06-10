@@ -1,0 +1,17 @@
+---
+
+---
+
+<hits-loader></hits-loader>
+
+<script>
+  import initHits from "@utils/hits.ts";
+
+  class HitsLoader extends HTMLElement {
+    async connectedCallback() {
+      await initHits();
+    }
+  }
+
+  customElements.define("hits-loader", HitsLoader);
+</script>
