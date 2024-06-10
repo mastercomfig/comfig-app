@@ -13,5 +13,7 @@
     }
   }
 
-  customElements.define("hits-loader", HitsLoader);
+  if (!customElements.get("app-loader")) {
+    customElements.define("hits-loader", HitsLoader);
+  }
 </script>

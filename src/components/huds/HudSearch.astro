@@ -271,5 +271,7 @@ const { hash } = Astro.props;
     }
   }
 
-  customElements.define("hud-search", HudSearch);
+  if (!customElements.get("app-loader")) {
+    customElements.define("hud-search", HudSearch);
+  }
 </script>

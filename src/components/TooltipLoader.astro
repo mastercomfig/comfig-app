@@ -18,5 +18,7 @@
     }
   }
 
-  customElements.define("tooltip-loader", TooltipLoader);
+  if (!customElements.get("app-loader")) {
+    customElements.define("tooltip-loader", TooltipLoader);
+  }
 </script>

@@ -172,5 +172,7 @@
     }
   }
 
-  customElements.define("hud-form-loader", HudFormLoader);
+  if (!customElements.get("app-loader")) {
+    customElements.define("hud-form-loader", HudFormLoader);
+  }
 </script>
