@@ -229,6 +229,11 @@ async function createPlayer(player) {
   });
   const hash = player.dataset.hash;
   try {
+    const playLink = document.getElementById(`play-${hash}`);
+    if (!playLink) {
+      return;
+    }
+    console.log(`Fetching https://hits.mastercomfig.com/${hash}.wav`);
     const response = await fetch(`https://hits.mastercomfig.com/${hash}.wav`);
     const buffer = await response.arrayBuffer();
     const wav = readWav(buffer);
@@ -249,7 +254,6 @@ async function createPlayer(player) {
     const buf = wavFile.toBuffer().buffer;
     const audioBlob = new Blob([buf], { type: "audio/wav" });
     wave.loadBlob(audioBlob, samples, duration);
-    const playLink = document.getElementById(`play-${hash}`);
     playLink.onclick = (e) => {
       e.preventDefault();
       const ratio = wave.getCurrentTime() / wave.getDuration();
