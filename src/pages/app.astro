@@ -25,9 +25,11 @@ import AppLoader from "@components/AppLoader.astro";
 
 const { appData, hash: appDataHash } = await getAppData();
 const appVersion = appData.v[0];
+if (!appVersion || !appData.m || !appData.p) {
+  throw new Error("App API returned null data!");
+}
 const appHash = appDataHash.substring(0, 8);
 const { hash } = await getGameData();
-const npmVersion = getAppVersion();
 ---
 
 <Layout>
