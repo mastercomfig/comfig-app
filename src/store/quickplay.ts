@@ -25,18 +25,28 @@ const useStore = create(
           state.blocklist.add(steamid);
           return state.blocklist;
         }),
-      pinglimit: -1,
+      pinglimit: 50,
       setPingLimit: (pinglimit) => set(() => ({ pinglimit })),
     }),
-    idbStorage("quickplay", 1, (persistedState, version) => {}, [
-      "recentServers",
-      "maxPlayerCap",
-      "gamemode",
-      "respawntimes",
-      "crits",
-      "beta",
-      "blocklist",
-    ]),
+    idbStorage(
+      "quickplay",
+      2,
+      (persistedState, version) => {
+        if (version < 2) {
+          persistedState.pinglimit = 50;
+        }
+        return persistedState;
+      },
+      [
+        "recentServers",
+        "maxPlayerCap",
+        "gamemode",
+        "respawntimes",
+        "crits",
+        "beta",
+        "blocklist",
+      ],
+    ),
   ),
 );
 

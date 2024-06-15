@@ -110,6 +110,9 @@ export async function app() {
     }
   }
 
+  // Current state of module selections
+  let selectedModules = {};
+
   async function loadModules() {
     const storedModulesDB = await tryDBGet("modules");
     if (storedModulesDB) {
@@ -264,8 +267,6 @@ export async function app() {
   let selectedPreset = null;
   // Currently selected addons
   let selectedAddons = [];
-  // Current state of module selections
-  let selectedModules = {};
   // Current state of autoexec binds
   let selectedBinds = {};
   // Overlaid bind layers
