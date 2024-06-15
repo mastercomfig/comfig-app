@@ -410,7 +410,7 @@ function logPopularity(...args) {
   }
 }
 
-let popularityLookup = null;
+let popularityLookup: any = null;
 let maxHype = 0;
 export async function getPopularity() {
   if (!popularityLookup) {
@@ -582,6 +582,34 @@ export async function getPopularity() {
       );
       const popularityData = await popularityQuery.json();
       const metrics = popularityData.data.viewer.accounts[0];
+      if (import.meta.env.COMFIG_API_KEY) {
+        const allHuds = await fetchHuds(true);
+        const downloadStatPromises: Promise<any>[] = [];
+        const headers = {
+          Authorization: `Bearer ${import.meta.env.COMFIG_API_KEY}`,
+        };
+        for (const hud of allHuds) {
+          const id = hud.id;
+          const downloadApiRes = fetch(
+            "https://worker.comfig.app/api/huds/download/get",
+            {
+              method: "POST",
+              headers,
+              body: JSON.stringify({
+                id,
+              }),
+            },
+          )
+            .then((res) => res.json())
+            .then((body) => ({
+              id,
+              count: body.count,
+            }));
+          downloadStatPromises.push(downloadApiRes);
+        }
+        const downloadStats = await Promise.all(downloadStatPromises);
+        metrics.downloads = downloadStats;
+      }
       logPopularity("TOP MONTH");
       for (const metric of metrics.topMonth) {
         const hudId = metric.dimensions.path.split("/")[3];
@@ -616,20 +644,23 @@ export async function getPopularity() {
           maxHype = popularityLookup[hudId];
         }
       }
-      if (metrics.topWeekDownloads) {
+      if (metrics.downloads) {
         logPopularity("TOP DOWNLOADS");
         let totalDownloads = 0;
         let downloadedHuds = 0;
-        for (const metric of metrics.topWeekDownloads) {
+        for (const metric of metrics.downloads) {
+          if (metric.count < 1) {
+            continue;
+          }
           totalDownloads += metric.count;
           downloadedHuds++;
         }
         const downloadPot = 100 * downloadedHuds;
-        for (const metric of metrics.topWeekDownloads) {
+        for (const metric of metrics.downloads) {
           if (metric.count < 1) {
             continue;
           }
-          const hudId = metric.dimensions.path.split("/")[3];
+          const hudId = metric.id;
           popularityLookup[hudId] =
             (popularityLookup[hudId] ?? 0) +
             Math.round((metric.count / totalDownloads) * downloadPot);
