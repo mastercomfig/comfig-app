@@ -1,10 +1,6 @@
 import gm from "@utils/game.ts";
-import { fetchCache } from "./fetchCache";
 
-export function getAppVersion() {
-  const npmVersion = process.env.npm_package_version;
-  return npmVersion;
-}
+import { fetchCache } from "./fetchCache";
 
 let appData = null;
 
