@@ -95,10 +95,7 @@ export default defineConfig({
       },
     },
   },
-  prefetch: {
-    prefetchAll: true,
-    defaultStrategy: "viewport",
-  },
+  prefetch: false,
   experimental: {
     directRenderScript: true,
     clientPrerender: true,
