@@ -1418,6 +1418,9 @@ export async function app() {
         ].split(".", 3);
         const crosshairPack = crosshairPacks[crosshairFile];
         const crosshairInfo = crosshairPack[crosshairKey] ?? crosshairPack;
+        if (!crosshairInfo) {
+          console.error("Unknown crosshair pack", crosshairFile, crosshairKey);
+        }
         for (const classname of Object.keys(items)) {
           const item = items[classname];
           const itemCrosshair = item.TextureData.crosshair;
@@ -1445,6 +1448,13 @@ export async function app() {
           ].split(".", 3);
           const crosshairPack = crosshairPacks[crosshairFile];
           const crosshairInfo = crosshairPack[crosshairKey];
+          if (!crosshairInfo) {
+            console.error(
+              "Unknown crosshair pack",
+              crosshairFile,
+              crosshairKey,
+            );
+          }
           const itemCrosshair = item.TextureData.crosshair;
           if (crosshairFile.indexOf("/") === -1) {
             itemCrosshair.file = `${crosshairTargetBase}${crosshairFile}`;
@@ -1470,6 +1480,9 @@ export async function app() {
         ].split(".", 3);
         const crosshairPack = crosshairPacks[crosshairFile];
         const crosshairInfo = crosshairPack[crosshairKey];
+        if (!crosshairInfo) {
+          console.error("Unknown crosshair pack", crosshairFile, crosshairKey);
+        }
         let itemCrosshair = item.TextureData.zoom;
         if (!itemCrosshair) {
           itemCrosshair = item.TextureData.zoom = {};
