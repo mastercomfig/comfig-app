@@ -3,10 +3,6 @@ import useQuickplayStore from "@store/quickplay";
 const REJOIN_COOLDOWN = 300 * 1000;
 const REJOIN_PENALTY = 1.0;
 
-const SERVER_HEADROOM = 1;
-const PLAYER_COUNT_SCORE = 1.5;
-
-const PING_LOW = 50.0;
 const PING_LOW_SCORE = 0.9;
 const PING_MED = 150.0;
 const PING_MED_SCORE = 0.0;
@@ -22,46 +18,32 @@ const MAX_PLAYER_OPTIONS = [
   [MIN_PLAYER_CAP, 100], // Don't care
 ];
 
-const APP_ID = 440;
-const APP_NAME = "tf";
 const APP_FULL_NAME = "Team Fortress";
 
-const TAGS_DISALLOWED = [
-  "friendlyfire",
-  "highlander",
-  "noquickplay",
-  "trade",
-  "dmgspread",
-];
 const TAG_PREFS = ["crits", "respawntimes", "beta"];
 const INCREASED_MAXPLAYERS = "increased_maxplayers";
 
-const knownMaps = new Set();
-const mapToGamemode = {};
-
-const gamemodeToTag = {
-  pl: "payload",
-  plr: "payload",
-  koth: "cp",
-  ad: "cp",
-  pass: "passtime",
-};
-
 const gamemodeToPrefix = {
-  ad: "cp",
+  attack_defense: "cp",
   powerup: "ctf",
+  passtime: "pass",
+  special_events: "",
+  halloween: "",
+  christmas: "",
 };
 
 const MISC_GAMEMODES = ["arena", "pass", "pd", "rd", "sd", "tc", "vsh", "zi"];
 
-// No forced MOTD or popups
-// No gameplay advantages
-// No reserved slot kicks
-// No content modifications
-// No non-default gamemodes
-// No class limits
-// No granting economy items
-const quickplayBanned = new Set();
+const REGIONS = {
+  0: "na",
+  1: "na",
+  2: "sa",
+  3: "eu",
+  4: "asia",
+  5: "oce",
+  6: "me",
+  7: "afr",
+};
 
 function lerp(inA, inB, outA, outB, x) {
   return outA + ((outB - outA) * (x - inA)) / (inB - inA);
@@ -69,6 +51,11 @@ function lerp(inA, inB, outA, outB, x) {
 
 export default function ServerFinder() {
   const quickplayStore = useQuickplayStore((state) => state);
+
+  let servers = [];
+  let mapToGamemode = {};
+  let serverPings = {};
+  let playerRegion = 255;
 
   const getRecentPenalty = (address) => {
     let penalty = 0.0;
@@ -87,6 +74,10 @@ export default function ServerFinder() {
 
   const updateMaxPlayers = (option) => {
     quickplayStore.setMaxPlayerCap(MAX_PLAYER_OPTIONS[option]);
+  };
+
+  const updatePingLimit = (option) => {
+    quickplayStore.setPingLimit(option);
   };
 
   const checkTagPref = (pref, tags: Set<string>) => {
@@ -143,12 +134,6 @@ export default function ServerFinder() {
 
   const filterServerTags = (gametype: string) => {
     const tags = new Set(gametype.split(","));
-    // There's some tags we never want to see in a quickplay server.
-    for (const disallowed of TAGS_DISALLOWED) {
-      if (tags.has(disallowed)) {
-        return false;
-      }
-    }
     // Just a quick check for if tags match the max player expectations.
     if (quickplayStore.maxPlayerCap === MAX_PLAYER_OPTIONS[0]) {
       if (tags.has(INCREASED_MAXPLAYERS)) {
@@ -164,63 +149,17 @@ export default function ServerFinder() {
         return false;
       }
     }
-    const gamemode =
-      gamemodeToTag[quickplayStore.gamemode] ?? quickplayStore.gamemode;
-    if (gamemode !== "any" && !tags.has(gamemode)) {
-      return false;
-    }
     return true;
   };
 
-  const idealPingToServer = (serverAddress) => {
-    // geodesic calculation from coordinator (based on IPs)
-    return 1.0;
-  };
-
-  const pingToCoordinator = () => {
-    // ping to coordinator - expected ping to coordinator
-    return 1.0;
-  };
-
-  const coordinatorPing = (address) => {
-    // ping to server - expected ping to server
-    return 1.0;
-  };
-
   const getExpectedPing = (address) => {
-    return (
-      idealPingToServer(address) +
-      pingToCoordinator() +
-      coordinatorPing(address)
-    );
+    return serverPings[address];
   };
 
-  // \appid\440\gamedir\tf\secure\1\dedicated\1\full\1\ngametype\friendlyfire,highlander,noquickplay,trade,dmgspread\steamblocking\1\nor\1\white\1
   const filterServer = (server) => {
-    // We filter by AppID, Secure, Dedicated, Non-Full, and gamedir in the list query.
-    // But, let's make sure here.
-    if (server.app_id !== APP_ID) {
-      return false;
-    }
-    if (!server.secure) {
-      return false;
-    }
-    if (!server.dedicated) {
-      return false;
-    }
-    if (server.num_players >= server.max_players) {
-      return false;
-    }
-    if (server.gamedir !== APP_NAME) {
-      return false;
-    }
     // Now let's start the server secondary filters.
     // Make sure game description has not been modified.
     if (server.game_description !== APP_FULL_NAME) {
-      return false;
-    }
-    // TODO: actually verify steam ID
-    if (!server.steamid) {
       return false;
     }
     const [minCap, maxCap] = quickplayStore.maxPlayerCap;
@@ -236,10 +175,6 @@ export default function ServerFinder() {
     if (!filterServerTags(server.gametype)) {
       return false;
     }
-    // Check for known maps
-    if (!knownMaps.has(server.map)) {
-      return false;
-    }
     const expectedGamemode = quickplayStore.gamemode;
     if (expectedGamemode !== "any") {
       const mapGamemode = mapToGamemode[server.map];
@@ -249,14 +184,14 @@ export default function ServerFinder() {
         }
       } else {
         const mapPrefix = server.map.split("_")[0];
-        if (expectedGamemode === "misc") {
+        if (expectedGamemode === "alternative") {
           if (MISC_GAMEMODES.indexOf(mapPrefix) === -1) {
             return false;
           }
         } else {
           const expectedPrefix =
             gamemodeToPrefix[expectedGamemode] ?? expectedGamemode;
-          if (mapPrefix !== expectedPrefix) {
+          if (expectedPrefix && mapPrefix !== expectedPrefix) {
             return false;
           }
         }
@@ -265,53 +200,23 @@ export default function ServerFinder() {
     if (quickplayStore.blocklist.has(server.steamid)) {
       return false;
     }
-    if (quickplayBanned.has(server.steamid)) {
-      return false;
-    }
-    if (quickplayStore.pinglimit > 0) {
-      const expectedPing = getExpectedPing(server.addr);
-      if (expectedPing > quickplayStore.pinglimit) {
-        return false;
-      }
-    }
 
     return true;
   };
 
-  const getServerReputation = (steamid) => {
-    return 0.0;
-  };
-
-  const scoreServer = (server) => {
-    const maxPlayers = server.max_players;
-    const players = server.num_players;
-    const bots = server.bots;
-    const newPlayers = players + 1;
-    const totalNewPlayers = newPlayers + bots;
-
-    // If server is full, we want to direct players to fill up other servers and not contest joins to full servers.
-    if (totalNewPlayers + SERVER_HEADROOM > maxPlayers) {
-      return -100.0;
+  const getPingForScoring = (server) => {
+    if (playerRegion != 255 && server.region != 255) {
+      if (REGIONS[playerRegion] !== REGIONS[server.region]) {
+        return PING_HIGH;
+      }
     }
-
-    const countLow = maxPlayers / 3;
-    const countIdeal = (maxPlayers * 5) / 6;
-
-    const scoreLow = 0.2;
-    const scoreIdeal = PLAYER_COUNT_SCORE;
-
-    if (newPlayers <= countLow) {
-      return lerp(0, countLow, 0.0, scoreLow, newPlayers);
-    } else if (newPlayers <= countIdeal) {
-      return lerp(countLow, countIdeal, scoreLow, scoreIdeal, newPlayers);
-    } else {
-      return lerp(countIdeal, maxPlayers, scoreIdeal, scoreLow, newPlayers);
-    }
+    return getExpectedPing(server);
   };
 
   const scoreServerForUser = (server) => {
     let userScore = 0.0;
-    const ping = getExpectedPing(server);
+    const ping = getPingForScoring(server);
+    const PING_LOW = quickplayStore.pinglimit;
     if (ping < PING_LOW) {
       userScore += lerp(0, PING_LOW, 1.0, PING_LOW_SCORE, ping);
     } else if (ping < PING_MED) {
@@ -333,13 +238,13 @@ export default function ServerFinder() {
     }
 
     userScore -= getRecentPenalty(server.addr);
+
+    return userScore;
   };
 
   const scoreServerForTotal = (server) => {
-    const serverScore =
-      scoreServer(server) + getServerReputation(server.steamid) + 6;
     const userScore = scoreServerForUser(server);
-    return serverScore + userScore;
+    return server.score + userScore;
   };
 
   const filterGoodServers = (score) => {
