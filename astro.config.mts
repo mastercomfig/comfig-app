@@ -10,6 +10,7 @@ const pwa = AstroPWA({
     type: "module",
     enabled: false,
   },
+  selfDestroying: true,
   registerType: "autoUpdate",
   workbox: {
     globPatterns: [
