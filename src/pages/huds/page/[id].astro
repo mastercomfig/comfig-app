@@ -192,8 +192,12 @@ const authors = await fetchAuthors();
           for (const downloadButton of downloadButtonList) {
             downloadButton.addEventListener("click", async () => {
               const id = window.location.pathname.replaceAll("/huds/page/", "");
+              const body = JSON.stringify({ id });
               setTimeout(async () => {
-                //await fetch(`/huds/stat/${id}`);
+                await fetch("https://worker.comfig.app/api/huds/download/add", {
+                  method: "POST",
+                  body,
+                });
               }, 1000);
             });
           }
