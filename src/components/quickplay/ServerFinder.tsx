@@ -254,6 +254,7 @@ export default function ServerFinder() {
     if (servers.length < 1) {
       return;
     }
+    console.log("servers", servers);
     setProgress(20);
     const copiedServers = structuredClone(servers);
     const scoredServers = [];
@@ -307,7 +308,7 @@ export default function ServerFinder() {
 
     filteredServers.sort((a, b) => b.score - a.score);
 
-    console.log(filteredServers);
+    console.log("filtered", filteredServers);
 
     window.location.href = `steam://connect/${filteredServers[0].addr}`;
     touchRecentServer(filteredServers[0].addr);
