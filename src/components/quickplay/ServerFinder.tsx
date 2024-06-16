@@ -318,7 +318,7 @@ export default function ServerFinder() {
     touchRecentServer(filteredServers[0].addr);
     console.log("servers", servers);
     console.log("filtered", filteredServers);
-    console.log("recent", quickplayStore.recentServers.map((s) => [s, getRecentPenalty(s)]));
+    console.log("recent", Object.keys(quickplayStore.recentServers).map((s) => [s, getRecentPenalty(s)]));
     quickplayStore.setSearching(0);
     setServers([]);
     setFilteredServers([]);
