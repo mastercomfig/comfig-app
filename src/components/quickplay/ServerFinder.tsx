@@ -195,10 +195,11 @@ export default function ServerFinder() {
     let userScore = 0.0;
     const ping = server.ping;
     const PING_LOW = quickplayStore.pinglimit;
+    let pingScore = 0;
     if (ping < PING_LOW) {
-      userScore += lerp(0, PING_LOW, 1.0, PING_LOW_SCORE, ping);
+      pingScore += lerp(0, PING_LOW, 1.0, PING_LOW_SCORE, ping);
     } else if (ping < PING_MED) {
-      userScore += lerp(
+      pingScore += lerp(
         PING_LOW,
         PING_MED,
         PING_LOW_SCORE,
@@ -206,13 +207,19 @@ export default function ServerFinder() {
         ping,
       );
     } else {
-      userScore += lerp(
+      pingScore += lerp(
         PING_MED,
         PING_HIGH,
         PING_MED_SCORE,
         PING_HIGH_SCORE,
         ping,
       );
+    }
+    userScore += pingScore;
+
+    // Favor low ping servers with players
+    if (server.players > 0) {
+      userScore += pingScore;
     }
 
     userScore -= getRecentPenalty(server.addr);
@@ -254,7 +261,6 @@ export default function ServerFinder() {
     if (servers.length < 1) {
       return;
     }
-    console.log("servers", servers);
     setProgress(20);
     const copiedServers = structuredClone(servers);
     const scoredServers = [];
@@ -308,10 +314,11 @@ export default function ServerFinder() {
 
     filteredServers.sort((a, b) => b.score - a.score);
 
-    console.log("filtered", filteredServers);
-
     window.location.href = `steam://connect/${filteredServers[0].addr}`;
     touchRecentServer(filteredServers[0].addr);
+    console.log("servers", servers);
+    console.log("filtered", filteredServers);
+    console.log("recent", quickplayStore.recentServers.map((s) => [s, getRecentPenalty(s)]));
     quickplayStore.setSearching(0);
     setServers([]);
     setFilteredServers([]);
