@@ -6,6 +6,8 @@ import idbStorage from "@utils/idbstorage";
 const useStore = create(
   persist(
     (set) => ({
+      searching: 0,
+      setSearching: (searching) => set(() => ({ searching })),
       recentServers: {},
       setRecentServer: (k, v) =>
         set((state) => ({ recentServers: { ...state.recentServers, [k]: v } })),

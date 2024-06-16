@@ -6,6 +6,7 @@ import ImportHead from "@components/head/ImportHead.astro";
 import MainHead from "@components/head/MainHead.astro";
 import PreloadHead from "@components/head/PreloadHead.astro";
 import NavSelector from "@components/NavSelector.astro";
+import ServerFinder from "@components/quickplay/ServerFinder.tsx";
 import Layout from "@layouts/Layout.astro";
 import payloadImg from "@img/gamemodes/pl.png";
 import kothImg from "@img/gamemodes/koth.png";
@@ -16,10 +17,17 @@ import plrImg from "@img/gamemodes/plr.png";
 import miscImg from "@img/gamemodes/sd.png";
 import randomImg from "@img/gamemodes/random.png";
 
-const gamemodes = [
+const gamemodesPending = [
+  {
+    name: "Random",
+    code: "any",
+    description: "We'll match you into the best game we can find.",
+    skill: 2,
+    img: randomImg,
+  },
   {
     name: "Payload",
-    code: "pl",
+    code: "payload",
     description: "BLU pushes the cart down the track. RED need to stop them.",
     skill: 0,
     img: payloadImg,
@@ -33,7 +41,7 @@ const gamemodes = [
   },
   {
     name: "Attack / Defense",
-    code: "ad",
+    code: "attack_defense",
     description: "BLU wins by capturing all points. RED wins by stopping them.",
     skill: 0,
     img: adImg,
@@ -47,32 +55,28 @@ const gamemodes = [
   },
   {
     name: "Capture Points",
-    code: "cp",
+    code: "capture_point",
     description: "Capture all points to win.",
     skill: 1,
     img: cpImg,
   },
   {
     name: "Payload Race",
-    code: "plr",
+    code: "payload_race",
     description: "Two teams. Two bombs. Two tracks. Hilarity ensues.",
     skill: 1,
     img: plrImg,
   },
   {
     name: "Misc",
-    code: "misc",
+    code: "alternative",
     description: "Game modes that don't fit into one of the other categories.",
     skill: 2,
     img: miscImg,
   },
-  {
-    name: "Random",
-    description: "We'll match you into the best game we can find.",
-    skill: 2,
-    img: randomImg,
-  },
 ];
+
+const gamemodes = [gamemodesPending[0]];
 ---
 
 <Layout>
@@ -105,10 +109,48 @@ const gamemodes = [
       <script>
         import { Carousel } from "bootstrap";
 
+        import useQuickplayStore from "@store/quickplay";
+
         document.addEventListener("astro:page-load", () => {
+          const codeLookup = [
+            "any",
+            "payload",
+            "koth",
+            "attack_defense",
+            "ctf",
+            "capture_point",
+            "payload_race",
+            "alternative",
+          ];
           const carouselEl = document.getElementById("quickplayGamemodes");
+          let carousel: Carousel | null = null;
+          function refreshCarousel() {
+            if (carouselEl) {
+              carousel = new Carousel(carouselEl);
+              carouselEl.addEventListener("slide.bs.carousel", (event) => {
+                const code = codeLookup[event.to];
+                useQuickplayStore.getState().setGamemode(code);
+              });
+            }
+          }
+          refreshCarousel();
           if (carouselEl) {
-            const carousel = new Carousel(carouselEl);
+            carouselEl.addEventListener("finished-searching", () => {
+              refreshCarousel();
+            });
+          }
+          const playNow = document.getElementById("quickplay-now");
+          if (playNow) {
+            playNow.addEventListener("click", () => {
+              if (useQuickplayStore.getState().searching) {
+                return;
+              }
+              useQuickplayStore.getState().setSearching(1);
+              if (carousel) {
+                carousel.dispose();
+                carousel = null;
+              }
+            });
           }
         });
       </script>
@@ -157,6 +199,7 @@ const gamemodes = [
             class="carousel carousel-light slide carousel-fade p-4"
             style="background: #ece9d7"
           >
+            <ServerFinder client:load />
             <div class="carousel-indicators carousel-hidable d-none">
               {
                 gamemodes.map((resource, index) => (
@@ -211,48 +254,57 @@ const gamemodes = [
                 ))
               }
             </div>
-            <button
-              class="carousel-control-prev carousel-hidable"
-              type="button"
-              data-bs-target="#quickplayGamemodes"
-              data-bs-slide="prev"
-            >
-              <span
-                class="carousel-control-prev-icon carousel-dark-buttons"
-                aria-hidden="true"></span>
-              <span class="visually-hidden">Previous</span>
-            </button>
-            <button
-              class="carousel-control-next carousel-hidable"
-              type="button"
-              data-bs-target="#quickplayGamemodes"
-              data-bs-slide="next"
-            >
-              <span
-                class="carousel-control-next-icon carousel-dark-buttons"
-                aria-hidden="true"></span>
-              <span class="visually-hidden">Next</span>
-            </button>
+            {
+              gamemodes.length > 1 && (
+                <>
+                  <button
+                    class="carousel-control-prev carousel-hidable"
+                    type="button"
+                    data-bs-target="#quickplayGamemodes"
+                    data-bs-slide="prev"
+                  >
+                    <span
+                      class="carousel-control-prev-icon carousel-dark-buttons"
+                      aria-hidden="true"
+                    />
+                    <span class="visually-hidden">Previous</span>
+                  </button>
+                  <button
+                    class="carousel-control-next carousel-hidable"
+                    type="button"
+                    data-bs-target="#quickplayGamemodes"
+                    data-bs-slide="next"
+                  >
+                    <span
+                      class="carousel-control-next-icon carousel-dark-buttons"
+                      aria-hidden="true"
+                    />
+                    <span class="visually-hidden">Next</span>
+                  </button>
+                </>
+              )
+            }
           </div>
           <div class="row g-0">
             <div class="col">
               <button
+                id="quickplay-now"
                 class="btn btn-success w-100"
                 style="font-size: 2.5rem; font-weight: 800">PLAY NOW!</button
               >
             </div>
-            <div class="col">
+            <!--<div class="col">
               <button
                 class="btn btn-dark w-100"
                 style="font-size: 2.5rem; font-weight: 600">SHOW SERVERS</button
               >
-            </div>
+            </div>-->
           </div>
-          <br />
+          <!--<br />
           <button
             class="btn btn-dark w-100"
             style="font-size: 2.5rem; font-weight: 800">Customize</button
-          >
+        >-->
         </div>
       </div>
       <br />
@@ -263,7 +315,24 @@ const gamemodes = [
           <p class="lead">
             This is a best attempt at recreating the old in-game Quickplay
             feature as accurately as possible, and updating it to work in the
-            current times and in browser.
+            current times and in browser. It is merely an experimental proof of
+            concept now, but will continue to improve over the coming weeks!
+          </p>
+
+          <h2 class="display-6 fw-bold">How do I report a problem?</h2>
+          <p class="lead">
+            Join us <a href="https://discord.gg/mastercomfig-389089828249010188"
+              >on Discord</a
+            > and report your issues to the <span
+              class="text-bg-primary p-1 mx-1">#tf2-quickplay</span
+            > channel. We welcome feedback from both players and server owners!
+          </p>
+
+          <h2 class="display-6 fw-bold">Why only random? Why no options?</h2>
+          <p class="lead">
+            As we scale the quickplay algorithm and surface issues from broader
+            usage, we will be slowly introducing features over time to make sure
+            everyone has a smooth experience!
           </p>
 
           <h2 class="display-6 fw-bold">How does this work?</h2>
@@ -409,3 +478,5 @@ const gamemodes = [
     </header>
   </Body>
 </Layout>
+-->
+

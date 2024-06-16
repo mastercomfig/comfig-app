@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+
 import useQuickplayStore from "@store/quickplay";
 
 const REJOIN_COOLDOWN = 300 * 1000;
@@ -18,10 +20,7 @@ const MAX_PLAYER_OPTIONS = [
   [MIN_PLAYER_CAP, 100], // Don't care
 ];
 
-const APP_FULL_NAME = "Team Fortress";
-
 const TAG_PREFS = ["crits", "respawntimes", "beta"];
-const INCREASED_MAXPLAYERS = "increased_maxplayers";
 
 const gamemodeToPrefix = {
   attack_defense: "cp",
@@ -39,10 +38,10 @@ const REGIONS = {
   1: "na",
   2: "sa",
   3: "eu",
-  4: "asia",
-  5: "oce",
+  4: "as",
+  5: "oc",
   6: "me",
-  7: "afr",
+  7: "af",
 };
 
 function lerp(inA, inB, outA, outB, x) {
@@ -51,11 +50,6 @@ function lerp(inA, inB, outA, outB, x) {
 
 export default function ServerFinder() {
   const quickplayStore = useQuickplayStore((state) => state);
-
-  let servers = [];
-  let mapToGamemode = {};
-  let serverPings = {};
-  let playerRegion = 255;
 
   const getRecentPenalty = (address) => {
     let penalty = 0.0;
@@ -133,17 +127,7 @@ export default function ServerFinder() {
   };
 
   const filterServerTags = (gametype: string) => {
-    const tags = new Set(gametype.split(","));
-    // Just a quick check for if tags match the max player expectations.
-    if (quickplayStore.maxPlayerCap === MAX_PLAYER_OPTIONS[0]) {
-      if (tags.has(INCREASED_MAXPLAYERS)) {
-        return false;
-      }
-    } else if (quickplayStore.maxPlayerCap === MAX_PLAYER_OPTIONS[2]) {
-      if (!tags.has(INCREASED_MAXPLAYERS)) {
-        return false;
-      }
-    }
+    const tags = new Set(gametype);
     for (const pref of TAG_PREFS) {
       if (!checkTagPref(pref, tags)) {
         return false;
@@ -152,23 +136,26 @@ export default function ServerFinder() {
     return true;
   };
 
-  const getExpectedPing = (address) => {
-    return serverPings[address];
-  };
+  const [schema, setSchema] = useState({});
+  const mapToGamemode = schema.map_gamemodes;
+
+  useEffect(() => {
+    fetch("https://worker.comfig.app/api/schema/get", {
+      method: "POST",
+    })
+      .then((res) => res.json())
+      .then((data) => setSchema(data));
+  }, []);
 
   const filterServer = (server) => {
     // Now let's start the server secondary filters.
-    // Make sure game description has not been modified.
-    if (server.game_description !== APP_FULL_NAME) {
-      return false;
-    }
     const [minCap, maxCap] = quickplayStore.maxPlayerCap;
     // Make sure we have enough player cap.
     if (server.max_players < minCap) {
       return false;
     }
     // Allow for one more player than our cap for SourceTV.
-    if (server.max_players >= maxCap + 1) {
+    if (server.max_players > maxCap + 1) {
       return false;
     }
     // Check the tags
@@ -204,18 +191,9 @@ export default function ServerFinder() {
     return true;
   };
 
-  const getPingForScoring = (server) => {
-    if (playerRegion != 255 && server.region != 255) {
-      if (REGIONS[playerRegion] !== REGIONS[server.region]) {
-        return PING_HIGH;
-      }
-    }
-    return getExpectedPing(server);
-  };
-
   const scoreServerForUser = (server) => {
     let userScore = 0.0;
-    const ping = getPingForScoring(server);
+    const ping = server.ping;
     const PING_LOW = quickplayStore.pinglimit;
     if (ping < PING_LOW) {
       userScore += lerp(0, PING_LOW, 1.0, PING_LOW_SCORE, ping);
@@ -250,4 +228,133 @@ export default function ServerFinder() {
   const filterGoodServers = (score) => {
     return score > 1.0;
   };
+
+  const [progress, setProgress] = useState(0);
+  const [servers, setServers] = useState([]);
+  const [filteredServers, setFilteredServers] = useState([]);
+  const [allFiltered, setAllFiltered] = useState(false);
+
+  useEffect(() => {
+    if (!quickplayStore.searching) {
+      return;
+    }
+    setProgress(2);
+    fetch("https://worker.comfig.app/api/quickplay/list", {
+      method: "POST",
+      body: JSON.stringify({
+        ping: 0,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => setServers(data))
+      .then(() => setProgress(20));
+  }, [quickplayStore.searching]);
+
+  useEffect(() => {
+    if (servers.length < 1) {
+      return;
+    }
+    setProgress(20);
+    const copiedServers = structuredClone(servers);
+    const scoredServers = [];
+    for (const server of copiedServers) {
+      server.score = scoreServerForTotal(server);
+      scoredServers.push(server);
+      setProgress(20 + (30 * scoredServers.length) / servers.length);
+    }
+    const finalServers = [];
+    let filtered = 0;
+    for (const server of scoredServers) {
+      const pct = (finalServers.length + filtered) / servers.length;
+      setProgress(50 + 50 * pct);
+      if (!filterGoodServers(server.score)) {
+        filtered += 1;
+        continue;
+      }
+      if (!filterServer(server)) {
+        filtered += 1;
+        continue;
+      }
+      finalServers.push(server);
+      const curServers = structuredClone(finalServers);
+      setTimeout(
+        () => {
+          setFilteredServers(curServers);
+          const pct = (curServers.length + filtered) / servers.length;
+          if (pct === 1) {
+            setAllFiltered(true);
+          }
+        },
+        5 + 300 * pct,
+      );
+    }
+  }, [
+    servers,
+    quickplayStore.maxPlayerCap,
+    quickplayStore.gamemode,
+    quickplayStore.blocklist,
+    quickplayStore.pinglimit,
+  ]);
+
+  useEffect(() => {
+    if (!allFiltered) {
+      return;
+    }
+
+    if (filteredServers.length < 1) {
+      return;
+    }
+
+    filteredServers.sort((a, b) => b.score - a.score);
+
+    console.log(filteredServers);
+
+    window.location.href = `steam://connect/${filteredServers[0].addr}`;
+    touchRecentServer(filteredServers[0].addr);
+    quickplayStore.setSearching(0);
+    setServers([]);
+    setFilteredServers([]);
+    setAllFiltered(false);
+    const carouselEl = document.getElementById("quickplayGamemodes");
+    const event = new Event("finished-searching");
+    if (carouselEl) {
+      carouselEl.dispatchEvent(event);
+    }
+  }, [allFiltered]);
+
+  return (
+    <div
+      className={`position-absolute z-3 top-50 start-50 translate-middle${quickplayStore.searching ? "" : " d-none"}`}
+      style={{
+        width: "93vh",
+      }}
+    >
+      <div className="bg-dark p-1 px-5" style={{}}>
+        <h3
+          className="mb-3 mt-4"
+          style={{ fontWeight: 800, letterSpacing: "0.1rem" }}
+        >
+          SEARCHING FOR THE BEST AVAILABLE SERVER
+        </h3>
+        <div
+          className="progress mb-3"
+          role="progressbar"
+          aria-label="Animated striped example"
+          aria-valuenow={progress}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          style={{ height: "2rem" }}
+        >
+          <div
+            className="progress-bar progress-bar-striped progress-bar-animated"
+            style={{ width: `${progress}%` }}
+          ></div>
+        </div>
+        <h5 className="mb-3">
+          Game servers meeting search criteria: {filteredServers.length}
+        </h5>
+        {/*<button className="btn btn-light mb-3 fw-bold">CANCEL</button>*/}
+      </div>
+    </div>
+  );
 }
