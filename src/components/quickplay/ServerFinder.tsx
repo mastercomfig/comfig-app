@@ -60,8 +60,6 @@ export default function ServerFinder() {
         const age = elapsed;
         const ageScore = age / REJOIN_COOLDOWN;
         penalty = (1.0 - ageScore) * REJOIN_PENALTY;
-      } else {
-        delete quickplayStore.recentServers[address];
       }
     }
     return penalty;
