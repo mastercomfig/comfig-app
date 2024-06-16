@@ -134,12 +134,15 @@ const gamemodes = [gamemodesPending[0]];
             }
           }
           refreshCarousel();
+          const playNow = document.getElementById("quickplay-now");
           if (carouselEl) {
             carouselEl.addEventListener("finished-searching", () => {
               refreshCarousel();
+              if (playNow) {
+                playNow.innerText = "TRY AGAIN";
+              }
             });
           }
-          const playNow = document.getElementById("quickplay-now");
           if (playNow) {
             playNow.addEventListener("click", () => {
               if (useQuickplayStore.getState().searching) {
