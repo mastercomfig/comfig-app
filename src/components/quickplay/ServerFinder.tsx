@@ -55,9 +55,14 @@ export default function ServerFinder() {
     let penalty = 0.0;
     const lastTime = quickplayStore.recentServers[address];
     if (lastTime) {
-      const age = Math.min(REJOIN_COOLDOWN, performance.now() - lastTime);
-      const ageScore = age / REJOIN_COOLDOWN;
-      penalty = (1.0 - ageScore) * REJOIN_PENALTY;
+      const elapsed = performance.now() - lastTime;
+      if (elapsed <= REJOIN_COOLDOWN) {
+        const age = elapsed;
+        const ageScore = age / REJOIN_COOLDOWN;
+        penalty = (1.0 - ageScore) * REJOIN_PENALTY;
+      } else {
+        delete quickplayStore.recentServers[address];
+      }
     }
     return penalty;
   };
@@ -222,7 +227,7 @@ export default function ServerFinder() {
       userScore += pingScore;
     }
 
-    userScore -= getRecentPenalty(server.addr);
+    userScore = getRecentPenalty(server.addr);
 
     return userScore;
   };
