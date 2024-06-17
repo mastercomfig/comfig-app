@@ -321,6 +321,12 @@ export default function ServerFinder() {
 
     window.location.href = `steam://connect/${filteredServers[0].addr}`;
     touchRecentServer(filteredServers[0].addr);
+    console.log(
+      "Joining",
+      filteredServers[0].addr,
+      filteredServers[0].steamid,
+      filteredServers[0].name,
+    );
     console.log("servers", servers);
     console.log("filtered", filteredServers);
     console.log(
@@ -334,6 +340,7 @@ export default function ServerFinder() {
     setServers([]);
     setFilteredServers([]);
     setAllFiltered(false);
+    setProgress(0);
     const carouselEl = document.getElementById("quickplayGamemodes");
     const event = new Event("finished-searching");
     if (carouselEl) {
