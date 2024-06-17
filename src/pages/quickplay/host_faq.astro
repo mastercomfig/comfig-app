@@ -1,0 +1,280 @@
+---
+import Body from "@components/Body.astro";
+import Footer from "@components/Footer.astro";
+import BaseHead from "@components/head/BaseHead.astro";
+import ImportHead from "@components/head/ImportHead.astro";
+import MainHead from "@components/head/MainHead.astro";
+import PreloadHead from "@components/head/PreloadHead.astro";
+import NavSelector from "@components/NavSelector.astro";
+import Layout from "@layouts/Layout.astro";
+---
+
+<Layout>
+  <head>
+    <BaseHead />
+    <PreloadHead />
+    <ImportHead />
+    <MainHead
+      title="comfig quickplay server host FAQ"
+      description="Learn more about information for server hosters for comfig quickplay, the reimplementation of TF2 Quickplay right in your browser."
+    />
+  </head>
+  <Body>
+    <nav class="navbar navbar-expand-sm sticky-top navbar-dark bg-teal">
+      <div class="container g-0">
+        <span class="navbar-brand">
+          <img
+            src="/img/mastercomfig_logo_transparent_i.svg"
+            alt=""
+            class="d-inline-block align-text-top"
+            width="24"
+            height="24"
+          />
+          <span class="d-none d-md-inline"> comfig</span>
+        </span>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <NavSelector pageName="quickplay" />
+        <div class="collapse navbar-collapse"></div>
+      </div>
+    </nav>
+    <section class="container bg-secondary-subtle mt-5 mb-4 px-5 pt-5 pb-2">
+      <h1 class="display-3 text-center fw-bold">Server Host FAQ</h1>
+
+      <p class="lead">
+        Hi, server owners! Thanks for your interest in comfig quickplay, and
+        your continued support of the TF2 community. This page documents
+        information for you all to better understand the quickplay system here,
+        and how we can work together to improve the experience for our players
+        and the community as a whole.
+      </p>
+      <h2 class="display-6 fw-bold">How are servers selected?</h2>
+      <p class="lead">
+        We want to provide players with an experience they expect, and must
+        generally follow default TF2 gameplay rules (excluding a few
+        preference-based exceptions), without adverse modifications which
+        players looking for an unmodified casual experience do not want. As long
+        as you strive to give players this kind of quality experience without
+        deceiving them, you will be eligible to receive quickplay players. There
+        is a full set of requirements, and a schedule for when they will be
+        enforced. We are super open with talking to server owners about this and
+        adjusting as needed.
+      </p>
+      <h3 class="fw-bold">Requirements</h3>
+      <p class="lead">
+        To avoid catching people off guard with the quickplay system, and to
+        improve the server browsing experience in general, we are proposing
+        different milestones of quickplay eligibility: M0, M1, M2, M3 and M4.
+        This is of course subject to change pending feedback from all of you! If
+        you do not meet the eligibility requirements, you will simply be
+        suspended from being listed on quickplay, and we would be happy to
+        reinstate anyone who would like work on compliance. The current
+        milestone in effect is M0.
+      </p>
+      <h4>M0</h4>
+      <p class="lead">
+        <ul>
+          <li>
+            Servers must be listed on the server browser, and must not use
+            strict matchmaking.
+          </li>
+          <li>Servers should not be password protected.</li>
+          <li>Servers must have VAC enabled.</li>
+          <li>Servers must have a public, non-SDR IP.</li>
+          <li>
+            Servers must be running on a dedicated server (srcds, not a listen
+            server).
+          </li>
+          <li>The server must at least have a max player cap of 18.</li>
+          <li>The server must be running any active Casual rotation map.</li>
+          <li>
+            The server must not have the following tags: <code
+              >friendlyfire, highlander, trade, noquickplay, hidden</code
+            >
+          </li>
+          <li>
+            Servers that violate <a
+              href="https://help.steampowered.com/en/faqs/view/6862-8119-C23E-EA7B"
+            >
+              the community guidelines
+            </a> may be delisted.
+          </li>
+          <li>
+            Servers must not actively trick players or lie to them or make it
+            difficult for them to find what they are looking for. Servers must
+            report accurate information about itself to the Steam infrastructure
+            and to clients.
+          </li>
+          <li>
+            All of the information in the server browser must be accurate:
+            number of players, number of bots, map, ping, region, etc.
+          </li>
+          <li>
+            Bots must be easily identified by players as bots. Do not give a bot
+            an avatar or assign it a ping value.
+          </li>
+          <li>
+            Servers cannot name themselves according to the naming conventions
+            used by Valve, or any other server organization.
+          </li>
+          <li>
+            Servers must not be malicious, by exposing clients to malware or
+            spyware, or by bypassing <code>cl_disablehtmlmotd</code>.
+          </li>
+          <li>
+            The engine uses tags to communicate to clients that certain
+            modifications are in effect. Servers must use these tags properly.
+            If a server makes these modifications using built-in engine
+            functionality, they will be set automatically, and all a server
+            needs to do is make sure they don't actively block them from
+            working. However, if the server uses a plugin to make gameplay
+            modifications with very similar effects, it is THEIR responsibility
+            to ensure that the tags are set. Players do not care how the
+            gameplay modification was implemented, they just want to know
+            whether it is active or not.
+          </li>
+          <li>
+            Here are some examples of tags that must be set accurately:
+            <code
+              >friendlyfire, respawntimes, norespawntime, increased_maxplayers,
+              nocrits, dmgspread, highlander</code
+            >
+          </li>
+          <li>
+            No opening a MOTD window (hidden or visible) that is not requested
+          </li>
+          <li>No forcing clients to view the MOTD until a timer has expired</li>
+          <li>No browser popups</li>
+          <li>No giving or selling gameplay advantage to players</li>
+          <li>No kicking players to make room for reserved slots</li>
+          <li>No modifying stock maps, models, or materials</li>
+          <li>
+            No running non-default game modes: prop hunt, dodgeball, class wars,
+            randomizer, engineer fortress, etc
+          </li>
+          <li>
+            No running non-default addons like custom weapons, x10, all crits,
+            etc
+          </li>
+        </ul>
+      </p>
+      <h4>M1</h4>
+      <p class="lead">
+        <ul>
+          <li>
+            Usage of Roll the Dice (RTD) must be labeled with the <code
+              >rtd</code
+            > tag.
+          </li>
+          <li>
+            Usage of any class limits must be labeled with the <code
+              >classlimits</code
+            > tag.
+          </li>
+          <li>
+            Banning any classes must be labeled with the <code>classbans</code>
+            tag.
+          </li>
+        </ul>
+      </p>
+      <h4>M2</h4>
+      <p class="lead">
+        <ul>
+          <li>
+            No granting or modifying economy items, or taking actions that
+            devalue players' items, or interfering with the TF2 economy. This
+            was enforced in the old Quickplay system.
+          </li>
+          <li>
+            You must advertise your game name as "Team Fortress", the default.
+            This was enforced in the old Quickplay system.
+          </li>
+        </ul>
+      </p>
+      <h4>M3</h4>
+      <p class="lead">
+        <ul>
+          <li>
+            You must respond to A2S pings from the game server. You may respond
+            to A2S through a proxy, but all responses must not be cached and be
+            traceable directly to the game server per request. Anycast solutions
+            which improve client routing and reduce ping are commendable, but
+            players must be able to see an accurate ping in the server browser
+            to the actual game server.
+          </li>
+          <li>
+            No using invalid characters in the server name in order to increase
+            its sorting order.
+          </li>
+        </ul>
+      </p>
+      <h4>M4</h4>
+      <p class="lead">
+        <ul>
+          <li>
+            Servers must be registered with a
+            <a href="https://steamcommunity.com/dev/managegameservers"
+              >game server account</a
+            >
+            tied to an owning Steam account, and log into that account when the server
+            boots using <code>sv_setsteamaccount</code>.
+          </li>
+          <li>Server accounts must be in good standing on Steam.</li>
+          <li>Servers should not be password protected.</li>
+        </ul>
+      </p>
+      <h2 class="display-6 fw-bold">You said there was a map requirement?</h2>
+      <p class="lead">
+        Yes, if your server is running a map which is not in the active Casual
+        rotation, then players will not be directed to your server through
+        quickplay. It's fine to switch to a custom map afterwards, and players
+        can stay on your server in this case, or they can choose to leave. Once
+        you switch back to an active Casual map, players will be directed to
+        your server again. Work and investigation is ongoing in this area for
+        custom maps.
+      </p>
+      <h2 class="display-6 fw-bold">What's the active Casual map rotation?</h2>
+      <p class="lead">
+        Any map that is listed in the Casual matchmaking group will be eligible
+        for quickplay. This update dynamically, so holiday maps like for Scream
+        Fortress and Smissmas will only be active during the holiday.
+      </p>
+      <h2 class="display-6 fw-bold">How do you get this data?</h2>
+      <p class="lead">
+        We use the public server browser list and server query information. If
+        you're open to players from the public, quickplay will evaluate your
+        eligibility and send players your way.
+      </p>
+      <h2 class="display-6 fw-bold">How can I opt-out?</h2>
+      <p class="lead">
+        We provide a few ways to opt-out. Some are explicit, like the
+        noquickplay tag (which you can set using <code
+          >tf_server_identity_disable_quickplay 1</code
+        >), or the hidden tag (which removes you from public server lists, can
+        be set using <code>tf_mm_strict 2</code>).
+        <br />
+        There's also some implicit ways. If you run a server which isn't eligible
+        for quickplay, like a surf, jump, or other custom gamemode server, obviously
+        you don't have to worry about opting out.
+      </p>
+      <h2 class="display-6 fw-bold">How do I talk with you?</h2>
+      <p class="lead">
+        Join us <a href="https://discord.gg/mastercomfig-389089828249010188"
+          >on Discord</a
+        > and report your issues or questions to the <span
+          class="text-bg-primary p-1 mx-1">#tf2-quickplay</span
+        > channel. You can also ask there to open a DM with me if needed.
+      </p>
+      <Footer />
+    </section>
+  </Body>
+</Layout>
