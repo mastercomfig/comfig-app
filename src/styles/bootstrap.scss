@@ -36,6 +36,7 @@ $form-switch-color: $input-focus-border-color;
 
 // Form Check
 $form-check-input-border: 1px solid $input-focus-border-color;
+$form-check-input-checked-color: $input-focus-border-color;
 
 // Form range
 $form-range-track-bg: color.adjust(#000, $lightness: 46%);

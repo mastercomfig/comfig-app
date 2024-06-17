@@ -7,6 +7,7 @@ import MainHead from "@components/head/MainHead.astro";
 import PreloadHead from "@components/head/PreloadHead.astro";
 import NavSelector from "@components/NavSelector.astro";
 import ServerFinder from "@components/quickplay/ServerFinder.tsx";
+import CustomizeButton from "@components/quickplay/CustomizeButton.tsx";
 import Layout from "@layouts/Layout.astro";
 import payloadImg from "@img/gamemodes/pl.png";
 import kothImg from "@img/gamemodes/koth.png";
@@ -94,13 +95,18 @@ const gamemodes = [gamemodesPending[0]];
     </PreloadHead>
     <ImportHead>
       <style>
-        .carousel {
+        .quickplay-section {
           max-width: 100vw;
         }
         @media (min-height: 602px) and (min-width: 921px) {
           .carousel {
-            width: 93vh;
             min-height: 64vh;
+          }
+          .quickplay-container {
+            min-width: 85vh;
+          }
+          .quickplay-section {
+            width: 85vh;
           }
         }
         @media (min-width: 921px) {
@@ -205,9 +211,9 @@ const gamemodes = [gamemodesPending[0]];
         <div class="collapse navbar-collapse"></div>
       </div>
     </nav>
-    <header class="jumbotron jumbotron-fluid home-header mt-3">
+    <section class="container quickplay-container pt-2 pb-4 bg-dark">
       <div
-        class="container d-flex align-items-center justify-content-center"
+        class="d-flex align-items-center justify-content-center"
         style="height: 100%"
       >
         <div class="align-middle text-center">
@@ -216,7 +222,7 @@ const gamemodes = [gamemodesPending[0]];
           </h1>
           <div
             id="quickplayGamemodes"
-            class="carousel carousel-light slide carousel-fade p-4"
+            class="carousel quickplay-section carousel-light slide carousel-fade p-4"
             style="background: #ece9d7"
           >
             <ServerFinder client:load />
@@ -332,173 +338,173 @@ const gamemodes = [gamemodesPending[0]];
         </div>
       </div>
       <br />
-      <section class="container">
-        <div class="m-2 bg-secondary-subtle p-5">
-          <h1 class="display-3 text-center fw-bold">FAQ</h1>
-          <h2 class="display-6 fw-bold">What is this?</h2>
-          <p class="lead">
-            This is a best attempt at recreating the old in-game Quickplay
-            feature as accurately as possible, and updating it to work in the
-            current times and in browser. It is merely an experimental proof of
-            concept now, but will continue to improve over the coming weeks!
-          </p>
+      <div class="container px-0 quickplay-section">
+        <CustomizeButton client:load />
+      </div>
+    </section>
+    <section class="container bg-secondary-subtle mt-5 mb-4 px-5 pt-5 pb-2">
+      <h1 class="display-3 text-center fw-bold">FAQ</h1>
+      <h2 class="display-6 fw-bold">What is this?</h2>
+      <p class="lead">
+        This is a best attempt at recreating the old in-game Quickplay feature
+        as accurately as possible, and updating it to work in the current times
+        and in browser. It is merely an experimental proof of concept now, but
+        will continue to improve over the coming weeks!
+      </p>
 
-          <h2 class="display-6 fw-bold">How do I report a problem?</h2>
-          <p class="lead">
-            Join us <a href="https://discord.gg/mastercomfig-389089828249010188"
-              >on Discord</a
-            > and report your issues to the <span
-              class="text-bg-primary p-1 mx-1">#tf2-quickplay</span
-            > channel. We welcome feedback from both players and server owners!
-          </p>
+      <h2 class="display-6 fw-bold">How do I report a problem?</h2>
+      <p class="lead">
+        Join us <a href="https://discord.gg/mastercomfig-389089828249010188"
+          >on Discord</a
+        > and report your issues to the <span class="text-bg-primary p-1 mx-1"
+          >#tf2-quickplay</span
+        > channel. We welcome feedback from both players and server owners!
+      </p>
 
-          <h2 class="display-6 fw-bold">Why only random? Why no options?</h2>
-          <p class="lead">
-            As we scale the quickplay algorithm and surface issues from broader
-            usage, we will be slowly introducing features over time to make sure
-            everyone has a smooth experience!
-          </p>
+      <h2 class="display-6 fw-bold">Why only random? Why no options?</h2>
+      <p class="lead">
+        As we scale the quickplay algorithm and surface issues from broader
+        usage, we will be slowly introducing features over time to make sure
+        everyone has a smooth experience!
+      </p>
 
-          <h2 class="display-6 fw-bold">How does this work?</h2>
-          <p class="lead">
-            Servers which are selected for the quickplay pool are then searched
-            through according to your preferences. You get matched into the
-            server with the best score. Servers are scored according to player
-            counts and estimated ping/region to be ideal for the player
-            searching, as well as a reputation bonus.
-          </p>
+      <h2 class="display-6 fw-bold">How does this work?</h2>
+      <p class="lead">
+        Servers which are selected for the quickplay pool are then searched
+        through according to your preferences. You get matched into the server
+        with the best score. Servers are scored according to player counts and
+        estimated ping/region to be ideal for the player searching, as well as a
+        reputation bonus.
+      </p>
 
-          <h2 class="display-6 fw-bold">How are servers selected?</h2>
-          <p class="lead">
-            As we are trying to recreate quickplay, we use as similar as
-            possible criteria for selecting servers for quickplay. Here are the
-            requirements to be eligible for quickplay:
-          </p>
-          <ul>
-            <li>
-              Servers must be listed on the server browser, and must not use
-              strict matchmaking.
-            </li>
-            <li>
-              Servers must be registered with a
-              <a href="https://steamcommunity.com/dev/managegameservers">game server account</a>
-              tied to an owning Steam account, and log into that account when the server
-              boots using <code>sv_setsteamaccount</code>.
-            </li>
-            <li>Server accounts must be in good standing on Steam.</li>
-            <li>Servers should not be password protected.</li>
-            <li>Servers must have VAC enabled.</li>
-            <li>Servers must have a public, non-SDR IP.</li>
-            <li>
-              Servers must be running on a dedicated server (srcds, not a listen
-              server).
-            </li>
-            <li>The server must at least have a max player cap of 18.</li>
-            <li>The server must be running any active Casual rotation map.</li>
-            <li>
-              The server must not have the following tags: <code
-                >friendlyfire, highlander, trade, noquickplay, hidden</code
-              >
-            </li>
-          </ul>
-          <p class="lead">
-            Additionally, we delist servers which do not follow the following
-            quickplay guidelines:
-            <ul>
-              <li>
-                Servers that violate <a
-                  href="https://help.steampowered.com/en/faqs/view/6862-8119-C23E-EA7B"
-                >
-                  the community guidelines
-                </a> may be delisted.
-              </li>
-              <li>
-                Servers must not actively trick players or lie to them or make
-                it difficult for them to find what they are looking for. Servers
-                must report accurate information about itself to the Steam
-                infrastructure and to clients.
-              </li>
-              <li>
-                All of the information in the server browser must be accurate:
-                number of players, number of bots, map, ping, region, etc.
-              </li>
-              <li>
-                Bots must be easily identified by players as bots. Do not give a
-                bot an avatar or assign it a ping value.
-              </li>
-              <li>
-                Servers cannot name themselves according to the naming
-                conventions used by Valve, or any other server organization.
-              </li>
-              <li>
-                Servers must not be malicious, by exposing clients to malware or
-                spyware, or by bypassing <code>cl_disablehtmlmotd</code>.
-              </li>
-              <li>
-                The engine uses tags to communicate to clients that certain
-                modifications are in effect. Servers must use these tags
-                properly. If a server makes these modifications using built-in
-                engine functionality, they will be set automatically, and all a
-                server needs to do is make sure they don't actively block them
-                from working. However, if the server uses a plugin to make
-                gameplay modifications with very similar effects, it is THEIR
-                responsibility to ensure that the tags are set. Players do not
-                care how the gameplay modification was implemented, they just
-                want to know whether it is active or not.
-              </li>
-              <li>
-                Here are some examples of tags that must be set accurately:
-                <code
-                  >friendlyfire, respawntimes, norespawntime,
-                  increased_maxplayers, nocrits, dmgspread, highlander</code
-                >
-              </li>
-            </ul>
-          </p>
-          <p class="lead">
-            Servers must generally follow default TF2 gameplay rules (excluding
-            a few preference-based exceptions), without adverse modifications
-            which players looking for an unmodified casual experience do not
-            want. These server modifications are not allowed for servers in
-            quickplay. If a server has any of these modifications, the server
-            owner can opt out of the quickplay pool. The easiest way to remove a
-            server from quickplay is to set <code
-              >tf_server_identity_disable_quickplay 1</code
-            >. Any server in the quickplay pool found to be using these
-            modifications will be delisted until it is compliant.
-          </p>
-          <ul>
-            <li>
-              Opening a MOTD window (hidden or visible) that is not requested
-            </li>
-            <li>Forcing clients to view the MOTD until a timer has expired</li>
-            <li>Browser popups</li>
-            <li>Giving or selling gameplay advantage to players</li>
-            <li>Kicking players to make room for reserved slots</li>
-            <li>Modifying stock maps, models, or materials</li>
-            <li>
-              Granting or modifying economy items, or taking actions that
-              devalue players' items, or interfering with the TF2 economy
-            </li>
-            <li>
-              Running non-default game modes: prop hunt, dodgeball, class wars,
-              randomizer, engineer fortress, etc
-            </li>
-            <li>
-              Running non-default addons like roll the dice (RTD), custom
-              weapons, x10, all crits, etc
-            </li>
-          </ul>
+      <h2 class="display-6 fw-bold">How are servers selected?</h2>
+      <p class="lead">
+        As we are trying to recreate quickplay, we use as similar as possible
+        criteria for selecting servers for quickplay. Here are the requirements
+        to be eligible for quickplay:
+      </p>
+      <ul>
+        <li>
+          Servers must be listed on the server browser, and must not use strict
+          matchmaking.
+        </li>
+        <li>
+          Servers must be registered with a
+          <a href="https://steamcommunity.com/dev/managegameservers"
+            >game server account</a
+          >
+          tied to an owning Steam account, and log into that account when the server
+          boots using <code>sv_setsteamaccount</code>.
+        </li>
+        <li>Server accounts must be in good standing on Steam.</li>
+        <li>Servers should not be password protected.</li>
+        <li>Servers must have VAC enabled.</li>
+        <li>Servers must have a public, non-SDR IP.</li>
+        <li>
+          Servers must be running on a dedicated server (srcds, not a listen
+          server).
+        </li>
+        <li>The server must at least have a max player cap of 18.</li>
+        <li>The server must be running any active Casual rotation map.</li>
+        <li>
+          The server must not have the following tags: <code
+            >friendlyfire, highlander, trade, noquickplay, hidden</code
+          >
+        </li>
+      </ul>
+      <p class="lead">
+        Additionally, we delist servers which do not follow the following
+        quickplay guidelines:
+        <ul>
+          <li>
+            Servers that violate <a
+              href="https://help.steampowered.com/en/faqs/view/6862-8119-C23E-EA7B"
+            >
+              the community guidelines
+            </a> may be delisted.
+          </li>
+          <li>
+            Servers must not actively trick players or lie to them or make it
+            difficult for them to find what they are looking for. Servers must
+            report accurate information about itself to the Steam infrastructure
+            and to clients.
+          </li>
+          <li>
+            All of the information in the server browser must be accurate:
+            number of players, number of bots, map, ping, region, etc.
+          </li>
+          <li>
+            Bots must be easily identified by players as bots. Do not give a bot
+            an avatar or assign it a ping value.
+          </li>
+          <li>
+            Servers cannot name themselves according to the naming conventions
+            used by Valve, or any other server organization.
+          </li>
+          <li>
+            Servers must not be malicious, by exposing clients to malware or
+            spyware, or by bypassing <code>cl_disablehtmlmotd</code>.
+          </li>
+          <li>
+            The engine uses tags to communicate to clients that certain
+            modifications are in effect. Servers must use these tags properly.
+            If a server makes these modifications using built-in engine
+            functionality, they will be set automatically, and all a server
+            needs to do is make sure they don't actively block them from
+            working. However, if the server uses a plugin to make gameplay
+            modifications with very similar effects, it is THEIR responsibility
+            to ensure that the tags are set. Players do not care how the
+            gameplay modification was implemented, they just want to know
+            whether it is active or not.
+          </li>
+          <li>
+            Here are some examples of tags that must be set accurately:
+            <code
+              >friendlyfire, respawntimes, norespawntime, increased_maxplayers,
+              nocrits, dmgspread, highlander</code
+            >
+          </li>
+        </ul>
+      </p>
+      <p class="lead">
+        Servers must generally follow default TF2 gameplay rules (excluding a
+        few preference-based exceptions), without adverse modifications which
+        players looking for an unmodified casual experience do not want. These
+        server modifications are not allowed for servers in quickplay. If a
+        server has any of these modifications, the server owner can opt out of
+        the quickplay pool. The easiest way to remove a server from quickplay is
+        to set <code>tf_server_identity_disable_quickplay 1</code>. Any server
+        in the quickplay pool found to be using these modifications will be
+        delisted until it is compliant.
+      </p>
+      <ul>
+        <li>Opening a MOTD window (hidden or visible) that is not requested</li>
+        <li>Forcing clients to view the MOTD until a timer has expired</li>
+        <li>Browser popups</li>
+        <li>Giving or selling gameplay advantage to players</li>
+        <li>Kicking players to make room for reserved slots</li>
+        <li>Modifying stock maps, models, or materials</li>
+        <li>
+          Granting or modifying economy items, or taking actions that devalue
+          players' items, or interfering with the TF2 economy
+        </li>
+        <li>
+          Running non-default game modes: prop hunt, dodgeball, class wars,
+          randomizer, engineer fortress, etc
+        </li>
+        <li>
+          Running non-default addons like roll the dice (RTD), custom weapons,
+          x10, all crits, etc
+        </li>
+      </ul>
 
-          <h2 class="display-6 fw-bold">What is reputation?</h2>
-          <p class="lead">
-            Reputation is a matchmaking metric given to servers if players are
-            shown to enjoy them. It is a small part of the overall scoring
-            system used to match servers with players.
-          </p>
-        </div>
-      </section>
-      <Footer />
-    </header>
+      <h2 class="display-6 fw-bold">What is reputation?</h2>
+      <p class="lead">
+        Reputation is a matchmaking metric given to servers if players are shown
+        to enjoy them. It is a small part of the overall scoring system used to
+        match servers with players.
+      </p>
+    </section>
+    <Footer />
   </Body>
 </Layout>
