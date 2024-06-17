@@ -9,6 +9,10 @@ const useStore = create(
       customizing: 0,
       toggleCustomizing: () =>
         set((state) => ({ customizing: !state.customizing })),
+      found: 0,
+      setFound: (found) => set(() => ({ found })),
+      lastServer: null,
+      setLastServer: (lastServer) => set(() => ({ lastServer })),
       searching: 0,
       setSearching: (searching) => set(() => ({ searching })),
       recentServers: {},
@@ -33,7 +37,13 @@ const useStore = create(
       addBlocklist: (steamid) =>
         set((state) => {
           state.blocklist.add(steamid);
-          return state.blocklist;
+          return { blocklist: state.blocklist };
+        }),
+      favorites: new Set([]),
+      addFavorite: (steamid) =>
+        set((state) => {
+          state.favorites.add(steamid);
+          return { favorites: state.favorites };
         }),
       pinglimit: 50,
       setPingLimit: (pinglimit) => set(() => ({ pinglimit })),

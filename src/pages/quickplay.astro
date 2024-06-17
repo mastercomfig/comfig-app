@@ -169,6 +169,7 @@ const gamemodes = [gamemodesPending[0]];
               }
               playNow.disabled = true;
               useQuickplayStore.getState().setSearching(1);
+              useQuickplayStore.getState().setFound(0);
               if (carousel) {
                 carousel.dispose();
                 carousel = null;
