@@ -251,15 +251,28 @@ export default function ServerFinder() {
       return;
     }
     setProgress(2);
-    fetch("https://worker.comfig.app/api/quickplay/list", {
-      method: "POST",
-      body: JSON.stringify({
-        ping: 0,
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => setServers(data))
-      .then(() => setProgress(20));
+    const start = performance.now();
+    let ping = 0;
+    const xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState > 0) {
+        xhr.onreadystatechange = null;
+        ping = performance.now() - start;
+        ping *= 2;
+        fetch("https://worker.comfig.app/api/quickplay/list", {
+          method: "POST",
+          body: JSON.stringify({
+            ping,
+          }),
+        })
+          .then((res) => res.json())
+          .then((data) => setServers(data))
+          .then(() => setProgress(20));
+      }
+    };
+
+    xhr.open("POST", "https://worker.comfig.app/api/quickplay/hello");
+    xhr.send();
   }, [quickplayStore.searching]);
 
   useEffect(() => {
