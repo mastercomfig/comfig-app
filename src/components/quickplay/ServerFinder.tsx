@@ -610,7 +610,7 @@ export default function ServerFinder() {
       <div
         className={`position-absolute z-3 top-50 start-50 translate-middle${quickplayStore.searching ? "" : " d-none"}`}
         style={{
-          width: "100%",
+          width: "95%",
         }}
       >
         <div className="bg-dark p-1 px-5" style={{}}>
@@ -644,7 +644,7 @@ export default function ServerFinder() {
       <div
         className={`position-absolute z-3 top-50 start-50 translate-middle${quickplayStore.found ? "" : " d-none"}`}
         style={{
-          width: "100%",
+          width: "95%",
         }}
       >
         <div className="bg-dark py-4 px-5" style={{}}>

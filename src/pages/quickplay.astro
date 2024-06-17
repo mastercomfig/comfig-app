@@ -18,12 +18,12 @@ import plrImg from "@img/gamemodes/plr.png";
 import miscImg from "@img/gamemodes/sd.png";
 import randomImg from "@img/gamemodes/random.png";
 
-const gamemodesPending = [
+const gamemodes = [
   {
     name: "Random",
     code: "any",
     description: "We'll match you into the best game we can find.",
-    skill: 2,
+    skill: 0,
     img: randomImg,
   },
   {
@@ -44,7 +44,7 @@ const gamemodesPending = [
     name: "Attack / Defense",
     code: "attack_defense",
     description: "BLU wins by capturing all points. RED wins by stopping them.",
-    skill: 0,
+    skill: 1,
     img: adImg,
   },
   {
@@ -76,8 +76,6 @@ const gamemodesPending = [
     img: miscImg,
   },
 ];
-
-const gamemodes = [gamemodesPending[0]];
 ---
 
 <Layout>
