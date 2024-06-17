@@ -1,4 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+
+import { MAX_PLAYER_OPTIONS, getMaxPlayerIndex } from "@utils/quickplay";
 
 import useQuickplayStore from "@store/quickplay";
 
@@ -10,15 +12,6 @@ const PING_MED = 150.0;
 const PING_MED_SCORE = 0.0;
 const PING_HIGH = 300.0;
 const PING_HIGH_SCORE = -1.0;
-
-const MIN_PLAYER_CAP = 18;
-// At least A, and at most B.
-const MAX_PLAYER_OPTIONS = [
-  [24, 24], // Default
-  [MIN_PLAYER_CAP, 32], // Any normal
-  [64, 100], // Any large
-  [MIN_PLAYER_CAP, 100], // Don't care
-];
 
 const TAG_PREFS = ["crits", "respawntimes", "beta"];
 
@@ -332,7 +325,7 @@ export default function ServerFinder() {
 
     filteredServers.sort((a, b) => b.score - a.score);
 
-    window.location.href = `steam://connect/${filteredServers[0].addr}`;
+    //window.location.href = `steam://connect/${filteredServers[0].addr}`;
     touchRecentServer(filteredServers[0].addr);
     console.log(
       "Joining",
@@ -361,11 +354,234 @@ export default function ServerFinder() {
     }
   }, [allFiltered]);
 
+  const maxPlayerIndex = useMemo(() => {
+    return getMaxPlayerIndex(quickplayStore.maxPlayerCap);
+  }, [quickplayStore.maxPlayerCap]);
+
+  if (quickplayStore.customizing) {
+    return (
+      <div
+        className={`position-absolute text-start z-3 top-50 start-50 translate-middle bg-dark-subtle p-5`}
+        style={{ width: "100%", height: "100%" }}
+      >
+        <h3 className="display-6 text-center" style={{ fontWeight: 600 }}>
+          ADVANCED OPTIONS
+        </h3>
+        <div className="row mt-4">
+          <div className="col-auto">
+            <h4 style={{ fontWeight: 500 }}>Server capacity</h4>
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="radio"
+                name="server-capacity"
+                id="server-capacity-0"
+                checked={maxPlayerIndex === 0}
+                onClick={() =>
+                  quickplayStore.setMaxPlayerCap(MAX_PLAYER_OPTIONS[0])
+                }
+              />
+              <label className="form-check-label" htmlFor="server-capacity-0">
+                24 players
+              </label>
+            </div>
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="radio"
+                name="server-capacity"
+                id="server-capacity-1"
+                checked={maxPlayerIndex === 1}
+                onClick={() =>
+                  quickplayStore.setMaxPlayerCap(MAX_PLAYER_OPTIONS[1])
+                }
+              />
+              <label className="form-check-label" htmlFor="server-capacity-1">
+                24-32 players
+              </label>
+            </div>
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="radio"
+                name="server-capacity"
+                id="server-capacity-2"
+                checked={maxPlayerIndex === 2}
+                onClick={() =>
+                  quickplayStore.setMaxPlayerCap(MAX_PLAYER_OPTIONS[2])
+                }
+              />
+              <label className="form-check-label" htmlFor="server-capacity-2">
+                18-32 players
+              </label>
+            </div>
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="radio"
+                name="server-capacity"
+                id="server-capacity-3"
+                checked={maxPlayerIndex === 3}
+                onClick={() =>
+                  quickplayStore.setMaxPlayerCap(MAX_PLAYER_OPTIONS[3])
+                }
+              />
+              <label className="form-check-label" htmlFor="server-capacity-3">
+                64-100 players
+              </label>
+            </div>
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="radio"
+                name="server-capacity"
+                id="server-capacity-any"
+                checked={maxPlayerIndex === 4}
+                onClick={() =>
+                  quickplayStore.setMaxPlayerCap(MAX_PLAYER_OPTIONS[4])
+                }
+              />
+              <label className="form-check-label" htmlFor="server-capacity-any">
+                Don't care
+              </label>
+            </div>
+          </div>
+          <div className="col-auto">
+            <h4 style={{ fontWeight: 500 }}>Random crits</h4>
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="radio"
+                name="random-crits"
+                id="random-crits-0"
+                checked={quickplayStore.crits === 0}
+                onClick={() => quickplayStore.setCrits(0)}
+              />
+              <label className="form-check-label" htmlFor="random-crits-0">
+                Enabled
+              </label>
+            </div>
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="radio"
+                name="random-crits"
+                id="random-crits-1"
+                checked={quickplayStore.crits === 1}
+                onClick={() => quickplayStore.setCrits(1)}
+              />
+              <label className="form-check-label" htmlFor="random-crits-1">
+                Disabled
+              </label>
+            </div>
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="radio"
+                name="random-crits"
+                id="random-crits-any"
+                checked={quickplayStore.crits === -1}
+                onClick={() => quickplayStore.setCrits(-1)}
+              />
+              <label className="form-check-label" htmlFor="random-crits-any">
+                Don't care
+              </label>
+            </div>
+          </div>
+          <div className="col-auto">
+            <h4 style={{ fontWeight: 500 }}>Respawn times</h4>
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="radio"
+                name="respawn-times"
+                id="respawn-times-0"
+                checked={quickplayStore.respawntimes === 0}
+                onClick={() => quickplayStore.setRespawnTimes(0)}
+              />
+              <label className="form-check-label" htmlFor="respawn-times-0">
+                Default respawn times
+              </label>
+            </div>
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="radio"
+                name="respawn-times"
+                id="respawn-times-1"
+                checked={quickplayStore.respawntimes === 1}
+                onClick={() => quickplayStore.setRespawnTimes(1)}
+              />
+              <label className="form-check-label" htmlFor="respawn-times-1">
+                Instant respawn
+              </label>
+            </div>
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="radio"
+                name="respawn-times"
+                id="respawn-times-any"
+                checked={quickplayStore.respawntimes === -1}
+                onClick={() => quickplayStore.setRespawnTimes(-1)}
+              />
+              <label className="form-check-label" htmlFor="respawn-times-any">
+                Don't care
+              </label>
+            </div>
+          </div>
+          <div className="col-auto d-none">
+            <h4 style={{ fontWeight: 500 }}>Beta maps</h4>
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="radio"
+                name="beta-maps"
+                id="beta-maps-0"
+                checked={quickplayStore.beta === 0}
+                onClick={() => quickplayStore.setBeta(0)}
+              />
+              <label className="form-check-label" htmlFor="beta-maps-0">
+                Play released maps
+              </label>
+            </div>
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="radio"
+                name="beta-maps"
+                id="beta-maps-1"
+                checked={quickplayStore.beta === 1}
+                onClick={() => quickplayStore.setBeta(1)}
+              />
+              <label className="form-check-label" htmlFor="beta-maps-1">
+                Play beta maps
+              </label>
+            </div>
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="radio"
+                name="beta-maps"
+                id="beta-maps-any"
+                checked={quickplayStore.beta === -1}
+                onClick={() => quickplayStore.setBeta(-1)}
+              />
+              <label className="form-check-label" htmlFor="beta-maps-any">
+                Don't care
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
       className={`position-absolute z-3 top-50 start-50 translate-middle${quickplayStore.searching ? "" : " d-none"}`}
       style={{
-        width: "93vh",
+        width: "100%",
       }}
     >
       <div className="bg-dark p-1 px-5" style={{}}>
