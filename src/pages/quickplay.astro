@@ -138,16 +138,21 @@ const gamemodes = [
           ];
           const carouselEl = document.getElementById("quickplayGamemodes");
           let carousel: Carousel | null = null;
-          function refreshCarousel() {
+          function refreshCarousel(start: boolean = false) {
             if (carouselEl) {
               carousel = new Carousel(carouselEl);
               carouselEl.addEventListener("slide.bs.carousel", (event) => {
                 const code = codeLookup[event.to];
                 useQuickplayStore.getState().setGamemode(code);
               });
+              if (start) {
+                carousel.to(
+                  codeLookup.indexOf(useQuickplayStore.getState().gamemode),
+                );
+              }
             }
           }
-          refreshCarousel();
+          refreshCarousel(true);
           const playNow = document.getElementById(
             "quickplay-now",
           ) as HTMLButtonElement;
