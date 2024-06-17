@@ -39,6 +39,7 @@ const useStore = create(
           state.blocklist.add(steamid);
           return { blocklist: state.blocklist };
         }),
+      clearBlocklist: () => set(() => ({ blocklist: new Set([]) })),
       favorites: new Set([]),
       addFavorite: (steamid) =>
         set((state) => {
