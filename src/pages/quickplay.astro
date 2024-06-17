@@ -95,8 +95,18 @@ const gamemodes = [gamemodesPending[0]];
     <ImportHead>
       <style>
         .carousel {
-          aspect-ratio: 4 / 3;
-          height: 70vh;
+          max-width: 100vw;
+        }
+        @media (min-height: 602px) and (min-width: 921px) {
+          .carousel {
+            width: 93vh;
+            min-height: 64vh;
+          }
+        }
+        @media (min-width: 921px) {
+          #gm-desc {
+            margin-top: -3rem;
+          }
         }
         .carousel-item {
           transition: none !important;
@@ -228,7 +238,7 @@ const gamemodes = [gamemodesPending[0]];
                   >
                     <div
                       class="h-100 d-flex flex-column justify-content-between"
-                      style={`background-image: url('${resource.img.src}'); background-position: center; background-size: contain;background-repeat: no-repeat`}
+                      style={`background-image: url('${resource.img.src}'); background-position: center; background-size: contain;background-repeat: no-repeat;width: 100%;aspect-ratio: 4 / 3`}
                     >
                       <h2
                         class="display-2"
@@ -236,24 +246,28 @@ const gamemodes = [gamemodesPending[0]];
                       >
                         {resource.name}
                       </h2>
-                      <div style="color: #2b2f32">
-                        <p class="lead m-0" style="font-size: 2.5rem">
-                          <strong>{resource.description}</strong>
-                        </p>
-                        <div
-                          class="text-danger-emphasis"
-                          style="font-size: 1.2rem"
-                        >
-                          {resource.skill === 0 && (
-                            <p class="m-0">Recommended For All Skill Levels</p>
-                          )}
-                          {resource.skill === 1 && (
-                            <p class="m-0">Recommended For Advanced Players</p>
-                          )}
-                          {resource.skill === 2 && (
-                            <p class="m-0">Recommended For Expert Players</p>
-                          )}
-                        </div>
+                    </div>
+                    <div style="color: #2b2f32">
+                      <p
+                        id="gm-desc"
+                        class="lead mb-0"
+                        style="font-size: 2.5rem"
+                      >
+                        <strong>{resource.description}</strong>
+                      </p>
+                      <div
+                        class="text-danger-emphasis"
+                        style="font-size: 1.2rem"
+                      >
+                        {resource.skill === 0 && (
+                          <p class="m-0">Recommended For All Skill Levels</p>
+                        )}
+                        {resource.skill === 1 && (
+                          <p class="m-0">Recommended For Advanced Players</p>
+                        )}
+                        {resource.skill === 2 && (
+                          <p class="m-0">Recommended For Expert Players</p>
+                        )}
                       </div>
                     </div>
                   </div>
