@@ -325,7 +325,7 @@ export default function ServerFinder() {
 
     filteredServers.sort((a, b) => b.score - a.score);
 
-    //window.location.href = `steam://connect/${filteredServers[0].addr}`;
+    window.location.href = `steam://connect/${filteredServers[0].addr}`;
     touchRecentServer(filteredServers[0].addr);
     console.log(
       "Joining",
