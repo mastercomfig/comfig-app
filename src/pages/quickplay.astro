@@ -144,12 +144,15 @@ const gamemodes = [gamemodesPending[0]];
             }
           }
           refreshCarousel();
-          const playNow = document.getElementById("quickplay-now");
+          const playNow = document.getElementById(
+            "quickplay-now",
+          ) as HTMLButtonElement;
           if (carouselEl) {
             carouselEl.addEventListener("finished-searching", () => {
               refreshCarousel();
               if (playNow) {
                 playNow.innerText = "TRY AGAIN";
+                playNow.disabled = false;
               }
             });
           }
@@ -158,6 +161,7 @@ const gamemodes = [gamemodesPending[0]];
               if (useQuickplayStore.getState().searching) {
                 return;
               }
+              playNow.disabled = true;
               useQuickplayStore.getState().setSearching(1);
               if (carousel) {
                 carousel.dispose();
