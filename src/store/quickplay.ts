@@ -11,6 +11,11 @@ const useStore = create(
       recentServers: {},
       setRecentServer: (k, v) =>
         set((state) => ({ recentServers: { ...state.recentServers, [k]: v } })),
+      removeRecentServer: (k) =>
+        set((state) => {
+          delete state.recentServers[k];
+          return { recentServers: state.recentServers };
+        }),
       maxPlayerCap: [24, 32],
       setMaxPlayerCap: (cap) => set(() => ({ maxPlayerCap: cap })),
       gamemode: "any",
@@ -32,10 +37,13 @@ const useStore = create(
     }),
     idbStorage(
       "quickplay",
-      2,
+      3,
       (persistedState, version) => {
         if (version < 2) {
           persistedState.pinglimit = 50;
+        }
+        if (version < 3) {
+          persistedState.recentServers = {};
         }
         return persistedState;
       },

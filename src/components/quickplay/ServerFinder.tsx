@@ -55,18 +55,20 @@ export default function ServerFinder() {
     let penalty = 0.0;
     const lastTime = quickplayStore.recentServers[address];
     if (lastTime) {
-      const elapsed = performance.now() - lastTime;
+      const elapsed = new Date().getTime() - lastTime;
       if (elapsed <= REJOIN_COOLDOWN) {
         const age = elapsed;
         const ageScore = age / REJOIN_COOLDOWN;
         penalty = (1.0 - ageScore) * REJOIN_PENALTY;
+      } else {
+        quickplayStore.removeRecentServer(address);
       }
     }
     return penalty;
   };
 
   const touchRecentServer = (address) => {
-    quickplayStore.setRecentServer(address, performance.now());
+    quickplayStore.setRecentServer(address, new Date().getTime());
   };
 
   const updateMaxPlayers = (option) => {
@@ -321,7 +323,13 @@ export default function ServerFinder() {
     touchRecentServer(filteredServers[0].addr);
     console.log("servers", servers);
     console.log("filtered", filteredServers);
-    console.log("recent", Object.keys(quickplayStore.recentServers).map((s) => [s, -getRecentPenalty(s)]));
+    console.log(
+      "recent",
+      Object.keys(quickplayStore.recentServers).map((s) => [
+        s,
+        -getRecentPenalty(s),
+      ]),
+    );
     quickplayStore.setSearching(0);
     setServers([]);
     setFilteredServers([]);
