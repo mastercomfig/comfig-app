@@ -308,6 +308,9 @@ export default function ServerFinder() {
         5 + 300 * pct,
       );
     }
+    if (filtered === servers.length) {
+      setAllFiltered(true);
+    }
   }, [
     servers,
     quickplayStore.maxPlayerCap,
@@ -322,6 +325,7 @@ export default function ServerFinder() {
     }
 
     if (filteredServers.length < 1) {
+      quickplayStore.setFound(-1);
       return;
     }
 
@@ -642,7 +646,48 @@ export default function ServerFinder() {
       </div>
 
       <div
-        className={`position-absolute z-3 top-50 start-50 translate-middle${quickplayStore.found ? "" : " d-none"}`}
+        className={`position-absolute z-3 top-50 start-50 translate-middle${quickplayStore.found === -1 ? "" : " d-none"}`}
+        style={{
+          width: "95%",
+        }}
+      >
+        <div className="bg-dark py-4 px-5" style={{}}>
+          <h3
+            className="mb-1 mt-2"
+            style={{ fontWeight: 800, letterSpacing: "0.1rem" }}
+          >
+            No servers found to join. Please adjust your options or clear your
+            server blocks.
+          </h3>
+          <hr />
+          <div
+            className="btn-group"
+            role="group"
+            aria-label="Server list options"
+          >
+            <button
+              className="btn btn-danger"
+              onClick={() => {
+                quickplayStore.setFound(0);
+                quickplayStore.clearBlocklist();
+              }}
+            >
+              <span className="fas fa-trash-can"></span> Clear blocks
+            </button>
+            <button
+              className="btn btn-dark"
+              onClick={() => {
+                quickplayStore.setFound(0);
+              }}
+            >
+              <span className="fas fa-circle-xmark"></span> Close
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div
+        className={`position-absolute z-3 top-50 start-50 translate-middle${quickplayStore.found === 1 ? "" : " d-none"}`}
         style={{
           width: "95%",
         }}
@@ -675,7 +720,7 @@ export default function ServerFinder() {
                 );
               }}
             >
-              Copy connect string
+              Copy connect command
             </button>
           </small>
           <hr />
