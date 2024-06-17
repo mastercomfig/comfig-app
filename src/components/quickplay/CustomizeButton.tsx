@@ -10,7 +10,7 @@ const RESPAWN_STATUS = [
   "Instant respawn",
   "Any respawn times",
 ];
-const CRIT_STATUS = ["No", ""];
+const CRIT_STATUS = ["", "No"];
 const BETA_STATUS = ["No beta maps", "Only beta maps"];
 
 const GAMEMODE_STATUS_LOOKUP = {
