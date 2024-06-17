@@ -14,8 +14,14 @@ const CRIT_STATUS = ["", "No"];
 const BETA_STATUS = ["No beta maps", "Only beta maps"];
 
 const GAMEMODE_STATUS_LOOKUP = {
-  payload: "Payload",
   any: "Any game mode",
+  payload: "Payload",
+  koth: "King of the Hill",
+  attack_defense: "Attack / Defense",
+  ctf: "Capture the Flag",
+  capture_point: "Capture Points",
+  payload_race: "Payload Race",
+  alternative: "Misc",
 };
 
 function genPrefString(
