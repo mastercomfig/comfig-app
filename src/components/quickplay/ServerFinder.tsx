@@ -13,6 +13,8 @@ const PING_MED_SCORE = 0.0;
 const PING_HIGH = 300.0;
 const PING_HIGH_SCORE = -1.0;
 
+const BAD_PING_THRESHOLD = (PING_MED + PING_HIGH) / 2;
+
 const TAG_PREFS = ["crits", "respawntimes", "beta"];
 
 const gamemodeToPrefix = {
@@ -325,14 +327,15 @@ export default function ServerFinder() {
 
     filteredServers.sort((a, b) => b.score - a.score);
 
-    window.location.href = `steam://connect/${filteredServers[0].addr}`;
-    touchRecentServer(filteredServers[0].addr);
-    console.log(
-      "Joining",
-      filteredServers[0].addr,
-      filteredServers[0].steamid,
-      filteredServers[0].name,
-    );
+    const server = filteredServers[0];
+    const parms = new URLSearchParams(window.location.search);
+    if (parms.get("noconnect") !== "1") {
+      window.location.href = `steam://connect/${server.addr}`;
+    }
+    touchRecentServer(server.addr);
+    console.log("Joining", server.addr, server.steamid, server.name);
+    quickplayStore.setLastServer(server);
+    quickplayStore.setFound(1);
     console.log("servers", servers);
     console.log("filtered", filteredServers);
     console.log(
@@ -358,10 +361,25 @@ export default function ServerFinder() {
     return getMaxPlayerIndex(quickplayStore.maxPlayerCap);
   }, [quickplayStore.maxPlayerCap]);
 
-  if (quickplayStore.customizing) {
-    return (
+  const pingColor = useMemo(() => {
+    if (!quickplayStore.lastServer) {
+      return;
+    }
+    const okPingThreshold = (quickplayStore.pinglimit + PING_MED) / 2;
+    const ping = quickplayStore.lastServer.ping;
+    if (ping >= BAD_PING_THRESHOLD) {
+      return "danger";
+    }
+    if (ping >= okPingThreshold) {
+      return "warning";
+    }
+    return "success";
+  }, [quickplayStore.lastServer, quickplayStore.pinglimit]);
+
+  return (
+    <>
       <div
-        className={`position-absolute text-start z-3 top-50 start-50 translate-middle bg-dark-subtle p-5`}
+        className={`position-absolute text-start z-2 top-50 start-50 translate-middle bg-dark-subtle p-5${quickplayStore.customizing ? "" : " d-none"}`}
         style={{ width: "100%", height: "100%" }}
       >
         <h3 className="display-6 text-center" style={{ fontWeight: 600 }}>
@@ -374,6 +392,7 @@ export default function ServerFinder() {
               <input
                 className="form-check-input"
                 type="radio"
+                readOnly
                 name="server-capacity"
                 id="server-capacity-0"
                 checked={maxPlayerIndex === 0}
@@ -389,6 +408,7 @@ export default function ServerFinder() {
               <input
                 className="form-check-input"
                 type="radio"
+                readOnly
                 name="server-capacity"
                 id="server-capacity-1"
                 checked={maxPlayerIndex === 1}
@@ -404,6 +424,7 @@ export default function ServerFinder() {
               <input
                 className="form-check-input"
                 type="radio"
+                readOnly
                 name="server-capacity"
                 id="server-capacity-2"
                 checked={maxPlayerIndex === 2}
@@ -419,6 +440,7 @@ export default function ServerFinder() {
               <input
                 className="form-check-input"
                 type="radio"
+                readOnly
                 name="server-capacity"
                 id="server-capacity-3"
                 checked={maxPlayerIndex === 3}
@@ -434,6 +456,7 @@ export default function ServerFinder() {
               <input
                 className="form-check-input"
                 type="radio"
+                readOnly
                 name="server-capacity"
                 id="server-capacity-any"
                 checked={maxPlayerIndex === 4}
@@ -452,6 +475,7 @@ export default function ServerFinder() {
               <input
                 className="form-check-input"
                 type="radio"
+                readOnly
                 name="random-crits"
                 id="random-crits-0"
                 checked={quickplayStore.crits === 0}
@@ -465,6 +489,7 @@ export default function ServerFinder() {
               <input
                 className="form-check-input"
                 type="radio"
+                readOnly
                 name="random-crits"
                 id="random-crits-1"
                 checked={quickplayStore.crits === 1}
@@ -478,6 +503,7 @@ export default function ServerFinder() {
               <input
                 className="form-check-input"
                 type="radio"
+                readOnly
                 name="random-crits"
                 id="random-crits-any"
                 checked={quickplayStore.crits === -1}
@@ -494,6 +520,7 @@ export default function ServerFinder() {
               <input
                 className="form-check-input"
                 type="radio"
+                readOnly
                 name="respawn-times"
                 id="respawn-times-0"
                 checked={quickplayStore.respawntimes === 0}
@@ -507,6 +534,7 @@ export default function ServerFinder() {
               <input
                 className="form-check-input"
                 type="radio"
+                readOnly
                 name="respawn-times"
                 id="respawn-times-1"
                 checked={quickplayStore.respawntimes === 1}
@@ -520,6 +548,7 @@ export default function ServerFinder() {
               <input
                 className="form-check-input"
                 type="radio"
+                readOnly
                 name="respawn-times"
                 id="respawn-times-any"
                 checked={quickplayStore.respawntimes === -1}
@@ -536,6 +565,7 @@ export default function ServerFinder() {
               <input
                 className="form-check-input"
                 type="radio"
+                readOnly
                 name="beta-maps"
                 id="beta-maps-0"
                 checked={quickplayStore.beta === 0}
@@ -549,6 +579,7 @@ export default function ServerFinder() {
               <input
                 className="form-check-input"
                 type="radio"
+                readOnly
                 name="beta-maps"
                 id="beta-maps-1"
                 checked={quickplayStore.beta === 1}
@@ -562,6 +593,7 @@ export default function ServerFinder() {
               <input
                 className="form-check-input"
                 type="radio"
+                readOnly
                 name="beta-maps"
                 id="beta-maps-any"
                 checked={quickplayStore.beta === -1}
@@ -574,42 +606,115 @@ export default function ServerFinder() {
           </div>
         </div>
       </div>
-    );
-  }
 
-  return (
-    <div
-      className={`position-absolute z-3 top-50 start-50 translate-middle${quickplayStore.searching ? "" : " d-none"}`}
-      style={{
-        width: "100%",
-      }}
-    >
-      <div className="bg-dark p-1 px-5" style={{}}>
-        <h3
-          className="mb-3 mt-4"
-          style={{ fontWeight: 800, letterSpacing: "0.1rem" }}
-        >
-          SEARCHING FOR THE BEST AVAILABLE SERVER
-        </h3>
-        <div
-          className="progress mb-3"
-          role="progressbar"
-          aria-label="Animated striped example"
-          aria-valuenow={progress}
-          aria-valuemin={0}
-          aria-valuemax={100}
-          style={{ height: "2rem" }}
-        >
+      <div
+        className={`position-absolute z-3 top-50 start-50 translate-middle${quickplayStore.searching ? "" : " d-none"}`}
+        style={{
+          width: "100%",
+        }}
+      >
+        <div className="bg-dark p-1 px-5" style={{}}>
+          <h3
+            className="mb-3 mt-4"
+            style={{ fontWeight: 800, letterSpacing: "0.1rem" }}
+          >
+            SEARCHING FOR THE BEST AVAILABLE SERVER
+          </h3>
           <div
-            className="progress-bar progress-bar-striped progress-bar-animated"
-            style={{ width: `${progress}%` }}
-          ></div>
+            className="progress mb-3"
+            role="progressbar"
+            aria-label="Animated striped example"
+            aria-valuenow={progress}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            style={{ height: "2rem" }}
+          >
+            <div
+              className="progress-bar progress-bar-striped progress-bar-animated"
+              style={{ width: `${progress}%` }}
+            ></div>
+          </div>
+          <h5 className="mb-3">
+            Game servers meeting search criteria: {filteredServers.length}
+          </h5>
+          {/*<button className="btn btn-light mb-3 fw-bold">CANCEL</button>*/}
         </div>
-        <h5 className="mb-3">
-          Game servers meeting search criteria: {filteredServers.length}
-        </h5>
-        {/*<button className="btn btn-light mb-3 fw-bold">CANCEL</button>*/}
       </div>
-    </div>
+
+      <div
+        className={`position-absolute z-3 top-50 start-50 translate-middle${quickplayStore.found ? "" : " d-none"}`}
+        style={{
+          width: "100%",
+        }}
+      >
+        <div className="bg-dark py-4 px-5" style={{}}>
+          <h4
+            className="mb-0 mt-1"
+            style={{ fontWeight: 500, letterSpacing: "0.1rem" }}
+          >
+            YOU'RE ON YOUR WAY TO…
+          </h4>
+          <h3
+            className="mb-1 mt-2"
+            style={{ fontWeight: 800, letterSpacing: "0.1rem" }}
+          >
+            {quickplayStore.lastServer?.name}{" "}
+            <span className={`fas fa-signal text-${pingColor}`}></span>
+          </h3>
+          <small>
+            Problem auto connecting?{" "}
+            <button
+              className="btn btn-sm btn-link m-0 p-0 align-baseline"
+              onClick={() => {
+                if (!navigator.clipboard) {
+                  console.error("Clipboard unsupported for connect string.");
+                  return;
+                }
+                navigator.clipboard.writeText(
+                  `connect ${quickplayStore.lastServer.addr}`,
+                );
+              }}
+            >
+              Copy connect string
+            </button>
+          </small>
+          <hr />
+          <h4
+            className="mb-3 mt-3"
+            style={{ fontWeight: 500, letterSpacing: "0.1rem" }}
+          >
+            Did you like this server?
+          </h4>
+          <div className="btn-group" role="group" aria-label="Server options">
+            <button
+              className="btn btn-danger"
+              onClick={() => {
+                quickplayStore.addBlocklist(quickplayStore.lastServer.steamid);
+                quickplayStore.setFound(0);
+              }}
+            >
+              <span className="fas fa-ban"></span> No, block it
+            </button>
+            <button
+              className="btn btn-dark"
+              onClick={() => {
+                quickplayStore.setFound(0);
+              }}
+            >
+              <span className="far fa-circle-xmark"></span> Don't care
+            </button>
+            <button
+              className="btn btn-success"
+              onClick={() => {
+                quickplayStore.addFavorite(quickplayStore.lastServer.steamid);
+                quickplayStore.setFound(0);
+              }}
+            >
+              <span className="fas fa-star"></span> Yes, favorite it
+            </button>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
