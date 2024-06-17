@@ -653,7 +653,7 @@ export default function ServerFinder() {
       >
         <div className="bg-dark py-4 px-5" style={{}}>
           <h3
-            className="mb-1 mt-2"
+            className="mb-1 mt-1"
             style={{ fontWeight: 800, letterSpacing: "0.1rem" }}
           >
             No servers found to join. Please adjust your options or clear your
