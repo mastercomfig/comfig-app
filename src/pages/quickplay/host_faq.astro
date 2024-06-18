@@ -91,7 +91,16 @@ import Layout from "@layouts/Layout.astro";
           </li>
           <li>Servers should not be password protected.</li>
           <li>Servers must have VAC enabled.</li>
-          <li>Servers must have a public, non-SDR IP.</li>
+          <li>
+            Servers must have a public, non-SDR (<a
+              href="https://partner.steamgames.com/doc/features/multiplayer/steamdatagramrelay"
+              target="_blank">Steam Datagram Relay</a
+            >) IP, i.e. do not use the <code>-enablefakeip</code> launch param. This
+            is so your server has a consistent IP.
+          </li>
+          <li>
+            Servers must respond to A2S queries in a reasonable amount of time.
+          </li>
           <li>
             Servers must be running on a dedicated server (srcds, not a listen
             server).
@@ -148,7 +157,7 @@ import Layout from "@layouts/Layout.astro";
             Here are some examples of tags that must be set accurately:
             <code
               >friendlyfire, respawntimes, norespawntime, increased_maxplayers,
-              nocrits, dmgspread, highlander</code
+              nocrits, dmgspread, highlander, gravity, mvm</code
             >
           </li>
           <li>

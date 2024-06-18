@@ -33,6 +33,8 @@ const useStore = create(
       setCrits: (crits) => set(() => ({ crits })),
       beta: -1,
       setBeta: (beta) => set(() => ({ beta })),
+      rtd: 0,
+      setRtd: (rtd) => set(() => ({ rtd })),
       blocklist: new Set([]),
       addBlocklist: (steamid) =>
         set((state) => {
