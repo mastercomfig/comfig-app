@@ -168,28 +168,7 @@ export default function ServerFinder() {
       .then((data) => setSchema(data));
   }, []);
 
-  const filterServer = (server) => {
-    // Now let's start the server secondary filters.
-    const [minCap, maxCap] = quickplayStore.maxPlayerCap;
-    // Make sure we have enough player cap.
-    if (server.max_players < minCap) {
-      return false;
-    }
-    // Allow for one more player than our cap for SourceTV.
-    if (server.max_players > maxCap + 1) {
-      return false;
-    }
-    const tags = new Set(server.gametype) as Set<string>;
-    // Check the tags
-    if (!filterServerTags(tags)) {
-      return false;
-    }
-    // Check for RTD in name if RTD is disabled
-    if (quickplayStore.rtd === 0) {
-      if (server.name.toLowerCase().indexOf("rtd") >= 0) {
-        return false;
-      }
-    }
+  const filterServerForGamemode = (server, tags: Set<string>) => {
     const expectedGamemode = quickplayStore.gamemode;
     if (expectedGamemode !== "any") {
       const mapGamemode = mapToGamemode[server.map];
@@ -228,6 +207,34 @@ export default function ServerFinder() {
           return false;
         }
       }
+    }
+    return true;
+  };
+
+  const filterServer = (server) => {
+    // Now let's start the server secondary filters.
+    const [minCap, maxCap] = quickplayStore.maxPlayerCap;
+    // Make sure we have enough player cap.
+    if (server.max_players < minCap) {
+      return false;
+    }
+    // Allow for one more player than our cap for SourceTV.
+    if (server.max_players > maxCap + 1) {
+      return false;
+    }
+    const tags = new Set(server.gametype) as Set<string>;
+    // Check the tags
+    if (!filterServerTags(tags)) {
+      return false;
+    }
+    // Check for RTD in name if RTD is disabled
+    if (quickplayStore.rtd === 0) {
+      if (server.name.toLowerCase().indexOf("rtd") >= 0) {
+        return false;
+      }
+    }
+    if (!filterServerForGamemode(server, tags)) {
+      return false;
     }
     if (quickplayStore.blocklist.has(server.steamid)) {
       return false;
@@ -282,8 +289,9 @@ export default function ServerFinder() {
   };
 
   const [progress, setProgress] = useState(0);
-  const [servers, setServers] = useState([]);
-  const [filteredServers, setFilteredServers] = useState([]);
+  const [servers, setServers] = useState<Array<any>>([]);
+  const [filteredServers, setFilteredServers] = useState<Array<any>>([]);
+  const [gamemodePop, setGamemodePop] = useState<Record<string, number>>({});
   const [allFiltered, setAllFiltered] = useState(false);
 
   useEffect(() => {
@@ -316,6 +324,32 @@ export default function ServerFinder() {
   }, [quickplayStore.searching]);
 
   useEffect(() => {
+    if (servers.length < 1) {
+      return;
+    }
+    const gm = quickplayStore.gamemode;
+    if (gamemodePop[gm] !== undefined) {
+      return;
+    }
+    let players = 0;
+    for (const server of servers) {
+      const tags = new Set(server.gametype) as Set<string>;
+      if (!filterServerForGamemode(server, tags)) {
+        continue;
+      }
+      players += server.players;
+    }
+    console.log(gamemodePop, players);
+    setGamemodePop({
+      ...gamemodePop,
+      [gm]: players,
+    });
+  }, [servers, quickplayStore.gamemode]);
+
+  useEffect(() => {
+    if (!quickplayStore.searching) {
+      return;
+    }
     if (servers.length < 1) {
       return;
     }
@@ -366,7 +400,7 @@ export default function ServerFinder() {
 
   function finishSearch() {
     quickplayStore.setSearching(0);
-    setServers([]);
+    //setServers([]);
     setFilteredServers([]);
     setAllFiltered(false);
     setProgress(0);
@@ -430,8 +464,19 @@ export default function ServerFinder() {
     return "success";
   }, [quickplayStore.lastServer, quickplayStore.pinglimit]);
 
+  console.log("pop", gamemodePop);
+
   return (
     <>
+      <div
+        className={`position-absolute text-start z-2 top-0 end-0 text-info py-2 px-3`}
+      >
+        {gamemodePop[quickplayStore.gamemode] !== undefined && (
+          <p className="lead fw-bold">
+            {gamemodePop[quickplayStore.gamemode]} players
+          </p>
+        )}
+      </div>
       <div
         className={`position-absolute text-start z-2 top-50 start-50 translate-middle bg-dark-subtle p-5${quickplayStore.customizing ? "" : " d-none"}`}
         style={{ width: "100%", height: "100%" }}
