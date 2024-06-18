@@ -321,6 +321,8 @@ export default function ServerFinder() {
 
     xhr.open("POST", "https://worker.comfig.app/api/quickplay/hello");
     xhr.send();
+
+    setGamemodePop({});
   }, [quickplayStore.searching]);
 
   useEffect(() => {
@@ -339,7 +341,6 @@ export default function ServerFinder() {
       }
       players += server.players;
     }
-    console.log(gamemodePop, players);
     setGamemodePop({
       ...gamemodePop,
       [gm]: players,
@@ -463,8 +464,6 @@ export default function ServerFinder() {
     }
     return "success";
   }, [quickplayStore.lastServer, quickplayStore.pinglimit]);
-
-  console.log("pop", gamemodePop);
 
   return (
     <>
