@@ -59,21 +59,15 @@ export default function CustomizeButton() {
 
   const prefString = useMemo(() => {
     const maxPlayerStatus = genMaxPlayerString(quickplayStore.maxPlayerCap);
-    const respawnStatus = genPrefString(
-      "respawn times",
-      quickplayStore.respawntimes,
-      RESPAWN_STATUS,
-      true,
-    );
     const critStatus = genPrefString(
       "random crits",
       quickplayStore.crits,
       CRIT_STATUS,
     );
-    const betaStatus = genPrefString(
-      "map status",
-      quickplayStore.beta,
-      BETA_STATUS,
+    const respawnStatus = genPrefString(
+      "respawn times",
+      quickplayStore.respawntimes,
+      RESPAWN_STATUS,
       true,
     );
     const rtdStatus = genPrefString(
@@ -82,12 +76,19 @@ export default function CustomizeButton() {
       RTD_STATUS,
       true,
     );
+    const betaStatus = genPrefString(
+      "map status",
+      quickplayStore.beta,
+      BETA_STATUS,
+      true,
+    );
     const strings = [
       GAMEMODE_STATUS_LOOKUP[quickplayStore.gamemode],
       maxPlayerStatus,
       critStatus,
       respawnStatus,
       rtdStatus,
+      betaStatus,
     ].filter((s) => s);
     return strings.join("; ");
   }, [
