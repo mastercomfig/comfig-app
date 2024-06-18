@@ -13,6 +13,9 @@ const PING_MED_SCORE = 0.0;
 const PING_HIGH = 300.0;
 const PING_HIGH_SCORE = -1.0;
 
+const MIN_PING = 25.0;
+const MAX_PING = PING_MED - 1;
+
 const BAD_PING_THRESHOLD = (PING_MED + PING_HIGH) / 2;
 
 const TAG_PREFS = ["crits", "respawntimes", "beta", "rtd"];
@@ -239,6 +242,9 @@ export default function ServerFinder() {
     if (quickplayStore.blocklist.has(server.steamid)) {
       return false;
     }
+    if (quickplayStore.mapbans.has(server.map)) {
+      return false;
+    }
 
     return true;
   };
@@ -270,8 +276,10 @@ export default function ServerFinder() {
     userScore += pingScore;
 
     // Favor low ping servers with players
-    if (server.players > 0) {
-      userScore += pingScore;
+    if (quickplayStore.pingmode === 1) {
+      if (server.players > 0) {
+        userScore += pingScore;
+      }
     }
 
     userScore += -getRecentPenalty(server.addr);
@@ -703,7 +711,7 @@ export default function ServerFinder() {
               </label>
             </div>
           </div>
-          <div className="col-auto d-none">
+          <div className="col-auto">
             <h4 style={{ fontWeight: 500 }}>Beta maps</h4>
             <div className="form-check">
               <input
@@ -749,6 +757,62 @@ export default function ServerFinder() {
             </div>
           </div>
         </div>
+        <br />
+        <div className="row">
+          <div className="col-3">
+            <h4 style={{ fontWeight: 500 }}>Ping</h4>
+            <input
+              type="range"
+              className="form-range"
+              value={quickplayStore.pinglimit}
+              onChange={(e) =>
+                quickplayStore.setPingLimit(parseInt(e.target.value, 10))
+              }
+              min={MIN_PING}
+              max={MAX_PING}
+              id="ping-range"
+            ></input>
+            <label htmlFor="ping-range" className="form-label">
+              {quickplayStore.pinglimit}ms
+            </label>
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                checked={quickplayStore.pingmode}
+                onChange={(e) =>
+                  quickplayStore.setPingMode(e.target.checked ? 1 : 0)
+                }
+                id="ping-mode-check"
+              />
+              <label className="form-check-label" htmlFor="ping-mode-check">
+                Strict regional matchmaking
+              </label>
+            </div>
+          </div>
+          <div className="col-auto">
+            <h4 style={{ fontWeight: 500 }}>Blocks/Bans</h4>
+            <button
+              className="btn btn-danger btn-sm mb-2"
+              onClick={() => {
+                quickplayStore.setFound(0);
+                quickplayStore.clearBlocklist();
+              }}
+            >
+              <span className="fas fa-trash-can"></span> Clear blocked servers
+            </button>
+            <br />
+            <button
+              className="btn btn-danger btn-sm"
+              onClick={() => {
+                quickplayStore.setFound(0);
+                quickplayStore.clearBlocklist();
+              }}
+            >
+              <span className="fas fa-trash-can"></span> Clear map bans
+            </button>
+          </div>
+        </div>
       </div>
 
       <div
@@ -767,7 +831,7 @@ export default function ServerFinder() {
           <div
             className="progress mb-3"
             role="progressbar"
-            aria-label="Animated striped example"
+            aria-label="Server search progress"
             aria-valuenow={progress}
             aria-valuemin={0}
             aria-valuemax={100}
@@ -781,7 +845,6 @@ export default function ServerFinder() {
           <h5 className="mb-3">
             Game servers meeting search criteria: {filteredServers.length}
           </h5>
-          {/*<button className="btn btn-light mb-3 fw-bold">CANCEL</button>*/}
         </div>
       </div>
 
@@ -850,7 +913,16 @@ export default function ServerFinder() {
             className="mb-0 mt-1"
             style={{ fontWeight: 500, letterSpacing: "0.1rem" }}
           >
-            <strong>Map:</strong> {quickplayStore.lastServer?.map}
+            <strong>Map:</strong> {quickplayStore.lastServer?.map}{" "}
+            <button
+              className="btn btn-danger btn-sm align-text-bottom"
+              onClick={() => {
+                quickplayStore.addMapBan(quickplayStore.lastServer.map);
+                quickplayStore.setFound(0);
+              }}
+            >
+              <span className="fas fa-ban"></span> Ban map
+            </button>
           </h4>
           <h4
             className="mb-0 mt-1"

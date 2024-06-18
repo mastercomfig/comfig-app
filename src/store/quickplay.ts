@@ -45,12 +45,21 @@ const useStore = create(
           return { blocklist: state.blocklist };
         }),
       clearBlocklist: () => set(() => ({ blocklist: new Set([]) })),
+      mapbans: new Set([]),
+      addMapBan: (map) =>
+        set((state) => {
+          state.mapbans.add(map);
+          return { mapbans: state.mapbans };
+        }),
+      clearMapBans: () => set(() => ({ mapbans: new Set([]) })),
       favorites: new Set([]),
       addFavorite: (steamid) =>
         set((state) => {
           state.favorites.add(steamid);
           return { favorites: state.favorites };
         }),
+      pingmode: 1,
+      setPingMode: (pingmode) => set(() => ({ pingmode })),
       pinglimit: 50,
       setPingLimit: (pinglimit) => set(() => ({ pinglimit })),
     }),
