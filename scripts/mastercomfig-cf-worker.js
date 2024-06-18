@@ -230,13 +230,25 @@ function constructDataResponse(updated, version, v, m, p) {
   return resBody;
 }
 
+const NULL_UPDATED = [null, null, null];
+const UPDATE_TIME = 1 * 60 * 60 * 1000; // 1 hour
+let memCache = null;
+let memCacheTime = 0;
+
 async function getApiData(version, force) {
   // Attempt cached
   let resBody = null;
+  const now = new Date().now();
   if (!force) {
-    resBody = await MASTERCOMFIG.get(
-      getVersionedKey("mastercomfig-api-response", version),
-    );
+    if (memCache && memCacheTime + UPDATE_TIME <= now) {
+      resBody = memCache;
+    } else {
+      resBody = await MASTERCOMFIG.get(
+        getVersionedKey("mastercomfig-api-response", version),
+      );
+      memCache = resBody;
+      memCacheTime = now;
+    }
   }
   if (!resBody) {
     let v = await MASTERCOMFIG.get(
@@ -244,16 +256,17 @@ async function getApiData(version, force) {
     );
     let m = await MASTERCOMFIG.get("mastercomfig-modules");
     let p = await MASTERCOMFIG.get("mastercomfig-preset-modules");
-    let updated = await updateData([
-      v ? null : rv,
-      m ? null : rm,
-      p ? null : rp,
-    ]);
+    let updated = NULL_UPDATED;
+    if (!v || !m || !p) {
+      updated = await updateData([v ? null : rv, m ? null : rm, p ? null : rp]);
+    }
     resBody = constructDataResponse(updated, version, v, m, p);
     await storeData(
       getVersionedKey("mastercomfig-api-response", version),
       resBody,
     );
+    memCache = resBody;
+    memCacheTime = now;
   }
   return resBody;
 }
