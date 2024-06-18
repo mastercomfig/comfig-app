@@ -25,6 +25,9 @@ const useStore = create(
         }),
       maxPlayerCap: [24, 32],
       setMaxPlayerCap: (cap) => set(() => ({ maxPlayerCap: cap })),
+      gamemodePop: {},
+      setGamemodePop: (k, v) =>
+        set((state) => ({ gamemodePop: { ...state.gamemodePop, [k]: v } })),
       gamemode: "any",
       setGamemode: (gamemode) => set(() => ({ gamemode })),
       respawntimes: 0,
@@ -53,7 +56,7 @@ const useStore = create(
     }),
     idbStorage(
       "quickplay",
-      3,
+      4,
       (persistedState, version) => {
         if (version < 2) {
           persistedState.pinglimit = 50;
@@ -61,12 +64,14 @@ const useStore = create(
         if (version < 3) {
           persistedState.recentServers = {};
         }
+        if (version < 4) {
+          delete persistedState.gamemode;
+        }
         return persistedState;
       },
       [
         "recentServers",
         "maxPlayerCap",
-        "gamemode",
         "respawntimes",
         "crits",
         "beta",
