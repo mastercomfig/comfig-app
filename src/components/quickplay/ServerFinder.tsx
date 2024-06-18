@@ -15,7 +15,7 @@ const PING_HIGH_SCORE = -1.0;
 
 const BAD_PING_THRESHOLD = (PING_MED + PING_HIGH) / 2;
 
-const TAG_PREFS = ["crits", "respawntimes", "beta"];
+const TAG_PREFS = ["crits", "respawntimes", "beta", "rtd"];
 
 const gamemodeToPrefix = {
   attack_defense: "cp",
@@ -38,6 +38,22 @@ const REGIONS = {
   6: "me",
   7: "af",
 };
+
+const DISALLOWED_GAMEMODES_IN_ANY = new Set([
+  "arena",
+  "rd",
+  "passtime",
+  "powerup",
+]);
+const DISALLOWED_MAP_PREFIXES_IN_ANY = new Set(["arena", "vsh", "zi", "rd"]);
+const DISALLOWED_MAPS_IN_ANY = new Set(["cp_degrootkeep"]);
+const DISALLOWED_GAMETYPES_IN_ANY = [
+  "passtime",
+  "powerup",
+  "rd",
+  "arena",
+  "medieval",
+];
 
 function lerp(inA, inB, outA, outB, x) {
   return outA + ((outB - outA) * (x - inA)) / (inB - inA);
@@ -108,6 +124,12 @@ export default function ServerFinder() {
       } else if (v === 1) {
         must("beta");
       }
+    } else if (pref === "rtd") {
+      if (v === 0) {
+        mustNot("rtd");
+      } else if (v === 1) {
+        must("rtd");
+      }
     }
     if (mustHave.length < 1 && mustNotHave.length < 1) {
       console.error("Unexpected tag pref!", pref, v);
@@ -126,8 +148,7 @@ export default function ServerFinder() {
     return true;
   };
 
-  const filterServerTags = (gametype: string) => {
-    const tags = new Set(gametype);
+  const filterServerTags = (tags: Set<string>) => {
     for (const pref of TAG_PREFS) {
       if (!checkTagPref(pref, tags)) {
         return false;
@@ -158,9 +179,16 @@ export default function ServerFinder() {
     if (server.max_players > maxCap + 1) {
       return false;
     }
+    const tags = new Set(server.gametype) as Set<string>;
     // Check the tags
-    if (!filterServerTags(server.gametype)) {
+    if (!filterServerTags(tags)) {
       return false;
+    }
+    // Check for RTD in name if RTD is disabled
+    if (quickplayStore.rtd === 0) {
+      if (server.name.toLowerCase().indexOf("rtd") >= 0) {
+        return false;
+      }
     }
     const expectedGamemode = quickplayStore.gamemode;
     if (expectedGamemode !== "any") {
@@ -181,6 +209,23 @@ export default function ServerFinder() {
           if (expectedPrefix && mapPrefix !== expectedPrefix) {
             return false;
           }
+        }
+      }
+    } else {
+      const mapGamemode = mapToGamemode[server.map];
+      if (DISALLOWED_GAMEMODES_IN_ANY.has(mapGamemode)) {
+        return false;
+      }
+      if (DISALLOWED_MAPS_IN_ANY.has(server.map)) {
+        return false;
+      }
+      const mapPrefix = server.map.split("_")[0];
+      if (DISALLOWED_MAP_PREFIXES_IN_ANY.has(mapPrefix)) {
+        return false;
+      }
+      for (const tag of DISALLOWED_GAMETYPES_IN_ANY) {
+        if (tags.has(tag)) {
+          return false;
         }
       }
     }
@@ -319,6 +364,19 @@ export default function ServerFinder() {
     quickplayStore.pinglimit,
   ]);
 
+  function finishSearch() {
+    quickplayStore.setSearching(0);
+    setServers([]);
+    setFilteredServers([]);
+    setAllFiltered(false);
+    setProgress(0);
+    const carouselEl = document.getElementById("quickplayGamemodes");
+    const event = new Event("finished-searching");
+    if (carouselEl) {
+      carouselEl.dispatchEvent(event);
+    }
+  }
+
   useEffect(() => {
     if (!allFiltered) {
       return;
@@ -326,6 +384,7 @@ export default function ServerFinder() {
 
     if (filteredServers.length < 1) {
       quickplayStore.setFound(-1);
+      finishSearch();
       return;
     }
 
@@ -349,16 +408,7 @@ export default function ServerFinder() {
         -getRecentPenalty(s),
       ]),
     );
-    quickplayStore.setSearching(0);
-    setServers([]);
-    setFilteredServers([]);
-    setAllFiltered(false);
-    setProgress(0);
-    const carouselEl = document.getElementById("quickplayGamemodes");
-    const event = new Event("finished-searching");
-    if (carouselEl) {
-      carouselEl.dispatchEvent(event);
-    }
+    finishSearch();
   }, [allFiltered]);
 
   const maxPlayerIndex = useMemo(() => {
@@ -563,6 +613,51 @@ export default function ServerFinder() {
               </label>
             </div>
           </div>
+          <div className="col-auto">
+            <h4 style={{ fontWeight: 500 }}>Roll the Dice</h4>
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="radio"
+                readOnly
+                name="rtd"
+                id="rtd-0"
+                checked={quickplayStore.rtd === 0}
+                onClick={() => quickplayStore.setRtd(0)}
+              />
+              <label className="form-check-label" htmlFor="rtd-0">
+                Disabled
+              </label>
+            </div>
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="radio"
+                readOnly
+                name="rtd"
+                id="rtd-1"
+                checked={quickplayStore.rtd === 1}
+                onClick={() => quickplayStore.setRtd(1)}
+              />
+              <label className="form-check-label" htmlFor="rtd-1">
+                Enabled
+              </label>
+            </div>
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="radio"
+                readOnly
+                name="rtd"
+                id="rtd-any"
+                checked={quickplayStore.rtd === -1}
+                onClick={() => quickplayStore.setRtd(-1)}
+              />
+              <label className="form-check-label" htmlFor="rtd-any">
+                Don't care
+              </label>
+            </div>
+          </div>
           <div className="col-auto d-none">
             <h4 style={{ fontWeight: 500 }}>Beta maps</h4>
             <div className="form-check">
@@ -706,6 +801,24 @@ export default function ServerFinder() {
             {quickplayStore.lastServer?.name}{" "}
             <span className={`fas fa-signal text-${pingColor}`}></span>
           </h3>
+          <h4
+            className="mb-0 mt-1"
+            style={{ fontWeight: 500, letterSpacing: "0.1rem" }}
+          >
+            <strong>Map:</strong> {quickplayStore.lastServer?.map}
+          </h4>
+          <h4
+            className="mb-0 mt-1"
+            style={{ fontWeight: 500, letterSpacing: "0.1rem" }}
+          >
+            {quickplayStore.lastServer?.players === 0 &&
+              "This server has no players. Please wait around a minute for others to join through quickplay matchmaking before requeuing."}
+            {quickplayStore.lastServer?.players > 0 && (
+              <span>
+                <strong>Players:</strong> {quickplayStore.lastServer?.players}
+              </span>
+            )}
+          </h4>
           <small>
             Problem auto connecting?{" "}
             <button

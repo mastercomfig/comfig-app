@@ -12,6 +12,7 @@ const RESPAWN_STATUS = [
 ];
 const CRIT_STATUS = ["", "No"];
 const BETA_STATUS = ["No beta maps", "Only beta maps"];
+const RTD_STATUS = ["", "Only RTD"];
 
 const GAMEMODE_STATUS_LOOKUP = {
   any: "Any game mode",
@@ -22,6 +23,7 @@ const GAMEMODE_STATUS_LOOKUP = {
   capture_point: "Capture Points",
   payload_race: "Payload Race",
   alternative: "Misc",
+  arena: "Arena",
 };
 
 function genPrefString(
@@ -74,13 +76,27 @@ export default function CustomizeButton() {
       BETA_STATUS,
       true,
     );
-    return `${GAMEMODE_STATUS_LOOKUP[quickplayStore.gamemode]}; ${maxPlayerStatus}; ${critStatus}; ${respawnStatus}`;
+    const rtdStatus = genPrefString(
+      "RTD",
+      quickplayStore.rtd,
+      RTD_STATUS,
+      true,
+    );
+    const strings = [
+      GAMEMODE_STATUS_LOOKUP[quickplayStore.gamemode],
+      maxPlayerStatus,
+      critStatus,
+      respawnStatus,
+      rtdStatus,
+    ].filter((s) => s);
+    return strings.join("; ");
   }, [
     quickplayStore.maxPlayerCap,
     quickplayStore.gamemode,
     quickplayStore.respawntimes,
     quickplayStore.crits,
     quickplayStore.beta,
+    quickplayStore.rtd,
   ]);
 
   return (
