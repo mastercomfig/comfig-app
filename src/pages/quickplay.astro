@@ -149,7 +149,9 @@ const gamemodes = [
           let carousel: Carousel | null = null;
           function refreshCarousel(start: boolean = false) {
             if (carouselEl) {
-              carousel = new Carousel(carouselEl);
+              carousel = new Carousel(carouselEl, {
+                pause: false,
+              });
               carouselEl.addEventListener("slide.bs.carousel", (event) => {
                 const code = codeLookup[event.to];
                 useQuickplayStore.getState().setGamemode(code);
