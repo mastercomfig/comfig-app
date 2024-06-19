@@ -867,7 +867,7 @@ export default function ServerFinder() {
               className="btn btn-danger btn-sm"
               onClick={() => {
                 quickplayStore.setFound(0);
-                quickplayStore.clearBlocklist();
+                quickplayStore.clearMapBans();
               }}
             >
               <span className="fas fa-trash-can"></span> Clear map bans
