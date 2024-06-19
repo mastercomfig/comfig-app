@@ -480,7 +480,8 @@ export default function ServerFinder() {
         {gamemodePop[quickplayStore.gamemode] !== undefined && (
           <p className="lead fw-bold">
             {gamemodePop[quickplayStore.gamemode]}{" "}
-            {gamemodePop[quickplayStore.gamemode] === 1 ? "player" : "players"}
+            {gamemodePop[quickplayStore.gamemode] === 1 ? "player" : "players"}{" "}
+            globally
           </p>
         )}
       </div>
