@@ -85,14 +85,6 @@ export default function ServerFinder() {
     quickplayStore.setRecentServer(address, new Date().getTime());
   };
 
-  const updateMaxPlayers = (option) => {
-    quickplayStore.setMaxPlayerCap(MAX_PLAYER_OPTIONS[option]);
-  };
-
-  const updatePingLimit = (option) => {
-    quickplayStore.setPingLimit(option);
-  };
-
   const checkTagPref = (pref, tags: Set<string>) => {
     const v = quickplayStore[pref];
     // -1 is don't care
