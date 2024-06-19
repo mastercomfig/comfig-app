@@ -133,6 +133,10 @@ const gamemodes = [
 
         import useQuickplayStore from "@store/quickplay";
 
+        const urlparms = new URLSearchParams(window.location.search);
+        if (urlparms.has("gm")) {
+          useQuickplayStore.getState().setGamemode(urlparms.get("gm"))
+        }
         document.addEventListener("astro:page-load", () => {
           const codeLookup = [
             "any",
@@ -189,6 +193,9 @@ const gamemodes = [
                 carousel = null;
               }
             });
+          }
+          if (urlparms.has("autostart")) {
+            playNow.click()
           }
         });
       </script>
