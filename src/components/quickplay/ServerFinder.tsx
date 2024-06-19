@@ -7,8 +7,6 @@ import useQuickplayStore from "@store/quickplay";
 const REJOIN_COOLDOWN = 300 * 1000;
 const REJOIN_PENALTY = 1.05;
 
-const BASE_SCORE = 6.025;
-
 const PING_LOW_SCORE = 0.9;
 const PING_MED = 150.0;
 const PING_MED_SCORE = 0.0;
@@ -30,6 +28,9 @@ const gamemodeToPrefix = {
   halloween: "",
   christmas: "",
 };
+
+const SERVER_HEADROOM = 1;
+const FULL_PLAYERS = 33;
 
 const MISC_GAMEMODES = ["arena", "pass", "pd", "rd", "sd", "tc", "vsh", "zi"];
 
@@ -282,13 +283,55 @@ export default function ServerFinder() {
     return userScore;
   };
 
+  const scoreServerByPlayers = (humans, maxPlayers, partySize) => {
+    const newHumans = humans + partySize;
+    const newTotalPlayers = newHumans;
+
+    const realMaxPlayers = maxPlayers;
+    if (maxPlayers > FULL_PLAYERS) {
+      maxPlayers = FULL_PLAYERS;
+    }
+
+    if (newTotalPlayers + SERVER_HEADROOM > realMaxPlayers) {
+      return -100;
+    }
+
+    if (newHumans == partySize) {
+      return -0.3;
+    }
+
+    const countLow = Math.floor(maxPlayers / 3);
+    const countIdeal = Math.floor((maxPlayers * 5) / 6);
+
+    const scoreLow = 0.1;
+    const scoreIdeal = 1.6;
+    const scoreFuller = 0.2;
+
+    if (newHumans <= countLow) {
+      return lerp(0, countLow, 0.0, scoreLow, newHumans);
+    } else if (newHumans <= countIdeal) {
+      return lerp(countLow, countIdeal, scoreLow, scoreIdeal, newHumans);
+    } else {
+      return lerp(countIdeal, maxPlayers, scoreIdeal, scoreFuller, newHumans);
+    }
+  };
+
+  const scoreServer = (server) => {
+    const partySize = quickplayStore.partysize;
+    if (partySize <= 1) {
+      return 0.0;
+    }
+    const humans = server.players;
+    const maxPlayers = server.max_players;
+    const defaultScore = scoreServerByPlayers(humans, maxPlayers, 1);
+    const newScore = scoreServerByPlayers(humans, maxPlayers, partySize);
+    return newScore - defaultScore;
+  };
+
   const scoreServerForTotal = (server) => {
     const userScore = scoreServerForUser(server);
     const totalScore = server.score + userScore;
-    if (server.score > BASE_SCORE) {
-      return Math.max(BASE_SCORE, totalScore);
-    }
-    return totalScore;
+    return totalScore + scoreServer(server);
   };
 
   const filterGoodServers = (score) => {
@@ -790,6 +833,24 @@ export default function ServerFinder() {
               </label>
             </div>
           </div>
+          <div className="col-3">
+            <h4 style={{ fontWeight: 500 }}>Party Size</h4>
+            <input
+              type="range"
+              className="form-range"
+              value={quickplayStore.partysize}
+              onChange={(e) =>
+                quickplayStore.setPartySize(parseInt(e.target.value, 10))
+              }
+              min={1}
+              max={6}
+              id="ping-range"
+            ></input>
+            <label htmlFor="ping-range" className="form-label">
+              {quickplayStore.partysize}{" "}
+              {quickplayStore.partysize === 1 ? "player" : "players"}
+            </label>
+          </div>
           <div className="col-auto">
             <h4 style={{ fontWeight: 500 }}>Blocks/Bans</h4>
             <button
@@ -860,7 +921,7 @@ export default function ServerFinder() {
             style={{ fontWeight: 800, letterSpacing: "0.1rem" }}
           >
             No servers found to join. Please adjust your options or clear your
-            server blocks.
+            server blocks and map bans.
           </h3>
           <hr />
           <div
@@ -876,6 +937,15 @@ export default function ServerFinder() {
               }}
             >
               <span className="fas fa-trash-can"></span> Clear blocks
+            </button>
+            <button
+              className="btn btn-danger"
+              onClick={() => {
+                quickplayStore.setFound(0);
+                quickplayStore.clearMapBans();
+              }}
+            >
+              <span className="fas fa-trash-can"></span> Clear map bans
             </button>
             <button
               className="btn btn-dark"

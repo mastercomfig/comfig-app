@@ -62,6 +62,8 @@ const useStore = create(
       setPingMode: (pingmode) => set(() => ({ pingmode })),
       pinglimit: 50,
       setPingLimit: (pinglimit) => set(() => ({ pinglimit })),
+      partysize: 1,
+      setPartySize: (partysize) => set(() => ({ partysize })),
     }),
     idbStorage(
       "quickplay",
