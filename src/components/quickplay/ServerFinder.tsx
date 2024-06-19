@@ -530,7 +530,7 @@ export default function ServerFinder() {
       </div>
       <div
         className={`position-absolute text-start z-2 top-50 start-50 translate-middle bg-dark-subtle p-5${quickplayStore.customizing ? "" : " d-none"}`}
-        style={{ width: "100%", height: "100%" }}
+        style={{ width: "100.1%", height: "100%", overflowY: "auto" }}
       >
         <h3 className="display-6 text-center" style={{ fontWeight: 600 }}>
           ADVANCED OPTIONS
@@ -802,7 +802,7 @@ export default function ServerFinder() {
         </div>
         <br />
         <div className="row">
-          <div className="col-3">
+          <div className="col-md-3">
             <h4 style={{ fontWeight: 500 }}>Ping</h4>
             <input
               type="range"
@@ -833,7 +833,7 @@ export default function ServerFinder() {
               </label>
             </div>
           </div>
-          <div className="col-3">
+          <div className="col-md-3">
             <h4 style={{ fontWeight: 500 }}>Party Size</h4>
             <input
               type="range"
