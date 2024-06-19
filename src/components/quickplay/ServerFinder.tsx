@@ -5,7 +5,9 @@ import { MAX_PLAYER_OPTIONS, getMaxPlayerIndex } from "@utils/quickplay";
 import useQuickplayStore from "@store/quickplay";
 
 const REJOIN_COOLDOWN = 300 * 1000;
-const REJOIN_PENALTY = 1.0;
+const REJOIN_PENALTY = 1.414;
+
+const BASE_SCORE = 6.025;
 
 const PING_LOW_SCORE = 0.9;
 const PING_MED = 150.0;
@@ -74,6 +76,7 @@ export default function ServerFinder() {
         const age = elapsed;
         const ageScore = age / REJOIN_COOLDOWN;
         penalty = (1.0 - ageScore) * REJOIN_PENALTY;
+        penalty *= penalty;
       } else {
         quickplayStore.removeRecentServer(address);
       }
@@ -281,7 +284,11 @@ export default function ServerFinder() {
 
   const scoreServerForTotal = (server) => {
     const userScore = scoreServerForUser(server);
-    return server.score + userScore;
+    const totalScore = server.score + userScore;
+    if (server.score > BASE_SCORE) {
+      return Math.max(BASE_SCORE, totalScore);
+    }
+    return totalScore;
   };
 
   const filterGoodServers = (score) => {
