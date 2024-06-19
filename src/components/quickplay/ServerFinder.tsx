@@ -946,7 +946,7 @@ export default function ServerFinder() {
                   return;
                 }
                 navigator.clipboard.writeText(
-                  `connect ${quickplayStore.lastServer.addr}`,
+                  `connect ${quickplayStore.lastServer.addr} quickplay_1`,
                 );
               }}
             >
