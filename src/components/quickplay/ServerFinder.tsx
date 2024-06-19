@@ -5,7 +5,7 @@ import { MAX_PLAYER_OPTIONS, getMaxPlayerIndex } from "@utils/quickplay";
 import useQuickplayStore from "@store/quickplay";
 
 const REJOIN_COOLDOWN = 300 * 1000;
-const REJOIN_PENALTY = 1.414;
+const REJOIN_PENALTY = 1.05;
 
 const BASE_SCORE = 6.025;
 
