@@ -88,7 +88,6 @@ export default function CustomizeButton() {
       critStatus,
       respawnStatus,
       rtdStatus,
-      betaStatus,
     ].filter((s) => s);
     return strings.join("; ");
   }, [

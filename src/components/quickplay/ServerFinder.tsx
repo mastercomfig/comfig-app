@@ -4,6 +4,8 @@ import { MAX_PLAYER_OPTIONS, getMaxPlayerIndex } from "@utils/quickplay";
 
 import useQuickplayStore from "@store/quickplay";
 
+import HelpTooltip from "@components/HelpTooltip";
+
 const REJOIN_COOLDOWN = 300 * 1000;
 const REJOIN_PENALTY = 1.05;
 
@@ -710,7 +712,13 @@ export default function ServerFinder() {
             </div>
           </div>
           <div className="col-auto">
-            <h4 style={{ fontWeight: 500 }}>Roll the Dice</h4>
+            <h4 style={{ fontWeight: 500 }}>
+              RTD{" "}
+              <HelpTooltip
+                id="rtd-help"
+                title="Roll the Dice. A common mod on some casual servers where players can apply a random effect to themselves every so often. You can change this setting to 'Don't care' to expand the server search pool."
+              />
+            </h4>
             <div className="form-check">
               <input
                 className="form-check-input"
@@ -754,7 +762,7 @@ export default function ServerFinder() {
               </label>
             </div>
           </div>
-          <div className="col-auto">
+          <div className="col-auto d-none">
             <h4 style={{ fontWeight: 500 }}>Beta maps</h4>
             <div className="form-check">
               <input
@@ -802,8 +810,14 @@ export default function ServerFinder() {
         </div>
         <br />
         <div className="row">
-          <div className="col-md-3">
-            <h4 style={{ fontWeight: 500 }}>Ping</h4>
+          <div className="col-md-4">
+            <h4 style={{ fontWeight: 500 }}>
+              Ping Preference{" "}
+              <HelpTooltip
+                id="ping-help"
+                title="The maximum ping before starting to derank servers for too high ping. This is more effective in some lower populated regions when Strict regional matchmaking is selected."
+              />
+            </h4>
             <input
               type="range"
               className="form-range"
@@ -829,12 +843,22 @@ export default function ServerFinder() {
                 id="ping-mode-check"
               />
               <label className="form-check-label" htmlFor="ping-mode-check">
-                Strict regional matchmaking
+                Strict regional matchmaking{" "}
+                <HelpTooltip
+                  id="regional-matchmaking-help"
+                  title="Strongly prefer servers close to you than far away servers with players."
+                />
               </label>
             </div>
           </div>
           <div className="col-md-3">
-            <h4 style={{ fontWeight: 500 }}>Party Size</h4>
+            <h4 style={{ fontWeight: 500 }}>
+              Party Size{" "}
+              <HelpTooltip
+                id="party-size-help"
+                title="Find a server which can fit a party of this size."
+              />
+            </h4>
             <input
               type="range"
               className="form-range"
