@@ -351,7 +351,6 @@ export default function ServerFinder() {
 
   async function queryServerList() {
     const now = new Date().getTime();
-    console.log("query");
     if (untilRef.current > now) {
       setServers(cachedServersRef.current);
       // HACK: refresh servers array
@@ -359,7 +358,6 @@ export default function ServerFinder() {
       setProgress(20);
       return;
     }
-    console.log("query2");
     fetch("https://worker.comfig.app/api/quickplay/list", {
       method: "POST",
       body: JSON.stringify({
@@ -399,7 +397,6 @@ export default function ServerFinder() {
         ping = performance.now() - start;
         ping *= 2;
         pingRef.current = ping;
-        console.log("hello");
         queryServerList();
       }
     };
