@@ -158,12 +158,12 @@ const gamemodes = [
                 useQuickplayStore.getState().setGamemode(code);
               });
               if (start) {
+                if (urlparms.has("gm")) {
+                  useQuickplayStore.getState().setGamemode(urlparms.get("gm"));
+                }
                 carousel.to(
                   codeLookup.indexOf(useQuickplayStore.getState().gamemode),
                 );
-              }
-              if (urlparms.has("gm")) {
-                useQuickplayStore.getState().setGamemode(urlparms.get("gm"));
               }
             }
           }
