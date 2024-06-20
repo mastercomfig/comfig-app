@@ -238,7 +238,7 @@ let memCacheTime = 0;
 async function getApiData(version, force) {
   // Attempt cached
   let resBody = null;
-  const now = new Date().now();
+  const now = new Date().getTime();
   if (!force) {
     if (memCache && memCacheTime + UPDATE_TIME <= now) {
       resBody = memCache;
