@@ -7,7 +7,7 @@ import useQuickplayStore from "@store/quickplay";
 import HelpTooltip from "@components/HelpTooltip";
 
 const REJOIN_COOLDOWN = 300 * 1000;
-const REJOIN_PENALTY = 1.05;
+const REJOIN_PENALTY = 1.08;
 
 const PING_LOW_SCORE = 0.9;
 const PING_MED = 150.0;
