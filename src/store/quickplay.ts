@@ -67,7 +67,7 @@ const useStore = create(
     }),
     idbStorage(
       "quickplay",
-      4,
+      5,
       (persistedState, version) => {
         if (version < 2) {
           persistedState.pinglimit = 50;
@@ -77,6 +77,9 @@ const useStore = create(
         }
         if (version < 4) {
           delete persistedState.gamemode;
+        }
+        if (version < 5) {
+          delete persistedState.beta;
         }
         return persistedState;
       },
