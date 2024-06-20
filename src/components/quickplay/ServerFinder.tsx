@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { MAX_PLAYER_OPTIONS, getMaxPlayerIndex } from "@utils/quickplay";
 
@@ -341,16 +341,50 @@ export default function ServerFinder() {
   };
 
   const [progress, setProgress] = useState(0);
+  const cachedServersRef = useRef<Array<any>>([]);
+  const pingRef = useRef(-1);
+  const untilRef = useRef(0);
   const [servers, setServers] = useState<Array<any>>([]);
   const [filteredServers, setFilteredServers] = useState<Array<any>>([]);
   const [gamemodePop, setGamemodePop] = useState<Record<string, number>>({});
   const [allFiltered, setAllFiltered] = useState(false);
+
+  async function queryServerList() {
+    const now = new Date().getTime();
+    if (untilRef.current > now) {
+      setServers(cachedServersRef.current);
+      setProgress(20);
+      return;
+    }
+    fetch("https://worker.comfig.app/api/quickplay/list", {
+      method: "POST",
+      body: JSON.stringify({
+        ping: pingRef.current,
+        version: 2,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setServers(data.servers);
+        cachedServersRef.current = data.servers;
+        untilRef.current = data.until;
+      })
+      .then(() => setProgress(20));
+  }
 
   useEffect(() => {
     if (!quickplayStore.searching) {
       return;
     }
     setProgress(2);
+
+    // Already found ping
+    if (pingRef.current > 0) {
+      queryServerList();
+      return;
+    }
+
+    // Query ping, then query list
     const start = performance.now();
     let ping = 0;
     const xhr = new XMLHttpRequest();
@@ -359,15 +393,8 @@ export default function ServerFinder() {
         xhr.onreadystatechange = null;
         ping = performance.now() - start;
         ping *= 2;
-        fetch("https://worker.comfig.app/api/quickplay/list", {
-          method: "POST",
-          body: JSON.stringify({
-            ping,
-          }),
-        })
-          .then((res) => res.json())
-          .then((data) => setServers(data))
-          .then(() => setProgress(20));
+        pingRef.current = ping;
+        queryServerList();
       }
     };
 
@@ -1049,7 +1076,7 @@ export default function ServerFinder() {
             Problem auto connecting?{" "}
             <button
               className="btn btn-sm btn-link m-0 p-0 align-baseline"
-              onClick={() => {}}
+              onClick={copyConnect}
             >
               Copy connect command
             </button>
