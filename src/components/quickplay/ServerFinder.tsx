@@ -871,7 +871,7 @@ export default function ServerFinder() {
               Party Size{" "}
               <HelpTooltip
                 id="party-size-help"
-                title="Find a server which can fit a party of this size."
+                title="Find a server which can fit a party of this size. You queue with this option, and then others in your party can join you once you have joined a server."
               />
             </h4>
             <input
