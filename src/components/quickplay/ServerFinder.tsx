@@ -464,6 +464,16 @@ export default function ServerFinder() {
     }
   }
 
+  function copyConnect() {
+    if (!navigator.clipboard) {
+      console.error("Clipboard unsupported for connect string.");
+      return;
+    }
+    navigator.clipboard.writeText(
+      `connect ${quickplayStore.lastServer.addr} quickplay_1`,
+    );
+  }
+
   useEffect(() => {
     if (!allFiltered) {
       return;
@@ -479,8 +489,13 @@ export default function ServerFinder() {
 
     const server = filteredServers[0];
     const parms = new URLSearchParams(window.location.search);
-    if (parms.get("noconnect") !== "1") {
+    if (!parms.has("noconnect")) {
       window.location.href = `steam://connect/${server.addr}`;
+    } else {
+      const noconnect = parms.get("noconnect");
+      if (noconnect === "2") {
+        copyConnect();
+      }
     }
     touchRecentServer(server.addr);
     console.log("Joining", server.addr, server.steamid, server.name);
@@ -1034,15 +1049,7 @@ export default function ServerFinder() {
             Problem auto connecting?{" "}
             <button
               className="btn btn-sm btn-link m-0 p-0 align-baseline"
-              onClick={() => {
-                if (!navigator.clipboard) {
-                  console.error("Clipboard unsupported for connect string.");
-                  return;
-                }
-                navigator.clipboard.writeText(
-                  `connect ${quickplayStore.lastServer.addr} quickplay_1`,
-                );
-              }}
+              onClick={() => {}}
             >
               Copy connect command
             </button>
