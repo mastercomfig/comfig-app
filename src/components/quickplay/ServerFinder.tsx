@@ -494,14 +494,13 @@ export default function ServerFinder() {
     }
   }
 
-  function copyConnect() {
+  function copyConnect(server = undefined) {
+    server = server ?? quickplayStore.lastServer;
     if (!navigator.clipboard) {
       console.error("Clipboard unsupported for connect string.");
       return;
     }
-    navigator.clipboard.writeText(
-      `connect ${quickplayStore.lastServer.addr} quickplay_1`,
-    );
+    navigator.clipboard.writeText(`connect ${server.addr} quickplay_1`);
   }
 
   useEffect(() => {
@@ -518,19 +517,22 @@ export default function ServerFinder() {
     filteredServers.sort((a, b) => b.score - a.score);
 
     const server = filteredServers[0];
+    console.log("Joining", server.addr, server.steamid, server.name);
+    quickplayStore.setLastServer(server);
+
     const parms = new URLSearchParams(window.location.search);
     if (!parms.has("noconnect")) {
       window.location.href = `steam://connect/${server.addr}`;
     } else {
       const noconnect = parms.get("noconnect");
       if (noconnect === "2") {
-        copyConnect();
+        copyConnect(server);
       }
     }
+
     touchRecentServer(server.addr);
-    console.log("Joining", server.addr, server.steamid, server.name);
-    quickplayStore.setLastServer(server);
     quickplayStore.setFound(1);
+
     console.log("servers", servers);
     console.log("filtered", filteredServers);
     console.log(
