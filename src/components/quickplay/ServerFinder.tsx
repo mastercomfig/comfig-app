@@ -523,11 +523,6 @@ export default function ServerFinder() {
     const parms = new URLSearchParams(window.location.search);
     if (!parms.has("noconnect")) {
       window.location.href = `steam://connect/${server.addr}`;
-    } else {
-      const noconnect = parms.get("noconnect");
-      if (noconnect === "2") {
-        copyConnect(server);
-      }
     }
 
     touchRecentServer(server.addr);
