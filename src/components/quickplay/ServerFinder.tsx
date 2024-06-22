@@ -494,13 +494,12 @@ export default function ServerFinder() {
     }
   }
 
-  function copyConnect(server = undefined) {
-    server = server ?? quickplayStore.lastServer;
+  function copyConnect() {
     if (!navigator.clipboard) {
       console.error("Clipboard unsupported for connect string.");
       return;
     }
-    navigator.clipboard.writeText(`connect ${server.addr} quickplay_1`);
+    navigator.clipboard.writeText(`connect ${quickplayStore.lastServer.addr} quickplay_1`);
   }
 
   useEffect(() => {
