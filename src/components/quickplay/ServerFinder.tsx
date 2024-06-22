@@ -149,13 +149,12 @@ export default function ServerFinder() {
       return true;
     }
     for (const has of mustHave) {
-      if (!tags.has(has)) {
+    if (tags.has("custom")) {
+      if (!tags.has("x10") && !tags.has("allcrits") && !tags.has("customweapons") && !tags.has("rebalance")) {
         return false;
       }
-      if (tags.has("custom")) {
-        if (!tags.has("x10") && !tags.has("allcrits") && !tags.has("customweapons") && !tags.has("rebalance")) {
-          return false;
-        }
+    } else if (!tags.has(has)) {
+        return false;
       }
     }
     for (const notHas of mustNotHave) {
