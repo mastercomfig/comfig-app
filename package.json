@@ -35,7 +35,7 @@
     "@typescript-eslint/parser": "^7.13.1",
     "@vite-pwa/astro": "^0.4.0",
     "@zip.js/zip.js": "^2.7.45",
-    "astro": "^4.11.0",
+    "astro": "0.0.0-server-islands-20240621194657",
     "astro-remote": "^0.3.3",
     "autoprefixer": "^10.4.19",
     "bootstrap": "^5.3.3",
