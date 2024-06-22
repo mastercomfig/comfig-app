@@ -38,6 +38,8 @@ const useStore = create(
       setBeta: (beta) => set(() => ({ beta })),
       rtd: 0,
       setRtd: (rtd) => set(() => ({ rtd })),
+      customGameplay: 0,
+      setCustomGameplay: (customGameplay) => set(() => ({ customGameplay })),
       blocklist: new Set([]),
       addBlocklist: (steamid) =>
         set((state) => {
@@ -90,6 +92,7 @@ const useStore = create(
         "crits",
         "beta",
         "rtd",
+        "customGameplay",
         "blocklist",
         "mapbans",
         "favorites",

@@ -13,6 +13,7 @@ const RESPAWN_STATUS = [
 const CRIT_STATUS = ["", "No"];
 const BETA_STATUS = ["No beta maps", "Only beta maps"];
 const RTD_STATUS = ["", "Only RTD"];
+const CUSTOM_STATUS = ["No modded gameplay", "Only modded gameplay"];
 
 const GAMEMODE_STATUS_LOOKUP = {
   any: "Any game mode",
@@ -76,6 +77,12 @@ export default function CustomizeButton() {
       RTD_STATUS,
       true,
     );
+    const customStatus = genPrefString(
+      "gameplay type",
+      quickplayStore.customGameplay,
+      CUSTOM_STATUS,
+      true,
+    );
     const betaStatus = genPrefString(
       "map status",
       quickplayStore.beta,
@@ -88,6 +95,7 @@ export default function CustomizeButton() {
       critStatus,
       respawnStatus,
       rtdStatus,
+      customStatus,
     ].filter((s) => s);
     return strings.join("; ");
   }, [
@@ -97,6 +105,7 @@ export default function CustomizeButton() {
     quickplayStore.crits,
     quickplayStore.beta,
     quickplayStore.rtd,
+    quickplayStore.customGameplay,
   ]);
 
   return (

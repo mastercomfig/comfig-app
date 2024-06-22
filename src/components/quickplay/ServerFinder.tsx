@@ -20,7 +20,7 @@ const MAX_PING = PING_MED - 1;
 
 const BAD_PING_THRESHOLD = (PING_MED + PING_HIGH) / 2;
 
-const TAG_PREFS = ["crits", "respawntimes", "beta", "rtd"];
+const TAG_PREFS = ["crits", "respawntimes", "beta", "rtd", "customGameplay"];
 
 const gamemodeToPrefix = {
   attack_defense: "cp",
@@ -131,6 +131,18 @@ export default function ServerFinder() {
       } else if (v === 1) {
         must("rtd");
       }
+    } else if (pref === "customGameplay") {
+      if (v === 0) {
+        //block all tags that may have custom content
+        mustNot("x10");
+        mustNot("allcrits");
+        mustNot("customweapons");
+        mustNot("rebalance");
+        mustNot("custom");
+      } else if (v === 1) {
+        must("custom");
+        mustNot("vanilla");
+      }
     }
     if (mustHave.length < 1 && mustNotHave.length < 1) {
       console.error("Unexpected tag pref!", pref, v);
@@ -139,6 +151,11 @@ export default function ServerFinder() {
     for (const has of mustHave) {
       if (!tags.has(has)) {
         return false;
+      }
+      if (tags.has("custom")) {
+        if (!tags.has("x10") && !tags.has("allcrits") && !tags.has("customweapons") && !tags.has("rebalance")) {
+          return false;
+        }
       }
     }
     for (const notHas of mustNotHave) {
@@ -800,6 +817,57 @@ export default function ServerFinder() {
                 onClick={() => quickplayStore.setRtd(-1)}
               />
               <label className="form-check-label" htmlFor="rtd-any">
+                Don't care
+              </label>
+            </div>
+          </div>
+          <div className="row mt-4">
+            <h4 style={{ fontWeight: 500 }}>
+              Customized Gameplay{" "}
+              <HelpTooltip
+                id="rtd-help"
+                title="Mods such as custom weapons or rebalance servers. You can change this setting to 'Don't care' to expand the server search pool."
+              />
+            </h4>
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="radio"
+                readOnly
+                name="customGameplay"
+                id="customGameplay-0"
+                checked={quickplayStore.customGameplay === 0}
+                onClick={() => quickplayStore.setCustomGameplay(0)}
+              />
+              <label className="form-check-label" htmlFor="customGameplay-0">
+                Disabled
+              </label>
+            </div>
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="radio"
+                readOnly
+                name="customGameplay"
+                id="customGameplay-1"
+                checked={quickplayStore.customGameplay === 1}
+                onClick={() => quickplayStore.setCustomGameplay(1)}
+              />
+              <label className="form-check-label" htmlFor="customGameplay-1">
+                Enabled
+              </label>
+            </div>
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="radio"
+                readOnly
+                name="customGameplay"
+                id="customGameplay-any"
+                checked={quickplayStore.customGameplay === -1}
+                onClick={() => quickplayStore.setCustomGameplay(-1)}
+              />
+              <label className="form-check-label" htmlFor="customGameplay-any">
                 Don't care
               </label>
             </div>
