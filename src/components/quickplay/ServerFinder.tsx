@@ -559,6 +559,9 @@ export default function ServerFinder() {
       Sentry.metrics.distribution(
         "custom.servers.server_refind_time",
         now - quickplayStore.foundTime,
+        {
+          unit: "millisecond",
+        },
       );
     }
     quickplayStore.setFoundTime(now);
@@ -1153,6 +1156,9 @@ export default function ServerFinder() {
                 Sentry.metrics.distribution(
                   "custom.servers.server_block_time",
                   new Date().getTime() - quickplayStore.foundTime,
+                  {
+                    unit: "millisecond",
+                  },
                 );
               }}
             >
@@ -1175,6 +1181,9 @@ export default function ServerFinder() {
                 Sentry.metrics.distribution(
                   "custom.servers.server_fav_time",
                   new Date().getTime() - quickplayStore.foundTime,
+                  {
+                    unit: "millisecond",
+                  },
                 );
               }}
             >
