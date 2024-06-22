@@ -538,6 +538,9 @@ export default function ServerFinder() {
       ]),
     );
     finishSearch();
+    if (parms.has("autoclose")) {
+      window.close();
+    }
   }, [allFiltered]);
 
   const maxPlayerIndex = useMemo(() => {
