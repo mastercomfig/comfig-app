@@ -516,6 +516,7 @@ export default function ServerFinder() {
 
     if (filteredServers.length < 1) {
       quickplayStore.setFound(-1);
+      finishSearch();
       Sentry.metrics.increment("no_servers_found", 1, {
         tags: {
           maxPlayerCap: getMaxPlayerIndex(quickplayStore.maxPlayerCap),
@@ -526,7 +527,6 @@ export default function ServerFinder() {
           partysize: quickplayStore.partysize,
         },
       });
-      finishSearch();
       return;
     }
 
@@ -541,6 +541,27 @@ export default function ServerFinder() {
       window.location.href = `steam://connect/${server.addr}`;
     }
 
+    touchRecentServer(server.addr);
+    quickplayStore.setFound(1);
+
+    console.log("servers", servers);
+    console.log("filtered", filteredServers);
+    console.log(
+      "recent",
+      Object.keys(quickplayStore.recentServers).map((s) => [
+        s,
+        -getRecentPenalty(s),
+      ]),
+    );
+
+    const now = new Date().getTime();
+    if (quickplayStore.foundTime > 0) {
+      Sentry.metrics.distribution(
+        "custom.servers.server_refind_time",
+        now - quickplayStore.foundTime,
+      );
+    }
+    quickplayStore.setFoundTime(now);
     Sentry.metrics.distribution("server_ping", server.ping, {
       tags: {
         pingmode: quickplayStore.pingmode,
@@ -568,18 +589,6 @@ export default function ServerFinder() {
       },
     });
 
-    touchRecentServer(server.addr);
-    quickplayStore.setFound(1);
-
-    console.log("servers", servers);
-    console.log("filtered", filteredServers);
-    console.log(
-      "recent",
-      Object.keys(quickplayStore.recentServers).map((s) => [
-        s,
-        -getRecentPenalty(s),
-      ]),
-    );
     finishSearch();
     if (parms.has("autoclose")) {
       window.close();
@@ -1140,6 +1149,11 @@ export default function ServerFinder() {
               onClick={() => {
                 quickplayStore.addBlocklist(quickplayStore.lastServer.steamid);
                 quickplayStore.setFound(0);
+                Sentry.metrics.increment("custom.servers.server_block", 1);
+                Sentry.metrics.distribution(
+                  "custom.servers.server_block_time",
+                  new Date().getTime() - quickplayStore.foundTime,
+                );
               }}
             >
               <span className="fas fa-ban"></span> No, block it
@@ -1157,6 +1171,11 @@ export default function ServerFinder() {
               onClick={() => {
                 quickplayStore.addFavorite(quickplayStore.lastServer.steamid);
                 quickplayStore.setFound(0);
+                Sentry.metrics.increment("custom.servers.server_fav", 1);
+                Sentry.metrics.distribution(
+                  "custom.servers.server_fav_time",
+                  new Date().getTime() - quickplayStore.foundTime,
+                );
               }}
             >
               <span className="fas fa-star"></span> Yes, favorite it

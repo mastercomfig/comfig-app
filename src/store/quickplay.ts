@@ -13,6 +13,8 @@ const useStore = create(
       setFound: (found) => set(() => ({ found })),
       lastServer: null,
       setLastServer: (lastServer) => set(() => ({ lastServer })),
+      foundTime: 0,
+      setFoundTime: (foundTime) => set(() => ({ foundTime })),
       searching: 0,
       setSearching: (searching) => set(() => ({ searching })),
       recentServers: {},
