@@ -557,10 +557,10 @@ export default function ServerFinder() {
     const now = new Date().getTime();
     if (quickplayStore.foundTime > 0) {
       Sentry.metrics.distribution(
-        "custom.servers.server_refind_time",
-        now - quickplayStore.foundTime,
+        "custom.servers.server_refind_time_sec",
+        (now - quickplayStore.foundTime) / 1000,
         {
-          unit: "millisecond",
+          unit: "second",
         },
       );
     }
@@ -1154,10 +1154,10 @@ export default function ServerFinder() {
                 quickplayStore.setFound(0);
                 Sentry.metrics.increment("custom.servers.server_block", 1);
                 Sentry.metrics.distribution(
-                  "custom.servers.server_block_time",
-                  new Date().getTime() - quickplayStore.foundTime,
+                  "custom.servers.server_block_time_sec",
+                  (new Date().getTime() - quickplayStore.foundTime) / 1000,
                   {
-                    unit: "millisecond",
+                    unit: "second",
                   },
                 );
               }}
@@ -1180,9 +1180,9 @@ export default function ServerFinder() {
                 Sentry.metrics.increment("custom.servers.server_fav", 1);
                 Sentry.metrics.distribution(
                   "custom.servers.server_fav_time",
-                  new Date().getTime() - quickplayStore.foundTime,
+                  (new Date().getTime() - quickplayStore.foundTime) / 1000,
                   {
-                    unit: "millisecond",
+                    unit: "second",
                   },
                 );
               }}
