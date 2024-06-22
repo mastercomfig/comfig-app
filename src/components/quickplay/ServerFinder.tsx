@@ -68,6 +68,10 @@ function lerp(inA, inB, outA, outB, x) {
   return outA + ((outB - outA) * (x - inA)) / (inB - inA);
 }
 
+function fastClone(obj) {
+  return JSON.parse(JSON.stringify(obj));
+}
+
 export default function ServerFinder() {
   const quickplayStore = useQuickplayStore((state) => state);
 
@@ -355,7 +359,7 @@ export default function ServerFinder() {
     if (untilRef.current > now) {
       setServers(cachedServersRef.current);
       // HACK: refresh servers array
-      cachedServersRef.current = structuredClone(cachedServersRef.current);
+      cachedServersRef.current = fastClone(cachedServersRef.current);
       setProgress(20);
       return;
     }
@@ -370,7 +374,7 @@ export default function ServerFinder() {
       .then((data) => {
         setServers(data.servers);
         // HACK: refresh servers array
-        cachedServersRef.current = structuredClone(data.servers);
+        cachedServersRef.current = fastClone(data.servers);
         untilRef.current = data.until;
       })
       .then(() => setProgress(20));
@@ -441,7 +445,7 @@ export default function ServerFinder() {
       return;
     }
     setProgress(20);
-    const copiedServers = structuredClone(servers);
+    const copiedServers = fastClone(servers);
     const scoredServers = [];
     for (const server of copiedServers) {
       server.score = scoreServerForTotal(server);
@@ -462,7 +466,7 @@ export default function ServerFinder() {
         continue;
       }
       finalServers.push(server);
-      const curServers = structuredClone(finalServers);
+      const curServers = fastClone(finalServers);
       setTimeout(
         () => {
           setFilteredServers(curServers);
@@ -532,7 +536,7 @@ export default function ServerFinder() {
 
     filteredServers.sort((a, b) => b.score - a.score);
 
-    const server = filteredServers[0];
+    const server = fastClone(filteredServers[0]);
     console.log("Joining", server.addr, server.steamid, server.name);
     quickplayStore.setLastServer(server);
 
