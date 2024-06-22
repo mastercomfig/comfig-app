@@ -1,5 +1,6 @@
 /*
   Permissions-Policy: document-domain=()
+  Document-Policy: js-profiling
   Content-Security-Policy: script-src 'unsafe-inline' 'self' blob: https://static.cloudflareinsights.com https://browser-update.org; frame-ancestors 'none';
 
 /sw.js

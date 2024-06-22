@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/browser";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import { MAX_PLAYER_OPTIONS, getMaxPlayerIndex } from "@utils/quickplay";
@@ -158,8 +159,8 @@ export default function ServerFinder() {
     return true;
   };
 
-  const [schema, setSchema] = useState({});
-  const mapToGamemode = schema.map_gamemodes;
+  const [schema, setSchema] = useState<any>(undefined);
+  const mapToGamemode = schema?.map_gamemodes ?? {};
 
   useEffect(() => {
     fetch("https://worker.comfig.app/api/schema/get", {
@@ -436,6 +437,9 @@ export default function ServerFinder() {
     if (servers.length < 1) {
       return;
     }
+    if (!schema) {
+      return;
+    }
     setProgress(20);
     const copiedServers = structuredClone(servers);
     const scoredServers = [];
@@ -475,6 +479,7 @@ export default function ServerFinder() {
     }
   }, [
     servers,
+    schema,
     quickplayStore.maxPlayerCap,
     quickplayStore.gamemode,
     quickplayStore.blocklist,
@@ -499,7 +504,9 @@ export default function ServerFinder() {
       console.error("Clipboard unsupported for connect string.");
       return;
     }
-    navigator.clipboard.writeText(`connect ${quickplayStore.lastServer.addr} quickplay_1`);
+    navigator.clipboard.writeText(
+      `connect ${quickplayStore.lastServer.addr} quickplay_1`,
+    );
   }
 
   useEffect(() => {
@@ -509,6 +516,16 @@ export default function ServerFinder() {
 
     if (filteredServers.length < 1) {
       quickplayStore.setFound(-1);
+      Sentry.metrics.increment("no_servers_found", 1, {
+        tags: {
+          maxPlayerCap: getMaxPlayerIndex(quickplayStore.maxPlayerCap),
+          gamemode: quickplayStore.gamemode,
+          respawntimes: quickplayStore.respawntimes,
+          crits: quickplayStore.crits,
+          rtd: quickplayStore.rtd,
+          partysize: quickplayStore.partysize,
+        },
+      });
       finishSearch();
       return;
     }
@@ -523,6 +540,33 @@ export default function ServerFinder() {
     if (!parms.has("noconnect")) {
       window.location.href = `steam://connect/${server.addr}`;
     }
+
+    Sentry.metrics.distribution("server_ping", server.ping, {
+      tags: {
+        pingmode: quickplayStore.pingmode,
+        pinglimit: quickplayStore.pinglimit,
+      },
+      unit: "millisecond",
+    });
+    Sentry.metrics.distribution("user_pinglimit", quickplayStore.pinglimit, {
+      tags: {
+        pingmode: quickplayStore.pingmode,
+        ping: server.ping,
+      },
+      unit: "millisecond",
+    });
+    Sentry.metrics.distribution("server_players", server.players);
+    Sentry.metrics.increment("server_found", 1, {
+      tags: {
+        maxPlayerCap: getMaxPlayerIndex(quickplayStore.maxPlayerCap),
+        gamemode: quickplayStore.gamemode,
+        respawntimes: quickplayStore.respawntimes,
+        crits: quickplayStore.crits,
+        rtd: quickplayStore.rtd,
+        partysize: quickplayStore.partysize,
+        pingmode: quickplayStore.pingmode,
+      },
+    });
 
     touchRecentServer(server.addr);
     quickplayStore.setFound(1);
