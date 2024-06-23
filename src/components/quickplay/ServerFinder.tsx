@@ -248,6 +248,9 @@ export default function ServerFinder() {
     if (quickplayStore.mapbans.has(server.map)) {
       return false;
     }
+    if (!quickplayStore.botsAllowed && (tags.has("bots") || server.bots > 0)) {
+      return false;
+    }
 
     return true;
   };
@@ -722,6 +725,24 @@ export default function ServerFinder() {
               />
               <label className="form-check-label" htmlFor="server-capacity-any">
                 Don't care
+              </label>
+            </div>
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                checked={quickplayStore.botsAllowed}
+                onChange={(e) =>
+                  quickplayStore.setBotsAllowed(e.target.checked ? 1 : 0)
+                }
+                id="bots-check"
+              />
+              <label className="form-check-label" htmlFor="bots-check">
+                Allow bots{" "}
+                <HelpTooltip
+                  id="bots-help"
+                  title="(Not cheater bots!) Allow or disallow servers that use AI bots to fill the server when there are fewer players."
+                />
               </label>
             </div>
           </div>

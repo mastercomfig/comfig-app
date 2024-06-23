@@ -66,6 +66,8 @@ const useStore = create(
       setPingLimit: (pinglimit) => set(() => ({ pinglimit })),
       partysize: 1,
       setPartySize: (partysize) => set(() => ({ partysize })),
+      botsAllowed: true,
+      setBotsAllowed: (botsAllowed) => set(() => ({ botsAllowed })),
     }),
     idbStorage(
       "quickplay",
