@@ -197,6 +197,12 @@ const gamemodes = [
               playNow.click();
             }
           }
+          const settingsButton = document.getElementById("quickplay-settings");
+          if (settingsButton) {
+            if (urlparms.get("autostart") === "2") {
+              settingsButton.click();
+            }
+          }
         });
       </script>
     </ImportHead>
@@ -461,6 +467,16 @@ const gamemodes = [
           >quickplayping@mastercomfig.com</a
         >. Give your general region, your search settings, the time you search
         for a game, and the server IP that you ended up on.
+      </p>
+
+      <h2 class="display-6 fw-bold">Does quickplay well in X region?</h2>
+      <p class="lead">
+        Probably! There's a strong server offering in Europe, the Americas,
+        Asia, and Oceania. Regions which don't have much or any servers
+        available are Africa, India and the Middle East. Player counts in every
+        region can vary depending on the time and day, of course, but there
+        should be enough people in each populated region to use quickplay
+        effectively.
       </p>
 
       <h2 class="display-6 fw-bold">
