@@ -100,22 +100,17 @@ const gamemodes = [
       <link rel="preload" as="image" href={randomImg.src} />
     </PreloadHead>
     <ImportHead>
-      <style>
-        .quickplay-section {
-          max-width: 100vw;
-        }
-        @media (min-height: 602px) and (min-width: 992px) {
-          .carousel {
-            min-height: 64vh;
-          }
-          .quickplay-container {
-            min-width: 85vh;
-          }
-          .quickplay-section {
-            width: 85vh;
-          }
-        }
+      <style>          
+      .quickplay-section {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
         @media (min-width: 992px) {
+          .quickplay-section {
+            padding-left: 5rem;
+            padding-right: 5rem;
+          }
+
           #gm-desc {
             margin-top: -3rem;
           }
@@ -233,15 +228,15 @@ const gamemodes = [
         <div class="collapse navbar-collapse"></div>
       </div>
     </nav>
-    <section class="container-lg quickplay-container pt-2 pb-4 bg-dark">
+    <section class="container pt-2 pb-4 bg-dark quickplay-section">
       <div
         class="d-flex align-items-center justify-content-center"
         style="height: 100%"
       >
-        <div class="align-middle text-center">
+        <div class="align-middle text-center w-100">
           <div
             id="quickplayGamemodes"
-            class="carousel quickplay-section carousel-light slide carousel-fade p-4"
+            class="carousel carousel-light slide carousel-fade p-4"
             style="background: #ece9d7"
           >
             <ServerFinder client:load />
@@ -352,7 +347,7 @@ const gamemodes = [
         </div>
       </div>
       <br />
-      <div class="container px-0 quickplay-section">
+      <div class="container px-0">
         <CustomizeButton client:load />
       </div>
     </section>
