@@ -102,7 +102,6 @@ export default function CustomizeButton() {
   return (
     <div>
       <button
-        id="quickplay-settings"
         className="btn btn-lg btn-dark me-3"
         onClick={() => {
           quickplayStore.toggleCustomizing();
