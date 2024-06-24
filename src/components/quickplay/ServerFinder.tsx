@@ -48,6 +48,8 @@ const REGIONS = {
   7: "af",
 };
 
+let satisfactionTimer: NodeJS.Timeout | null = null;
+
 const DISALLOWED_GAMEMODES_IN_ANY = new Set([
   "arena",
   "rd",
@@ -552,6 +554,26 @@ export default function ServerFinder() {
     touchRecentServer(server.addr);
     quickplayStore.setFound(1);
 
+    if (satisfactionTimer) {
+      clearTimeout(satisfactionTimer);
+    }
+    satisfactionTimer = setTimeout(
+      () => {
+        Sentry.metrics.increment("custom.servers.satisfaction_found", 1, {
+          tags: {
+            maxPlayerCap: getMaxPlayerIndex(quickplayStore.maxPlayerCap),
+            gamemode: quickplayStore.gamemode,
+            respawntimes: quickplayStore.respawntimes,
+            crits: quickplayStore.crits,
+            rtd: quickplayStore.rtd,
+            partysize: quickplayStore.partysize,
+            pingmode: quickplayStore.pingmode,
+          },
+        });
+      },
+      8 * 60 * 1000,
+    );
+
     console.log("servers", servers);
     console.log("filtered", filteredServers);
     console.log(
@@ -599,6 +621,16 @@ export default function ServerFinder() {
         pingmode: quickplayStore.pingmode,
       },
     });
+
+    Sentry.metrics.distribution(
+      "custom.user.map_bans_count",
+      quickplayStore.mapbans.size,
+    );
+
+    Sentry.metrics.distribution(
+      "custom.user.server_blocks_count",
+      quickplayStore.blocklist.size,
+    );
 
     finishSearch();
     if (parms.has("autoclose")) {
@@ -1176,6 +1208,9 @@ export default function ServerFinder() {
                     unit: "second",
                   },
                 );
+                if (satisfactionTimer) {
+                  clearTimeout(satisfactionTimer);
+                }
               }}
             >
               <span className="fas fa-ban"></span> No, block it
@@ -1201,6 +1236,9 @@ export default function ServerFinder() {
                     unit: "second",
                   },
                 );
+                if (satisfactionTimer) {
+                  clearTimeout(satisfactionTimer);
+                }
               }}
             >
               <span className="fas fa-star"></span> Yes, favorite it
