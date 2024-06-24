@@ -360,7 +360,9 @@ export default function ServerFinder() {
       setServers(cachedServersRef.current);
       // HACK: refresh servers array
       cachedServersRef.current = fastClone(cachedServersRef.current);
-      setProgress(20);
+      if (quickplayStore.searching) {
+        setProgress(20);
+      }
       return;
     }
     fetch("https://worker.comfig.app/api/quickplay/list", {
@@ -377,21 +379,14 @@ export default function ServerFinder() {
         cachedServersRef.current = fastClone(data.servers);
         untilRef.current = data.until;
       })
-      .then(() => setProgress(20));
+      .then(() => {
+        if (quickplayStore.searching) {
+          setProgress(20);
+        }
+      });
   }
 
   useEffect(() => {
-    if (!quickplayStore.searching) {
-      return;
-    }
-    setProgress(2);
-
-    // Already found ping
-    if (pingRef.current > 0) {
-      queryServerList();
-      return;
-    }
-
     // Query ping, then query list
     const start = performance.now();
     let ping = 0;
@@ -410,6 +405,15 @@ export default function ServerFinder() {
     xhr.send();
 
     setGamemodePop({});
+  }, []);
+
+  useEffect(() => {
+    if (!quickplayStore.searching) {
+      return;
+    }
+    setProgress(2);
+
+    queryServerList();
   }, [quickplayStore.searching]);
 
   useEffect(() => {

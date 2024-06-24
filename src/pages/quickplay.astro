@@ -180,28 +180,26 @@ const gamemodes = [
               }
             });
           }
-          if (playNow) {
-            playNow.addEventListener("click", () => {
-              if (useQuickplayStore.getState().searching) {
-                return;
-              }
-              playNow.disabled = true;
-              useQuickplayStore.getState().setSearching(1);
-              useQuickplayStore.getState().setFound(0);
-              if (carousel) {
-                carousel.dispose();
-                carousel = null;
-              }
-            });
-            if (urlparms.get("autostart") === "1") {
-              playNow.click();
+          function startSearching() {
+            if (useQuickplayStore.getState().searching) {
+              return;
+            }
+            playNow.disabled = true;
+            useQuickplayStore.getState().setSearching(1);
+            useQuickplayStore.getState().setFound(0);
+            if (carousel) {
+              carousel.dispose();
+              carousel = null;
             }
           }
-          const settingsButton = document.getElementById("quickplay-settings");
-          if (settingsButton) {
-            if (urlparms.get("autostart") === "2") {
-              settingsButton.click();
+          if (playNow) {
+            playNow.addEventListener("click", startSearching);
+            if (urlparms.get("autostart") === "1") {
+              startSearching();
             }
+          }
+          if (urlparms.get("autostart") === "2") {
+            useQuickplayStore.getState().toggleCustomizing().click();
           }
         });
       </script>
