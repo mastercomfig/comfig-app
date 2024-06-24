@@ -546,7 +546,7 @@ export default function ServerFinder() {
 
     const parms = new URLSearchParams(window.location.search);
     if (!parms.has("noconnect")) {
-      window.location.href = `steam://connect/${server.addr}`;
+      window.location.href = `steam://connect/${server.addr}/quickplay_1`;
     }
 
     touchRecentServer(server.addr);
