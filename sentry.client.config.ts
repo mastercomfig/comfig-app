@@ -31,6 +31,6 @@ Sentry.init({
     /https:\/\/worker.comfig.app/,
   ],
   profilesSampleRate: 1.0,
-  replaysSessionSampleRate: 0.1,
-  replaysOnErrorSampleRate: 1.0,
+  replaysSessionSampleRate: 0.01,
+  replaysOnErrorSampleRate: 0.1,
 });
