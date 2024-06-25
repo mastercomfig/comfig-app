@@ -11,7 +11,7 @@ const REJOIN_COOLDOWN = 300 * 1000;
 const REJOIN_PENALTY = 1.225;
 
 const PING_LOW_SCORE = 0.9;
-const PING_MIN = 10.0;
+const PING_MIN = 24.0;
 const PING_MED = 150.0;
 const PING_MED_SCORE = 0.0;
 const PING_HIGH = 300.0;
