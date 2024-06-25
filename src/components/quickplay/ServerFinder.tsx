@@ -50,6 +50,7 @@ const REGIONS = {
 };
 
 let satisfactionTimer: NodeJS.Timeout | null = null;
+const SATISFACTION_TIME = 8 * 60 * 1000;
 
 const DISALLOWED_GAMEMODES_IN_ANY = new Set([
   "arena",
@@ -391,6 +392,20 @@ export default function ServerFinder() {
       });
   }
 
+  function markSatisfaction() {
+    Sentry.metrics.increment("custom.servers.satisfaction_found", 1, {
+      tags: {
+        maxPlayerCap: getMaxPlayerIndex(quickplayStore.maxPlayerCap),
+        gamemode: quickplayStore.gamemode,
+        respawntimes: quickplayStore.respawntimes,
+        crits: quickplayStore.crits,
+        rtd: quickplayStore.rtd,
+        partysize: quickplayStore.partysize,
+        pingmode: quickplayStore.pingmode,
+      },
+    });
+  }
+
   useEffect(() => {
     // Query ping, then query list
     const start = performance.now();
@@ -410,6 +425,16 @@ export default function ServerFinder() {
     xhr.send();
 
     setGamemodePop({});
+
+    // revisiting site
+    const foundTime = quickplayStore.foundTime;
+    if (foundTime > 0) {
+      const now = new Date().getTime();
+      if (now - foundTime > SATISFACTION_TIME) {
+        markSatisfaction();
+        quickplayStore.setFoundTime(0);
+      }
+    }
   }, []);
 
   useEffect(() => {
@@ -560,22 +585,7 @@ export default function ServerFinder() {
     if (satisfactionTimer) {
       clearTimeout(satisfactionTimer);
     }
-    satisfactionTimer = setTimeout(
-      () => {
-        Sentry.metrics.increment("custom.servers.satisfaction_found", 1, {
-          tags: {
-            maxPlayerCap: getMaxPlayerIndex(quickplayStore.maxPlayerCap),
-            gamemode: quickplayStore.gamemode,
-            respawntimes: quickplayStore.respawntimes,
-            crits: quickplayStore.crits,
-            rtd: quickplayStore.rtd,
-            partysize: quickplayStore.partysize,
-            pingmode: quickplayStore.pingmode,
-          },
-        });
-      },
-      8 * 60 * 1000,
-    );
+    satisfactionTimer = setTimeout(markSatisfaction, SATISFACTION_TIME);
 
     console.log("servers", servers);
     console.log("filtered", filteredServers);
@@ -589,13 +599,18 @@ export default function ServerFinder() {
 
     const now = new Date().getTime();
     if (quickplayStore.foundTime > 0) {
-      Sentry.metrics.distribution(
-        "custom.servers.server_refind_time_sec",
-        (now - quickplayStore.foundTime) / 1000,
-        {
-          unit: "second",
-        },
-      );
+      if (now - quickplayStore.foundTime > SATISFACTION_TIME) {
+        // revisiting site
+        markSatisfaction();
+      } else {
+        Sentry.metrics.distribution(
+          "custom.servers.server_refind_time_sec",
+          (now - quickplayStore.foundTime) / 1000,
+          {
+            unit: "second",
+          },
+        );
+      }
     }
     quickplayStore.setFoundTime(now);
     Sentry.metrics.distribution("server_ping", server.ping, {
