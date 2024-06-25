@@ -11,6 +11,7 @@ const REJOIN_COOLDOWN = 300 * 1000;
 const REJOIN_PENALTY = 1.08;
 
 const PING_LOW_SCORE = 0.9;
+const PING_MIN = 10.0;
 const PING_MED = 150.0;
 const PING_MED_SCORE = 0.0;
 const PING_HIGH = 300.0;
@@ -259,8 +260,10 @@ export default function ServerFinder() {
     const ping = server.ping;
     const PING_LOW = quickplayStore.pinglimit;
     let pingScore = 0;
-    if (ping < PING_LOW) {
-      pingScore += lerp(0, PING_LOW, 1.0, PING_LOW_SCORE, ping);
+    if (ping <= PING_MIN) {
+      pingScore += 1.0;
+    } else if (ping < PING_LOW) {
+      pingScore += lerp(PING_MIN, PING_LOW, 1.0, PING_LOW_SCORE, ping);
     } else if (ping < PING_MED) {
       pingScore += lerp(
         PING_LOW,
