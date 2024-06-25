@@ -97,6 +97,7 @@ const useStore = create(
         "favorites",
         "pingmode",
         "pinglimit",
+        "foundTime",
       ],
     ),
   ),
