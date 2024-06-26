@@ -19,7 +19,7 @@ import plrImg from "@img/gamemodes/plr.png";
 import miscImg from "@img/gamemodes/sd.png";
 import arenaImg from "@img/gamemodes/arena.png";
 
-const gamemodes = [
+const potentialGamemodes = [
   {
     name: "Random",
     code: "any",
@@ -84,6 +84,8 @@ const gamemodes = [
     img: miscImg,
   },
 ];
+
+const gamemodes = [potentialGamemodes[0]];
 ---
 
 <Layout>
