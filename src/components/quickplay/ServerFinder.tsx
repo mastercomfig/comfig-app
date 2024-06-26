@@ -610,6 +610,17 @@ export default function ServerFinder() {
             unit: "second",
           },
         );
+        Sentry.metrics.increment("custom.servers.server_refind", 1, {
+          tags: {
+            maxPlayerCap: getMaxPlayerIndex(quickplayStore.maxPlayerCap),
+            gamemode: quickplayStore.gamemode,
+            respawntimes: quickplayStore.respawntimes,
+            crits: quickplayStore.crits,
+            rtd: quickplayStore.rtd,
+            partysize: quickplayStore.partysize,
+            pingmode: quickplayStore.pingmode,
+          },
+        });
       }
     }
     quickplayStore.setFoundTime(now);
