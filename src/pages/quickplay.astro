@@ -19,7 +19,7 @@ import plrImg from "@img/gamemodes/plr.png";
 import miscImg from "@img/gamemodes/sd.png";
 import arenaImg from "@img/gamemodes/arena.png";
 
-const potentialGamemodes = [
+const gamemodes = [
   {
     name: "Random",
     code: "any",
@@ -84,8 +84,6 @@ const potentialGamemodes = [
     img: miscImg,
   },
 ];
-
-const gamemodes = [potentialGamemodes[0]];
 ---
 
 <Layout>
@@ -313,7 +311,7 @@ const gamemodes = [potentialGamemodes[0]];
               gamemodes.length > 1 && (
                 <>
                   <button
-                    class="carousel-control-prev carousel-hidable"
+                    class="carousel-control-prev carousel-hidable d-none"
                     type="button"
                     data-bs-target="#quickplayGamemodes"
                     data-bs-slide="prev"
@@ -325,7 +323,7 @@ const gamemodes = [potentialGamemodes[0]];
                     <span class="visually-hidden">Previous</span>
                   </button>
                   <button
-                    class="carousel-control-next carousel-hidable"
+                    class="carousel-control-next carousel-hidable d-none"
                     type="button"
                     data-bs-target="#quickplayGamemodes"
                     data-bs-slide="next"
