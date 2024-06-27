@@ -425,6 +425,30 @@ export default function ServerFinder() {
         pingmode: quickplayStore.pingmode,
       },
     });
+    Sentry.metrics.distribution(
+      "custom.servers.satisfaction_find_count",
+      quickplayStore.findCount,
+      {
+        tags: {
+          maxPlayerCap: getMaxPlayerIndex(quickplayStore.maxPlayerCap),
+          gamemode: quickplayStore.gamemode,
+          respawntimes: quickplayStore.respawntimes,
+          crits: quickplayStore.crits,
+          rtd: quickplayStore.rtd,
+          partysize: quickplayStore.partysize,
+          pingmode: quickplayStore.pingmode,
+        },
+      },
+    );
+    const now = new Date().getTime();
+    Sentry.metrics.distribution(
+      "custom.servers.server_satisfaction_find_time",
+      (now - quickplayStore.foundTime) / 1000,
+      {
+        unit: "second",
+      },
+    );
+    quickplayStore.setFoundCount(0);
   }
 
   useEffect(() => {
@@ -564,7 +588,7 @@ export default function ServerFinder() {
       return;
     }
     navigator.clipboard.writeText(
-      `connect ${quickplayStore.lastServer.addr} quickplay_1`,
+      `connect ${quickplayStore.lastServer.addr} quickplay_${quickplayStore.sessionCount ?? 1}`,
     );
   }
 
@@ -592,12 +616,11 @@ export default function ServerFinder() {
     filteredServers.sort((a, b) => b.score - a.score);
 
     const server = fastClone(filteredServers[0]);
-    console.log("Joining", server.addr, server.steamid, server.name);
     quickplayStore.setLastServer(server);
 
     const parms = new URLSearchParams(window.location.search);
     if (!parms.has("noconnect")) {
-      window.location.href = `steam://connect/${server.addr}/quickplay_1`;
+      window.location.href = `steam://connect/${server.addr}/quickplay_${quickplayStore.sessionCount ?? 1}`;
     }
 
     touchRecentServer(server.addr);
@@ -608,15 +631,8 @@ export default function ServerFinder() {
     }
     satisfactionTimer = setTimeout(markSatisfaction, SATISFACTION_TIME);
 
-    console.log("servers", servers);
-    console.log("filtered", filteredServers);
-    console.log(
-      "recent",
-      Object.keys(quickplayStore.recentServers).map((s) => [
-        s,
-        -getRecentPenalty(s),
-      ]),
-    );
+    console.log("all servers:", servers);
+    console.log("user selection:", filteredServers);
 
     const now = new Date().getTime();
     if (quickplayStore.foundTime > 0) {
@@ -644,6 +660,8 @@ export default function ServerFinder() {
         });
       }
     }
+    quickplayStore.setFindCount(quickplayStore.findCount + 1);
+    quickplayStore.setSessionCount(quickplayStore.sessionCount + 1);
     quickplayStore.setFoundTime(now);
     Sentry.metrics.distribution("server_ping", server.ping, {
       tags: {
@@ -671,6 +689,39 @@ export default function ServerFinder() {
         pingmode: quickplayStore.pingmode,
       },
     });
+    Sentry.metrics.distribution(
+      "custom.servers.total_eligible",
+      filteredServers.length,
+      {
+        tags: {
+          maxPlayerCap: getMaxPlayerIndex(quickplayStore.maxPlayerCap),
+          gamemode: quickplayStore.gamemode,
+          respawntimes: quickplayStore.respawntimes,
+          crits: quickplayStore.crits,
+          rtd: quickplayStore.rtd,
+          partysize: quickplayStore.partysize,
+          pingmode: quickplayStore.pingmode,
+        },
+      },
+    );
+    const goodServers = filteredServers.filter(
+      (server) => server.players > 0 && server.ping <= 75,
+    );
+    Sentry.metrics.distribution(
+      "custom.servers.total_good",
+      goodServers.length,
+      {
+        tags: {
+          maxPlayerCap: getMaxPlayerIndex(quickplayStore.maxPlayerCap),
+          gamemode: quickplayStore.gamemode,
+          respawntimes: quickplayStore.respawntimes,
+          crits: quickplayStore.crits,
+          rtd: quickplayStore.rtd,
+          partysize: quickplayStore.partysize,
+          pingmode: quickplayStore.pingmode,
+        },
+      },
+    );
 
     Sentry.metrics.distribution(
       "custom.user.server_blocks_count",
