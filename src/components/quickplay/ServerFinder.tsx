@@ -448,7 +448,7 @@ export default function ServerFinder() {
         unit: "second",
       },
     );
-    quickplayStore.setFoundCount(0);
+    quickplayStore.setFindCount(0);
   }
 
   useEffect(() => {
