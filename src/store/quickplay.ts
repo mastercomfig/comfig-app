@@ -6,6 +6,7 @@ import idbStorage from "@utils/idbstorage";
 const useStore = create(
   persist(
     (set) => ({
+      codeLookup: ["any", "alternative", "arena"],
       customizing: 0,
       toggleCustomizing: () =>
         set((state) => ({ customizing: !state.customizing })),
