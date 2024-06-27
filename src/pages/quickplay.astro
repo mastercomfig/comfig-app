@@ -21,53 +21,18 @@ import arenaImg from "@img/gamemodes/arena.png";
 
 const gamemodes = [
   {
-    name: "Random",
+    name: "Core Game Modes",
     code: "any",
     description: "We'll match you into the best game we can find.",
     skill: 0,
     img: randomImg,
   },
   {
-    name: "Payload",
-    code: "payload",
-    description: "BLU pushes the cart down the track. RED need to stop them.",
-    skill: 0,
-    img: payloadImg,
-  },
-  {
-    name: "King of the Hill",
-    code: "koth",
-    description: "One team must control a single point until time runs out.",
-    skill: 0,
-    img: kothImg,
-  },
-  {
-    name: "Attack / Defense",
-    code: "attack_defense",
-    description: "BLU wins by capturing all points. RED wins by stopping them.",
+    name: "Misc",
+    code: "alternative",
+    description: "Unique modes that don't fit into the core categories.",
     skill: 1,
-    img: adImg,
-  },
-  {
-    name: "Capture the Flag",
-    code: "ctf",
-    description: "And by flag we mean a glowing briefcase.",
-    skill: 1,
-    img: ctfImg,
-  },
-  {
-    name: "Capture Points",
-    code: "capture_point",
-    description: "Capture all points to win.",
-    skill: 1,
-    img: cpImg,
-  },
-  {
-    name: "Payload Race",
-    code: "payload_race",
-    description: "Two teams. Two bombs. Two tracks. Hilarity ensues.",
-    skill: 1,
-    img: plrImg,
+    img: miscImg,
   },
   {
     name: "Arena",
@@ -76,14 +41,9 @@ const gamemodes = [
     skill: 2,
     img: arenaImg,
   },
-  {
-    name: "Misc",
-    code: "alternative",
-    description: "Game modes that don't fit into one of the other categories.",
-    skill: 2,
-    img: miscImg,
-  },
 ];
+
+const activeGamemodes = [gamemodes[0], gamemodes[7], gamemodes[8]];
 ---
 
 <Layout>

@@ -72,6 +72,7 @@
     "react-color": "^2.19.3",
     "react-compare-slider": "^3.1.0",
     "react-dom": "^18.3.1",
+    "react-minisearch": "^6.3.0",
     "react-select": "^5.8.0",
     "remove-markdown": "^0.5.0",
     "sass": "^1.77.6",

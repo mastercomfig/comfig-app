@@ -22,8 +22,11 @@ const useStore = create(
         set((state) => ({ recentServers: { ...state.recentServers, [k]: v } })),
       removeRecentServer: (k) =>
         set((state) => {
-          delete state.recentServers[k];
-          return { recentServers: state.recentServers };
+          const recentServers = {
+            ...state.recentServers,
+          };
+          delete recentServers[k];
+          return { recentServers };
         }),
       maxPlayerCap: [24, 32],
       setMaxPlayerCap: (cap) => set(() => ({ maxPlayerCap: cap })),
@@ -43,22 +46,37 @@ const useStore = create(
       blocklist: new Set([]),
       addBlocklist: (steamid) =>
         set((state) => {
-          state.blocklist.add(steamid);
-          return { blocklist: state.blocklist };
+          const blocklist = new Set(state.blocklist);
+          blocklist.add(steamid);
+          return { blocklist };
         }),
       clearBlocklist: () => set(() => ({ blocklist: new Set([]) })),
-      mapbans: new Set([]),
-      addMapBan: (map) =>
+      mapbanlist: [],
+      addMapBan: (map, i) =>
         set((state) => {
-          state.mapbans.add(map);
-          return { mapbans: state.mapbans };
+          const mapbanlist = [...state.mapbanlist];
+          if (mapbanlist.length <= i) {
+            i = undefined;
+          }
+          if (i !== undefined) {
+            mapbanlist[i] = map;
+          } else {
+            mapbanlist.push(map);
+          }
+          return { mapbanlist };
         }),
-      clearMapBans: () => set(() => ({ mapbans: new Set([]) })),
+      delMapBan: (index) =>
+        set((state) => {
+          const mapbanlist = [...state.mapbanlist];
+          mapbanlist.splice(index, 1);
+          return { mapbanlist };
+        }),
       favorites: new Set([]),
       addFavorite: (steamid) =>
         set((state) => {
-          state.favorites.add(steamid);
-          return { favorites: state.favorites };
+          const favorites = new Set(state.favorites);
+          favorites.add(steamid);
+          return { favorites };
         }),
       pingmode: 1,
       setPingMode: (pingmode) => set(() => ({ pingmode })),
@@ -69,7 +87,7 @@ const useStore = create(
     }),
     idbStorage(
       "quickplay",
-      5,
+      6,
       (persistedState, version) => {
         if (version < 2) {
           persistedState.pinglimit = 50;
@@ -83,6 +101,10 @@ const useStore = create(
         if (version < 5) {
           delete persistedState.beta;
         }
+        if (version < 6) {
+          const mapbans = Array.from(persistedState["mapbans"]);
+          persistedState.mapbanlist = mapbans.slice(0, 5);
+        }
         return persistedState;
       },
       [
@@ -93,7 +115,7 @@ const useStore = create(
         "beta",
         "rtd",
         "blocklist",
-        "mapbans",
+        "mapbanlist",
         "favorites",
         "pingmode",
         "pinglimit",
