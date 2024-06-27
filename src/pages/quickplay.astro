@@ -105,8 +105,14 @@ const gamemodes = [
                 useQuickplayStore.getState().setGamemode(code);
               });
               if (start) {
-                if (urlparms.has("gm")) {
-                  useQuickplayStore.getState().setGamemode(urlparms.get("gm"));
+                const gm = urlparms.get("gm");
+                if (gm) {
+                  const gmIndex = useQuickplayStore
+                    .getState()
+                    .codeLookup.indexOf(gm);
+                  if (gmIndex >= 0) {
+                    useQuickplayStore.getState().setGamemode(gm);
+                  }
                 }
                 carousel.to(
                   useQuickplayStore
