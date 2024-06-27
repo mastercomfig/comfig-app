@@ -57,7 +57,7 @@ export default function MapBans({
         className="row g-4"
         style={{
           overflowY: "auto",
-          height: "42rem",
+          height: "min(42rem, 45vh)",
         }}
       >
         {mapList.map((m) => {
