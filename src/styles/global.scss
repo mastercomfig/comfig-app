@@ -267,6 +267,11 @@ b {
   padding-left: 0.5rem;
 }
 
+// Quickplay, todo, move to its own module
+.map-ban-remove:hover {
+  color: var(--bs-danger);
+}
+
 // React select https://github.com/JedWatson/react-select/issues/2345#issuecomment-843674624
 :root {
   --bs-select-padding-y: #{$form-select-padding-y};

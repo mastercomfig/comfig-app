@@ -7,6 +7,8 @@ import useQuickplayStore from "@store/quickplay";
 
 import HelpTooltip from "@components/HelpTooltip";
 
+import MapBans from "./MapBans";
+
 const REJOIN_COOLDOWN = 300 * 1000;
 const REJOIN_PENALTY = 1.225;
 
@@ -34,7 +36,7 @@ const gamemodeToPrefix = {
 };
 
 const SERVER_HEADROOM = 1;
-const FULL_PLAYERS = 33;
+const FULL_PLAYERS = 24;
 
 const MISC_GAMEMODES = ["arena", "pass", "pd", "rd", "sd", "tc", "vsh", "zi"];
 
@@ -68,6 +70,8 @@ const DISALLOWED_GAMETYPES_IN_ANY = [
   "medieval",
 ];
 
+const MAP_BAN_INDICES = [0, 1, 2, 3, 4, 5];
+
 function lerp(inA, inB, outA, outB, x) {
   return outA + ((outB - outA) * (x - inA)) / (inB - inA);
 }
@@ -78,6 +82,10 @@ function fastClone(obj) {
 
 export default function ServerFinder() {
   const quickplayStore = useQuickplayStore((state) => state);
+
+  const mapbans = useMemo(() => {
+    return new Set(quickplayStore.mapbanlist.slice(0, 5));
+  }, [quickplayStore.mapbanlist]);
 
   const getRecentPenalty = (address) => {
     let penalty = 0.0;
@@ -169,6 +177,13 @@ export default function ServerFinder() {
 
   const [schema, setSchema] = useState<any>(undefined);
   const mapToGamemode = schema?.map_gamemodes ?? {};
+  const mapToThumbnail = schema?.map_thumbnails ?? {};
+
+  const allMaps = useMemo(() => {
+    return Object.keys(mapToGamemode).map((m, i) => ({ id: i, name: m }));
+  }, [schema]);
+
+  const [mapBanIndex, setMapBanIndex] = useState(-1);
 
   useEffect(() => {
     fetch("https://worker.comfig.app/api/schema/get", {
@@ -249,7 +264,7 @@ export default function ServerFinder() {
     if (quickplayStore.blocklist.has(server.steamid)) {
       return false;
     }
-    if (quickplayStore.mapbans.has(server.map)) {
+    if (mapbans.has(server.map)) {
       return false;
     }
 
@@ -296,25 +311,29 @@ export default function ServerFinder() {
     return userScore;
   };
 
+  const toNearestEven = (num) => {
+    return 2 * Math.round(num / 2.0);
+  };
+
   const scoreServerByPlayers = (humans, maxPlayers, partySize) => {
     const newHumans = humans + partySize;
     const newTotalPlayers = newHumans;
 
     const realMaxPlayers = maxPlayers;
-    if (maxPlayers > FULL_PLAYERS) {
-      maxPlayers = FULL_PLAYERS;
-    }
-
     if (newTotalPlayers + SERVER_HEADROOM > realMaxPlayers) {
       return -100;
     }
 
-    if (newHumans == partySize) {
+    if (maxPlayers > FULL_PLAYERS) {
+      maxPlayers = FULL_PLAYERS - partySize;
+    }
+
+    if (humans === 0) {
       return -0.3;
     }
 
-    const countLow = Math.floor(maxPlayers / 3);
-    const countIdeal = Math.floor((maxPlayers * 5) / 6);
+    const countLow = toNearestEven(maxPlayers / 3);
+    const countIdeal = toNearestEven(maxPlayers * 0.72);
 
     const scoreLow = 0.1;
     const scoreIdeal = 1.6;
@@ -324,8 +343,10 @@ export default function ServerFinder() {
       return lerp(0, countLow, 0.0, scoreLow, newHumans);
     } else if (newHumans <= countIdeal) {
       return lerp(countLow, countIdeal, scoreLow, scoreIdeal, newHumans);
-    } else {
+    } else if (newHumans <= maxPlayers) {
       return lerp(countIdeal, maxPlayers, scoreIdeal, scoreFuller, newHumans);
+    } else {
+      return lerp(maxPlayers, realMaxPlayers, scoreFuller, scoreLow, newHumans);
     }
   };
 
@@ -652,11 +673,6 @@ export default function ServerFinder() {
     });
 
     Sentry.metrics.distribution(
-      "custom.user.map_bans_count",
-      quickplayStore.mapbans.size,
-    );
-
-    Sentry.metrics.distribution(
       "custom.user.server_blocks_count",
       quickplayStore.blocklist.size,
     );
@@ -686,6 +702,7 @@ export default function ServerFinder() {
     return "success";
   }, [quickplayStore.lastServer, quickplayStore.pinglimit]);
 
+  // Look, I know this is bad. I'll split it into components later.
   return (
     <>
       <div
@@ -1045,9 +1062,15 @@ export default function ServerFinder() {
             </label>
           </div>
           <div className="col-auto">
-            <h4 style={{ fontWeight: 500 }}>Blocks/Bans</h4>
+            <h4 style={{ fontWeight: 500 }}>Blocks</h4>
+            <p>
+              You have {quickplayStore.blocklist.size}{" "}
+              {quickplayStore.blocklist.size === 1 ? "server" : "servers"}{" "}
+              blocked.
+            </p>
             <button
               className="btn btn-danger btn-sm mb-2"
+              disabled={quickplayStore.blocklist.size === 0}
               onClick={() => {
                 quickplayStore.setFound(0);
                 quickplayStore.clearBlocklist();
@@ -1055,18 +1078,78 @@ export default function ServerFinder() {
             >
               <span className="fas fa-trash-can"></span> Clear blocked servers
             </button>
-            <br />
-            <button
-              className="btn btn-danger btn-sm"
-              onClick={() => {
-                quickplayStore.setFound(0);
-                quickplayStore.clearMapBans();
-              }}
-            >
-              <span className="fas fa-trash-can"></span> Clear map bans
-            </button>
           </div>
         </div>
+        <br />
+        <h4 style={{ fontWeight: 500 }}>Map Bans</h4>
+        <div className="row g-4">
+          {MAP_BAN_INDICES.map((i) => {
+            if (quickplayStore.mapbanlist.length <= i) {
+              return (
+                <div className="col-2" key={i}>
+                  <div
+                    className="bg-dark px-4 py-3 text-center display-6 d-flex align-items-center justify-content-center"
+                    style={{
+                      height: "5rem",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => {
+                      setMapBanIndex(i);
+                    }}
+                  >
+                    <span className="fas fa-ban text-body-secondary"></span>
+                  </div>
+                </div>
+              );
+            }
+            const mapName = quickplayStore.mapbanlist[i];
+            return (
+              <div className="col-2" key={i}>
+                <div
+                  className="bg-dark px-4 py-3 text-center d-flex align-items-center justify-content-center position-relative"
+                  style={{
+                    backgroundImage: `url('${mapToThumbnail[mapName]}')`,
+                    backgroundSize: "cover",
+                    height: "5rem",
+                    textShadow:
+                      "-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000",
+                    cursor: "pointer",
+                  }}
+                  onClick={(e) => {
+                    if (e.target.classList.contains("map-ban-remove")) {
+                      return;
+                    }
+                    setMapBanIndex(i);
+                  }}
+                >
+                  <span className="text-light fw-bold">{mapName}</span>
+                  <span
+                    className="position-absolute top-0 start-100 translate-middle fas fa-circle-xmark map-ban-remove"
+                    onClick={() => {
+                      quickplayStore.delMapBan(i);
+                    }}
+                  ></span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      <div
+        className={`position-absolute z-3 top-50 start-50 translate-middle${mapBanIndex >= 0 ? "" : " d-none"}`}
+        style={{
+          width: "95%",
+        }}
+      >
+        <MapBans
+          maps={allMaps}
+          mapbans={mapbans}
+          index={mapBanIndex}
+          mapToThumbnail={mapToThumbnail}
+          addMapBan={quickplayStore.addMapBan}
+          setMapBanIndex={setMapBanIndex}
+        />
       </div>
 
       <div
@@ -1075,7 +1158,7 @@ export default function ServerFinder() {
           width: "95%",
         }}
       >
-        <div className="bg-dark p-1 px-5" style={{}}>
+        <div className="bg-dark p-1 px-5">
           <h3
             className="mb-3 mt-4"
             style={{ fontWeight: 800, letterSpacing: "0.1rem" }}
@@ -1130,15 +1213,6 @@ export default function ServerFinder() {
               }}
             >
               <span className="fas fa-trash-can"></span> Clear blocks
-            </button>
-            <button
-              className="btn btn-danger"
-              onClick={() => {
-                quickplayStore.setFound(0);
-                quickplayStore.clearMapBans();
-              }}
-            >
-              <span className="fas fa-trash-can"></span> Clear map bans
             </button>
             <button
               className="btn btn-dark"
