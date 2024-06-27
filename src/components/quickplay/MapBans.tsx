@@ -30,7 +30,15 @@ export default function MapBans({
         className="mb-3 mt-4"
         style={{ fontWeight: 800, letterSpacing: "0.1rem" }}
       >
-        SELECT A MAP TO BAN
+        SELECT A MAP TO BAN{" "}
+        <button
+          className="btn btn-dark btn-sm align-text-top"
+          onClick={() => {
+            setMapBanIndex(-1);
+          }}
+        >
+          <span className="fas fa-x fa-fw"></span> Cancel
+        </button>
       </h3>
       <div role="search">
         <input
