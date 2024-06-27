@@ -42,8 +42,6 @@ const gamemodes = [
     img: arenaImg,
   },
 ];
-
-const activeGamemodes = [gamemodes[0], gamemodes[7], gamemodes[8]];
 ---
 
 <Layout>
@@ -95,17 +93,6 @@ const activeGamemodes = [gamemodes[0], gamemodes[7], gamemodes[8]];
 
         document.addEventListener("astro:page-load", () => {
           const urlparms = new URLSearchParams(window.location.search);
-          const codeLookup = [
-            "any",
-            "payload",
-            "koth",
-            "attack_defense",
-            "ctf",
-            "capture_point",
-            "payload_race",
-            "arena",
-            "alternative",
-          ];
           const carouselEl = document.getElementById("quickplayGamemodes");
           let carousel: Carousel | null = null;
           function refreshCarousel(start: boolean = false) {
@@ -114,7 +101,7 @@ const activeGamemodes = [gamemodes[0], gamemodes[7], gamemodes[8]];
                 pause: false,
               });
               carouselEl.addEventListener("slide.bs.carousel", (event) => {
-                const code = codeLookup[event.to];
+                const code = useQuickplayStore.getState().codeLookup[event.to];
                 useQuickplayStore.getState().setGamemode(code);
               });
               if (start) {
@@ -122,7 +109,9 @@ const activeGamemodes = [gamemodes[0], gamemodes[7], gamemodes[8]];
                   useQuickplayStore.getState().setGamemode(urlparms.get("gm"));
                 }
                 carousel.to(
-                  codeLookup.indexOf(useQuickplayStore.getState().gamemode),
+                  useQuickplayStore
+                    .getState()
+                    .codeLookup.indexOf(useQuickplayStore.getState().gamemode),
                 );
               }
             }
@@ -209,7 +198,10 @@ const activeGamemodes = [gamemodes[0], gamemodes[7], gamemodes[8]];
             style="background: #ece9d7"
           >
             <ServerFinder client:load />
-            <div class="carousel-indicators carousel-hidable d-none">
+            <div
+              id="quickplayCarouselIndicators"
+              class="carousel-indicators carousel-hidable d-none"
+            >
               {
                 gamemodes.map((resource, index) => (
                   <button
@@ -223,7 +215,7 @@ const activeGamemodes = [gamemodes[0], gamemodes[7], gamemodes[8]];
                 ))
               }
             </div>
-            <div class="carousel-inner h-100">
+            <div id="quickplayCarouselInner" class="carousel-inner h-100">
               {
                 gamemodes.map((resource, index) => (
                   <div
@@ -271,7 +263,7 @@ const activeGamemodes = [gamemodes[0], gamemodes[7], gamemodes[8]];
               gamemodes.length > 1 && (
                 <>
                   <button
-                    class="carousel-control-prev carousel-hidable d-none"
+                    class="carousel-control-prev carousel-hidable"
                     type="button"
                     data-bs-target="#quickplayGamemodes"
                     data-bs-slide="prev"
@@ -283,7 +275,7 @@ const activeGamemodes = [gamemodes[0], gamemodes[7], gamemodes[8]];
                     <span class="visually-hidden">Previous</span>
                   </button>
                   <button
-                    class="carousel-control-next carousel-hidable d-none"
+                    class="carousel-control-next carousel-hidable"
                     type="button"
                     data-bs-target="#quickplayGamemodes"
                     data-bs-slide="next"

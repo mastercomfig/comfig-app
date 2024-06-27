@@ -1268,7 +1268,7 @@ export default function ServerFinder() {
             style={{ fontWeight: 500, letterSpacing: "0.1rem" }}
           >
             {quickplayStore.lastServer?.players === 0 &&
-              "This server has no players. Please wait around a minute for others to join through quickplay matchmaking before requeuing to help us populate more servers!."}
+              "This server has no players. Please wait around a minute for others to join through quickplay matchmaking before requeuing to help us populate more servers!"}
             {quickplayStore.lastServer?.players > 0 && (
               <span>
                 <strong>Players:</strong> {quickplayStore.lastServer?.players}
