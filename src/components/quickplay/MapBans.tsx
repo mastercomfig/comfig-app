@@ -54,7 +54,7 @@ export default function MapBans({
       >
         {mapList.map((m) => {
           return (
-            <div className="col-4">
+            <div className="col-4" key={m.name}>
               <div
                 className="bg-dark px-4 py-3 text-center d-flex align-items-center justify-content-center position-relative"
                 style={{
