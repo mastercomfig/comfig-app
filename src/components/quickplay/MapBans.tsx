@@ -32,7 +32,7 @@ export default function MapBans({
       >
         SELECT A MAP TO BAN{" "}
         <button
-          className="btn btn-dark btn-sm align-text-top"
+          className="btn btn-danger btn-sm align-text-top"
           onClick={() => {
             setMapBanIndex(-1);
           }}
