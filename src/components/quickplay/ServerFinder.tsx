@@ -1142,14 +1142,16 @@ export default function ServerFinder() {
           width: "95%",
         }}
       >
-        <MapBans
-          maps={allMaps}
-          mapbans={mapbans}
-          index={mapBanIndex}
-          mapToThumbnail={mapToThumbnail}
-          addMapBan={quickplayStore.addMapBan}
-          setMapBanIndex={setMapBanIndex}
-        />
+        {allMaps.length && (
+          <MapBans
+            maps={allMaps}
+            mapbans={mapbans}
+            index={mapBanIndex}
+            mapToThumbnail={mapToThumbnail}
+            addMapBan={quickplayStore.addMapBan}
+            setMapBanIndex={setMapBanIndex}
+          />
+        )}
       </div>
 
       <div
