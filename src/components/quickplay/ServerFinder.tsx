@@ -1,6 +1,7 @@
 import * as Sentry from "@sentry/browser";
 import { useEffect, useMemo, useRef, useState } from "react";
 
+import { filterString } from "@utils/filter";
 import { MAX_PLAYER_OPTIONS, getMaxPlayerIndex } from "@utils/quickplay";
 
 import useQuickplayStore from "@store/quickplay";
@@ -530,6 +531,7 @@ export default function ServerFinder() {
     const scoredServers = [];
     for (const server of copiedServers) {
       server.score = scoreServerForTotal(server);
+      server.name = filterString(server.name);
       // If we're in the server list, we can choose to connect to a server with only one slot left
       if (
         quickplayStore.searching === 2 &&
