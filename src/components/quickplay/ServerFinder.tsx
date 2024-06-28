@@ -8,6 +8,7 @@ import useQuickplayStore from "@store/quickplay";
 import HelpTooltip from "@components/HelpTooltip";
 
 import MapBans from "./MapBans";
+import ServerList from "./ServerList";
 
 const REJOIN_COOLDOWN = 300 * 1000;
 const REJOIN_PENALTY = 1.225;
@@ -184,6 +185,7 @@ export default function ServerFinder() {
   }, [schema]);
 
   const [mapBanIndex, setMapBanIndex] = useState(-1);
+  const [showServers, setShowServers] = useState(false);
 
   useEffect(() => {
     fetch("https://worker.comfig.app/api/schema/get", {
@@ -548,10 +550,14 @@ export default function ServerFinder() {
       const curServers = fastClone(finalServers);
       setTimeout(
         () => {
-          setFilteredServers(curServers);
           const pct = (curServers.length + filtered) / servers.length;
           if (pct === 1) {
             setAllFiltered(true);
+            setFilteredServers(
+              curServers.toSorted((a, b) => b.score - a.score),
+            );
+          } else {
+            setFilteredServers(curServers);
           }
         },
         5 + 300 * pct,
@@ -569,7 +575,7 @@ export default function ServerFinder() {
     quickplayStore.pinglimit,
   ]);
 
-  function finishSearch() {
+  function finishSearch(imFeelingLucky) {
     quickplayStore.setSearching(0);
     //setServers([]);
     setFilteredServers([]);
@@ -577,19 +583,154 @@ export default function ServerFinder() {
     setProgress(0);
     const carouselEl = document.getElementById("quickplayGamemodes");
     const event = new Event("finished-searching");
+    event.imFeelingLucky = imFeelingLucky;
     if (carouselEl) {
       carouselEl.dispatchEvent(event);
     }
   }
 
-  function copyConnect() {
+  function copyConnect(imFeelingLucky) {
     if (!navigator.clipboard) {
       console.error("Clipboard unsupported for connect string.");
       return;
     }
+    const connectStr = imFeelingLucky ? "quickplay" : "quickpick";
     navigator.clipboard.writeText(
-      `connect ${quickplayStore.lastServer.addr} quickplay_${quickplayStore.sessionCount ?? 1}`,
+      `connect ${quickplayStore.lastServer.addr} ${connectStr}_${quickplayStore.sessionCount ?? 1}`,
     );
+  }
+
+  function connectToServer(server, imFeelingLucky: boolean) {
+    quickplayStore.setLastServer(server);
+
+    const parms = new URLSearchParams(window.location.search);
+    const connectStr = imFeelingLucky ? "quickplay" : "quickpick";
+
+    quickplayStore.setFound(imFeelingLucky ? 1 : 2);
+
+    if (!parms.has("noconnect")) {
+      setTimeout(() => {
+        if (useQuickplayStore.getState().found < 1) {
+          return;
+        }
+        window.location.href = `steam://connect/${server.addr}/${connectStr}${quickplayStore.sessionCount ?? 1}`;
+      }, 1000);
+    }
+
+    touchRecentServer(server.addr);
+
+    const now = new Date().getTime();
+
+    if (imFeelingLucky) {
+      if (satisfactionTimer) {
+        clearTimeout(satisfactionTimer);
+      }
+      satisfactionTimer = setTimeout(markSatisfaction, SATISFACTION_TIME);
+      if (quickplayStore.foundTime > 0) {
+        if (now - quickplayStore.foundTime > SATISFACTION_TIME) {
+          // revisiting site
+          markSatisfaction();
+        } else {
+          Sentry.metrics.distribution(
+            "custom.servers.server_refind_time_sec",
+            (now - quickplayStore.foundTime) / 1000,
+            {
+              unit: "second",
+            },
+          );
+          Sentry.metrics.increment("custom.servers.server_refind", 1, {
+            tags: {
+              maxPlayerCap: getMaxPlayerIndex(quickplayStore.maxPlayerCap),
+              gamemode: quickplayStore.gamemode,
+              respawntimes: quickplayStore.respawntimes,
+              crits: quickplayStore.crits,
+              rtd: quickplayStore.rtd,
+              partysize: quickplayStore.partysize,
+              pingmode: quickplayStore.pingmode,
+            },
+          });
+        }
+      }
+    }
+
+    quickplayStore.setSessionCount(quickplayStore.sessionCount + 1);
+
+    if (imFeelingLucky) {
+      quickplayStore.setFindCount(quickplayStore.findCount + 1);
+      quickplayStore.setFoundTime(now);
+      Sentry.metrics.distribution("server_ping", server.ping, {
+        tags: {
+          pingmode: quickplayStore.pingmode,
+          pinglimit: quickplayStore.pinglimit,
+        },
+        unit: "millisecond",
+      });
+      Sentry.metrics.distribution("user_pinglimit", quickplayStore.pinglimit, {
+        tags: {
+          pingmode: quickplayStore.pingmode,
+          ping: server.ping,
+        },
+        unit: "millisecond",
+      });
+      Sentry.metrics.distribution("server_players", server.players);
+      Sentry.metrics.increment("server_found", 1, {
+        tags: {
+          maxPlayerCap: getMaxPlayerIndex(quickplayStore.maxPlayerCap),
+          gamemode: quickplayStore.gamemode,
+          respawntimes: quickplayStore.respawntimes,
+          crits: quickplayStore.crits,
+          rtd: quickplayStore.rtd,
+          partysize: quickplayStore.partysize,
+          pingmode: quickplayStore.pingmode,
+        },
+      });
+      Sentry.metrics.distribution(
+        "custom.servers.total_eligible",
+        filteredServers.length,
+        {
+          tags: {
+            maxPlayerCap: getMaxPlayerIndex(quickplayStore.maxPlayerCap),
+            gamemode: quickplayStore.gamemode,
+            respawntimes: quickplayStore.respawntimes,
+            crits: quickplayStore.crits,
+            rtd: quickplayStore.rtd,
+            partysize: quickplayStore.partysize,
+            pingmode: quickplayStore.pingmode,
+          },
+        },
+      );
+      const goodServers = filteredServers.filter(
+        (server) => server.players > 0 && server.ping <= 75,
+      );
+      Sentry.metrics.distribution(
+        "custom.servers.total_good",
+        goodServers.length,
+        {
+          tags: {
+            maxPlayerCap: getMaxPlayerIndex(quickplayStore.maxPlayerCap),
+            gamemode: quickplayStore.gamemode,
+            respawntimes: quickplayStore.respawntimes,
+            crits: quickplayStore.crits,
+            rtd: quickplayStore.rtd,
+            partysize: quickplayStore.partysize,
+            pingmode: quickplayStore.pingmode,
+          },
+        },
+      );
+
+      Sentry.metrics.distribution(
+        "custom.user.server_blocks_count",
+        quickplayStore.blocklist.size,
+      );
+    }
+
+    finishSearch(imFeelingLucky);
+
+    if (imFeelingLucky) {
+      if (parms.has("autoclose")) {
+        window.close();
+      }
+    }
   }
 
   useEffect(() => {
@@ -599,7 +740,7 @@ export default function ServerFinder() {
 
     if (filteredServers.length < 1) {
       quickplayStore.setFound(-1);
-      finishSearch();
+      finishSearch(quickplayStore.searching === 1);
       Sentry.metrics.increment("no_servers_found", 1, {
         tags: {
           maxPlayerCap: getMaxPlayerIndex(quickplayStore.maxPlayerCap),
@@ -613,137 +754,26 @@ export default function ServerFinder() {
       return;
     }
 
-    filteredServers.sort((a, b) => b.score - a.score);
-
-    const server = fastClone(filteredServers[0]);
-    quickplayStore.setLastServer(server);
-
-    const parms = new URLSearchParams(window.location.search);
-    if (!parms.has("noconnect")) {
-      window.location.href = `steam://connect/${server.addr}/quickplay_${quickplayStore.sessionCount ?? 1}`;
-    }
-
-    touchRecentServer(server.addr);
-    quickplayStore.setFound(1);
-
-    if (satisfactionTimer) {
-      clearTimeout(satisfactionTimer);
-    }
-    satisfactionTimer = setTimeout(markSatisfaction, SATISFACTION_TIME);
-
     console.log("all servers:", servers);
     console.log("user selection:", filteredServers);
 
-    const now = new Date().getTime();
-    if (quickplayStore.foundTime > 0) {
-      if (now - quickplayStore.foundTime > SATISFACTION_TIME) {
-        // revisiting site
-        markSatisfaction();
-      } else {
-        Sentry.metrics.distribution(
-          "custom.servers.server_refind_time_sec",
-          (now - quickplayStore.foundTime) / 1000,
-          {
-            unit: "second",
-          },
-        );
-        Sentry.metrics.increment("custom.servers.server_refind", 1, {
-          tags: {
-            maxPlayerCap: getMaxPlayerIndex(quickplayStore.maxPlayerCap),
-            gamemode: quickplayStore.gamemode,
-            respawntimes: quickplayStore.respawntimes,
-            crits: quickplayStore.crits,
-            rtd: quickplayStore.rtd,
-            partysize: quickplayStore.partysize,
-            pingmode: quickplayStore.pingmode,
-          },
-        });
-      }
+    if (quickplayStore.searching === 2) {
+      setShowServers(true);
+      quickplayStore.setSearching(0);
+      return;
     }
-    quickplayStore.setFindCount(quickplayStore.findCount + 1);
-    quickplayStore.setSessionCount(quickplayStore.sessionCount + 1);
-    quickplayStore.setFoundTime(now);
-    Sentry.metrics.distribution("server_ping", server.ping, {
-      tags: {
-        pingmode: quickplayStore.pingmode,
-        pinglimit: quickplayStore.pinglimit,
-      },
-      unit: "millisecond",
-    });
-    Sentry.metrics.distribution("user_pinglimit", quickplayStore.pinglimit, {
-      tags: {
-        pingmode: quickplayStore.pingmode,
-        ping: server.ping,
-      },
-      unit: "millisecond",
-    });
-    Sentry.metrics.distribution("server_players", server.players);
-    Sentry.metrics.increment("server_found", 1, {
-      tags: {
-        maxPlayerCap: getMaxPlayerIndex(quickplayStore.maxPlayerCap),
-        gamemode: quickplayStore.gamemode,
-        respawntimes: quickplayStore.respawntimes,
-        crits: quickplayStore.crits,
-        rtd: quickplayStore.rtd,
-        partysize: quickplayStore.partysize,
-        pingmode: quickplayStore.pingmode,
-      },
-    });
-    Sentry.metrics.distribution(
-      "custom.servers.total_eligible",
-      filteredServers.length,
-      {
-        tags: {
-          maxPlayerCap: getMaxPlayerIndex(quickplayStore.maxPlayerCap),
-          gamemode: quickplayStore.gamemode,
-          respawntimes: quickplayStore.respawntimes,
-          crits: quickplayStore.crits,
-          rtd: quickplayStore.rtd,
-          partysize: quickplayStore.partysize,
-          pingmode: quickplayStore.pingmode,
-        },
-      },
-    );
-    const goodServers = filteredServers.filter(
-      (server) => server.players > 0 && server.ping <= 75,
-    );
-    Sentry.metrics.distribution(
-      "custom.servers.total_good",
-      goodServers.length,
-      {
-        tags: {
-          maxPlayerCap: getMaxPlayerIndex(quickplayStore.maxPlayerCap),
-          gamemode: quickplayStore.gamemode,
-          respawntimes: quickplayStore.respawntimes,
-          crits: quickplayStore.crits,
-          rtd: quickplayStore.rtd,
-          partysize: quickplayStore.partysize,
-          pingmode: quickplayStore.pingmode,
-        },
-      },
-    );
 
-    Sentry.metrics.distribution(
-      "custom.user.server_blocks_count",
-      quickplayStore.blocklist.size,
-    );
-
-    finishSearch();
-    if (parms.has("autoclose")) {
-      window.close();
-    }
+    const server = fastClone(filteredServers[0]);
+    connectToServer(server, true);
   }, [allFiltered]);
 
   const maxPlayerIndex = useMemo(() => {
     return getMaxPlayerIndex(quickplayStore.maxPlayerCap);
   }, [quickplayStore.maxPlayerCap]);
 
-  const pingColor = useMemo(() => {
-    if (!quickplayStore.lastServer) {
-      return;
-    }
+  function calcPingColor(server) {
     const okPingThreshold = (quickplayStore.pinglimit + PING_MED) / 2;
-    const ping = quickplayStore.lastServer.ping;
+    const ping = server.ping;
     if (ping >= BAD_PING_THRESHOLD) {
       return "danger";
     }
@@ -751,6 +781,13 @@ export default function ServerFinder() {
       return "warning";
     }
     return "success";
+  }
+
+  const pingColor = useMemo(() => {
+    if (!quickplayStore.lastServer) {
+      return;
+    }
+    return calcPingColor(quickplayStore.lastServer);
   }, [quickplayStore.lastServer, quickplayStore.pinglimit]);
 
   // Look, I know this is bad. I'll split it into components later.
@@ -1206,6 +1243,22 @@ export default function ServerFinder() {
       </div>
 
       <div
+        className={`position-absolute z-3 top-50 start-50 translate-middle${showServers ? "" : " d-none"}`}
+        style={{
+          width: "95%",
+        }}
+      >
+        <ServerList
+          servers={filteredServers}
+          mapToThumbnail={mapToThumbnail}
+          setShowServers={setShowServers}
+          connectToServer={connectToServer}
+          calcPingColor={calcPingColor}
+          finishSearch={finishSearch}
+        />
+      </div>
+
+      <div
         className={`position-absolute z-3 top-50 start-50 translate-middle${quickplayStore.searching ? "" : " d-none"}`}
         style={{
           width: "95%",
@@ -1216,7 +1269,9 @@ export default function ServerFinder() {
             className="mb-3 mt-4"
             style={{ fontWeight: 800, letterSpacing: "0.1rem" }}
           >
-            SEARCHING FOR THE BEST AVAILABLE SERVER
+            {quickplayStore.searching === 1 &&
+              "SEARCHING FOR THE BEST AVAILABLE SERVER"}
+            {quickplayStore.searching === 2 && "SEARCHING FOR SERVERS…"}
           </h3>
           <div
             className="progress mb-3"
@@ -1280,7 +1335,7 @@ export default function ServerFinder() {
       </div>
 
       <div
-        className={`position-absolute z-3 top-50 start-50 translate-middle${quickplayStore.found === 1 ? "" : " d-none"}`}
+        className={`position-absolute z-3 top-50 start-50 translate-middle${quickplayStore.found > 0 ? "" : " d-none"}`}
         style={{
           width: "95%",
         }}
@@ -1319,15 +1374,18 @@ export default function ServerFinder() {
             style={{ fontWeight: 500, letterSpacing: "0.1rem" }}
           >
             {quickplayStore.lastServer?.players === 0 &&
+              quickplayStore.found !== 2 &&
               "This server has no players. Please wait around a minute for others to join through quickplay matchmaking before requeuing to help us populate more servers!"}
-            {quickplayStore.lastServer?.players > 0 && (
+            {(quickplayStore.lastServer?.players > 0 ||
+              quickplayStore.found === 2) && (
               <span>
                 <strong>Players:</strong> {quickplayStore.lastServer?.players}
               </span>
             )}
           </h4>
           {quickplayStore.lastServer?.players > 0 &&
-            quickplayStore.lastServer?.players <= 8 && (
+            quickplayStore.lastServer?.players <= 8 &&
+            quickplayStore.found !== 2 && (
               <h5 className="mb-0 mt-1">
                 This server has a low number of players. Please wait around a
                 minute for others to join through quickplay matchmaking before
@@ -1338,7 +1396,9 @@ export default function ServerFinder() {
             Problem auto connecting?{" "}
             <button
               className="btn btn-sm btn-link m-0 p-0 align-baseline"
-              onClick={copyConnect}
+              onClick={() => {
+                copyConnect(quickplayStore.searching === 1);
+              }}
             >
               Copy connect command
             </button>
