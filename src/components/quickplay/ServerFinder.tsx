@@ -748,7 +748,9 @@ export default function ServerFinder() {
 
     if (imFeelingLucky) {
       if (parms.has("autoclose")) {
-        window.close();
+        setTimeout(() => {
+          window.close();
+        }, 6 * 60);
       }
     }
   }
