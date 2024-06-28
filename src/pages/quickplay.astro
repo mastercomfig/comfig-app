@@ -127,20 +127,24 @@ const gamemodes = [
             "quickplay-now",
           ) as HTMLButtonElement;
           if (carouselEl) {
-            carouselEl.addEventListener("finished-searching", () => {
+            carouselEl.addEventListener("finished-searching", (event) => {
               refreshCarousel();
               if (playNow) {
-                playNow.innerText = "TRY AGAIN";
+                if (event.imFeelingLucky) {
+                  playNow.innerText = "TRY AGAIN";
+                } else {
+                  playNow.innerText = "PLAY NOW!";
+                }
                 playNow.disabled = false;
               }
             });
           }
-          function startSearching() {
+          function startSearching(variant) {
             if (useQuickplayStore.getState().searching) {
               return;
             }
             playNow.disabled = true;
-            useQuickplayStore.getState().setSearching(1);
+            useQuickplayStore.getState().setSearching(variant);
             useQuickplayStore.getState().setFound(0);
             if (carousel) {
               carousel.dispose();
@@ -148,13 +152,23 @@ const gamemodes = [
             }
           }
           if (playNow) {
-            playNow.addEventListener("click", startSearching);
+            playNow.addEventListener("click", () => {
+              startSearching(1);
+            });
             if (urlparms.get("autostart") === "1") {
-              startSearching();
+              startSearching(1);
             }
           }
           if (urlparms.get("autostart") === "2") {
             useQuickplayStore.getState().toggleCustomizing().click();
+          }
+          const quickpickBtn = document.getElementById(
+            "quickpick-btn",
+          ) as HTMLButtonElement;
+          if (quickpickBtn) {
+            quickpickBtn.addEventListener("click", () => {
+              startSearching(2);
+            });
           }
         });
       </script>
@@ -297,19 +311,22 @@ const gamemodes = [
             }
           </div>
           <div class="row g-0">
-            <div class="col">
+            <div class="col-11">
               <button
                 id="quickplay-now"
                 class="btn btn-success w-100"
-                style="font-size: 2.5rem; font-weight: 800">PLAY NOW!</button
+                style="font-size: 2.5rem; font-weight: 800;box-shadow: 0 -5px 5px 2px inset #0d5e1b"
+                >PLAY NOW!</button
               >
             </div>
-            <!--<div class="col">
+            <div class="col-1">
               <button
-                class="btn btn-dark w-100"
-                style="font-size: 2.5rem; font-weight: 600">SHOW SERVERS</button
+                id="quickpick-btn"
+                class="btn btn-info w-100"
+                style="font-size: 2.5rem; font-weight: 600;box-shadow: 0 -5px 5px 2px inset #5e0d4c"
+                ><span class="fas fa-list"></span></button
               >
-            </div>-->
+            </div>
           </div>
         </div>
       </div>

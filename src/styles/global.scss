@@ -272,6 +272,14 @@ b {
   color: var(--bs-danger);
 }
 
+.quickpick-server-item:hover {
+  background: #352a22;
+}
+
+.quickpick-server-item.active {
+  background: #463931;
+}
+
 // React select https://github.com/JedWatson/react-select/issues/2345#issuecomment-843674624
 :root {
   --bs-select-padding-y: #{$form-select-padding-y};
