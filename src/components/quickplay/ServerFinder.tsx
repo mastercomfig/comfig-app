@@ -530,6 +530,14 @@ export default function ServerFinder() {
     const scoredServers = [];
     for (const server of copiedServers) {
       server.score = scoreServerForTotal(server);
+      // If we're in the server list, we can choose to connect to a server with only one slot left
+      if (
+        quickplayStore.searching === 2 &&
+        server.score < -50 &&
+        server.players < server.max_players
+      ) {
+        server.score += 100;
+      }
       scoredServers.push(server);
       setProgress(20 + (30 * scoredServers.length) / servers.length);
     }
@@ -538,7 +546,7 @@ export default function ServerFinder() {
     for (const server of scoredServers) {
       const pct = (finalServers.length + filtered) / servers.length;
       setProgress(50 + 50 * pct);
-      if (!filterGoodServers(server.score)) {
+      if (quickplayStore.searching === 1 && !filterGoodServers(server.score)) {
         filtered += 1;
         continue;
       }
@@ -653,37 +661,49 @@ export default function ServerFinder() {
       }
     }
 
+    Sentry.metrics.increment("custom.servers.found", 1, {
+      tags: {
+        maxPlayerCap: getMaxPlayerIndex(quickplayStore.maxPlayerCap),
+        gamemode: quickplayStore.gamemode,
+        respawntimes: quickplayStore.respawntimes,
+        crits: quickplayStore.crits,
+        rtd: quickplayStore.rtd,
+        partysize: quickplayStore.partysize,
+        pingmode: quickplayStore.pingmode,
+        searchmode: imFeelingLucky ? 1 : 2,
+      },
+    });
+    Sentry.metrics.distribution("custom.servers.ping", server.ping, {
+      tags: {
+        pingmode: quickplayStore.pingmode,
+        pinglimit: quickplayStore.pinglimit,
+        searchmode: imFeelingLucky ? 1 : 2,
+      },
+      unit: "millisecond",
+    });
+    Sentry.metrics.distribution(
+      "custom.user.pinglimit",
+      quickplayStore.pinglimit,
+      {
+        tags: {
+          pingmode: quickplayStore.pingmode,
+          ping: server.ping,
+          searchmode: imFeelingLucky ? 1 : 2,
+        },
+        unit: "millisecond",
+      },
+    );
+    Sentry.metrics.distribution("custom.servers.players", server.players, {
+      tags: {
+        searchmode: imFeelingLucky ? 1 : 2,
+      },
+    });
+
     quickplayStore.setSessionCount(quickplayStore.sessionCount + 1);
 
     if (imFeelingLucky) {
       quickplayStore.setFindCount(quickplayStore.findCount + 1);
       quickplayStore.setFoundTime(now);
-      Sentry.metrics.distribution("server_ping", server.ping, {
-        tags: {
-          pingmode: quickplayStore.pingmode,
-          pinglimit: quickplayStore.pinglimit,
-        },
-        unit: "millisecond",
-      });
-      Sentry.metrics.distribution("user_pinglimit", quickplayStore.pinglimit, {
-        tags: {
-          pingmode: quickplayStore.pingmode,
-          ping: server.ping,
-        },
-        unit: "millisecond",
-      });
-      Sentry.metrics.distribution("server_players", server.players);
-      Sentry.metrics.increment("server_found", 1, {
-        tags: {
-          maxPlayerCap: getMaxPlayerIndex(quickplayStore.maxPlayerCap),
-          gamemode: quickplayStore.gamemode,
-          respawntimes: quickplayStore.respawntimes,
-          crits: quickplayStore.crits,
-          rtd: quickplayStore.rtd,
-          partysize: quickplayStore.partysize,
-          pingmode: quickplayStore.pingmode,
-        },
-      });
       Sentry.metrics.distribution(
         "custom.servers.total_eligible",
         filteredServers.length,
@@ -1202,6 +1222,7 @@ export default function ServerFinder() {
                     textShadow:
                       "-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000",
                     cursor: "pointer",
+                    wordBreak: "break-all",
                   }}
                   onClick={(e) => {
                     if (e.target.classList.contains("map-ban-remove")) {
@@ -1228,6 +1249,7 @@ export default function ServerFinder() {
         className={`position-absolute z-3 top-50 start-50 translate-middle${mapBanIndex >= 0 ? "" : " d-none"}`}
         style={{
           width: "95%",
+          height: "95%",
         }}
       >
         {allMaps.length && (
@@ -1246,6 +1268,7 @@ export default function ServerFinder() {
         className={`position-absolute z-3 top-50 start-50 translate-middle${showServers ? "" : " d-none"}`}
         style={{
           width: "95%",
+          height: "95%",
         }}
       >
         <ServerList
@@ -1262,9 +1285,10 @@ export default function ServerFinder() {
         className={`position-absolute z-3 top-50 start-50 translate-middle${quickplayStore.searching ? "" : " d-none"}`}
         style={{
           width: "95%",
+          maxHeight: "95%",
         }}
       >
-        <div className="bg-dark p-1 px-5">
+        <div className="bg-dark p-1 px-5 h-100 w-100">
           <h3
             className="mb-3 mt-4"
             style={{ fontWeight: 800, letterSpacing: "0.1rem" }}
@@ -1297,9 +1321,10 @@ export default function ServerFinder() {
         className={`position-absolute z-3 top-50 start-50 translate-middle${quickplayStore.found === -1 ? "" : " d-none"}`}
         style={{
           width: "95%",
+          maxHeight: "95%",
         }}
       >
-        <div className="bg-dark py-4 px-5" style={{}}>
+        <div className="bg-dark py-4 px-5 h-100 w-100">
           <h3
             className="mb-1 mt-1"
             style={{ fontWeight: 800, letterSpacing: "0.1rem" }}
@@ -1338,9 +1363,10 @@ export default function ServerFinder() {
         className={`position-absolute z-3 top-50 start-50 translate-middle${quickplayStore.found > 0 ? "" : " d-none"}`}
         style={{
           width: "95%",
+          maxHeight: "95%",
         }}
       >
-        <div className="bg-dark py-4 px-5" style={{}}>
+        <div className="bg-dark py-4 px-5 h-100 w-100">
           <h4
             className="mb-0 mt-1"
             style={{ fontWeight: 500, letterSpacing: "0.1rem" }}

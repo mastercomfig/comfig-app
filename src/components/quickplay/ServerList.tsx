@@ -11,13 +11,13 @@ export default function ServerList({
   const [selectedServer, setSelectedServer] = useState<any>(undefined);
 
   return (
-    <div className="bg-dark py-4 px-5">
+    <div className="bg-dark py-4 px-5 h-100 w-100">
       <h3 className="display-3 text-center fw-bold">Search Results</h3>
       <div
         className="g-4 bg-body text-start"
         style={{
           overflowY: "auto",
-          height: "min(42rem, 45vh)",
+          height: "calc(100% - 10rem)",
         }}
       >
         {servers.map((server) => (

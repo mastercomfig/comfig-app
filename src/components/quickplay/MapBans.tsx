@@ -25,7 +25,7 @@ export default function MapBans({
   }
 
   return (
-    <div className="bg-dark p-1 pb-5 px-5">
+    <div className="bg-dark p-1 pb-5 px-5 h-100 w-100">
       <h3
         className="mb-3 mt-4"
         style={{ fontWeight: 800, letterSpacing: "0.1rem" }}
@@ -57,7 +57,7 @@ export default function MapBans({
         className="row g-4"
         style={{
           overflowY: "auto",
-          height: "min(42rem, 45vh)",
+          height: "calc(100% - 7rem)",
         }}
       >
         {mapList.map((m) => {
@@ -73,6 +73,7 @@ export default function MapBans({
                     "-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000",
                   cursor: "pointer",
                   fontSize: "1rem",
+                  wordBreak: "break-all",
                 }}
                 onClick={() => {
                   if (!mapbans.has(m.name)) {
