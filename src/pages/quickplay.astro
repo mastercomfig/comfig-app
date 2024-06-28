@@ -64,13 +64,16 @@ const gamemodes = [
         }
         @media (min-height: 602px) and (min-width: 992px) {
           .carousel {
-            min-height: 64vh;
+            min-height: min(
+              calc(max(85vh, 55rem) * 3 / 4),
+              calc(100vw * 3 / 4)
+            );
           }
           .quickplay-container {
-            min-width: 85vh;
+            min-width: min(85vh, 100vw);
           }
           .quickplay-section {
-            width: 85vh;
+            width: max(85vh, 55rem);
           }
         }
         @media (min-width: 992px) {
@@ -126,6 +129,9 @@ const gamemodes = [
           const playNow = document.getElementById(
             "quickplay-now",
           ) as HTMLButtonElement;
+          const quickpickBtn = document.getElementById(
+            "quickpick-btn",
+          ) as HTMLButtonElement;
           if (carouselEl) {
             carouselEl.addEventListener("finished-searching", (event) => {
               refreshCarousel();
@@ -136,6 +142,7 @@ const gamemodes = [
                   playNow.innerText = "PLAY NOW!";
                 }
                 playNow.disabled = false;
+                quickpickBtn.disabled = false;
               }
             });
           }
@@ -144,6 +151,7 @@ const gamemodes = [
               return;
             }
             playNow.disabled = true;
+            quickpickBtn.disabled = true;
             useQuickplayStore.getState().setSearching(variant);
             useQuickplayStore.getState().setFound(0);
             if (carousel) {
@@ -155,20 +163,20 @@ const gamemodes = [
             playNow.addEventListener("click", () => {
               startSearching(1);
             });
-            if (urlparms.get("autostart") === "1") {
-              startSearching(1);
-            }
           }
           if (urlparms.get("autostart") === "2") {
             useQuickplayStore.getState().toggleCustomizing().click();
           }
-          const quickpickBtn = document.getElementById(
-            "quickpick-btn",
-          ) as HTMLButtonElement;
           if (quickpickBtn) {
             quickpickBtn.addEventListener("click", () => {
               startSearching(2);
             });
+          }
+          if (urlparms.get("autostart") === "1") {
+            startSearching(1);
+          }
+          if (urlparms.get("autostart") === "3") {
+            startSearching(2);
           }
         });
       </script>
@@ -311,7 +319,7 @@ const gamemodes = [
             }
           </div>
           <div class="row g-0">
-            <div class="col-11">
+            <div class="col">
               <button
                 id="quickplay-now"
                 class="btn btn-success w-100"
@@ -319,12 +327,12 @@ const gamemodes = [
                 >PLAY NOW!</button
               >
             </div>
-            <div class="col-1">
+            <div class="col-auto">
               <button
                 id="quickpick-btn"
                 class="btn btn-info w-100"
                 style="font-size: 2.5rem; font-weight: 600;box-shadow: 0 -5px 5px 2px inset #5e0d4c"
-                ><span class="fas fa-list"></span></button
+                ><span class="fas fa-list fa-fw m-1"></span></button
               >
             </div>
           </div>
