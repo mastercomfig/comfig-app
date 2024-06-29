@@ -62,18 +62,15 @@ const gamemodes = [
         .quickplay-section {
           max-width: 100vw;
         }
-        @media (min-height: 602px) and (min-width: 992px) {
+        @media (min-width: 576px) {
           .carousel {
-            min-height: min(
-              calc(max(85vh, 55rem) * 3 / 4),
-              calc(100vw * 3 / 4)
-            );
+            height: min(max(calc(95vh * 3 / 4), 33.75rem), calc(100vw * 3 / 4));
           }
           .quickplay-container {
             min-width: min(85vh, 100vw);
           }
           .quickplay-section {
-            width: max(85vh, 55rem);
+            width: max(95vh, 60rem);
           }
         }
         @media (min-width: 992px) {
@@ -247,11 +244,11 @@ const gamemodes = [
               {
                 gamemodes.map((resource, index) => (
                   <div
-                    class={`carousel-item h-100 ${index == 0 ? "active" : ""}`}
+                    class={`carousel-item h-100 d-flex flex-column ${index == 0 ? "active" : ""}`}
                   >
                     <div
-                      class="h-100 d-flex flex-column justify-content-between"
-                      style={`background-image: url('${resource.img.src}'); background-position: center; background-size: contain;background-repeat: no-repeat;width: 100%;aspect-ratio: 4 / 3`}
+                      class="flex-grow-1"
+                      style={`background-image: url('${resource.img.src}'); background-position: center; background-size: contain;background-repeat: no-repeat;aspect-ratio: 4 / 3`}
                     >
                       <h2
                         class="display-2"
