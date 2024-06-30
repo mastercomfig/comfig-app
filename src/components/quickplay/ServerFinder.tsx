@@ -1389,15 +1389,6 @@ export default function ServerFinder() {
             style={{ fontWeight: 500, letterSpacing: "0.1rem" }}
           >
             <strong>Map</strong>: {quickplayStore.lastServer?.map}{" "}
-            <button
-              className="btn btn-danger btn-sm align-text-bottom"
-              onClick={() => {
-                quickplayStore.addMapBan(quickplayStore.lastServer.map);
-                quickplayStore.setFound(0);
-              }}
-            >
-              <span className="fas fa-ban"></span> Ban map
-            </button>
           </h4>
           <h4
             className="mb-0 mt-1"
