@@ -1388,7 +1388,7 @@ export default function ServerFinder() {
             className="mb-0 mt-1"
             style={{ fontWeight: 500, letterSpacing: "0.1rem" }}
           >
-            <strong>Map:</strong> {quickplayStore.lastServer?.map}{" "}
+            <strong>Map</strong>: {quickplayStore.lastServer?.map}{" "}
             <button
               className="btn btn-danger btn-sm align-text-bottom"
               onClick={() => {
@@ -1404,12 +1404,19 @@ export default function ServerFinder() {
             style={{ fontWeight: 500, letterSpacing: "0.1rem" }}
           >
             {quickplayStore.lastServer?.players === 0 &&
-              quickplayStore.found !== 2 &&
-              "This server has no players. Please wait around a minute for others to join through quickplay matchmaking before requeuing to help us populate more servers!"}
+              quickplayStore.found !== 2 && (
+                <>
+                  This server has no players. Please{" "}
+                  <strong>wait around a few minutes</strong> for others to join
+                  through quickplay matchmaking before requeuing to{" "}
+                  <strong>help us populate more servers</strong>!
+                </>
+              )}
             {(quickplayStore.lastServer?.players > 0 ||
               quickplayStore.found === 2) && (
               <span>
-                <strong>Players:</strong> {quickplayStore.lastServer?.players}
+                <strong>Players</strong>: {quickplayStore.lastServer?.players} /
+                {quickplayStore.lastServer?.max_players}
               </span>
             )}
           </h4>
@@ -1417,9 +1424,10 @@ export default function ServerFinder() {
             quickplayStore.lastServer?.players <= 8 &&
             quickplayStore.found !== 2 && (
               <h5 className="mb-0 mt-1">
-                This server has a low number of players. Please wait around a
-                minute for others to join through quickplay matchmaking before
-                requeuing to help us populate more servers!
+                This server has a low number of players. Please{" "}
+                <strong>wait around a few minutes</strong> for others to join
+                through quickplay matchmaking before requeuing to{" "}
+                <strong>help us populate more servers</strong>!
               </h5>
             )}
           <small>
