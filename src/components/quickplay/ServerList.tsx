@@ -52,14 +52,15 @@ export default function ServerList({
                   className="mb-0 mt-1"
                   style={{ fontWeight: 500, letterSpacing: "0.1rem" }}
                 >
-                  <strong>Map:</strong> {server.map}
+                  <strong>Map</strong>: {server.map}
                 </h4>
                 <h4
                   className="mb-0 mt-1"
                   style={{ fontWeight: 500, letterSpacing: "0.1rem" }}
                 >
                   <span>
-                    <strong>Players:</strong> {server.players}
+                    <strong>Players</strong>: {server.players} /{" "}
+                    {server.max_players}
                   </span>
                 </h4>
               </div>
