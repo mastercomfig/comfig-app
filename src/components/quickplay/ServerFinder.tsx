@@ -9,6 +9,7 @@ import useQuickplayStore from "@store/quickplay";
 import HelpTooltip from "@components/HelpTooltip";
 
 import MapBans from "./MapBans";
+import PingDisplay from "./PingDisplay";
 import ServerList from "./ServerList";
 
 const REJOIN_COOLDOWN = 300 * 1000;
@@ -795,24 +796,18 @@ export default function ServerFinder() {
     return getMaxPlayerIndex(quickplayStore.maxPlayerCap);
   }, [quickplayStore.maxPlayerCap]);
 
-  function calcPingColor(server) {
-    const okPingThreshold = (quickplayStore.pinglimit + PING_MED) / 2;
-    const ping = server.ping;
-    if (ping >= BAD_PING_THRESHOLD) {
-      return "danger";
-    }
-    if (ping >= okPingThreshold) {
-      return "warning";
-    }
-    return "success";
-  }
-
-  const pingColor = useMemo(() => {
-    if (!quickplayStore.lastServer) {
-      return;
-    }
-    return calcPingColor(quickplayStore.lastServer);
-  }, [quickplayStore.lastServer, quickplayStore.pinglimit]);
+  const calcPingColor = useMemo(() => {
+    return (ping) => {
+      const okPingThreshold = (quickplayStore.pinglimit + PING_MED) / 2;
+      if (ping >= BAD_PING_THRESHOLD) {
+        return "danger";
+      }
+      if (ping >= okPingThreshold) {
+        return "warning";
+      }
+      return "success";
+    };
+  }, [quickplayStore.pinglimit]);
 
   // Look, I know this is bad. I'll split it into components later.
   return (
@@ -1382,7 +1377,10 @@ export default function ServerFinder() {
             style={{ fontWeight: 800, letterSpacing: "0.1rem" }}
           >
             {quickplayStore.lastServer?.name}{" "}
-            <span className={`fas fa-signal text-${pingColor}`}></span>
+            <PingDisplay
+              ping={quickplayStore.lastServer?.ping}
+              calcPingColor={calcPingColor}
+            />
           </h3>
           <h4
             className="mb-0 mt-1"

@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+import PingDisplay from "./PingDisplay";
+
 export default function ServerList({
   servers,
   mapToThumbnail,
@@ -44,9 +46,10 @@ export default function ServerList({
                   style={{ fontWeight: 800, letterSpacing: "0.1rem" }}
                 >
                   {server.name}{" "}
-                  <span
-                    className={`fas fa-signal text-${calcPingColor(server)}`}
-                  ></span>
+                  <PingDisplay
+                    ping={server.ping}
+                    calcPingColor={calcPingColor}
+                  />
                 </h3>
                 <h4
                   className="mb-0 mt-1"
