@@ -65,7 +65,7 @@ const useStore = create(
           }
           if (i !== undefined) {
             mapbanlist[i] = map;
-          } else {
+          } else if (mapbanlist.length < 6) {
             mapbanlist.push(map);
           }
           return { mapbanlist };
