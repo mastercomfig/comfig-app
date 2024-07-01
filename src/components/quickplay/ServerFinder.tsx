@@ -625,7 +625,7 @@ export default function ServerFinder() {
           return;
         }
         window.location.href = `steam://connect/${server.addr}/${connectStr}${quickplayStore.sessionCount ?? 1}`;
-      }, 1000);
+      }, 3000);
     }
 
     touchRecentServer(server.addr);
@@ -751,9 +751,12 @@ export default function ServerFinder() {
 
     if (imFeelingLucky) {
       if (parms.has("autoclose")) {
-        setTimeout(() => {
-          window.close();
-        }, 6 * 60);
+        setTimeout(
+          () => {
+            window.close();
+          },
+          6 * 60 * 1000,
+        );
       }
     }
   }
