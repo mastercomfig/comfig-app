@@ -625,7 +625,7 @@ export default function ServerFinder() {
           return;
         }
         window.location.href = `steam://connect/${server.addr}/${connectStr}${quickplayStore.sessionCount ?? 1}`;
-      }, 3000);
+      }, 1200);
     }
 
     touchRecentServer(server.addr);
