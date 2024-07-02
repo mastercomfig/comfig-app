@@ -341,12 +341,12 @@ const gamemodes = [
       </div>
     </section>
     <section class="container bg-secondary-subtle mt-5 mb-4 px-5 pt-5 pb-2">
-      <h1 class="display-3 text-center fw-bold">FAQ</h1>
+      <h1 class="display-3 text-center fw-bold">Questions and Answers</h1>
       <p class="lead">
         Hi, thanks for trying out quickplay! You may have a few questions about
         it, which should be answered down below. Thanks, and have fun!<br /><br
         />And if you're a community server host, check out our <a
-          href="/quickplay/host_faq">Server Hoster FAQ</a
+          href="/quickplay/host_faq">Server Hoster guide</a
         > for more information about quickplay requirements and how we can work together
         to make a great experience for players.
       </p>
@@ -355,8 +355,7 @@ const gamemodes = [
       <p class="lead">
         This is a best attempt at recreating the old in-game Quickplay feature
         as accurately as possible, and updating it to work in the current times
-        and in browser. It is merely an experimental proof of concept now, but
-        will continue to improve over the coming weeks!
+        and in browser.
       </p>
 
       <h2 class="display-6 fw-bold">How do I report a problem?</h2>
@@ -368,11 +367,18 @@ const gamemodes = [
         feedback from both players and server owners!
       </p>
 
+      <h2 class="display-6 fw-bold">How can I follow updates?</h2>
+      <p class="lead">
+        You can see updates <a href="https://discord.gg/comfig">on Discord</a>,
+        or on our <a href="/quickplay/updates">update log</a>.
+      </p>
+
       <h2 class="display-6 fw-bold">How do I share this around?</h2>
       <p class="lead">
         We really appreciate the enthuasiasm! The more people use quickplay, the
         better it'll be! You can share our easy to remember <strong
-          >quickplay.tf</strong
+          style="font-weight: 700"
+          class="text-primary">quickplay.tf</strong
         > link, and even include it in your Steam name!
       </p>
 
@@ -448,7 +454,7 @@ const gamemodes = [
         for a game, and the server IP that you ended up on.
       </p>
 
-      <h2 class="display-6 fw-bold">Does quickplay well in X region?</h2>
+      <h2 class="display-6 fw-bold">Does quickplay do well in X region?</h2>
       <p class="lead">
         Probably! There's a strong server offering in Europe, the Americas,
         Asia, and Oceania. Regions which don't have much or any servers
@@ -477,7 +483,7 @@ const gamemodes = [
         adverse modifications which players looking for an unmodified casual
         experience do not want. These server modifications are not allowed for
         servers in quickplay. You can learn more about detailed requirements in
-        the <a href="/quickplay/host_faq">server hoster FAQ</a>.
+        the <a href="/quickplay/host_faq">server hoster guide</a>.
       </p>
 
       <h2 class="display-6 fw-bold">Can I suggest a workshop map?</h2>
@@ -504,8 +510,10 @@ const gamemodes = [
       <h2 class="display-6 fw-bold">What is reputation?</h2>
       <p class="lead">
         Reputation is a matchmaking metric given to servers if players are shown
-        to enjoy them. It is a small part of the overall scoring system used to
-        match servers with players. It is currently not implemented.
+        to enjoy them. This was used in the old quickplay algorithm to help weed
+        out bad servers which didn't give players a good experience. It is a
+        small part of the overall scoring system used to match servers with
+        players. It is currently not implemented.
       </p>
 
       <h2 class="display-6 fw-bold">How do I support you and this project?</h2>

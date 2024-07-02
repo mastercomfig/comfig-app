@@ -1,0 +1,58 @@
+---
+import Body from "@components/Body.astro";
+import Footer from "@components/Footer.astro";
+import BaseHead from "@components/head/BaseHead.astro";
+import ImportHead from "@components/head/ImportHead.astro";
+import MainHead from "@components/head/MainHead.astro";
+import PreloadHead from "@components/head/PreloadHead.astro";
+import NavSelector from "@components/NavSelector.astro";
+import Layout from "@layouts/Layout.astro";
+import { Content as UpdatePost } from "../../posts/quickplay/updates.md";
+---
+
+<Layout>
+  <head>
+    <BaseHead />
+    <PreloadHead />
+    <ImportHead />
+    <MainHead
+      title="comfig quickplay | Updates"
+      description="Learn more about all the updates to comfig quickplay, the reimplementation of TF2 Quickplay right in your browser."
+    />
+  </head>
+  <Body>
+    <nav class="navbar navbar-expand-sm sticky-top navbar-dark bg-teal">
+      <div class="container g-0">
+        <span class="navbar-brand">
+          <img
+            src="/img/mastercomfig_logo_transparent_i.svg"
+            alt=""
+            class="d-inline-block align-text-top"
+            width="24"
+            height="24"
+          />
+          <span class="d-none d-md-inline"> comfig</span>
+        </span>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <NavSelector pageName="quickplay" />
+        <div class="collapse navbar-collapse"></div>
+      </div>
+    </nav>
+    <section class="container bg-secondary-subtle mt-5 mb-4 px-5 pt-5 pb-2">
+      <h1 class="display-3 text-center fw-bold">Quickplay Updates</h1>
+
+      <UpdatePost />
+    </section>
+    <Footer />
+  </Body>
+</Layout>
