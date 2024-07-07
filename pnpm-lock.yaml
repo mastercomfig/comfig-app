@@ -44,6 +44,9 @@ importers:
       '@types/browser-update':
         specifier: ^3.3.3
         version: 3.3.3
+      '@types/lodash':
+        specifier: ^4.17.6
+        version: 4.17.6
       '@types/react':
         specifier: ^18.3.3
         version: 18.3.3
@@ -2136,6 +2139,9 @@ packages:
 
   '@types/koa__router@12.0.3':
     resolution: {integrity: sha512-5YUJVv6NwM1z7m6FuYpKfNLTZ932Z6EF6xy2BbtpJSyn13DKNQEkXVffFVSnJHxvwwWh2SAeumpjAYUELqgjyw==}
+
+  '@types/lodash@4.17.6':
+    resolution: {integrity: sha512-OpXEVoCKSS3lQqjx9GGGOapBeuW5eUboYHRlHP9urXPX25IKZ6AnP5ZRxtVf63iieUbsHxLn8NQ5Nlftc6yzAA==}
 
   '@types/marked@4.3.2':
     resolution: {integrity: sha512-a79Yc3TOk6dGdituy8hmTTJXjOkZ7zsFYV10L337ttq/rec8lRMDBpV7fL3uLx6TgbFCa5DU/h8FmIBQPSbU0w==}
@@ -8013,6 +8019,8 @@ snapshots:
   '@types/koa__router@12.0.3':
     dependencies:
       '@types/koa': 2.14.0
+
+  '@types/lodash@4.17.6': {}
 
   '@types/marked@4.3.2': {}
 

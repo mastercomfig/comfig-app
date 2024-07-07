@@ -11,6 +11,8 @@ import { ScrollSpy, Tab } from "bootstrap";
 import { del, get, set } from "idb-keyval";
 import { stringify } from "vdf-parser";
 
+import fastClone from "./fastClone.ts";
+
 const idbKeyval = {
   get,
   set,
@@ -1353,7 +1355,7 @@ export async function app() {
       const tracers = itemsState.tracers;
       const selectedExplosionEffects = itemsState.explosioneffects;
       const selectedPlayerExplosions = itemsState.playerexplosions;
-      const items = structuredClone(globalThis.items);
+      const items = fastClone(globalThis.items);
       delete items.default;
       const itemsToDownload = new Set();
       const crosshairsToDownload = new Set();

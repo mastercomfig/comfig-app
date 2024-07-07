@@ -8,6 +8,8 @@ import minigunStarFlashImg from "@img/app/explosions/muzzle_minigun_starflash01.
 import { fetchCache, fetchCacheText } from "@ssg/fetchCache";
 import { parse } from "vdf-parser";
 
+import fastClone from "./fastClone";
+
 const classes = [
   "scout",
   "soldier",
@@ -999,7 +1001,7 @@ const explosionEffects = {
   duck_collect_trail_special_red: "Invisible",
 };
 
-const playerExplosionEffects = structuredClone(explosionEffects);
+const playerExplosionEffects = fastClone(explosionEffects);
 playerExplosionEffects["default"] = "Use Explosion Effect";
 
 const explosionPreviews = {
@@ -1012,7 +1014,7 @@ const explosionPreviews = {
   duck_collect_trail_special_red: duckCollectTrailImg.src,
 };
 
-const playerExplosionPreviews = structuredClone(explosionPreviews);
+const playerExplosionPreviews = fastClone(explosionPreviews);
 playerExplosionPreviews["default"] = null;
 
 function getNormalizedSlotName(item) {

@@ -1,6 +1,7 @@
 import * as Sentry from "@sentry/browser";
 import { useEffect, useMemo, useRef, useState } from "react";
 
+import fastClone from "@utils/fastClone";
 import { filterString } from "@utils/filter";
 import { MAX_PLAYER_OPTIONS, getMaxPlayerIndex } from "@utils/quickplay";
 
@@ -77,10 +78,6 @@ const MAP_BAN_INDICES = [0, 1, 2, 3, 4, 5];
 
 function lerp(inA, inB, outA, outB, x) {
   return outA + ((outB - outA) * (x - inA)) / (inB - inA);
-}
-
-function fastClone(obj) {
-  return JSON.parse(JSON.stringify(obj));
 }
 
 export default function ServerFinder() {
