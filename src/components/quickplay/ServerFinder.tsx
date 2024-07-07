@@ -564,9 +564,7 @@ export default function ServerFinder() {
           const pct = (curServers.length + filtered) / servers.length;
           if (pct === 1) {
             setAllFiltered(true);
-            setFilteredServers(
-              curServers.toSorted((a, b) => b.score - a.score),
-            );
+            setFilteredServers(curServers.sort((a, b) => b.score - a.score));
           } else {
             setFilteredServers(curServers);
           }
