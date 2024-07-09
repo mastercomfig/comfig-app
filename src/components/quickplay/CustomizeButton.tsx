@@ -13,6 +13,12 @@ const RESPAWN_STATUS = [
 const CRIT_STATUS = ["", "No"];
 const BETA_STATUS = ["No beta maps", "Only beta maps"];
 const RTD_STATUS = ["", "Only RTD"];
+const CLASSRES_STATUS = [
+  "No class restrictions",
+  "Class limits OK",
+  "Class limits and bans OK",
+];
+const OBJECTIVES_STATUS = ["", "No objectives"];
 
 const GAMEMODE_STATUS_LOOKUP = {
   any: "Any game mode",
@@ -76,6 +82,18 @@ export default function CustomizeButton() {
       RTD_STATUS,
       true,
     );
+    const classResStatus = genPrefString(
+      "class restrictions",
+      quickplayStore.classres,
+      CLASSRES_STATUS,
+      true,
+    );
+    const objectiveStatus = genPrefString(
+      "objectives",
+      quickplayStore.nocap,
+      OBJECTIVES_STATUS,
+      true,
+    );
     const betaStatus = genPrefString(
       "map status",
       quickplayStore.beta,
@@ -88,6 +106,8 @@ export default function CustomizeButton() {
       critStatus,
       respawnStatus,
       rtdStatus,
+      classResStatus,
+      objectiveStatus,
     ].filter((s) => s);
     return strings.join("; ");
   }, [
@@ -97,6 +117,8 @@ export default function CustomizeButton() {
     quickplayStore.crits,
     quickplayStore.beta,
     quickplayStore.rtd,
+    quickplayStore.classres,
+    quickplayStore.nocap,
   ]);
 
   return (

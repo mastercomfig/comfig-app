@@ -28,7 +28,15 @@ const MAX_PING = PING_MED - 1;
 
 const BAD_PING_THRESHOLD = (PING_MED + PING_HIGH) / 2;
 
-const TAG_PREFS = ["crits", "respawntimes", "beta", "rtd"];
+const TAG_PREFS = [
+  "crits",
+  "respawntimes",
+  "beta",
+  "rtd",
+  "classres",
+  "nocap",
+  "pure",
+];
 
 const gamemodeToPrefix = {
   attack_defense: "cp",
@@ -148,6 +156,25 @@ export default function ServerFinder() {
       } else if (v === 1) {
         must("rtd");
       }
+    } else if (pref === "nocap") {
+      if (v === 0) {
+        mustNot("nocap");
+      } else if (v === 1) {
+        must("nocap");
+      }
+    } else if (pref === "classres") {
+      if (v === 0) {
+        mustNot("classlimits");
+        mustNot("classbans");
+      } else if (v === 1) {
+        mustNot("classbans");
+      }
+    } else if (pref === "pure") {
+      if (v === 0) {
+        must("pure");
+      } else if (v === 1) {
+        mustNot("pure");
+      }
     }
     if (mustHave.length < 1 && mustNotHave.length < 1) {
       console.error("Unexpected tag pref!", pref, v);
@@ -252,12 +279,6 @@ export default function ServerFinder() {
     // Check the tags
     if (!filterServerTags(tags)) {
       return false;
-    }
-    // Check for RTD in name if RTD is disabled
-    if (quickplayStore.rtd === 0) {
-      if (server.name.toLowerCase().indexOf("rtd") >= 0) {
-        return false;
-      }
     }
     if (!filterServerForGamemode(server, tags)) {
       return false;
@@ -828,7 +849,7 @@ export default function ServerFinder() {
         <h3 className="display-6 text-center" style={{ fontWeight: 600 }}>
           ADVANCED OPTIONS
         </h3>
-        <div className="row mt-4">
+        <div className="row mt-4 gy-2">
           <div className="col-auto">
             <h4 style={{ fontWeight: 500 }}>Server capacity</h4>
             <div className="form-check">
@@ -1049,6 +1070,147 @@ export default function ServerFinder() {
                 onClick={() => quickplayStore.setRtd(-1)}
               />
               <label className="form-check-label" htmlFor="rtd-any">
+                Don't care
+              </label>
+            </div>
+          </div>
+          <div className="col-auto">
+            <h4 style={{ fontWeight: 500 }}>Class restrictions</h4>
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="radio"
+                readOnly
+                name="classres"
+                id="classres-0"
+                checked={quickplayStore.classres === 0}
+                onClick={() => quickplayStore.setClassRes(0)}
+              />
+              <label className="form-check-label" htmlFor="classres-0">
+                None
+              </label>
+            </div>
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="radio"
+                readOnly
+                name="classres"
+                id="classres-1"
+                checked={quickplayStore.classres === 1}
+                onClick={() => quickplayStore.setClassRes(1)}
+              />
+              <label className="form-check-label" htmlFor="classres-1">
+                Class limits OK
+              </label>
+            </div>
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="radio"
+                readOnly
+                name="classres"
+                id="classres-any"
+                checked={quickplayStore.classres === -1}
+                onClick={() => quickplayStore.setClassRes(-1)}
+              />
+              <label className="form-check-label" htmlFor="classres-any">
+                Class limits and bans OK
+              </label>
+            </div>
+          </div>
+          <div className="col-auto d-none">
+            <h4 style={{ fontWeight: 500 }}>Client Mods</h4>
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="radio"
+                readOnly
+                name="pure"
+                id="pure-0"
+                checked={quickplayStore.pure === 0}
+                onClick={() => quickplayStore.setPure(0)}
+              />
+              <label className="form-check-label" htmlFor="pure-0">
+                Disallowed
+              </label>
+            </div>
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="radio"
+                readOnly
+                name="pure"
+                id="pure-1"
+                checked={quickplayStore.pure === 1}
+                onClick={() => quickplayStore.setPure(1)}
+              />
+              <label className="form-check-label" htmlFor="pure-1">
+                Allowed
+              </label>
+            </div>
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="radio"
+                readOnly
+                name="pure"
+                id="pure-any"
+                checked={quickplayStore.pure === -1}
+                onClick={() => quickplayStore.setPure(-1)}
+              />
+              <label className="form-check-label" htmlFor="pure-any">
+                Don't care
+              </label>
+            </div>
+          </div>
+          <div className="col-auto">
+            <h4 style={{ fontWeight: 500 }}>
+              Objectives{" "}
+              <HelpTooltip
+                id="objectives-help"
+                title="Whether to look for servers which remove map objectives for a more deathmatch-oriented experienced. You can change this setting to 'Don't care' to expand the server search pool."
+              />
+            </h4>
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="radio"
+                readOnly
+                name="nocap"
+                id="nocap-0"
+                checked={quickplayStore.nocap === 0}
+                onClick={() => quickplayStore.setNoCap(0)}
+              />
+              <label className="form-check-label" htmlFor="nocap-0">
+                Enabled
+              </label>
+            </div>
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="radio"
+                readOnly
+                name="nocap"
+                id="nocap-1"
+                checked={quickplayStore.nocap === 1}
+                onClick={() => quickplayStore.setNoCap(1)}
+              />
+              <label className="form-check-label" htmlFor="nocap-1">
+                Disabled
+              </label>
+            </div>
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="radio"
+                readOnly
+                name="nocap"
+                id="nocap-any"
+                checked={quickplayStore.nocap === -1}
+                onClick={() => quickplayStore.setNoCap(-1)}
+              />
+              <label className="form-check-label" htmlFor="nocap-any">
                 Don't care
               </label>
             </div>

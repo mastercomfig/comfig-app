@@ -1,3 +1,10 @@
+## July 9, 2024
+
+* Now enforcing [Milestone 1](/quickplay/host_faq#m1) server requirements
+* Added options for class restrictions and objectives
+* Added more popular community maps and fixed some community map release versions not being allowed (some servers are using older/different versions of the same map)
+* Fixed an issue with some arena variants of maps not being eligible for quickplay
+
 ## July 2, 2024
 
 * Added update log
