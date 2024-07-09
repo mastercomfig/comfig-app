@@ -80,10 +80,10 @@ import Layout from "@layouts/Layout.astro";
         to change pending feedback from all of you! If you do not meet the
         eligibility requirements, you will simply be suspended from being listed
         on quickplay, and we would be happy to reinstate anyone who would like
-        to work on compliance. The current milestone in effect is M0. Meeting
+        to work on compliance. The current milestone in effect is M1. Meeting
         higher milestones not in effect gives your server a rank bonus.
       </p>
-      <h4>M0</h4>
+      <h4 id="m0">M0</h4>
       <p class="lead">
         <ul>
           <li>
@@ -110,7 +110,8 @@ import Layout from "@layouts/Layout.astro";
           <li>The server must be running any active casual rotation map.</li>
           <li>
             The server must not have the following tags: <code
-              >friendlyfire, highlander, trade, noquickplay, hidden</code
+              >friendlyfire, trade, gravity, mvm, pve, dmgspread, noquickplay,
+              hidden</code
             >
           </li>
           <li>
@@ -151,7 +152,7 @@ import Layout from "@layouts/Layout.astro";
             Here are some examples of tags that must be set accurately:
             <code
               >friendlyfire, respawntimes, norespawntime, increased_maxplayers,
-              nocrits, dmgspread, highlander, gravity, mvm</code
+              nocrits, dmgspread, highlander, gravity, mvm, pve</code
             >
           </li>
           <li>
@@ -172,7 +173,7 @@ import Layout from "@layouts/Layout.astro";
           </li>
         </ul>
       </p>
-      <h4>M1</h4>
+      <h4 id="m1">M1</h4>
       <p class="lead">
         <ul>
           <li>
@@ -214,7 +215,7 @@ import Layout from "@layouts/Layout.astro";
           </li>
         </ul>
       </p>
-      <h4>M3</h4>
+      <h4 id="m3">M3</h4>
       <p class="lead">
         <ul>
           <li>
@@ -235,7 +236,7 @@ import Layout from "@layouts/Layout.astro";
           </li>
         </ul>
       </p>
-      <h4>M4</h4>
+      <h4 id="m4">M4</h4>
       <p class="lead">
         <ul>
           <li>
@@ -274,34 +275,21 @@ import Layout from "@layouts/Layout.astro";
         for quickplay. This updates dynamically, so holiday maps like for Scream
         Fortress and Smissmas will only be active during the holiday.
         <br /><br />
-        There are a few exceptions for holiday maps which do not contain any holiday
-        gimmicks. These are: ctf_doublecross_snowy, ctf_haarp, ctf_frosty, ctf_snowfall_final,
-        ctf_turbine_winter, cp_frostwatch, pl_frostcliff, pl_chilly, pl_coal_event,
-        pl_rumford_event, pl_wutville_event, plr_hacksaw, koth_maple_ridge_event,
-        koth_megalo, koth_snowtower, pd_snowville_event, pd_galleria.
-        <br /><br />
-        There's also a few community maps allowed. Right now these are ones which
-        are release candidate or later, and have a variant already accepted into
-        the game, i.e. a holiday version. These are: cp_stoneyridge_rc2, cp_ambush_rc5,
-        pl_coal_rc23, pl_fifthcurve_rc1, pl_millstone_v4, pl_rumford_rc2, pl_rumble_rc1,
-        pl_sludgepit_final4, pl_vineyard_rc8b, koth_bagel_rc9b, koth_brine_rc3a,
-        koth_maple_ridge_rc2, koth_megasnow_rc1, koth_moonshine, koth_slaughter_rc1,
-        koth_synthetic_rc6a, koth_undergrove_rc1.
+        There are a few exceptions: official holiday maps which do not contain any
+        holiday gimmicks and community maps with a variant already accepted into
+        the game (i.e. a holiday version).
         <br /><br />
         You may be asking why there are exceptions. There are some regions where
         being strict on maps would completely obliterate the server pool due to low
-        server population. Players can also ban maps of their choosing, so keep in
-        mind that it's probably best to avoid some of these holiday/custom maps even
-        if they are allowed by the quickplay system.
+        server population.
         <br /><br />
         <strong>Note:</strong> We're also currently experimenting with being looser
         with these restrictions, and allowing even more community maps, so that quickplay
         users aren't excluded from important parts of the server population, especially
         in regions where servers are hard to come by. This is an area of active investigation
         and we're gathering feedback from both server owners and players regarding
-        this. The allowed maplist thus is in active flux and there are maps allowed
-        in quickplay which may not be listed in this guide yet. The current criteria
-        for this is mostly a mix of player playtime and regional server availability.
+        this. The current criteria for this is mostly a mix of player playtime and
+        regional server availability.
       </p>
       <h2 class="display-6 fw-bold">
         Are there restrictions to the Core game mode search type?
