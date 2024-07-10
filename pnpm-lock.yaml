@@ -26,6 +26,9 @@ importers:
       '@fortawesome/fontawesome-free':
         specifier: ^6.5.2
         version: 6.5.2
+      '@kindspells/astro-shield':
+        specifier: ^1.3.6
+        version: 1.3.6(astro@4.11.1(@types/node@20.14.8)(sass@1.77.6)(terser@5.31.1)(typescript@5.5.2))
       '@popperjs/core':
         specifier: ^2.11.8
         version: 2.11.8
@@ -1543,6 +1546,12 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
+
+  '@kindspells/astro-shield@1.3.6':
+    resolution: {integrity: sha512-h8RVLrCVRqCuJgjweN2VeMRypY/5G1ZDrs1UKnZqzT2KH1Chh+mASs3dATuYO6SYrqTpEtYFtZcTZFRb+CA+tg==}
+    engines: {node: '>= 18.0.0'}
+    peerDependencies:
+      astro: ^4.0.0
 
   '@mapbox/node-pre-gyp@1.0.11':
     resolution: {integrity: sha512-Yhlar6v9WQgUp/He7BdgzOz8lqMQ8sU+jkCq7Wx8Myc5YFJLbEe7lgui/V7G1qB1DJykHSGwreceSaD60Y0PUQ==}
@@ -7282,6 +7291,10 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.4.15
+
+  '@kindspells/astro-shield@1.3.6(astro@4.11.1(@types/node@20.14.8)(sass@1.77.6)(terser@5.31.1)(typescript@5.5.2))':
+    dependencies:
+      astro: 4.11.1(@types/node@20.14.8)(sass@1.77.6)(terser@5.31.1)(typescript@5.5.2)
 
   '@mapbox/node-pre-gyp@1.0.11':
     dependencies:
