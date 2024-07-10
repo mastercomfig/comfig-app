@@ -1501,7 +1501,7 @@ export default function ServerFinder() {
           })}
         </div>
         <br />
-        <h4 style={{ fontWeight: 500 }}>Gamemodes</h4>
+        <h4 style={{ fontWeight: 500 }}>Game Modes</h4>
         <div className="row g-4">
           {Object.values(gamemodes).map((gm) => {
             return (

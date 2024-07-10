@@ -1,6 +1,6 @@
 ## July 9, 2024
 
-* Added gamemode selection as an advanced option, to allow for queuing for multiple gamemodes
+* Added game mode selection as an advanced option, to allow for queuing for multiple game modes
 * Now enforcing [Milestone 1](/quickplay/host_faq#m1) server requirements
 * Added options for class restrictions and objectives
 * Added more popular community maps and fixed some community map release versions not being allowed (some servers are using older/different versions of the same map)
@@ -32,15 +32,15 @@
 ## June 27, 2024
 
 * Added show servers button to show a list of servers instead of picking for you.
-  * This helps users validate against the quickplay algorithm to make sure it's really selecting the best server for them, and it also helps users select their favorite map or gamemode out of ones which are available on servers.
-* Added back Misc and Arena gamemodes
+  * This helps users validate against the quickplay algorithm to make sure it's really selecting the best server for them, and it also helps users select their favorite map or game mode out of ones which are available on servers.
+* Added back Misc and Arena game modes
 * Added a delay before connecting to a server. If you close out of the connection dialog by blocking or closing, it will not connect you to that server.
 * Minor bug fixes
 
 ## June 26, 2024
 
-* Removed gamemode selection temporarily.
-  * There was a very strong indication that people were not finding a satisfactory server simply because of strict gamemode selection. Anything except random and payload was getting people bouncing off servers at a very high rate. Not enough people are playing in order to make gamemode selection viable. Map bans can be used to avoid popular maps for gamemodes you don't wish to play, and work is ongoing to improve user choice.
+* Removed game mode selection temporarily.
+  * There was a very strong indication that people were not finding a satisfactory server simply because of strict game mode selection. Anything except random and payload was getting people bouncing off servers at a very high rate. Not enough people are playing in order to make game mode selection viable. Map bans can be used to avoid popular maps for game modes you don't wish to play, and work is ongoing to improve user choice.
 * Reworked map bans. You can now select up to 6 maps you wish to be filtered out entirely ahead of time.
   * As for map selection, we recommend voting for the maps you really want to play once you're on a community server.
 * Resolved the aforementioned slight advantage a 32 player server has to fight over the last few slots from 21 to 23. Now, all servers are on equal footing for this range, for competing to fill up to a full 24 player match. Afterwards, if the server still has player slots available, it will still be scored higher than an empty server, ramping down as the server fills up.
@@ -107,7 +107,7 @@
 * Added advanced options for adjusting ping scoring
 * When a server is found with 0 players, there is a warning given to you that you should stay on the server for a minute to wait for other quickplay users to match into the server.
 * Added a choice selection of holiday maps without gimmicks: ctf_doublecross_snowy, ctf_frosty, ctf_snowfall_final, ctf_turbine_winter, cp_frostwatch, pl_frostcliff, pl_coal_event, pl_rumford_event, pl_wutville_event, koth_maple_ridge_event, koth_snowtower, pd_snowville_event, pd_galleria
-* Excluded some gamemodes from the Any game mode / Random search type: Arena, Robot Destruction, Passtime, Mannpower, VS Saxton Hale, Zombie Infection or Medieval Mode
+* Excluded some game modes from the Any game mode / Random search type: Arena, Robot Destruction, Passtime, Mannpower, VS Saxton Hale, Zombie Infection or Medieval Mode
 * Fixed a bug which caused populated 64-100 player servers to not be matched into
 * Fixed a bug which caused 24 player servers with SourceTV enabled to not be matched into
 * Fixed a bug where too many bots would cause the server to be detected as too full for quickplay
@@ -122,7 +122,7 @@
 
 * Added advanced options for server capacity, random crits, and respawn time preferences
 * Added an informational panel which tells you which server you're connecting to, and gives you options to block or favorite it
-* Added gamemode selection
+* Added game mode selection
 * Added a Server Host FAQ and reworded the main FAQ to be easier for a general audience. Made clarfications about how quickplay rules work.
 * Updated quickplay page to scale better to a variety of small displays (height and width combinations)
 
