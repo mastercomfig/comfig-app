@@ -1,3 +1,12 @@
+import adImg from "@img/gamemodes/ad.png";
+import arenaImg from "@img/gamemodes/arena.png";
+import cpImg from "@img/gamemodes/cp.png";
+import ctfImg from "@img/gamemodes/ctf.png";
+import kothImg from "@img/gamemodes/koth.png";
+import payloadImg from "@img/gamemodes/pl.png";
+import plrImg from "@img/gamemodes/plr.png";
+import miscImg from "@img/gamemodes/sd.png";
+import xMarkImg from "@img/xmark.png";
 import * as Sentry from "@sentry/browser";
 import { useEffect, useMemo, useRef, useState } from "react";
 
@@ -50,6 +59,65 @@ const gamemodeToPrefix = {
 const SERVER_HEADROOM = 1;
 const FULL_PLAYERS = 24;
 
+const gamemodes = {
+  payload: {
+    name: "Payload",
+    code: "payload",
+    description: "BLU pushes the cart down the track. RED need to stop them.",
+    skill: 0,
+    img: payloadImg,
+  },
+  koth: {
+    name: "King of the Hill",
+    code: "koth",
+    description: "One team must control a single point until time runs out.",
+    skill: 0,
+    img: kothImg,
+  },
+  attack_defense: {
+    name: "Attack / Defense",
+    code: "attack_defense",
+    description: "BLU wins by capturing all points. RED wins by stopping them.",
+    skill: 1,
+    img: adImg,
+  },
+  ctf: {
+    name: "Capture the Flag",
+    code: "ctf",
+    description: "And by flag we mean a glowing briefcase.",
+    skill: 1,
+    img: ctfImg,
+  },
+  capture_point: {
+    name: "Capture Points",
+    code: "capture_point",
+    description: "Capture all points to win.",
+    skill: 1,
+    img: cpImg,
+  },
+  payload_race: {
+    name: "Payload Race",
+    code: "payload_race",
+    description: "Two teams. Two bombs. Two tracks. Hilarity ensues.",
+    skill: 1,
+    img: plrImg,
+  },
+  alternative: {
+    name: "Misc",
+    code: "alternative",
+    description: "Game modes that don't fit into one of the other categories.",
+    skill: 2,
+    img: miscImg,
+  },
+  arena: {
+    name: "Arena",
+    code: "arena",
+    description: "Quick rounds. No respawns. It's like Counter-Strike!",
+    skill: 2,
+    img: arenaImg,
+  },
+};
+
 const MISC_GAMEMODES = ["arena", "pass", "pd", "rd", "sd", "tc", "vsh", "zi"];
 
 const REGIONS = {
@@ -94,6 +162,10 @@ export default function ServerFinder() {
   const mapbans = useMemo(() => {
     return new Set(quickplayStore.mapbanlist.slice(0, 5));
   }, [quickplayStore.mapbanlist]);
+
+  const gamemodeList = useMemo(() => {
+    return Array.from(quickplayStore.gamemodes);
+  }, [quickplayStore.gamemodes]);
 
   const getRecentPenalty = (address) => {
     let penalty = 0.0;
@@ -221,8 +293,11 @@ export default function ServerFinder() {
       .then((data) => setSchema(data));
   }, []);
 
-  const filterServerForGamemode = (server, tags: Set<string>) => {
-    const expectedGamemode = quickplayStore.gamemode;
+  const filterServerForGamemode = (
+    expectedGamemode,
+    server,
+    tags: Set<string>,
+  ) => {
     if (expectedGamemode !== "any") {
       const mapGamemode = mapToGamemode[server.map];
       if (mapGamemode) {
@@ -264,6 +339,17 @@ export default function ServerFinder() {
     return true;
   };
 
+  const filterServerForGamemodes = (server, tags: Set<string>) => {
+    const expectedGamemode = quickplayStore.gamemode;
+    if (expectedGamemode === "pvp") {
+      return gamemodeList.some((gm) =>
+        filterServerForGamemode(gm, server, tags),
+      );
+    } else {
+      return false;
+    }
+  };
+
   const filterServer = (server) => {
     // Now let's start the server secondary filters.
     const [minCap, maxCap] = quickplayStore.maxPlayerCap;
@@ -280,7 +366,7 @@ export default function ServerFinder() {
     if (!filterServerTags(tags)) {
       return false;
     }
-    if (!filterServerForGamemode(server, tags)) {
+    if (!filterServerForGamemodes(server, tags)) {
       return false;
     }
     if (quickplayStore.blocklist.has(server.steamid)) {
@@ -514,17 +600,14 @@ export default function ServerFinder() {
   }, [quickplayStore.searching]);
 
   useEffect(() => {
-    if (servers.length < 1) {
-      return;
-    }
     const gm = quickplayStore.gamemode;
-    if (gamemodePop[gm] !== undefined) {
+    if (servers.length < 1) {
+      gamemodePop[gm] = 0;
       return;
     }
     let players = 0;
     for (const server of servers) {
-      const tags = new Set(server.gametype) as Set<string>;
-      if (!filterServerForGamemode(server, tags)) {
+      if (!filterServer(server)) {
         continue;
       }
       players += server.players;
@@ -533,7 +616,22 @@ export default function ServerFinder() {
       ...gamemodePop,
       [gm]: players,
     });
-  }, [servers, quickplayStore.gamemode]);
+  }, [
+    servers,
+    quickplayStore.gamemode,
+    quickplayStore.gamemodes,
+    quickplayStore.maxPlayerCap,
+    quickplayStore.respawntimes,
+    quickplayStore.crits,
+    quickplayStore.beta,
+    quickplayStore.rtd,
+    quickplayStore.blocklist,
+    quickplayStore.mapbanlist,
+    quickplayStore.partysize,
+    quickplayStore.nocap,
+    quickplayStore.classres,
+    quickplayStore.pure,
+  ]);
 
   useEffect(() => {
     if (!quickplayStore.searching) {
@@ -838,7 +936,7 @@ export default function ServerFinder() {
           <p className="lead fw-bold">
             {gamemodePop[quickplayStore.gamemode]}{" "}
             {gamemodePop[quickplayStore.gamemode] === 1 ? "player" : "players"}{" "}
-            globally
+            online with your filters
           </p>
         )}
       </div>
@@ -1397,6 +1495,59 @@ export default function ServerFinder() {
                       quickplayStore.delMapBan(i);
                     }}
                   ></span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <br />
+        <h4 style={{ fontWeight: 500 }}>Gamemodes</h4>
+        <div className="row g-4">
+          {Object.values(gamemodes).map((gm) => {
+            return (
+              <div
+                key={gm.code}
+                className="col-3 text-dark text-center"
+                style={{
+                  height: "16rem",
+                  userSelect: "none",
+                  cursor:
+                    quickplayStore.gamemodes.size <= 1 &&
+                    quickplayStore.gamemodes.has(gm.code)
+                      ? "auto"
+                      : "pointer",
+                }}
+                onClick={() => {
+                  if (
+                    quickplayStore.gamemodes.size <= 1 &&
+                    quickplayStore.gamemodes.has(gm.code)
+                  ) {
+                    return;
+                  }
+                  quickplayStore.toggleGamemode(gm.code);
+                }}
+              >
+                <div
+                  className="h-100 p-0 position-relative"
+                  style={{
+                    backgroundColor: "#ece9d7",
+                    backgroundImage: `url('${gm.img.src}')`,
+                    backgroundSize: "contain",
+                    backgroundRepeat: "no-repeat",
+                  }}
+                >
+                  <div
+                    className={`h-100 w-100 position-absolute${quickplayStore.gamemodes.has(gm.code) ? " d-none" : ""}`}
+                    style={{
+                      backgroundColor: "rgb(0 0 0 / 0.33)",
+                      backgroundImage: `url('${xMarkImg.src}')`,
+                      backgroundSize: "contain",
+                      backgroundRepeat: "no-repeat",
+                    }}
+                  ></div>
+                  <div className="p-2">
+                    <h4 className="fw-bold">{gm.name}</h4>
+                  </div>
                 </div>
               </div>
             );

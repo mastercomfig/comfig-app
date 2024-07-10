@@ -6,7 +6,7 @@ import idbStorage from "@utils/idbstorage";
 const useStore = create(
   persist(
     (set) => ({
-      codeLookup: ["any", "alternative", "arena"],
+      codeLookup: ["pvp"],
       customizing: 0,
       toggleCustomizing: () =>
         set((state) => ({ customizing: !state.customizing })),
@@ -35,11 +35,40 @@ const useStore = create(
         }),
       maxPlayerCap: [24, 32],
       setMaxPlayerCap: (cap) => set(() => ({ maxPlayerCap: cap })),
-      gamemodePop: {},
-      setGamemodePop: (k, v) =>
-        set((state) => ({ gamemodePop: { ...state.gamemodePop, [k]: v } })),
-      gamemode: "any",
+      gamemode: "pvp",
       setGamemode: (gamemode) => set(() => ({ gamemode })),
+      gamemodes: new Set([
+        "payload",
+        "koth",
+        "attack_defense",
+        "ctf",
+        "capture_point",
+        "payload_race",
+      ]),
+      addGamemode: (gamemode) =>
+        set((state) => {
+          const gamemodes = new Set(state.gamemodes);
+          gamemodes.add(gamemode);
+          return { gamemodes };
+        }),
+      removeGamemode: (gamemode) =>
+        set((state) => {
+          const gamemodes = new Set(state.gamemodes);
+          gamemodes.delete(gamemode);
+          return { gamemodes };
+        }),
+      toggleGamemode: (gamemode) =>
+        set((state) => {
+          const gamemodes = new Set(state.gamemodes);
+          if (gamemodes.has(gamemode)) {
+            gamemodes.delete(gamemode);
+          } else {
+            gamemodes.add(gamemode);
+          }
+          return { gamemodes };
+        }),
+      clearGamemodes: () => set(() => ({ gamemodes: new Set([]) })),
+      setGamemodes: (arr) => set(() => ({ gamemodes: new Set(arr) })),
       respawntimes: 0,
       setRespawnTimes: (respawntimes) => set(() => ({ respawntimes })),
       crits: -1,

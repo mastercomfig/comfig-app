@@ -32,6 +32,15 @@ const GAMEMODE_STATUS_LOOKUP = {
   arena: "Arena",
 };
 
+const CORE_GAMEMODES = [
+  "payload",
+  "koth",
+  "attack_defense",
+  "ctf",
+  "capture_point",
+  "payload_race",
+];
+
 function genPrefString(
   pref: string,
   status: number,
@@ -100,8 +109,32 @@ export default function CustomizeButton() {
       BETA_STATUS,
       true,
     );
+    let gamemodeString = "";
+    const gamemodesCount = quickplayStore.gamemodes.size;
+    const gamemodes = Array.from(quickplayStore.gamemodes);
+    if (gamemodesCount === 8) {
+      gamemodeString = "All game modes";
+    } else if (gamemodesCount > 0 && gamemodesCount < 3) {
+      gamemodeString = gamemodes
+        .map((gm) => GAMEMODE_STATUS_LOOKUP[gm])
+        .join(", ");
+    } else {
+      if (
+        gamemodesCount === 6 &&
+        CORE_GAMEMODES.every((gm) => quickplayStore.gamemodes.has(gm))
+      ) {
+        gamemodeString = "Core game modes";
+      } else if (
+        gamemodesCount === 2 &&
+        CORE_GAMEMODES.every((gm) => !quickplayStore.gamemodes.has(gm))
+      ) {
+        gamemodeString = "Alt game modes";
+      } else {
+        gamemodeString = `${quickplayStore.gamemodes.size} ${quickplayStore.gamemodes.size === 1 ? "game mode" : "game modes"}`;
+      }
+    }
     const strings = [
-      GAMEMODE_STATUS_LOOKUP[quickplayStore.gamemode],
+      gamemodeString,
       maxPlayerStatus,
       critStatus,
       respawnStatus,
@@ -112,7 +145,7 @@ export default function CustomizeButton() {
     return strings.join("; ");
   }, [
     quickplayStore.maxPlayerCap,
-    quickplayStore.gamemode,
+    quickplayStore.gamemodes,
     quickplayStore.respawntimes,
     quickplayStore.crits,
     quickplayStore.beta,

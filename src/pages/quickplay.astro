@@ -10,36 +10,14 @@ import ServerFinder from "@components/quickplay/ServerFinder.tsx";
 import CustomizeButton from "@components/quickplay/CustomizeButton.tsx";
 import Layout from "@layouts/Layout.astro";
 import randomImg from "@img/gamemodes/random.png";
-import payloadImg from "@img/gamemodes/pl.png";
-import kothImg from "@img/gamemodes/koth.png";
-import adImg from "@img/gamemodes/ad.png";
-import ctfImg from "@img/gamemodes/ctf.png";
-import cpImg from "@img/gamemodes/cp.png";
-import plrImg from "@img/gamemodes/plr.png";
-import miscImg from "@img/gamemodes/sd.png";
-import arenaImg from "@img/gamemodes/arena.png";
 
 const gamemodes = [
   {
-    name: "Core Game Modes",
-    code: "any",
+    name: "Start Playing",
+    code: "pvp",
     description: "We'll match you into the best game we can find.",
-    skill: 0,
+    skill: undefined,
     img: randomImg,
-  },
-  {
-    name: "Misc",
-    code: "alternative",
-    description: "Unique modes that don't fit into the core categories.",
-    skill: 1,
-    img: miscImg,
-  },
-  {
-    name: "Arena",
-    code: "arena",
-    description: "Quick rounds. No respawns. It's like Counter-Strike!",
-    skill: 2,
-    img: arenaImg,
   },
 ];
 ---
@@ -47,16 +25,7 @@ const gamemodes = [
 <Layout>
   <head>
     <BaseHead />
-    <PreloadHead>
-      <link rel="preload" as="image" href={payloadImg.src} />
-      <link rel="preload" as="image" href={kothImg.src} />
-      <link rel="preload" as="image" href={adImg.src} />
-      <link rel="preload" as="image" href={ctfImg.src} />
-      <link rel="preload" as="image" href={cpImg.src} />
-      <link rel="preload" as="image" href={plrImg.src} />
-      <link rel="preload" as="image" href={miscImg.src} />
-      <link rel="preload" as="image" href={randomImg.src} />
-    </PreloadHead>
+    <PreloadHead />
     <ImportHead>
       <style>
         .quickplay-section {
@@ -107,12 +76,20 @@ const gamemodes = [
               if (start) {
                 const gm = urlparms.get("gm");
                 if (gm) {
-                  const gmIndex = useQuickplayStore
-                    .getState()
-                    .codeLookup.indexOf(gm);
-                  if (gmIndex >= 0) {
-                    useQuickplayStore.getState().setGamemode(gm);
+                  let gamemodes: string[] = [];
+                  if (gm === "any") {
+                    gamemodes = [
+                      "payload",
+                      "koth",
+                      "attack_defense",
+                      "ctf",
+                      "capture_point",
+                      "payload_race",
+                    ];
+                  } else {
+                    gamemodes = gm.split(",");
                   }
+                  useQuickplayStore.getState().setGamemodes(gamemodes);
                 }
                 carousel.to(
                   useQuickplayStore
