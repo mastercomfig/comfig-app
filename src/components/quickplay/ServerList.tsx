@@ -38,6 +38,7 @@ export default function ServerList({
                   src={mapToThumbnail[server.map]}
                   alt={server.map}
                   style={{ width: "10rem", height: "10rem" }}
+                  crossOrigin=""
                 />
               </div>
               <div className="flex-grow-1 ms-3">
