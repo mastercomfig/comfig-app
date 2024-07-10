@@ -1,0 +1,9 @@
+---
+const { class: className, ...rest } = Astro.props;
+---
+
+<img
+  class={`img-fluid${className ? ` ${className}` : ""}`}
+  {...rest}
+  crossorigin=""
+/>
