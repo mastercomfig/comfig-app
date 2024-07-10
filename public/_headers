@@ -4,6 +4,7 @@
   Document-Policy: js-profiling
   Content-Security-Policy: upgrade-insecure-requests; default-src 'none'; script-src 'unsafe-inline' 'self' blob: https://static.cloudflareinsights.com; frame-src 'https://youtube.com'; img-src data: https:; connect-src https:; media-src https:; style-src 'self'; style-src-elem 'unsafe-inline'; style-src-attr 'unsafe-inline'; manifest-src 'self'; font-src 'self'; worker-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'; sandbox 'allow-downloads' 'allow-forms' 'allow-modals' 'allow-popups' 'allow-same-origin' 'allow-scripts';
   Cross-Origin-Resource-Policy: same-origin
+  Cross-Origin-Opener-Policy: same-origin
   Cross-Origin-Embedder-Policy: require-corp
 
 /sw.js

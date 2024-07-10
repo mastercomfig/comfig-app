@@ -43,8 +43,6 @@ const canonical = Astro.url.href;
 <title>{noSite ? title : `${title} | ${site}`}</title>
 <meta name="theme-color" content="#009688" />
 <meta name="msapplication-TileColor" content="#009688" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <slot />
 
 <meta property="og:site_name" content={site} />
@@ -56,7 +54,7 @@ const canonical = Astro.url.href;
 <meta name="twitter:card" content="summary" />
 <meta property="og:url" content={canonical} />
 <meta name="twitter:url" content={canonical} />
-<link rel="canonical" href={canonical} />
+<link rel="canonical" href={canonical} crossorigin="" />
 <meta name="twitter:site" content="@mastercoms" />
 <meta name="twitter:creator" content="@mastercoms" />
 <meta property="og:image" content={image} />
