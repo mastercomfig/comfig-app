@@ -1,5 +1,6 @@
 import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
+import { shield } from "@kindspells/astro-shield";
 import sentry from "@sentry/astro";
 import AstroPWA from "@vite-pwa/astro";
 import { defineConfig } from "astro/config";
@@ -68,6 +69,8 @@ const pwa = AstroPWA({
 export default defineConfig({
   site: "https://comfig.app",
   integrations: [
+    react(),
+    pwa,
     sentry({
       dsn: "https://42c25ee2fb084eb5a832ee92d97057d5@o182209.ingest.us.sentry.io/6265934",
       sourceMapsUploadOptions: {
@@ -76,13 +79,13 @@ export default defineConfig({
         authToken: process.env.SENTRY_AUTH_TOKEN ?? "",
       },
     }),
-    react(),
-    pwa,
+    shield({}),
     sitemap(),
   ],
   vite: {
     build: {
       sourcemap: true,
+      assetsInlineLimit: 0,
     },
     resolve: {
       alias: {
@@ -100,5 +103,7 @@ export default defineConfig({
     directRenderScript: true,
     clientPrerender: true,
     globalRoutePriority: true,
+    contentCollectionCache: true,
+    contentCollectionJsonSchema: true,
   },
 });
