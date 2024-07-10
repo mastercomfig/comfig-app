@@ -1,5 +1,6 @@
 ## July 9, 2024
 
+* Added gamemode selection as an advanced option, to allow for queuing for multiple gamemodes
 * Now enforcing [Milestone 1](/quickplay/host_faq#m1) server requirements
 * Added options for class restrictions and objectives
 * Added more popular community maps and fixed some community map release versions not being allowed (some servers are using older/different versions of the same map)
