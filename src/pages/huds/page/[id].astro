@@ -281,7 +281,9 @@ const authors = await fetchAuthors();
                 <div
                   class={`carousel-item h-100 ${index == 0 ? "active" : ""}`}
                 >
-                  {(resource.startsWith("https://www.youtube.com/") && (
+                  {(resource.startsWith(
+                    "https://www.youtube-nocookie.com/",
+                  ) && (
                     <div class="h-100 w-100">
                       <iframe
                         class="hud-youtube-iframe h-100 w-100"
