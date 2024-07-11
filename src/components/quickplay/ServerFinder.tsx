@@ -156,7 +156,7 @@ function lerp(inA, inB, outA, outB, x) {
   return outA + ((outB - outA) * (x - inA)) / (inB - inA);
 }
 
-export default function ServerFinder() {
+export default function ServerFinder({ hash }: { hash: string }) {
   const quickplayStore = useQuickplayStore((state) => state);
 
   const mapbans = useMemo(() => {
@@ -286,11 +286,30 @@ export default function ServerFinder() {
   const [showServers, setShowServers] = useState(false);
 
   useEffect(() => {
+    fetch(`/quickplay/data/${hash}.cached.json`)
+      .then((res) => res.json())
+      .then((data) =>
+        setSchema((old) => {
+          if (old) {
+            return Object.assign({}, old, data);
+          } else {
+            return data;
+          }
+        }),
+      );
     fetch("https://worker.comfig.app/api/schema/get", {
       method: "POST",
     })
       .then((res) => res.json())
-      .then((data) => setSchema(data));
+      .then((data) =>
+        setSchema((old) => {
+          if (old) {
+            return Object.assign({}, data, old);
+          } else {
+            return data;
+          }
+        }),
+      );
   }, []);
 
   const filterServerForGamemode = (

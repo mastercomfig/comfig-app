@@ -10,6 +10,7 @@ import ServerFinder from "@components/quickplay/ServerFinder.tsx";
 import CustomizeButton from "@components/quickplay/CustomizeButton.tsx";
 import Layout from "@layouts/Layout.astro";
 import randomImg from "@img/gamemodes/random.png";
+import { getQuickplayData } from "@ssg/quickplayData";
 
 const gamemodes = [
   {
@@ -20,6 +21,8 @@ const gamemodes = [
     img: randomImg,
   },
 ];
+
+const { hash } = await getQuickplayData();
 ---
 
 <Layout>
@@ -199,7 +202,7 @@ const gamemodes = [
             class="carousel quickplay-section carousel-light slide carousel-fade p-4"
             style="background: #ece9d7"
           >
-            <ServerFinder client:load />
+            <ServerFinder client:load hash={hash.substring(0, 8)} />
             <div
               id="quickplayCarouselIndicators"
               class="carousel-indicators carousel-hidable d-none"
