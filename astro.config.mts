@@ -82,6 +82,14 @@ export default defineConfig({
     shield({}),
     sitemap(),
   ],
+  image: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "teamwork.tf",
+      },
+    ],
+  },
   vite: {
     build: {
       sourcemap: true,
