@@ -351,8 +351,6 @@ function authenticate(auth, key) {
     return false;
   }
 
-  console.log(auth, key);
-
   // If the auth and bearer token are not equal length, encode the user's auth as the key so they always get back a result with an encoding time which matches their key.
   let falseSet = false;
   if (auth.length !== key.length) {
