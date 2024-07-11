@@ -187,6 +187,7 @@ const authors = await fetchAuthors();
       </script>
       <script>
         document.addEventListener("astro:page-load", () => {
+          // Download tracking
           const downloadButtonList =
             document.querySelectorAll(".hud-download-btn");
           for (const downloadButton of downloadButtonList) {
@@ -200,6 +201,16 @@ const authors = await fetchAuthors();
                 });
               }, 1000);
             });
+          }
+
+          // Check for iframe compat
+          const ytIframes: HTMLIFrameElement[] = document.querySelectorAll(
+            ".hud-youtube-iframe",
+          );
+          for (const ytIframe of ytIframes) {
+            if (!ytIframe.credentialless) {
+              ytIframe.parentElement.innerHTML = `<div class="h-100 d-flex align-items-center justify-content-center align-self-center text-center"><div><p>Due to data tracking protections, YouTube has been blocked from embedding.<br/>Go directly to the site instead.</p><a class="btn btn-warning" href="https://youtu.be/${ytIframe.title}" target="_blank" rel="noopener"><strong>Go to YouTube</strong></a></div></div>`;
+            }
           }
         });
       </script>
@@ -271,17 +282,20 @@ const authors = await fetchAuthors();
                   class={`carousel-item h-100 ${index == 0 ? "active" : ""}`}
                 >
                   {(resource.startsWith("https://www.youtube.com/") && (
-                    <iframe
-                      style="border:none;width:100%;height:100%"
-                      src={resource}
-                      title={`${hud.resources[index].replace("https://youtu.be/", "")}`}
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowfullscreen
-                      loading="lazy"
-                      referrerpolicy="no-referrer"
-                      sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
-                      credentialless
-                    />
+                    <div class="h-100 w-100">
+                      <iframe
+                        class="hud-youtube-iframe h-100 w-100"
+                        style="border:none"
+                        src={resource}
+                        title={`${hud.resources[index].replace("https://youtu.be/", "")}`}
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen
+                        loading="lazy"
+                        referrerpolicy="no-referrer"
+                        sandbox="allow-scripts allow-same-origin allow-presentation allow-popups allow-popups-to-escape-sandbox"
+                        credentialless
+                      />
+                    </div>
                   )) || (
                     <img
                       loading="lazy"
