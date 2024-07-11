@@ -79,6 +79,7 @@
     "remove-markdown": "^0.5.0",
     "sass": "^1.77.6",
     "serialize-javascript": "^6.0.2",
+    "sharp": "^0.33.4",
     "shorthash": "^0.0.2",
     "simple-keyboard": "^3.7.87",
     "stylelint": "^16.6.1",
