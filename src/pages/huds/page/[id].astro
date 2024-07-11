@@ -209,7 +209,7 @@ const authors = await fetchAuthors();
           );
           for (const ytIframe of ytIframes) {
             if (!ytIframe.credentialless) {
-              ytIframe.parentElement.innerHTML = `<div class="h-100 d-flex align-items-center justify-content-center align-self-center text-center"><div><p>Due to data tracking protections, YouTube has been blocked from embedding.<br/>Go directly to the site instead.</p><a class="btn btn-warning" href="https://youtu.be/${ytIframe.title}" target="_blank" rel="noopener"><strong>Go to YouTube</strong></a></div></div>`;
+              ytIframe.parentElement.innerHTML = `<div class="h-100 d-flex align-items-center justify-content-center align-self-center text-center"><div><p>Due to data tracking protections, YouTube has been blocked from embedding.<br/>Go directly to the site instead.</p><a class="btn btn-warning" href="https://youtu.be/${ytIframe.title}" target="_blank" rel="noreferrer"><strong>Go to YouTube</strong></a></div></div>`;
             }
           }
         });
@@ -343,8 +343,8 @@ const authors = await fetchAuthors();
           <a
             href={hud.isGithub ? hud.versions[0].downloadUrl : hud.repo}
             class=`btn ${hud.isGithub ? "btn-secondary" : "btn-warning"} hud-download-btn w-100 h-100 btn-lg d-flex align-items-center justify-content-center`
-            target={hud.isGithub ? undefined : "_blank"}
-            rel={hud.isGithub ? undefined : "noopener noreferrer"}
+            target="_blank"
+            rel="noreferrer"
             data-bs-toggle={hud.isGithub ? undefined : "tooltip"}
             data-bs-placement={hud.isGithub ? undefined : "top"}
             data-bs-title={hud.isGithub
@@ -384,8 +384,8 @@ const authors = await fetchAuthors();
               <a
                 href={hud.isGithub ? hud.versions[1].downloadUrl : hud.repo}
                 class="btn btn-warning hud-download-btn w-100 h-100 d-flex align-items-center justify-content-center"
-                target={hud.isGithub ? undefined : "_blank"}
-                rel={hud.isGithub ? undefined : "noopener noreferrer"}
+                target="_blank"
+                rel="noreferrer"
                 data-bs-toggle="tooltip"
                 data-bs-placement="top"
                 data-bs-title="This version has not yet been reviewed!"
@@ -447,6 +447,8 @@ const authors = await fetchAuthors();
               hud.social.album && (
                 <a
                   href={hud.social.album}
+                  target="_blank"
+                  rel="noreferrer"
                   class="list-group-item d-flex justify-content-between align-items-center"
                 >
                   <span>
@@ -460,6 +462,8 @@ const authors = await fetchAuthors();
               hud.isGithub && (
                 <a
                   href={`${hud.repo}/tree/${hud.versions[0].hash}`}
+                  target="_blank"
+                  rel="noreferrer"
                   class="list-group-item d-flex justify-content-between align-items-center"
                 >
                   <span>
@@ -473,6 +477,8 @@ const authors = await fetchAuthors();
               hud.social.issues && (
                 <a
                   href={hud.social.issues}
+                  target="_blank"
+                  rel="noreferrer"
                   class="list-group-item d-flex justify-content-between align-items-center"
                 >
                   <span>
@@ -487,6 +493,8 @@ const authors = await fetchAuthors();
               hud.social.support && (
                 <a
                   href={hud.social.support}
+                  target="_blank"
+                  rel="noreferrer"
                   class="list-group-item d-flex justify-content-between align-items-center support-pink"
                 >
                   <span>
@@ -515,6 +523,8 @@ const authors = await fetchAuthors();
               hud.social.discord && !hud.social.discord.includes("#") && (
                 <a
                   href={`https://discord.gg/${hud.social.discord}`}
+                  target="_blank"
+                  rel="noreferrer"
                   class="list-group-item d-flex justify-content-between align-items-center"
                 >
                   <span>
@@ -528,6 +538,8 @@ const authors = await fetchAuthors();
               hud.social.steam_group && (
                 <a
                   href={`https://steamcommunity.com/groups/${hud.social.steam_group}`}
+                  target="_blank"
+                  rel="noreferrer"
                   class="list-group-item d-flex justify-content-between align-items-center"
                 >
                   <span>
@@ -541,6 +553,8 @@ const authors = await fetchAuthors();
               hud.social.steam_profile && (
                 <a
                   href={`https://steamcommunity.com/profiles/${hud.social.steam_profile}`}
+                  target="_blank"
+                  rel="noreferrer"
                   class="list-group-item d-flex justify-content-between align-items-center"
                 >
                   <span>
@@ -554,6 +568,8 @@ const authors = await fetchAuthors();
               hud.social.twitter && (
                 <a
                   href={`https://twitter.com/${hud.social.twitter}`}
+                  target="_blank"
+                  rel="noreferrer"
                   class="list-group-item d-flex justify-content-between align-items-center"
                 >
                   <span>
@@ -567,6 +583,8 @@ const authors = await fetchAuthors();
               hud.social.youtube && (
                 <a
                   href={`https://www.youtube.com/${hud.social.youtube}`}
+                  target="_blank"
+                  rel="noreferrer"
                   class="list-group-item d-flex justify-content-between align-items-center"
                 >
                   <span>
@@ -580,6 +598,8 @@ const authors = await fetchAuthors();
               hud.social.twitch && (
                 <a
                   href={`https://twitch.tv/${hud.social.twitch}`}
+                  target="_blank"
+                  rel="noreferrer"
                   class="list-group-item d-flex justify-content-between align-items-center"
                 >
                   <span>
@@ -772,7 +792,7 @@ const authors = await fetchAuthors();
     <footer class="container g-0">
       <br />
       <p>
-        <a href="https://github.com/mastercomfig/comfig-app"
+        <a href="https://github.com/mastercomfig/comfig-app" rel="noopener"
           ><span class="fab fa-github fa-fw"></span> Source code</a
         >
       </p>

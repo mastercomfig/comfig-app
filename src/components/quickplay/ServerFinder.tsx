@@ -757,7 +757,9 @@ export default function ServerFinder({ hash }: { hash: string }) {
         if (useQuickplayStore.getState().found < 1) {
           return;
         }
-        window.location.href = `steam://connect/${server.addr}/${connectStr}${quickplayStore.sessionCount ?? 1}`;
+        window.location.assign(
+          `steam://connect/${server.addr}/${connectStr}${quickplayStore.sessionCount ?? 1}`,
+        );
       }, 1200);
     }
 
