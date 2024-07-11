@@ -13,6 +13,8 @@ async function gatherResponse(response) {
 const allowedOrigins = new Set([
   "https://mastercomfig.com",
   "https://comfig.app",
+  "http://localhost:4321",
+  "http://127.0.0.1:4321",
 ]);
 const secureOrigin = new Set(["https://comfig.app"]);
 
