@@ -19,6 +19,17 @@ const idbKeyval = {
   del,
 };
 
+// https://stackoverflow.com/a/56842762
+const MAX_COLOR = 256.0 - Number.EPSILON * 128;
+
+function floatToByte(f) {
+  // HACK: handling legacy values
+  if (f >= 0.78 && f <= 0.784) {
+    return 200.0;
+  }
+  return Math.floor(f * MAX_COLOR);
+}
+
 export async function app() {
   const downloadStatusEl = document.getElementById("download-status");
   if (downloadStatusEl) {
@@ -1371,7 +1382,7 @@ export async function app() {
           )};`;
           configContents[target] += `cl_crosshair_blue ${Math.round(color.b)};`;
           configContents[target] += `cl_crosshairalpha ${Math.round(
-            (color.a ?? 1) * 255,
+            floatToByte(color.a ?? 1),
           )}\n`;
         }
         // If any color is set, we need to use color mode 5
@@ -1382,7 +1393,7 @@ export async function app() {
         if (crosshairColorCount == 1 && defaultColor) {
           defaultFile = "autoexec.cfg";
         }
-        defaultColor = defaultColor ?? { r: 200, g: 200, b: 200, a: 0.784 };
+        defaultColor = defaultColor ?? { r: 200, g: 200, b: 200, a: 0.78 };
         addColor(defaultFile, defaultColor);
         for (const playerClass of Object.keys(crosshairColors)) {
           if (playerClass == "default") {
