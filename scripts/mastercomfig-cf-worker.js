@@ -10,12 +10,16 @@ async function gatherResponse(response) {
   return await response.json();
 }
 
+const allowedOrigins = new Set([
+  "https://mastercomfig.com",
+  "https://comfig.app",
+]);
+
 // Cloudflare supports the GET, POST, HEAD, and OPTIONS methods from any origin,
 // and allow any header on requests. These headers must be present
 // on all responses to all CORS preflight requests. In practice, this means
 // all responses to OPTIONS requests.
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET,HEAD,POST,OPTIONS",
   "Access-Control-Max-Age": "86400",
 };
@@ -307,8 +311,9 @@ function handleOptions(request) {
   // Make sure the necessary headers are present
   // for this to be a valid pre-flight request
   const headers = request.headers;
+  const origin = headers.get("Origin");
   if (
-    headers.get("Origin") !== null &&
+    allowedOrigins.has(origin) &&
     headers.get("Access-Control-Request-Method") !== null &&
     headers.get("Access-Control-Request-Headers") !== null
   ) {
@@ -317,6 +322,7 @@ function handleOptions(request) {
     // you can do that here.
     const respHeaders = {
       ...corsHeaders,
+      "Access-Control-Allow-Origin": origin,
       // Allow all future content Request headers to go back to browser
       // such as Authorization (Bearer) or X-Client-Name-Version
       "Access-Control-Allow-Headers": request.headers.get(
@@ -334,6 +340,43 @@ function handleOptions(request) {
   }
 }
 
+function authenticate(auth, key) {
+  // If not authenticated, it's an automatic rejection. The user already knows it is an authenticated resource.
+  if (!auth) {
+    return false;
+  }
+
+  // If there is no key, it cannot be authenticated.
+  if (!key) {
+    return false;
+  }
+
+  console.log(auth, key);
+
+  // If the auth and bearer token are not equal length, encode the user's auth as the key so they always get back a result with an encoding time which matches their key.
+  let falseSet = false;
+  if (auth.length !== key.length) {
+    key = auth;
+    falseSet = true;
+  }
+
+  const encoder = new TextEncoder();
+
+  // a and b must be equal length, or else the encoding time can be used as an attack vector.
+  const a = encoder.encode(auth);
+  const b = encoder.encode(key);
+
+  if (!crypto.subtle.timingSafeEqual(a, b)) {
+    return false;
+  }
+
+  if (falseSet) {
+    return false;
+  }
+
+  return true;
+}
+
 async function handleRequest(request) {
   if (request.method === "OPTIONS") {
     return handleOptions(request);
@@ -345,9 +388,6 @@ async function handleRequest(request) {
     let tag = url.searchParams.get("t");
     if (tag && (tag.includes("..") || tag.includes("/") || tag === ".")) {
       tag = null;
-    }
-    if (url.pathname === webhookPathname) {
-      await forceUpdate(version);
     }
     if (url.pathname.startsWith("/download")) {
       let downloadUrl = url.pathname.substring(downloadLength);
@@ -406,6 +446,9 @@ async function handleRequest(request) {
       let updated = await updateData([v ? null : rv, modules, presets]);
       let resBody = constructDataResponse(updated, version, v);
       return new Response(resBody, resHeaders);
+    }
+    if (url.pathname !== "/" && authenticate(url.pathname, webhookPathname)) {
+      await forceUpdate(version);
     }
     const resBody = await getApiData(version);
     return new Response(resBody, resHeaders);
