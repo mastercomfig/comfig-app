@@ -84,6 +84,8 @@ const {
           social.support && (
             <a
               href={social.support}
+              target="_blank"
+              rel="noreferrer"
               class="list-group-item d-flex justify-content-between align-items-center support-pink"
             >
               <span>
@@ -111,6 +113,8 @@ const {
           social.discord && !social.discord.includes("#") && (
             <a
               href={`https://discord.gg/${social.discord}`}
+              target="_blank"
+              rel="noreferrer"
               class="list-group-item d-flex justify-content-between align-items-center"
             >
               <span>
@@ -123,6 +127,8 @@ const {
           social.steam_group && (
             <a
               href={`https://steamcommunity.com/groups/${social.steam_group}`}
+              target="_blank"
+              rel="noreferrer"
               class="list-group-item d-flex justify-content-between align-items-center"
             >
               <span>
@@ -135,6 +141,8 @@ const {
           social.steam_profile && (
             <a
               href={`https://steamcommunity.com/profiles/${social.steam_profile}`}
+              target="_blank"
+              rel="noreferrer"
               class="list-group-item d-flex justify-content-between align-items-center"
             >
               <span>
@@ -147,6 +155,8 @@ const {
           social.twitter && (
             <a
               href={`https://twitter.com/${social.twitter}`}
+              target="_blank"
+              rel="noreferrer"
               class="list-group-item d-flex justify-content-between align-items-center"
             >
               <span>
@@ -159,6 +169,8 @@ const {
           social.youtube && (
             <a
               href={`https://www.youtube.com/${social.youtube}`}
+              target="_blank"
+              rel="noreferrer"
               class="list-group-item d-flex justify-content-between align-items-center"
             >
               <span>
@@ -171,6 +183,8 @@ const {
           social.twitch && (
             <a
               href={`https://twitch.tv/${social.twitch}`}
+              target="_blank"
+              rel="noreferrer"
               class="list-group-item d-flex justify-content-between align-items-center"
             >
               <span>
@@ -216,7 +230,7 @@ const {
     <footer class="container g-0">
       <br />
       <p>
-        <a href="https://github.com/mastercomfig/comfig-app"
+        <a href="https://github.com/mastercomfig/comfig-app" rel="noopener"
           ><span class="fab fa-github fa-fw"></span> Source code</a
         >
       </p>

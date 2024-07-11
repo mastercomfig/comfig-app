@@ -95,7 +95,8 @@ import Layout from "@layouts/Layout.astro";
           <li>
             Servers must have a public, non-SDR (<a
               href="https://partner.steamgames.com/doc/features/multiplayer/steamdatagramrelay"
-              target="_blank">Steam Datagram Relay</a
+              target="_blank"
+              rel="noreferrer">Steam Datagram Relay</a
             >) IP, i.e. do not use the <code>-enablefakeip</code> launch param. This
             is so your server has an identifiable IP.
           </li>
@@ -241,8 +242,10 @@ import Layout from "@layouts/Layout.astro";
         <ul>
           <li>
             Servers must be registered with a
-            <a href="https://steamcommunity.com/dev/managegameservers"
-              >game server account</a
+            <a
+              href="https://steamcommunity.com/dev/managegameservers"
+              target="_blank"
+              rel="noreferrer">game server account</a
             >
             tied to an owning Steam account, and log into that account when the server
             boots using <code>sv_setsteamaccount</code>.
@@ -251,6 +254,8 @@ import Layout from "@layouts/Layout.astro";
           <li>
             Servers that violate <a
               href="https://help.steampowered.com/en/faqs/view/6862-8119-C23E-EA7B"
+              target="_blank"
+              rel="noreferrer"
             >
               the community guidelines
             </a> may be delisted, i.e., if there has been a trade or community action/ban
@@ -321,12 +326,16 @@ import Layout from "@layouts/Layout.astro";
       </p>
       <h2 class="display-6 fw-bold">How do I talk with you?</h2>
       <p class="lead">
-        Join us <a href="https://discord.gg/comfig">on Discord</a> and report your
-        issues or questions to the <span class="text-bg-primary p-1 mx-1"
-          >#tf2-quickplay</span
+        Join us <a
+          href="https://discord.gg/comfig"
+          target="_blank"
+          rel="noopener">on Discord</a
+        > and report your issues or questions to the <span
+          class="text-bg-primary p-1 mx-1">#tf2-quickplay</span
         > channel. You can also email me any questions or feedback at <a
           href="mailto:quickplayservers@mastercomfig.com"
-          >quickplayservers@mastercomfig.com</a
+          target="_blank"
+          rel="noreferrer">quickplayservers@mastercomfig.com</a
         >.
       </p>
     </section>
