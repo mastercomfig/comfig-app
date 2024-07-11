@@ -47,7 +47,7 @@ const getHudDbCommit = async (sha) => {
 
 const getHudResource = (id, name) => {
   if (name.startsWith("https://youtu.be/")) {
-    return name.replace("https://youtu.be", "https://youtube.com/embed");
+    return name.replace("https://youtu.be", "https://www.youtube.com/embed");
   }
   if (name.startsWith("https://")) {
     return name;
