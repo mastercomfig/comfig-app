@@ -88,7 +88,7 @@ const astroCSPHashExporter: AstroIntegration = {
         scriptSrcHashes,
       );
       // Not ideal, but protects against non-targeted attacks. We don't really have options for non-dynamic content.
-      const scriptSrcNonce = crypto.randomBytes(16).toString("base64");
+      const scriptSrcNonce = `'nonce-${crypto.randomBytes(16).toString("base64")}'`;
       headersFile = headersFile.replace("{{SCRIPT_SRC_NONCE}}", scriptSrcNonce);
       const styleSrcElementHashes = `'${sriHashes.inlineStyleHashes.join("' '")}'`;
       headersFile = headersFile.replace(
