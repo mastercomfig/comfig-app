@@ -14,6 +14,7 @@ const allowedOrigins = new Set([
   "https://mastercomfig.com",
   "https://comfig.app",
 ]);
+const secureOrigin = new Set(["https://comfig.app"]);
 
 // Cloudflare supports the GET, POST, HEAD, and OPTIONS methods from any origin,
 // and allow any header on requests. These headers must be present
@@ -22,11 +23,16 @@ const allowedOrigins = new Set([
 const corsHeaders = {
   "Access-Control-Allow-Methods": "GET,HEAD,POST,OPTIONS",
   "Access-Control-Max-Age": "86400",
+  "Content-Security-Policy": "default-src 'none'; frame-ancestors 'none'",
+  Vary: "Accept-Encoding, Origin",
 };
 
 const optionsRes = {
   headers: {
     Allow: "GET, HEAD, POST, OPTIONS",
+    "Content-Security-Policy": "default-src 'none'; frame-ancestors 'none'",
+    "Cross-Origin-Resource-Policy": "same-origin",
+    Vary: "Accept-Encoding, Origin",
   },
 };
 
@@ -63,36 +69,41 @@ const reqGHReleaseHeaders = {
 const resCommonHeaders = {
   headers: {
     "Cache-Control": "max-age=86400",
-    "Access-Control-Allow-Origin": "*",
+    "Content-Security-Policy": "default-src 'none'; frame-ancestors 'none'",
+    Vary: "Accept-Encoding, Origin",
   },
 };
 
 // Return JSON with 24 hour cache
 const resHeaders = {
   headers: {
-    "Content-Type": "application/json;charset=UTF-8",
     ...resCommonHeaders.headers,
+    "Content-Type": "application/json;charset=UTF-8",
   },
 };
 
 const resAssetHeaders = {
   headers: {
-    "Content-Type": "application/octet-stream",
     ...resCommonHeaders.headers,
+    "Content-Type": "application/octet-stream",
   },
 };
 
 // Return octet stream with 1 year cache
 const resAssetHeadersSuccess = {
   headers: {
-    "Content-Type": "application/octet-stream",
     ...resCommonHeaders.headers,
+    "Content-Type": "application/octet-stream",
     "Cache-Control": "max-age=31536000,immutable",
   },
 };
 
 const deniedOptions = {
   status: 405,
+  headers: {
+    "Cross-Origin-Resource-Policy": "same-origin",
+    "Content-Security-Policy": "default-src 'none'; frame-ancestors 'none'",
+  },
 };
 
 const cacheOpt = {
@@ -307,6 +318,24 @@ const validNames = new Set([
 const downloadLength = "/download".length;
 const downloadSlashLength = downloadLength + 1;
 
+function generateCommonHeaders(origin, commonHeaders) {
+  const isCors = allowedOrigins.has(origin);
+  const isSecure = secureOrigin.has(origin);
+  const headers = {
+    ...commonHeaders.headers,
+  };
+  if (isCors) {
+    headers["Access-Control-Allow-Origin"] = origin;
+  }
+  if (!isCors || isSecure) {
+    headers["Cross-Origin-Resource-Policy"] = "same-origin";
+  }
+  return {
+    ...commonHeaders,
+    headers,
+  };
+}
+
 function handleOptions(request) {
   // Make sure the necessary headers are present
   // for this to be a valid pre-flight request
@@ -329,6 +358,10 @@ function handleOptions(request) {
         "Access-Control-Request-Headers",
       ),
     };
+
+    if (secureOrigin.has(origin)) {
+      headers["Cross-Origin-Resource-Policy"] = "same-origin";
+    }
 
     return new Response(null, {
       headers: respHeaders,
@@ -381,6 +414,7 @@ async function handleRequest(request) {
   }
   if (request.method === "GET" || request.method == "POST") {
     const url = new URL(request.url);
+    const origin = request.headers.get("Origin");
     //let version = url.searchParams.get("v") ?? 2;
     let version = 2;
     let tag = url.searchParams.get("t");
@@ -411,9 +445,10 @@ async function handleRequest(request) {
                 downloadUrl,
               reqGHReleaseHeaders,
             );
-            const resHeaders = response.ok
-              ? resAssetHeadersSuccess
-              : resAssetHeaders;
+            const resHeaders = generateCommonHeaders(
+              origin,
+              response.ok ? resAssetHeadersSuccess : resAssetHeaders,
+            );
             let { readable, writable } = new TransformStream();
             response.body.pipeTo(writable);
             return new Response(readable, {
@@ -443,13 +478,13 @@ async function handleRequest(request) {
       ];
       let updated = await updateData([v ? null : rv, modules, presets]);
       let resBody = constructDataResponse(updated, version, v);
-      return new Response(resBody, resHeaders);
+      return new Response(resBody, generateCommonHeaders(origin, resHeaders));
     }
     if (url.pathname !== "/" && authenticate(url.pathname, webhookPathname)) {
       await forceUpdate(version);
     }
     const resBody = await getApiData(version);
-    return new Response(resBody, resHeaders);
+    return new Response(resBody, generateCommonHeaders(origin, resHeaders));
   }
   return new Response(null, deniedOptions);
 }
