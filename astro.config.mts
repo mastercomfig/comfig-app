@@ -5,6 +5,7 @@ import sentry from "@sentry/astro";
 import AstroPWA from "@vite-pwa/astro";
 import type { AstroIntegration } from "astro";
 import { defineConfig } from "astro/config";
+import crypto from "node:crypto";
 import fs from "node:fs";
 import { resolve } from "node:path";
 
@@ -86,6 +87,9 @@ const astroCSPHashExporter: AstroIntegration = {
         "{{SCRIPT_SRC_HASHES}}",
         scriptSrcHashes,
       );
+      // Not ideal, but protects against non-targeted attacks. We don't really have options for non-dynamic content.
+      const scriptSrcNonce = crypto.randomBytes(16).toString("base64");
+      headersFile = headersFile.replace("{{SCRIPT_SRC_NONCE}}", scriptSrcNonce);
       const styleSrcElementHashes = `'${sriHashes.inlineStyleHashes.join("' '")}'`;
       headersFile = headersFile.replace(
         "{{STYLE_SRC_ELEM_HASHES}}",
