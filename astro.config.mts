@@ -3,8 +3,10 @@ import sitemap from "@astrojs/sitemap";
 import { shield } from "@kindspells/astro-shield";
 import sentry from "@sentry/astro";
 import AstroPWA from "@vite-pwa/astro";
+import type { AstroIntegration } from "astro";
 import { defineConfig } from "astro/config";
-import url from "url";
+import fs from "node:fs";
+import { resolve } from "node:path";
 
 const pwa = AstroPWA({
   devOptions: {
@@ -65,6 +67,39 @@ const pwa = AstroPWA({
   },
 });
 
+const rootDir = new URL(".", import.meta.url).pathname;
+
+const astroCSPHashExporter: AstroIntegration = {
+  name: "astro-csp-hash-exporter",
+  hooks: {
+    "astro:build:done": async () => {
+      if (import.meta.env.DEV) {
+        return;
+      }
+      const sriHashes = await import("./generated/sriHashes.mjs");
+      const headersFilePath = resolve(rootDir, "public", "_headers");
+      let headersFile = fs.readFileSync(headersFilePath, {
+        encoding: "utf-8",
+      });
+      const scriptSrcHashes = `'${sriHashes.inlineScriptHashes.join("' '")}'`;
+      headersFile = headersFile.replace(
+        "{{SCRIPT_SRC_HASHES}}",
+        scriptSrcHashes,
+      );
+      const styleSrcElementHashes = `'${sriHashes.inlineStyleHashes.join("' '")}'`;
+      headersFile = headersFile.replace(
+        "{{STYLE_SRC_ELEM_HASHES}}",
+        styleSrcElementHashes,
+      );
+      fs.writeFileSync(headersFilePath, headersFile);
+    },
+  },
+};
+
+const modulePath = import.meta.env.DEV
+  ? undefined
+  : resolve(rootDir, "generated", "sriHashes.mjs");
+
 // https://astro.build/config
 export default defineConfig({
   site: "https://comfig.app",
@@ -79,7 +114,8 @@ export default defineConfig({
         authToken: process.env.SENTRY_AUTH_TOKEN ?? "",
       },
     }),
-    shield({}),
+    shield({ sri: { hashesModule: modulePath } }),
+    astroCSPHashExporter,
     sitemap(),
   ],
   image: {
@@ -90,6 +126,9 @@ export default defineConfig({
       },
     ],
   },
+  build: {
+    inlineStylesheets: "never",
+  },
   vite: {
     build: {
       sourcemap: true,
@@ -97,12 +136,8 @@ export default defineConfig({
     },
     resolve: {
       alias: {
-        "~bootstrap": url.fileURLToPath(
-          new URL("./node_modules/bootstrap", import.meta.url),
-        ),
-        "~bootswatch": url.fileURLToPath(
-          new URL("./node_modules/bootswatch", import.meta.url),
-        ),
+        "~bootstrap": resolve(rootDir, "node_modules", "bootstrap"),
+        "~bootswatch": resolve(rootDir, "node_modules", "bootswatch"),
       },
     },
   },
