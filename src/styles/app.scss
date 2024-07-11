@@ -166,6 +166,10 @@ a.addon-card:hover {
 }
 
 .crosshair-preview:hover {
+  background: #fff !important;
+}
+
+.crosshair-preview.crosshair-preview-inverted:hover {
   background: #000 !important;
 }
 

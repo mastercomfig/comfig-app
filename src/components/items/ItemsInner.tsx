@@ -1,23 +1,19 @@
-import { useMemo, useState, useEffect } from "react";
-import { Button, Tab, Row, Col, Nav, FormCheck, Form } from "react-bootstrap";
-import useItemStore from "@store/items";
-import ItemsSelector from "./ItemsSelector";
 import crosshairPreviewImg from "@img/app/crosshairs/crosspreview.webp";
-import { ChromePicker } from "react-color";
+import debounce from "lodash/debounce";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Button, Col, Form, FormCheck, Nav, Row, Tab } from "react-bootstrap";
+import { type RgbaColor, RgbaColorPicker, setNonce } from "react-colorful";
 
-const dataUrl =
-  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAMUlEQVQ4T2NkYGAQYcAP3uCTZhw1gGGYhAGBZIA/nYDCgBDAm9BGDWAAJyRCgLaBCAAgXwixzAS0pgAAAABJRU5ErkJggg==";
+import useItemStore from "@store/items";
 
-export class ServerCanvas {
-  toDataURL: () => string;
-  getContext: () => { fillRect: () => void; translate: () => void };
-  constructor() {
-    this.toDataURL = () => dataUrl;
-    this.getContext = () => ({
-      fillRect: () => {},
-      translate: () => {},
-    });
-  }
+import ItemsSelector from "./ItemsSelector";
+
+const cspNonce =
+  document.querySelector<HTMLMetaElement>("meta[property=csp-nonce]")?.nonce ??
+  null;
+
+if (cspNonce) {
+  setNonce(cspNonce);
 }
 
 function calculateItemSlots(playerClass, items) {
@@ -145,12 +141,16 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
   const selectedExplosion = itemStore.explosioneffects;
   const selectedPlayerExplosion = itemStore.playerexplosions;
 
-  const [liveCrosshairColor, setLiveCrosshairColor] = useState(undefined);
-  const [liveCrosshairScale, setLiveCrosshairScale] = useState(undefined);
+  const [liveCrosshairColor, setLiveCrosshairColor] = useState<
+    RgbaColor | undefined
+  >(undefined);
+  const [liveCrosshairScale, setLiveCrosshairScale] = useState<
+    number | undefined
+  >(undefined);
 
   const currentCrosshairColor = liveCrosshairColor ??
     selectedCrosshairColor ??
-    itemStore.crosshairColors?.default ?? { r: 200, g: 200, b: 200, a: 0.784 };
+    itemStore.crosshairColors?.default ?? { r: 200, g: 200, b: 200, a: 0.78 };
   const defaultCrosshairScale =
     selectedCrosshairScale ?? itemStore.crosshairScales?.default ?? 32;
   const currentCrosshairScale = liveCrosshairScale ?? defaultCrosshairScale;
@@ -196,6 +196,16 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
     state.setPlayerExplosionEffect,
     state.delPlayerExplosionEffect,
   ]);
+
+  const crosshairColorDebounce = useCallback(
+    debounce((color) => {
+      setCrosshairColor(
+        playerClass === "All-Class" ? "default" : playerClass,
+        color,
+      );
+    }, 300),
+    [setCrosshairColor, playerClass],
+  );
 
   const isDefault = itemClasses[0].classname === "default";
 
@@ -269,6 +279,7 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
                           transform: `scale(${currentCrosshairScale / 32})`,
                         }}
                         colorize={currentCrosshairColor}
+                        colorizePreviewInvertClass="crosshair-preview-inverted"
                       >
                         {selectedZoomCrosshairs &&
                           zoomable.has(item.classname) && (
@@ -336,22 +347,137 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
                           }}
                         />
                         <h6>Crosshair Color</h6>
-                        <ChromePicker
+                        <RgbaColorPicker
                           className="w-100"
-                          renderers={{ canvas: ServerCanvas }}
                           color={currentCrosshairColor}
                           onChange={(color) => {
-                            setLiveCrosshairColor(color.rgb);
-                          }}
-                          onChangeComplete={(color) => {
-                            setCrosshairColor(
-                              playerClass === "All-Class"
-                                ? "default"
-                                : playerClass,
-                              color.rgb,
-                            );
+                            setLiveCrosshairColor(color);
+                            crosshairColorDebounce(color);
                           }}
                         />
+                        <Row className="w-100 my-1 g-0">
+                          <Col xs={"auto"} className="mx-2">
+                            <small className="text-muted">Preview</small>
+                          </Col>
+                          <Col
+                            style={{
+                              backgroundColor:
+                                Math.sqrt(
+                                  Math.pow(currentCrosshairColor.r, 2) +
+                                    Math.pow(currentCrosshairColor.g, 2) +
+                                    Math.pow(currentCrosshairColor.b, 2),
+                                ) <= 127
+                                  ? "#fff"
+                                  : "#000",
+                            }}
+                            className="rounded-end-3"
+                          >
+                            <div
+                              style={{
+                                backgroundColor: `rgba(${currentCrosshairColor.r} ${currentCrosshairColor.g} ${currentCrosshairColor.b} / ${currentCrosshairColor.a})`,
+                              }}
+                              className="rounded-end-3 w-100 h-100"
+                            ></div>
+                          </Col>
+                        </Row>
+                        <Row className="w-100 g-0">
+                          <Col>
+                            <Form.Control
+                              placeholder="Red"
+                              value={currentCrosshairColor.r}
+                              type="number"
+                              min={0}
+                              max={255}
+                              step={1}
+                              onBlur={(e) => {
+                                const newVal = parseInt(e.target.value);
+                                const color = {
+                                  ...currentCrosshairColor,
+                                  r: newVal,
+                                };
+                                setCrosshairColor(
+                                  playerClass === "All-Class"
+                                    ? "default"
+                                    : playerClass,
+                                  color,
+                                );
+                              }}
+                            />
+                            <Form.Text>Red</Form.Text>
+                          </Col>
+                          <Col>
+                            <Form.Control
+                              placeholder="Blue"
+                              value={currentCrosshairColor.b}
+                              type="number"
+                              min={0}
+                              max={255}
+                              step={1}
+                              onBlur={(e) => {
+                                const newVal = parseInt(e.target.value);
+                                const color = {
+                                  ...currentCrosshairColor,
+                                  b: newVal,
+                                };
+                                setCrosshairColor(
+                                  playerClass === "All-Class"
+                                    ? "default"
+                                    : playerClass,
+                                  color,
+                                );
+                              }}
+                            />
+                            <Form.Text>Blue</Form.Text>
+                          </Col>
+                          <Col>
+                            <Form.Control
+                              placeholder="Green"
+                              value={currentCrosshairColor.g}
+                              type="number"
+                              min={0}
+                              max={255}
+                              step={1}
+                              onBlur={(e) => {
+                                const newVal = parseInt(e.target.value);
+                                const color = {
+                                  ...currentCrosshairColor,
+                                  g: newVal,
+                                };
+                                setCrosshairColor(
+                                  playerClass === "All-Class"
+                                    ? "default"
+                                    : playerClass,
+                                  color,
+                                );
+                              }}
+                            />
+                            <Form.Text>Green</Form.Text>
+                          </Col>
+                          <Col>
+                            <Form.Control
+                              placeholder="Alpha"
+                              value={currentCrosshairColor.a}
+                              type="number"
+                              min={0}
+                              max={1}
+                              step={0.01}
+                              onBlur={(e) => {
+                                const newVal = parseFloat(e.target.value);
+                                const color = {
+                                  ...currentCrosshairColor,
+                                  a: newVal,
+                                };
+                                setCrosshairColor(
+                                  playerClass === "All-Class"
+                                    ? "default"
+                                    : playerClass,
+                                  color,
+                                );
+                              }}
+                            />
+                            <Form.Text>Alpha</Form.Text>
+                          </Col>
+                        </Row>
                         <Button
                           className="w-100"
                           variant="danger"
@@ -366,7 +492,7 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
                               r: 200,
                               g: 200,
                               b: 200,
-                              a: 0.784,
+                              a: 0.78,
                             });
                           }}
                         >

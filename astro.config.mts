@@ -70,6 +70,8 @@ const pwa = AstroPWA({
 
 const rootDir = new URL(".", import.meta.url).pathname;
 
+const nonce = crypto.randomBytes(16).toString("base64");
+
 const astroCSPHashExporter: AstroIntegration = {
   name: "astro-csp-hash-exporter",
   hooks: {
@@ -88,8 +90,8 @@ const astroCSPHashExporter: AstroIntegration = {
         scriptSrcHashes,
       );
       // Not ideal, but protects against non-targeted attacks. We don't really have options for non-dynamic content.
-      const scriptSrcNonce = `'nonce-${crypto.randomBytes(16).toString("base64")}'`;
-      headersFile = headersFile.replace("{{SCRIPT_SRC_NONCE}}", scriptSrcNonce);
+      const srcNonce = `'nonce-${nonce}'`;
+      headersFile = headersFile.replaceAll("{{SRC_NONCE}}", srcNonce);
       const styleSrcElementHashes = `'${sriHashes.inlineStyleHashes.join("' '")}'`;
       headersFile = headersFile.replace(
         "{{STYLE_SRC_ELEM_HASHES}}",
@@ -138,6 +140,9 @@ export default defineConfig({
     build: {
       sourcemap: true,
       assetsInlineLimit: 0,
+    },
+    html: {
+      cspNonce: nonce,
     },
     resolve: {
       alias: {

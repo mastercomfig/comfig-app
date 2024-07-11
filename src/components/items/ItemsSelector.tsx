@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { FormSelect } from "react-bootstrap";
-import { components } from "react-select";
-import Select from "react-select";
+import Select, { components } from "react-select";
 
 function onMenuOpen() {
   setTimeout(() => {
@@ -187,7 +186,7 @@ export default function ItemsSelector({
   type,
   previewPath,
   previews,
-  previewClass,
+  previewClass = "",
   previewStyle,
   previewImgClass,
   previewImgStyle,
@@ -195,6 +194,7 @@ export default function ItemsSelector({
   groups,
   children,
   colorize,
+  colorizePreviewInvertClass,
   hidePreview,
 }) {
   const [selected, setSelected] = useState(selection ?? defaultValue);
@@ -245,6 +245,18 @@ export default function ItemsSelector({
         }
       }
     }
+  }
+
+  let currentPreviewClass = previewClass;
+  if (colorize && colorizePreviewInvertClass) {
+    currentPreviewClass +=
+      Math.sqrt(
+        Math.pow(colorize.r, 2) +
+          Math.pow(colorize.g, 2) +
+          Math.pow(colorize.b, 2),
+      ) <= 127
+        ? ""
+        : ` ${colorizePreviewInvertClass}`;
   }
 
   return (
@@ -313,7 +325,7 @@ export default function ItemsSelector({
       {(selected !== defaultValue || !isDefaultWeapon) && !hidePreview && (
         <div className="col-8">
           <div
-            className={`col-8 preview-container ${previewClass}`}
+            className={`col-8 preview-container ${currentPreviewClass}`}
             style={previewStyle}
           >
             {getPreviewImage(
@@ -330,7 +342,3 @@ export default function ItemsSelector({
     </div>
   );
 }
-
-ItemsSelector.defaultProps = {
-  previewClass: "",
-};
