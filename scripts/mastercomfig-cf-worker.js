@@ -482,7 +482,11 @@ async function handleRequest(request) {
       let resBody = constructDataResponse(updated, version, v);
       return new Response(resBody, generateCommonHeaders(origin, resHeaders));
     }
-    if (url.pathname !== "/" && authenticate(url.pathname, webhookPathname)) {
+    if (
+      request.method == "POST" &&
+      url.pathname !== "/" &&
+      authenticate(url.pathname, webhookPathname)
+    ) {
       await forceUpdate(version);
     }
     const resBody = await getApiData(version);
