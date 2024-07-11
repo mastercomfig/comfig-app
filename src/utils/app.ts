@@ -732,7 +732,7 @@ export async function app() {
       gameDirectory = directoryHandle;
       updatePresetDownloadButton();
       getEl("game-folder-text").innerText =
-        `${gameDirectory.name} folder chosen, click to change`;
+        `"${gameDirectory.name}" folder chosen, click to change`;
     } catch (err) {
       console.error("Get directory failed:", err);
     }
