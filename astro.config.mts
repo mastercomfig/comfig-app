@@ -91,7 +91,8 @@ const astroCSPHashExporter: AstroIntegration = {
         "{{STYLE_SRC_ELEM_HASHES}}",
         styleSrcElementHashes,
       );
-      fs.writeFileSync(headersFilePath, headersFile);
+      const headersFileWritePath = resolve(rootDir, "dist", "_headers");
+      fs.writeFileSync(headersFileWritePath, headersFile);
     },
   },
 };
