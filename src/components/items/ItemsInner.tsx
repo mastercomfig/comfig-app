@@ -389,6 +389,14 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
                               min={0}
                               max={255}
                               step={1}
+                              onChange={(e) => {
+                                const newVal = parseInt(e.target.value);
+                                setLiveCrosshairColor((old) => ({
+                                  ...currentCrosshairColor,
+                                  ...old,
+                                  r: newVal,
+                                }));
+                              }}
                               onBlur={(e) => {
                                 const newVal = parseInt(e.target.value);
                                 const color = {
@@ -407,36 +415,20 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
                           </Col>
                           <Col>
                             <Form.Control
-                              placeholder="Blue"
-                              value={currentCrosshairColor.b}
-                              type="number"
-                              min={0}
-                              max={255}
-                              step={1}
-                              onBlur={(e) => {
-                                const newVal = parseInt(e.target.value);
-                                const color = {
-                                  ...currentCrosshairColor,
-                                  b: newVal,
-                                };
-                                setCrosshairColor(
-                                  playerClass === "All-Class"
-                                    ? "default"
-                                    : playerClass,
-                                  color,
-                                );
-                              }}
-                            />
-                            <Form.Text>Blue</Form.Text>
-                          </Col>
-                          <Col>
-                            <Form.Control
                               placeholder="Green"
                               value={currentCrosshairColor.g}
                               type="number"
                               min={0}
                               max={255}
                               step={1}
+                              onChange={(e) => {
+                                const newVal = parseInt(e.target.value);
+                                setLiveCrosshairColor((old) => ({
+                                  ...currentCrosshairColor,
+                                  ...old,
+                                  g: newVal,
+                                }));
+                              }}
                               onBlur={(e) => {
                                 const newVal = parseInt(e.target.value);
                                 const color = {
@@ -455,12 +447,52 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
                           </Col>
                           <Col>
                             <Form.Control
+                              placeholder="Blue"
+                              value={currentCrosshairColor.b}
+                              type="number"
+                              min={0}
+                              max={255}
+                              step={1}
+                              onChange={(e) => {
+                                const newVal = parseInt(e.target.value);
+                                setLiveCrosshairColor((old) => ({
+                                  ...currentCrosshairColor,
+                                  ...old,
+                                  b: newVal,
+                                }));
+                              }}
+                              onBlur={(e) => {
+                                const newVal = parseInt(e.target.value);
+                                const color = {
+                                  ...currentCrosshairColor,
+                                  b: newVal,
+                                };
+                                setCrosshairColor(
+                                  playerClass === "All-Class"
+                                    ? "default"
+                                    : playerClass,
+                                  color,
+                                );
+                              }}
+                            />
+                            <Form.Text>Blue</Form.Text>
+                          </Col>
+                          <Col>
+                            <Form.Control
                               placeholder="Alpha"
                               value={currentCrosshairColor.a}
                               type="number"
                               min={0}
                               max={1}
                               step={0.01}
+                              onChange={(e) => {
+                                const newVal = parseInt(e.target.value);
+                                setLiveCrosshairColor((old) => ({
+                                  ...currentCrosshairColor,
+                                  ...old,
+                                  a: newVal,
+                                }));
+                              }}
                               onBlur={(e) => {
                                 const newVal = parseFloat(e.target.value);
                                 const color = {
