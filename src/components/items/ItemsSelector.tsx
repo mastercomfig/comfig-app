@@ -1,6 +1,15 @@
+import createCache from "@emotion/cache";
+import { CacheProvider } from "@emotion/react";
 import { useState } from "react";
 import { FormSelect } from "react-bootstrap";
 import Select, { components } from "react-select";
+
+const cache = createCache({
+  key: "css",
+  nonce:
+    document.querySelector<HTMLMetaElement>("meta[property=csp-nonce]")
+      ?.nonce || "",
+});
 
 function onMenuOpen() {
   setTimeout(() => {
@@ -263,32 +272,39 @@ export default function ItemsSelector({
     <div className="row">
       <div className={hidePreview ? "col-12" : "col-4"}>
         {(useAdvancedSelect && (
-          <Select
-            components={{ DropdownIndicator, IndicatorSeparator }}
-            theme={getSelectTheme}
-            styles={getSelectStyles(false)}
-            onMenuOpen={onMenuOpen}
-            className={"MyDropdown"}
-            classNamePrefix={"MyDropdown"}
-            formatOptionLabel={({ value, label }) => (
-              <div style={{ display: "flex", alignItems: "center" }}>
-                {getPreviewImage(value, previews, previewPath, previewImgClass)}
-                <div style={{ marginLeft: "0.5rem" }}>{label}</div>
-              </div>
-            )}
-            defaultValue={selectOptions[selection ?? defaultValue]}
-            autoComplete="off"
-            onChange={(option) => {
-              const value = option.value;
-              setSelected(value);
-              if (value === defaultValue) {
-                delItem(classname);
-              } else {
-                setItem(classname, value);
-              }
-            }}
-            options={Object.values(groupedSelectOptions ?? selectOptions)}
-          />
+          <CacheProvider value={cache}>
+            <Select
+              components={{ DropdownIndicator, IndicatorSeparator }}
+              theme={getSelectTheme}
+              styles={getSelectStyles(false)}
+              onMenuOpen={onMenuOpen}
+              className={"MyDropdown"}
+              classNamePrefix={"MyDropdown"}
+              formatOptionLabel={({ value, label }) => (
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  {getPreviewImage(
+                    value,
+                    previews,
+                    previewPath,
+                    previewImgClass,
+                  )}
+                  <div style={{ marginLeft: "0.5rem" }}>{label}</div>
+                </div>
+              )}
+              defaultValue={selectOptions[selection ?? defaultValue]}
+              autoComplete="off"
+              onChange={(option) => {
+                const value = option.value;
+                setSelected(value);
+                if (value === defaultValue) {
+                  delItem(classname);
+                } else {
+                  setItem(classname, value);
+                }
+              }}
+              options={Object.values(groupedSelectOptions ?? selectOptions)}
+            />
+          </CacheProvider>
         )) || (
           <FormSelect
             className="bg-dark text-light"
