@@ -4,7 +4,7 @@ import { shield } from "@kindspells/astro-shield";
 import sentry from "@sentry/astro";
 import AstroPWA from "@vite-pwa/astro";
 import type { AstroIntegration } from "astro";
-import { defineConfig } from "astro/config";
+import { defineConfig, envField } from "astro/config";
 import crypto from "node:crypto";
 import fs from "node:fs";
 import { resolve } from "node:path";
@@ -158,5 +158,14 @@ export default defineConfig({
     globalRoutePriority: true,
     contentCollectionCache: true,
     contentCollectionJsonSchema: true,
+    env: {
+      schema: {
+        NONCE: envField.string({
+          context: "server",
+          access: "secret",
+          default: nonce,
+        }),
+      },
+    },
   },
 });
