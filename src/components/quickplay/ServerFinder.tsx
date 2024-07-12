@@ -963,7 +963,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
       </div>
       <div
         className={`position-absolute text-start z-2 top-50 start-50 translate-middle bg-dark-subtle p-5${quickplayStore.customizing ? "" : " d-none"}`}
-        style={{ width: "100.1%", height: "100%", overflowY: "auto" }}
+        style={{ width: "100.1%", height: "100.1%", overflowY: "auto" }}
       >
         <h3 className="display-6 text-center" style={{ fontWeight: 600 }}>
           ADVANCED OPTIONS
