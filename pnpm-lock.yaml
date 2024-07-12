@@ -20,6 +20,12 @@ importers:
       '@babel/core':
         specifier: ^7.24.7
         version: 7.24.7
+      '@emotion/cache':
+        specifier: ^11.11.0
+        version: 11.11.0
+      '@emotion/react':
+        specifier: ^11.11.4
+        version: 11.11.4(@types/react@18.3.3)(react@18.3.1)
       '@fontsource-variable/roboto-flex':
         specifier: ^5.0.15
         version: 5.0.15
