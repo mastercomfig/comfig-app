@@ -352,6 +352,7 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
                           color={currentCrosshairColor}
                           onChange={(color) => {
                             setLiveCrosshairColor(color);
+                            crosshairColorDebounce.cancel();
                             crosshairColorDebounce(color);
                           }}
                         />
