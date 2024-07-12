@@ -1,6 +1,6 @@
 import crosshairPreviewImg from "@img/app/crosshairs/crosspreview.webp";
 import debounce from "lodash/debounce";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Button, Col, Form, FormCheck, Nav, Row, Tab } from "react-bootstrap";
 import { type RgbaColor, RgbaColorPicker, setNonce } from "react-colorful";
 
@@ -197,13 +197,14 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
     state.delPlayerExplosionEffect,
   ]);
 
-  const crosshairColorDebounce = useCallback(
-    debounce((color) => {
-      setCrosshairColor(
-        playerClass === "All-Class" ? "default" : playerClass,
-        color,
-      );
-    }, 300),
+  const crosshairColorDebounce = useMemo(
+    () =>
+      debounce((color) => {
+        setCrosshairColor(
+          playerClass === "All-Class" ? "default" : playerClass,
+          color,
+        );
+      }, 300),
     [setCrosshairColor, playerClass],
   );
 
@@ -352,7 +353,6 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
                           color={currentCrosshairColor}
                           onChange={(color) => {
                             setLiveCrosshairColor(color);
-                            crosshairColorDebounce.cancel();
                             crosshairColorDebounce(color);
                           }}
                         />
