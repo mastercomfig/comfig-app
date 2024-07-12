@@ -1,9 +1,13 @@
 ---
+import { getSecret } from "astro:env/server";
 
+const nonce = getSecret("NONCE");
 ---
 
 <html lang="en-US" data-bs-theme="dark" transition:animate="none">
   <slot />
+
+  <meta property="csp-nonce" nonce={nonce} />
 
   <script>
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
