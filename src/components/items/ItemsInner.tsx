@@ -357,7 +357,9 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
                         />
                         <Row className="w-100 my-1 g-0">
                           <Col xs={"auto"} className="mx-2">
-                            <small className="text-muted">Preview</small>
+                            <small className="text-muted h-100 align-bottom">
+                              Preview
+                            </small>
                           </Col>
                           <Col
                             style={{
@@ -370,14 +372,35 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
                                   ? "#fff"
                                   : "#000",
                             }}
-                            className="rounded-end-3"
                           >
                             <div
                               style={{
                                 backgroundColor: `rgba(${currentCrosshairColor.r} ${currentCrosshairColor.g} ${currentCrosshairColor.b} / ${currentCrosshairColor.a})`,
                               }}
-                              className="rounded-end-3 w-100 h-100"
+                              className="w-100 h-100"
                             ></div>
+                          </Col>
+                          <Col xs="auto">
+                            <Button
+                              className="w-100"
+                              variant="danger"
+                              size="sm"
+                              onClick={() => {
+                                delCrosshairColor(
+                                  playerClass === "All-Class"
+                                    ? "default"
+                                    : playerClass,
+                                );
+                                setLiveCrosshairColor({
+                                  r: 200,
+                                  g: 200,
+                                  b: 200,
+                                  a: 0.78,
+                                });
+                              }}
+                            >
+                              <span className="fa fa-undo fa-fw"></span>{" "}
+                            </Button>
                           </Col>
                         </Row>
                         <Row className="w-100 g-0">
@@ -510,27 +533,6 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
                             <Form.Text>Alpha</Form.Text>
                           </Col>
                         </Row>
-                        <Button
-                          className="w-100"
-                          variant="danger"
-                          size="sm"
-                          onClick={() => {
-                            delCrosshairColor(
-                              playerClass === "All-Class"
-                                ? "default"
-                                : playerClass,
-                            );
-                            setLiveCrosshairColor({
-                              r: 200,
-                              g: 200,
-                              b: 200,
-                              a: 0.78,
-                            });
-                          }}
-                        >
-                          <span className="fa fa-undo fa-fw"></span>{" "}
-                          <strong>RESET COLOR</strong>
-                        </Button>
                       </ItemsSelector>
                     )}
                     {((item.MuzzleFlashParticleEffect &&
