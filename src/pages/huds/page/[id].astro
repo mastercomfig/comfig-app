@@ -522,9 +522,9 @@ const authors = await fetchAuthors();
               )
             }
             {
-              hud.social.discord && !hud.social.discord.includes("#") && (
+              hud.social.discord && hud.social.discord.startsWith("/") && (
                 <a
-                  href={`https://discord.gg/${hud.social.discord}`}
+                  href={`https://discord.gg${hud.social.discord}`}
                   target="_blank"
                   rel="noreferrer"
                   class="list-group-item d-flex justify-content-between align-items-center"
