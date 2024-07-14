@@ -11,10 +11,7 @@ import { Modal, ScrollSpy, Tab } from "bootstrap";
 import { del, get, set, setMany } from "idb-keyval";
 import { stringify } from "vdf-parser";
 
-
-
 import fastClone from "./fastClone.ts";
-
 
 const idbKeyval = {
   get,
@@ -45,7 +42,7 @@ export async function app() {
   }
   console.log("App loading...");
 
-  if (window.location.hostname === "mastercomfig.com") {
+  if (false && window.location.hostname === "mastercomfig.com") {
     window.location.assign("/deprecated_app");
     return;
   }
@@ -55,7 +52,10 @@ export async function app() {
     const migrateModal = new Modal("#migrateModal");
     const migrateBtn = document.getElementById("comfig-migrate-btn");
     if (migrateBtn) {
-      migrateBtn.addEventListener("onclick", async () => {
+      migrateBtn.addEventListener("click", async () => {
+        if (true) {
+          return;
+        }
         if (!navigator.clipboard) {
           console.error("Clipboard import unsupported.");
           window.location.assign("/app");
