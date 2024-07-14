@@ -7,11 +7,14 @@ import noneImg from "@img/presets/none.webp";
 import ultraImg from "@img/presets/ultra.webp";
 import veryLowImg from "@img/presets/very-low.webp";
 import { BlobReader, BlobWriter, ZipWriter } from "@zip.js/zip.js";
-import { ScrollSpy, Tab } from "bootstrap";
-import { del, get, set } from "idb-keyval";
+import { Modal, ScrollSpy, Tab } from "bootstrap";
+import { del, get, set, setMany } from "idb-keyval";
 import { stringify } from "vdf-parser";
 
+
+
 import fastClone from "./fastClone.ts";
+
 
 const idbKeyval = {
   get,
@@ -41,6 +44,32 @@ export async function app() {
     downloadStatusEl.classList.remove("download-status-fill");
   }
   console.log("App loading...");
+
+  if (window.location.hostname === "mastercomfig.com") {
+    window.location.assign("/deprecated_app");
+    return;
+  }
+
+  const parms = new URLSearchParams(window.location.search);
+  if (parms.get("migrate") === "1") {
+    const migrateModal = new Modal("#migrateModal");
+    const migrateBtn = document.getElementById("comfig-migrate-btn");
+    if (migrateBtn) {
+      migrateBtn.addEventListener("onclick", async () => {
+        if (!navigator.clipboard) {
+          console.error("Clipboard import unsupported.");
+          window.location.assign("/app");
+          return;
+        }
+        const data = await navigator.clipboard.readText();
+        const obj = JSON.parse(data);
+        const entries = Object.entries(obj);
+        setMany(entries);
+        window.location.assign("/app");
+      });
+      migrateModal.show();
+    }
+  }
 
   const dfirebase = import("firebase/compat/app")
     .then(async (firebase) => {
