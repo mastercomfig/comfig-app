@@ -4,11 +4,11 @@ import { useState } from "react";
 import { FormSelect } from "react-bootstrap";
 import Select, { components } from "react-select";
 
+import { getNonce } from "@utils/nonce";
+
 const cache = createCache({
   key: "css",
-  nonce:
-    document.querySelector<HTMLMetaElement>("meta[property=csp-nonce]")
-      ?.nonce || "",
+  nonce: getNonce(),
 });
 
 function onMenuOpen() {

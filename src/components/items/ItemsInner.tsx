@@ -4,13 +4,13 @@ import { useEffect, useMemo, useState } from "react";
 import { Button, Col, Form, FormCheck, Nav, Row, Tab } from "react-bootstrap";
 import { type RgbaColor, RgbaColorPicker, setNonce } from "react-colorful";
 
+import { getNonce } from "@utils/nonce";
+
 import useItemStore from "@store/items";
 
 import ItemsSelector from "./ItemsSelector";
 
-const cspNonce =
-  document.querySelector<HTMLMetaElement>("meta[property=csp-nonce]")?.nonce ??
-  null;
+const cspNonce = getNonce();
 
 if (cspNonce) {
   setNonce(cspNonce);

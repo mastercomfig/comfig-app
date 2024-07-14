@@ -1,6 +1,8 @@
 import { WaveFile } from "wavefile";
 import WaveSurfer from "wavesurfer.js";
 
+import { getNonce } from "./nonce";
+
 // Adapted from MS-ADPCM decoder
 // https://github.com/Snack-X/node-ms-adpcm
 // Public Domain
@@ -216,7 +218,7 @@ function readWav(arr) {
 
 const playerLookup = {};
 
-async function createPlayer(player) {
+async function createPlayer(player: HTMLElement) {
   const wave = WaveSurfer.create({
     container: player,
     height: 64,
@@ -254,10 +256,13 @@ async function createPlayer(player) {
     const buf = wavFile.toBuffer().buffer;
     const audioBlob = new Blob([buf], { type: "audio/wav" });
     wave.loadBlob(audioBlob, samples, duration);
+    player.firstElementChild?.shadowRoot
+      ?.querySelector("style")
+      ?.setAttribute("nonce", getNonce());
     playLink.onclick = (e) => {
       e.preventDefault();
       const ratio = wave.getCurrentTime() / wave.getDuration();
-      if (ratio < 0.8) {
+      if (ratio < 0.95) {
         if (playerLookup[hash]) {
           playerLookup[hash] = playerLookup[hash].then(() => wave.playPause());
         } else {
@@ -281,7 +286,9 @@ async function createPlayer(player) {
 }
 
 export default async function initHits() {
-  const players = document.querySelectorAll(".hs-container");
+  const players = document.querySelectorAll(
+    ".hs-container",
+  ) as NodeListOf<HTMLElement>;
   const playerPromises = Array.from(players).map(createPlayer);
   await Promise.all(playerPromises);
 }
