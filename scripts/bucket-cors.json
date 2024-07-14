@@ -1,0 +1,8 @@
+[
+  {
+    "origin": ["https://comfig.app", "http://127.0.0.1:4321"],
+    "method": ["GET"],
+    "responseHeader": ["Content-Type"],
+    "maxAgeSeconds": 3600
+  }
+]
