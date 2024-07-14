@@ -823,5 +823,37 @@ const { hash } = await getGameData();
         rel="noopener"><span class="fab fa-github fa-fw"></span> open source</a
       >.
     </footer>
+
+    <div
+      class="modal fade"
+      id="migrateModal"
+      tabindex={-1}
+      role="dialog"
+      aria-labelledby="migrateModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header text-light">
+            <h5 class="modal-title" id="migrateModalLabel">
+              Migrate from mastercomfig.com
+            </h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <h6 class="fw-bold">Welcome to comfig.app!</h6>
+            <p>Meet the new, faster and more secure mastercomfig app.</p>
+            <p>Let's migrate your data so you can jump right back in.</p>
+            <button id="comfig-migrate-btn" class="btn btn-primary btn-lg"
+              ><span class="fas fa-box fa-fw"></span> Import data</button
+            >
+          </div>
+        </div>
+      </div>
+    </div>
   </Body>
 </Layout>
