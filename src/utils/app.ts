@@ -12,6 +12,7 @@ import { del, get, set, setMany } from "idb-keyval";
 import { stringify } from "vdf-parser";
 
 import fastClone from "./fastClone.ts";
+import TSON from "./tson";
 
 const idbKeyval = {
   get,
@@ -42,7 +43,7 @@ export async function app() {
   }
   console.log("App loading...");
 
-  if (false && window.location.hostname === "mastercomfig.com") {
+  if (window.location.hostname === "mastercomfig.com") {
     window.location.assign("/deprecated_app");
     return;
   }
@@ -53,16 +54,13 @@ export async function app() {
     const migrateBtn = document.getElementById("comfig-migrate-btn");
     if (migrateBtn) {
       migrateBtn.addEventListener("click", async () => {
-        if (true) {
-          return;
-        }
         if (!navigator.clipboard) {
           console.error("Clipboard import unsupported.");
           window.location.assign("/app");
           return;
         }
         const data = await navigator.clipboard.readText();
-        const obj = JSON.parse(data);
+        const obj = TSON.parse(data);
         const entries = Object.entries(obj);
         setMany(entries);
         window.location.assign("/app");

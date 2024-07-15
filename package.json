@@ -93,6 +93,8 @@
     "stylelint-config-html": "^1.1.0",
     "stylelint-config-standard-scss": "^13.1.0",
     "typescript": "^5.5.3",
+    "typeson": "^9.0.3",
+    "typeson-registry": "^10.0.0",
     "vdf-parser": "^1.2.1",
     "vite": "^5.3.3",
     "wavefile": "^11.0.0",
