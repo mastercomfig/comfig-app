@@ -393,7 +393,7 @@ const { hash } = await getGameData();
                     </li>
                   </ul>
                 </p>
-                <Items client:only="react" hash={hash.substring(0, 8)} />
+                <Items client:load hash={hash.substring(0, 8)} />
               </div>
             </div>
           </div>
