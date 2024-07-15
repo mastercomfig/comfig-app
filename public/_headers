@@ -2,7 +2,7 @@
   ! Access-Control-Allow-Origin
   Permissions-Policy: document-domain=()
   Document-Policy: js-profiling
-  Content-Security-Policy: upgrade-insecure-requests; default-src 'none'; script-src {{SRC_NONCE}} {{SCRIPT_SRC_HASHES}} 'self' blob: https://static.cloudflareinsights.com; frame-src https://www.youtube-nocookie.com; img-src data: https:; connect-src https:; media-src blob: https:; style-src 'self'; style-src-elem {{SRC_NONCE}} {{STYLE_SRC_ELEM_HASHES}} 'self'; style-src-attr 'unsafe-inline'; manifest-src 'self'; font-src 'self'; worker-src blob: 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'; sandbox allow-downloads allow-forms allow-modals allow-popups allow-popups-to-escape-sandbox allow-presentation allow-same-origin allow-scripts;
+  Content-Security-Policy: upgrade-insecure-requests; default-src 'none'; script-src {{SRC_NONCE}} {{SCRIPT_SRC_HASHES}} 'self' blob: https://static.cloudflareinsights.com https://ajax.cloudflare.com https://challenges.cloudflare.com; frame-src https://www.youtube-nocookie.com https://challenges.cloudflare.com; img-src data: https:; connect-src https:; media-src blob: https:; style-src 'self'; style-src-elem {{SRC_NONCE}} {{STYLE_SRC_ELEM_HASHES}} 'self'; style-src-attr 'unsafe-inline'; manifest-src 'self'; font-src 'self'; worker-src blob: 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'; sandbox allow-downloads allow-forms allow-modals allow-popups allow-popups-to-escape-sandbox allow-presentation allow-same-origin allow-scripts;
   Cross-Origin-Resource-Policy: same-origin
   Cross-Origin-Opener-Policy: same-origin
   Cross-Origin-Embedder-Policy: require-corp

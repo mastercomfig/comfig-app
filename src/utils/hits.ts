@@ -257,7 +257,11 @@ async function createPlayer(player: HTMLElement) {
     const audioBlob = new Blob([buf], { type: "audio/wav" });
     wave.loadBlob(audioBlob, samples, duration);
     const shadowDom = player.firstElementChild?.shadowRoot;
-    const styleBlock = shadowDom?.querySelector("style")?.cloneNode();
+    const originalStyleBlock = shadowDom?.querySelector(
+      "style",
+    ) as HTMLStyleElement;
+    const styleBlock = originalStyleBlock?.cloneNode() as HTMLStyleElement;
+    styleBlock.innerHTML = originalStyleBlock.innerHTML;
     styleBlock?.setAttribute("nonce", getNonce());
     shadowDom?.insertBefore(styleBlock, shadowDom.firstChild);
     playLink.onclick = (e) => {
