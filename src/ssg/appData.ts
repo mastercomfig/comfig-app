@@ -16,7 +16,9 @@ export async function sha256(str) {
 
 export async function getAppData() {
   if (!appData) {
-    appData = await fetchCache("https://api.comfig.app/");
+    appData = await fetchCache(
+      import.meta.env.COMFIG_API_URL ?? "https://api.comfig.app/",
+    );
   }
 
   const hash = await sha256(JSON.stringify(appData));
