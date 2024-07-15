@@ -267,7 +267,8 @@ async function createPlayer(player: HTMLElement) {
     playLink.onclick = (e) => {
       e.preventDefault();
       const ratio = wave.getCurrentTime() / wave.getDuration();
-      if (ratio < 0.92) {
+      const ratioThreshold = wave.getDuration() <= 0.3 ? 0.98 : 0.56;
+      if (ratio < ratioThreshold) {
         if (playerLookup[hash]) {
           playerLookup[hash] = playerLookup[hash].then(() => wave.playPause());
         } else {
