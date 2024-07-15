@@ -2,7 +2,7 @@ import { shuffle } from "@utils/shuffle";
 
 import hs from "./hitsounds.json";
 
-const seed = new Date().toLocaleDateString();
+const seed = new Date().toLocaleDateString("en-US");
 
 export function getHitsounds(alpha?: boolean) {
   if (alpha) {
