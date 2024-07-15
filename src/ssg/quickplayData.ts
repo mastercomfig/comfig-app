@@ -8,7 +8,7 @@ let quickplayData: any = null;
 export async function getQuickplayData() {
   if (!quickplayData) {
     const rawData = await fetchCache(
-      "https://worker.comfig.app/api/schema/get",
+      `${import.meta.env.COMFIG_WORKER_URL ?? "https://worker.comfig.app/"}api/schema/get`,
       {
         method: "POST",
       },

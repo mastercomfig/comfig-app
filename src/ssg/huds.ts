@@ -594,7 +594,7 @@ export async function getPopularity() {
         for (const hud of allHuds) {
           const id = hud.id;
           const downloadApiRes = fetch(
-            "https://worker.comfig.app/api/huds/download/get",
+            `${import.meta.env.COMFIG_WORKER_URL ?? "https://worker.comfig.app/"}api/huds/download/get`,
             {
               method: "POST",
               headers,
