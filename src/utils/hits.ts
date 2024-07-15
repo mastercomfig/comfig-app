@@ -256,13 +256,14 @@ async function createPlayer(player: HTMLElement) {
     const buf = wavFile.toBuffer().buffer;
     const audioBlob = new Blob([buf], { type: "audio/wav" });
     wave.loadBlob(audioBlob, samples, duration);
-    player.firstElementChild?.shadowRoot
-      ?.querySelector("style")
-      ?.setAttribute("nonce", getNonce());
+    const shadowDom = player.firstElementChild?.shadowRoot;
+    const styleBlock = shadowDom?.querySelector("style")?.cloneNode();
+    styleBlock?.setAttribute("nonce", getNonce());
+    shadowDom?.insertBefore(styleBlock, shadowDom.firstChild);
     playLink.onclick = (e) => {
       e.preventDefault();
       const ratio = wave.getCurrentTime() / wave.getDuration();
-      if (ratio < 0.95) {
+      if (ratio < 0.92) {
         if (playerLookup[hash]) {
           playerLookup[hash] = playerLookup[hash].then(() => wave.playPause());
         } else {
