@@ -1,12 +1,12 @@
-import adImg from "@img/gamemodes/ad.png";
-import arenaImg from "@img/gamemodes/arena.png";
-import cpImg from "@img/gamemodes/cp.png";
-import ctfImg from "@img/gamemodes/ctf.png";
-import kothImg from "@img/gamemodes/koth.png";
-import payloadImg from "@img/gamemodes/pl.png";
-import plrImg from "@img/gamemodes/plr.png";
-import miscImg from "@img/gamemodes/sd.png";
-import xMarkImg from "@img/xmark.png";
+import adImg from "@img/gamemodes/ad.webp";
+import arenaImg from "@img/gamemodes/arena.webp";
+import cpImg from "@img/gamemodes/cp.webp";
+import ctfImg from "@img/gamemodes/ctf.webp";
+import kothImg from "@img/gamemodes/koth.webp";
+import payloadImg from "@img/gamemodes/pl.webp";
+import plrImg from "@img/gamemodes/plr.webp";
+import miscImg from "@img/gamemodes/sd.webp";
+import xMarkImg from "@img/xmark.webp";
 import * as Sentry from "@sentry/browser";
 import { useEffect, useMemo, useRef, useState } from "react";
 
