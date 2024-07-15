@@ -41,14 +41,16 @@ import Layout from "@layouts/Layout.astro";
             <span class="fas fa-boxes-packing fa-fw"></span> Backup and import
           </button>
           <br /><br />
-          <div class="d-none">
+          <div>
             <p>
-              Or, if you'd like to start fresh without your pre-existing data,
-              click this second button below.<br />You will lose all your
-              current customizations.
+              Or, if you'd like to skip migrating your pre-existing data, click
+              this second button below.<br />You won't keep any saved
+              customizations from mastercomfig.com.<br />If this is your first
+              time using the site, or you already used comfig.app, you can
+              safely use this option.
             </p>
             <a class="btn btn-danger p-2" href="https://comfig.app/app">
-              <span class="fas fa-box-open fa-fw"></span> Skip and start fresh
+              <span class="fas fa-box-open fa-fw"></span> Skip migration
             </a>
             <br /><br />
           </div>
@@ -60,6 +62,7 @@ import Layout from "@layouts/Layout.astro";
       </div>
     </header>
     <script>
+      import TSON from "@utils/tson";
       import { entries } from "idb-keyval";
       document.addEventListener("astro:page-load", () => {
         const btn = document.getElementById("comfig-backup");
@@ -83,7 +86,7 @@ import Layout from "@layouts/Layout.astro";
             obj[key.toString()] = val;
           }
 
-          const data = JSON.stringify(obj);
+          const data = TSON.stringify(obj);
           if (!data) {
             window.location.assign("https://comfig.app/app");
             return;
@@ -94,7 +97,7 @@ import Layout from "@layouts/Layout.astro";
             return;
           }
           await navigator.clipboard.writeText(data);
-          window.location.assign("https://comfig.app/app?migrate=1");
+          window.location.assign("/app?migrate=1");
         });
       });
     </script>

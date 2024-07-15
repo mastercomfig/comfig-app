@@ -129,8 +129,8 @@ importers:
         specifier: ^6.9.0
         version: 6.9.0(eslint@9.6.0)
       eslint-plugin-react-hooks:
-        specifier: ^4.6.2
-        version: 4.6.2(eslint@9.6.0)
+        specifier: ^5.1.0-beta-26f2496093-20240514
+        version: 5.1.0-rc-fb9a90fa48-20240614(eslint@9.6.0)
       eslint-plugin-react-refresh:
         specifier: ^0.4.8
         version: 0.4.8(eslint@9.6.0)
@@ -239,6 +239,12 @@ importers:
       typescript:
         specifier: ^5.5.3
         version: 5.5.3
+      typeson:
+        specifier: ^9.0.3
+        version: 9.0.3
+      typeson-registry:
+        specifier: ^10.0.0
+        version: 10.0.0
       vdf-parser:
         specifier: ^1.2.1
         version: 1.2.1
@@ -2507,6 +2513,10 @@ packages:
   base-64@1.0.0:
     resolution: {integrity: sha512-kwDPIFCGx0NZHog36dj+tHiwP4QMzsZ3AgMViUBKI0+V5n4U0ufTCUMhnQ04diaRI8EX/QcPfql7zlhZ7j4zgg==}
 
+  base64-arraybuffer-es6@3.1.0:
+    resolution: {integrity: sha512-QKKtftiSrKjilihGNLXxnrb9LJj7rnEdB1cYAqVpekFy0tisDklAf1RAgvpm0HsGYx9sv7FUbgpsrfwTyCPVLg==}
+    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+
   binary-extensions@2.3.0:
     resolution: {integrity: sha512-Ceh+7ox5qe7LJuLHoY0feh3pHuUDHAcRUeyL2VYghZwfpkNIy/+8Ocg0a3UuSoYzavmylwuLWQOf3hl0jjMMIw==}
     engines: {node: '>=8'}
@@ -2996,11 +3006,11 @@ packages:
     peerDependencies:
       eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8
 
-  eslint-plugin-react-hooks@4.6.2:
-    resolution: {integrity: sha512-QzliNJq4GinDBcD8gPB5v0wh6g8q3SUi6EFF0x8N/BL9PoVs0atuGc47ozMRyOWAKdwaZ5OnbOEa3WR+dSGKuQ==}
+  eslint-plugin-react-hooks@5.1.0-rc-fb9a90fa48-20240614:
+    resolution: {integrity: sha512-xsiRwaDNF5wWNC4ZHLut+x/YcAxksUd9Rizt7LaEn3bV8VyYRpXnRJQlLOfYaVy9esk4DFP4zPPnoNVjq5Gc0w==}
     engines: {node: '>=10'}
     peerDependencies:
-      eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0
+      eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0 || ^9.0.0
 
   eslint-plugin-react-refresh@0.4.8:
     resolution: {integrity: sha512-MIKAclwaDFIiYtVBLzDdm16E+Ty4GwhB6wZlCAG1R3Ur+F9Qbo6PRxpA5DK7XtDgm+WlCoAY2WxAwqhmIDHg6Q==}
@@ -5162,6 +5172,14 @@ packages:
     resolution: {integrity: sha512-/hreyEujaB0w76zKo6717l3L0o/qEUtRgdvUBvlkhoWeOVMjMuHNHk0BRBzikzuGDqNmPQbg5ifMEqsHLiIUcQ==}
     engines: {node: '>=14.17'}
     hasBin: true
+
+  typeson-registry@10.0.0:
+    resolution: {integrity: sha512-avguVaKqLvpKAViY3AD+YJFMNSlgAqs66nue3e2DBUY6xBOr2tJgggCyd8E026CM2F6JfNxp8tl9JU/+ZsJtyA==}
+    engines: {node: '>=18.0.0'}
+
+  typeson@9.0.3:
+    resolution: {integrity: sha512-vsOn+VPbIYI3jgj96vwIhAO0BNmlBxEgBKVmuzl1dwXzQe+3XjRi/gK2zYgAansWYlrtvluy4lvWcL8LF01P3Q==}
+    engines: {node: '>=16.0.0'}
 
   typo-js@1.2.4:
     resolution: {integrity: sha512-Oy/k+tFle5NAA3J/yrrYGfvEnPVrDZ8s8/WCwjUE75k331QyKIsFss7byQ/PzBmXLY6h1moRnZbnaxWBe3I3CA==}
@@ -8501,6 +8519,8 @@ snapshots:
 
   base-64@1.0.0: {}
 
+  base64-arraybuffer-es6@3.1.0: {}
+
   binary-extensions@2.3.0: {}
 
   bootstrap@5.3.3(@popperjs/core@2.11.8):
@@ -9087,7 +9107,7 @@ snapshots:
       safe-regex-test: 1.0.3
       string.prototype.includes: 2.0.0
 
-  eslint-plugin-react-hooks@4.6.2(eslint@9.6.0):
+  eslint-plugin-react-hooks@5.1.0-rc-fb9a90fa48-20240614(eslint@9.6.0):
     dependencies:
       eslint: 9.6.0
 
@@ -11638,6 +11658,14 @@ snapshots:
       semver: 7.6.2
 
   typescript@5.5.3: {}
+
+  typeson-registry@10.0.0:
+    dependencies:
+      base64-arraybuffer-es6: 3.1.0
+      typeson: 9.0.3
+      whatwg-url: 14.0.0
+
+  typeson@9.0.3: {}
 
   typo-js@1.2.4: {}
 
