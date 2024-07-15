@@ -13,7 +13,7 @@ import FittyText from "@components/FittyText.astro";
 import HitsLoader from "@components/HitsLoader.astro";
 import "@styles/hits.scss";
 
-const { page, hitsounds } = Astro.props;
+const { page, hitsounds, alpha } = Astro.props;
 
 const currentPage = page.currentPage ?? 1;
 ---
@@ -49,6 +49,20 @@ const currentPage = page.currentPage ?? 1;
           aria-current="page"
           href="/hits/ks/1"
           ><span class="fas fa-skull-crossbones fa-fw"></span> Killsounds</a
+        >
+      </nav>
+      <nav class="nav nav-underline">
+        <a
+          class={`nav-link ${alpha ? "" : "active"}`}
+          aria-current="page"
+          href={`/hits/${hitsounds ? "hs" : "ks"}/1`}
+          ><span class="fas fa-shuffle fa-fw"></span> Daily Shuffle</a
+        >
+        <a
+          class={`nav-link ${alpha ? "active" : ""}`}
+          aria-current="page"
+          href={`/hits/${hitsounds ? "hs" : "ks"}/alphabetical/1`}
+          ><span class="fas fa-arrow-down-a-z fa-fw"></span> Alphabetically</a
         >
       </nav>
       <div class="row">
@@ -95,7 +109,7 @@ const currentPage = page.currentPage ?? 1;
         (page.url.prev || page.url.next) && (
           <div class="mt-4 d-flex justify-content-between">
             <a
-              href={`/hits/${hitsounds ? "hs" : "ks"}/1`}
+              href={`/hits/${hitsounds ? "hs" : "ks"}${alpha ? "/alphabetical" : ""}/1`}
               class={`btn btn-secondary ${
                 currentPage === 1 ? "invisible" : ""
               }`}
@@ -117,7 +131,7 @@ const currentPage = page.currentPage ?? 1;
               </a>
             </div>
             <a
-              href={`/hits/${hitsounds ? "hs" : "ks"}/${page.lastPage}`}
+              href={`/hits/${hitsounds ? "hs" : "ks"}${alpha ? "/alphabetical" : ""}/${page.lastPage}`}
               class={`btn btn-secondary ${
                 currentPage === page.lastPage ? "invisible" : ""
               }`}

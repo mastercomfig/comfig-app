@@ -1,0 +1,15 @@
+---
+import HitsPage from "@components/hits/HitsPage.astro";
+import { getKillsounds } from "@ssg/hits";
+
+export async function getStaticPaths({ paginate }) {
+  let pages = paginate(await getKillsounds(true), {
+    pageSize: 12,
+  });
+  return pages;
+}
+
+const { page } = Astro.props;
+---
+
+<HitsPage page={page} hitsounds={false} alpha={true} />
