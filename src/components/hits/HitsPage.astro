@@ -9,8 +9,8 @@ import HitsNav from "@components/hits/HitsNav.astro";
 import Sponsor from "@components/Sponsor.astro";
 import Layout from "@layouts/Layout.astro";
 
-import FittyText from "@components/FittyText.astro";
-import HitsLoader from "@components/HitsLoader.astro";
+import FittyText from "@components/loaders/FittyText.astro";
+import HitsLoader from "@components/loaders/HitsLoader.astro";
 import "@styles/hits.scss";
 
 const { page, hitsounds, alpha } = Astro.props;
@@ -90,7 +90,7 @@ const currentPage = page.currentPage ?? 1;
                     <div class="col-auto">
                       <a
                         href={`https://hits.mastercomfig.com/${s.hash}.wav`}
-                        download="killsound.wav"
+                        download={hitsounds ? "hitsound.wav" : "killsound.wav"}
                         class="btn btn-outline-secondary position-relative h-100 hs-dl"
                         target="_blank"
                         rel="noopener"

@@ -1,5 +1,6 @@
 ---
 import NavSelector from "@components/NavSelector.astro";
+import MiniHitsPlayer from "./MiniHitsPlayer.astro";
 ---
 
 <style>
@@ -58,6 +59,8 @@ import NavSelector from "@components/NavSelector.astro";
     aspect-ratio: 16 / 9;
   }
 </style>
+
+<MiniHitsPlayer />
 
 <script>
   import hitsounds from "@ssg/hitsounds.json";
@@ -122,24 +125,11 @@ import NavSelector from "@components/NavSelector.astro";
       }
       searchResults.innerHTML = "";
       for (const result of results) {
-        const resultDiv = document.createElement("div");
-        resultDiv.classList.add("card", "mb-2", "text-start");
-        const resultBody = document.createElement("div");
-        resultBody.classList.add("card-body");
-        const resultTitle = document.createElement("h5");
-        resultTitle.classList.add("card-title");
-        resultTitle.innerHTML = `${result.id} <span class="fas fa-${
-          result.type === "hitsound" ? "bullseye" : "skull-crossbones"
-        } fa-fw"></span>`;
-        resultBody.appendChild(resultTitle);
-        const resultLink = document.createElement("a");
-        resultLink.classList.add("stretched-link");
-        resultLink.href = `https://hits.mastercomfig.com/${result.hash}.wav`;
-        resultLink.download = `${result.type}.wav`;
-        resultLink.innerHTML = '<span class="fas fa-download fa-fw"></span>';
-        resultBody.appendChild(resultLink);
-        resultDiv.appendChild(resultBody);
-        searchResults.appendChild(resultDiv);
+        const hitsPlayer = document.createElement("mini-hits-player");
+        hitsPlayer.dataset.id = result.id;
+        hitsPlayer.dataset.type = result.type;
+        hitsPlayer.dataset.hash = result.hash;
+        searchResults.appendChild(hitsPlayer);
       }
     }
 

@@ -1,0 +1,74 @@
+---
+
+---
+
+<script>
+  import { addGlobalStylesToShadowRoot } from "@utils/globalStyles";
+  import { createPlayer } from "@utils/hits";
+
+  class MiniHitsPlayer extends HTMLElement {
+    constructor() {
+      // Always call super first in constructor
+      super();
+    }
+
+    async connectedCallback() {
+      const shadow = this.attachShadow({ mode: "open" });
+      addGlobalStylesToShadowRoot(shadow);
+
+      const resultDiv = document.createElement("div");
+      resultDiv.classList.add("card", "mb-2", "text-start");
+
+      const resultBody = document.createElement("div");
+      resultBody.classList.add("card-body");
+
+      const id = this.dataset.id;
+      const type = this.dataset.type;
+      const hash = this.dataset.hash;
+
+      const resultTitle = document.createElement("h5");
+      resultTitle.classList.add("card-title");
+      resultTitle.innerHTML = `${id} <span class="fas fa-${
+        type === "hitsound" ? "bullseye" : "skull-crossbones"
+      } fa-fw"></span>`;
+      resultBody.appendChild(resultTitle);
+
+      const playContainer = document.createElement("div");
+      playContainer.classList.add("hs-container-mini", "loading-bg", "mb-4");
+      playContainer.dataset.hash = hash;
+      resultBody.appendChild(playContainer);
+
+      const playLink = document.createElement("a");
+      playLink.classList.add(
+        "z-2",
+        "position-relative",
+        "px-4",
+        "py-1",
+        "me-3",
+        "btn",
+        "btn-primary",
+      );
+      playLink.href = "#";
+      playLink.id = `play-mini-${hash}`;
+      playLink.innerHTML = '<span class="fas fa-play fa-fw"></span>';
+      resultBody.appendChild(playLink);
+
+      const resultLink = document.createElement("a");
+      resultLink.classList.add("stretched-link");
+      resultLink.href = `https://hits.mastercomfig.com/${hash}.wav`;
+      resultLink.download = `${type}.wav`;
+      resultLink.innerHTML = '<span class="fas fa-download fa-fw"></span>';
+      resultBody.appendChild(resultLink);
+
+      resultDiv.appendChild(resultBody);
+
+      shadow.appendChild(resultDiv);
+
+      createPlayer(playContainer, true, shadow);
+    }
+  }
+
+  if (!customElements.get("mini-hits-player")) {
+    customElements.define("mini-hits-player", MiniHitsPlayer);
+  }
+</script>
