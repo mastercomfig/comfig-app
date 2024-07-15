@@ -216,25 +216,33 @@ function readWav(arr) {
   }
 }
 
-const playerLookup = {};
+const playerLookupFull = {};
+const playerLookupMini = {};
 
-async function createPlayer(player: HTMLElement) {
-  const wave = WaveSurfer.create({
-    container: player,
-    height: 64,
-    interact: false,
-    cursorWidth: 0,
-    hideScrollbar: true,
-  });
-  wave.on("ready", () => {
-    player.classList.remove("loading-bg");
-  });
+export async function createPlayer(
+  player: HTMLElement,
+  mini: boolean = false,
+  shadowRoot: ShadowRoot | undefined = undefined,
+) {
   const hash = player.dataset.hash;
   try {
-    const playLink = document.getElementById(`play-${hash}`);
+    const root = shadowRoot ?? document;
+    const playLink = root.getElementById(
+      mini ? `play-mini-${hash}` : `play-${hash}`,
+    );
     if (!playLink) {
       return;
     }
+    const wave = WaveSurfer.create({
+      container: player,
+      height: mini ? 32 : 64,
+      interact: false,
+      cursorWidth: 0,
+      hideScrollbar: true,
+    });
+    wave.on("ready", () => {
+      player.classList.remove("loading-bg");
+    });
     console.log(`Fetching https://hits.mastercomfig.com/${hash}.wav`);
     const response = await fetch(`https://hits.mastercomfig.com/${hash}.wav`);
     const buffer = await response.arrayBuffer();
@@ -264,6 +272,7 @@ async function createPlayer(player: HTMLElement) {
     styleBlock.innerHTML = originalStyleBlock.innerHTML;
     styleBlock?.setAttribute("nonce", getNonce());
     shadowDom?.insertBefore(styleBlock, shadowDom.firstChild);
+    const playerLookup = mini ? playerLookupMini : playerLookupFull;
     playLink.onclick = (e) => {
       e.preventDefault();
       const ratio = wave.getCurrentTime() / wave.getDuration();
@@ -295,6 +304,6 @@ export default async function initHits() {
   const players = document.querySelectorAll(
     ".hs-container",
   ) as NodeListOf<HTMLElement>;
-  const playerPromises = Array.from(players).map(createPlayer);
+  const playerPromises = Array.from(players).map((p) => createPlayer(p));
   await Promise.all(playerPromises);
 }

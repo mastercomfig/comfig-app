@@ -21,7 +21,7 @@ import veryLowImg from "@img/presets/very-low.webp";
 import highImg from "@img/presets/high.webp";
 import noneImg from "@img/presets/none.webp";
 import NavSelector from "@components/NavSelector.astro";
-import AppLoader from "@components/AppLoader.astro";
+import AppLoader from "@components/loaders/AppLoader.astro";
 
 const { appData, hash: appDataHash } = await getAppData();
 const appVersion = appData.v[0];
