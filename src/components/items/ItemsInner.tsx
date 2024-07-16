@@ -205,7 +205,7 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
           color,
         );
       }, 300),
-    [setCrosshairColor, playerClass],
+    [playerClass],
   );
 
   const isDefault = itemClasses[0].classname === "default";
