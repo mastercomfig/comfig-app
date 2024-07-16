@@ -1,13 +1,14 @@
 import crosshairPreviewImg from "@img/app/crosshairs/crosspreview.webp";
 import debounce from "lodash/debounce";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Button, Col, Form, FormCheck, Nav, Row, Tab } from "react-bootstrap";
-import { type RgbaColor, RgbaColorPicker, setNonce } from "react-colorful";
+import { type RgbaColor, setNonce } from "react-colorful";
 
 import { getNonce } from "@utils/nonce";
 
 import useItemStore from "@store/items";
 
+import { ColorPickerWrapper } from "./ColorPickerWrapper";
 import ItemsSelector from "./ItemsSelector";
 
 const cspNonce = getNonce();
@@ -54,6 +55,8 @@ function calculateItemSlots(playerClass, items) {
 
   return [slots, slotNames, firstKey];
 }
+
+const defaultColor = { r: 200, g: 200, b: 200, a: 0.78 };
 
 function calculateCrosshairs(items) {
   let crosshairs = {};
@@ -148,9 +151,18 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
     number | undefined
   >(undefined);
 
-  const currentCrosshairColor = liveCrosshairColor ??
+  const currentCrosshairColor =
+    liveCrosshairColor ??
     selectedCrosshairColor ??
-    itemStore.crosshairColors?.default ?? { r: 200, g: 200, b: 200, a: 0.78 };
+    itemStore.crosshairColors?.default ??
+    defaultColor;
+  const defaultCrosshairColor = useMemo(
+    () =>
+      selectedCrosshairColor ??
+      itemStore.crosshairColors?.default ??
+      defaultColor,
+    [],
+  );
   const defaultCrosshairScale =
     selectedCrosshairScale ?? itemStore.crosshairScales?.default ?? 32;
   const currentCrosshairScale = liveCrosshairScale ?? defaultCrosshairScale;
@@ -206,6 +218,14 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
         );
       }, 300),
     [],
+  );
+
+  const onColorChange = useCallback(
+    (color) => {
+      setLiveCrosshairColor(color);
+      crosshairColorDebounce(color);
+    },
+    [setLiveCrosshairColor, crosshairColorDebounce],
   );
 
   const isDefault = itemClasses[0].classname === "default";
@@ -280,7 +300,6 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
                           transform: `scale(${currentCrosshairScale / 32})`,
                         }}
                         colorize={currentCrosshairColor}
-                        colorizePreviewInvertClass="crosshair-preview-inverted"
                       >
                         {selectedZoomCrosshairs &&
                           zoomable.has(item.classname) && (
@@ -348,13 +367,10 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
                           }}
                         />
                         <h6>Crosshair Color</h6>
-                        <RgbaColorPicker
+                        <ColorPickerWrapper
                           className="w-100"
-                          color={currentCrosshairColor}
-                          onChange={(color) => {
-                            setLiveCrosshairColor(color);
-                            crosshairColorDebounce(color);
-                          }}
+                          color={defaultCrosshairColor}
+                          onChange={onColorChange}
                         />
                         <Row className="w-100 my-1 g-0">
                           <Col xs={"auto"} className="mx-2">
@@ -364,14 +380,8 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
                           </Col>
                           <Col
                             style={{
-                              backgroundColor:
-                                Math.sqrt(
-                                  Math.pow(currentCrosshairColor.r, 2) +
-                                    Math.pow(currentCrosshairColor.g, 2) +
-                                    Math.pow(currentCrosshairColor.b, 2),
-                                ) <= 127
-                                  ? "#fff"
-                                  : "#000",
+                              backgroundColor: "#fff",
+                              backgroundImage: `url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill-opacity=".05"><path d="M8 0h8v8H8zM0 8h8v8H0z"/></svg>')`,
                             }}
                           >
                             <div

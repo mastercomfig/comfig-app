@@ -1,5 +1,6 @@
 import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
+import tailwind from "@astrojs/tailwind";
 import { shield } from "@kindspells/astro-shield";
 import sentry from "@sentry/astro";
 import AstroPWA from "@vite-pwa/astro";
@@ -112,6 +113,10 @@ export default defineConfig({
   site: "https://comfig.app",
   integrations: [
     react(),
+    tailwind({
+      applyBaseStyles: false,
+      nesting: true,
+    }),
     pwa,
     sentry({
       dsn: "https://42c25ee2fb084eb5a832ee92d97057d5@o182209.ingest.us.sentry.io/6265934",
@@ -121,7 +126,11 @@ export default defineConfig({
         authToken: process.env.SENTRY_AUTH_TOKEN ?? "",
       },
     }),
-    shield({ sri: { hashesModule: modulePath } }),
+    shield({
+      sri: {
+        hashesModule: modulePath,
+      },
+    }),
     astroCSPHashExporter,
     sitemap(),
   ],
