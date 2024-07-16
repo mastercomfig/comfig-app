@@ -205,7 +205,7 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
           color,
         );
       }, 300),
-    [playerClass],
+    [],
   );
 
   const isDefault = itemClasses[0].classname === "default";
