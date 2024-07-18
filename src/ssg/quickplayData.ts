@@ -16,6 +16,9 @@ export async function getQuickplayData() {
     const thumbnails = rawData.map_thumbnails;
     const newThumbnails = {};
     for (const [map, thumbnail] of Object.entries(thumbnails)) {
+      if (!map || !thumbnail) {
+        continue;
+      }
       const optimizedImage = await getImage({
         src: thumbnail,
         inferSize: true,
