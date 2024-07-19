@@ -17,6 +17,7 @@ import ultraImg from "@img/presets/ultra.webp";
 import veryLowHqImg from "@img/presets/very-low-hq.webp";
 import ultraHqImg from "@img/presets/ultra-hq.webp";
 import networkImg from "@img/network.webp";
+import HomePageLoader from "@components/loaders/HomePageLoader.astro";
 ---
 
 <Layout>
@@ -25,7 +26,6 @@ import networkImg from "@img/network.webp";
     <PreloadHead />
     <ImportHead>
       <script>
-        import "@utils/index.ts";
         import "bootstrap/js/src/modal.js";
       </script>
     </ImportHead>
@@ -36,6 +36,7 @@ import networkImg from "@img/network.webp";
     />
   </head>
   <Body>
+    <HomePageLoader />
     <header
       class="jumbotron jumbotron-fluid"
       style=`background: linear-gradient(rgba(38, 50, 56, 0.7) 10%, rgba(38, 50, 56, 0.7)), url(${badlandsImg.src}); background-size: cover; background-position: center`

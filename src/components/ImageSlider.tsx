@@ -1,7 +1,7 @@
 import {
   ReactCompareSlider,
-  ReactCompareSliderImage,
   ReactCompareSliderHandle,
+  ReactCompareSliderImage,
 } from "react-compare-slider";
 
 export default function ImageSlider({ srcOne, altOne, srcTwo, altTwo }) {
@@ -12,7 +12,7 @@ export default function ImageSlider({ srcOne, altOne, srcTwo, altTwo }) {
           buttonStyle={{
             backdropFilter: "blur(2px)",
             backgroundColor: "rgba(50, 50, 50, 0.8)",
-            color: "#000",
+            color: "#fcfcfd",
             opacity: 0.8,
             boxShadow: "0 0 5px #000",
           }}
