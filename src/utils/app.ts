@@ -2672,9 +2672,11 @@ export async function app() {
       addVersion(lastVersion, versionDropdown, lastDownloadedBadge, true);
     }
 
-    addDropdownDivider(versionDropdown);
+    if (false) {
+      addDropdownDivider(versionDropdown);
 
-    addVersion("Dev build", versionDropdown, ["alpha", "bg-danger"]);
+      addVersion("Dev build", versionDropdown, ["alpha", "bg-danger"]);
+    }
 
     getEl("versionDropdown").classList.add("ready");
   }
