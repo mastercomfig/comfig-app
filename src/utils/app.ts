@@ -2578,6 +2578,10 @@ export async function app() {
 
   function addVersion(ver, dropdown, badge, disabled?) {
     const versionListItem = document.createElement("li");
+    // TODO: change to staging since the dev build is incompatible
+    if (ver === "Dev build") {
+      versionListItem.classList.add("d-none");
+    }
     const dropdownItem = document.createElement("a");
     dropdownItem.classList.add("dropdown-item");
     if (disabled) {
