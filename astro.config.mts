@@ -166,7 +166,6 @@ export default defineConfig({
     clientPrerender: true,
     globalRoutePriority: true,
     contentCollectionCache: true,
-    contentCollectionJsonSchema: true,
     env: {
       schema: {
         NONCE: envField.string({
