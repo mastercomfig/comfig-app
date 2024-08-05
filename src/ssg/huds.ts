@@ -606,7 +606,7 @@ export async function getPopularity() {
           )
             .then((res) => res.json())
             .then((body) => ({
-              id,
+              id: hud.id,
               count: body.count,
             }));
           downloadStatPromises.push(downloadApiRes);
