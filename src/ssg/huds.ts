@@ -592,7 +592,8 @@ export async function getPopularity() {
           Authorization: `Bearer ${import.meta.env.COMFIG_API_KEY}`,
         };
         for (const hud of allHuds) {
-          const id = hud.id;
+          // trailing slash for legacy ID
+          const id = `${hud.id}/`;
           const downloadApiRes = fetch(
             `${import.meta.env.COMFIG_WORKER_URL ?? "https://worker.comfig.app/"}api/huds/download/get`,
             {
