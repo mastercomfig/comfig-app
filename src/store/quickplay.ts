@@ -1,3 +1,4 @@
+import cloneDeep from "lodash/cloneDeep";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -128,7 +129,8 @@ const useStore = create(
     idbStorage(
       "quickplay",
       6,
-      (persistedState, version) => {
+      (inPersistedState, version) => {
+        const persistedState = cloneDeep(inPersistedState);
         if (version < 2) {
           persistedState.pinglimit = 50;
         }

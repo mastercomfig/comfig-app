@@ -1,8 +1,90 @@
+import cloneDeep from "lodash/cloneDeep";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 import "@utils/game.js";
 import idbStorage from "@utils/idbstorage";
+
+const persistence = idbStorage(
+  "items",
+  7,
+  (inPersistedState, version) => {
+    const persistedState = cloneDeep(inPersistedState);
+    try {
+      // Explosion effects were wrong order
+      if (version === 0) {
+        for (const [key, val] of Object.entries(
+          persistedState.explosioneffects,
+        )) {
+          persistedState.explosioneffects[val] = key;
+          delete persistedState.explosioneffects[key];
+        }
+      }
+      // Incorrect migration
+      if (version < 3) {
+        for (const [key, val] of Object.entries(
+          persistedState.explosioneffects,
+        )) {
+          persistedState.explosioneffects[val] = explosionEffects[key];
+          delete persistedState.explosioneffects[key];
+        }
+      }
+      // Adding crosshair pack groups
+      if (version < 4) {
+        for (const [key, val] of Object.entries(persistedState.crosshairs)) {
+          persistedState.crosshairs[key] = `Valve.${val}`;
+        }
+      }
+      // We didn't create new entries before v7, but we have to do it before v6 migration because it relies on them
+      if (version < 7) {
+        if (!persistedState.zoomCrosshairs) {
+          persistedState.zoomCrosshairs = {};
+        }
+        if (!persistedState.crosshairScales) {
+          persistedState.crosshairScales = {};
+        }
+        if (!persistedState.crosshairColors) {
+          persistedState.crosshairColors = {};
+        }
+        if (!persistedState.playerexplosions) {
+          persistedState.playerexplosions = {};
+        }
+        if (!persistedState.crosshairScales) {
+          persistedState.crosshairScales = {};
+        }
+      }
+      // Removing blocked items which were added post release
+      if (version < 6) {
+        for (const blockedItem of blockedItems) {
+          delete persistedState.crosshairs[blockedItem];
+          delete persistedState.crosshairColors[blockedItem];
+          delete persistedState.crosshairScales[blockedItem];
+          delete persistedState.zoomCrosshairs[blockedItem];
+          persistedState.muzzleflashes.delete(blockedItem);
+          persistedState.brassmodels.delete(blockedItem);
+          persistedState.tracers.delete(blockedItem);
+          delete persistedState.explosioneffects[blockedItem];
+          delete persistedState.playerexplosions[blockedItem];
+        }
+      }
+    } catch (e) {
+      console.error(e);
+      throw e;
+    }
+    return persistedState;
+  },
+  [
+    "crosshairs",
+    "crosshairColors",
+    "crosshairScales",
+    "zoomCrosshairs",
+    "muzzleflashes",
+    "brassmodels",
+    "tracers",
+    "explosioneffects",
+    "playerexplosions",
+  ],
+);
 
 const useStore = create(
   persist(
@@ -33,8 +115,11 @@ const useStore = create(
         set((state) => ({ crosshairs: { ...state.crosshairs, [k]: v } })),
       delCrosshair: (k) =>
         set((state) => {
-          delete state.crosshairs[k];
-          return state;
+          const crosshairs = {
+            ...state.crosshairs,
+          };
+          delete crosshairs[k];
+          return { crosshairs };
         }),
       setCrosshairColor: (k, v) =>
         set((state) => ({
@@ -42,8 +127,11 @@ const useStore = create(
         })),
       delCrosshairColor: (k) =>
         set((state) => {
-          delete state.crosshairColors[k];
-          return state;
+          const crosshairColors = {
+            ...state.crosshairColors,
+          };
+          delete crosshairColors[k];
+          return { crosshairColors };
         }),
       setCrosshairScale: (k, v) => {
         set((state) => ({
@@ -52,8 +140,11 @@ const useStore = create(
       },
       delCrosshairScale: (k) =>
         set((state) => {
-          delete state.crosshairScales[k];
-          return state;
+          const crosshairScales = {
+            ...state.crosshairScales,
+          };
+          delete crosshairScales[k];
+          return { crosshairScales };
         }),
       setZoomCrosshair: (k, v) =>
         set((state) => ({
@@ -61,38 +152,47 @@ const useStore = create(
         })),
       delZoomCrosshair: (k) =>
         set((state) => {
-          delete state.zoomCrosshairs[k];
-          return state;
+          const zoomCrosshairs = {
+            ...state.zoomCrosshairs,
+          };
+          delete zoomCrosshairs[k];
+          return { zoomCrosshairs };
         }),
       setMuzzleFlash: (k) =>
         set((state) => {
-          state.muzzleflashes.add(k);
-          return state;
+          const muzzleflashes = new Set(state.muzzleflashes);
+          muzzleflashes.add(k);
+          return { muzzleflashes };
         }),
       delMuzzleFlash: (k) =>
         set((state) => {
-          state.muzzleflashes.delete(k);
-          return state;
+          const muzzleflashes = new Set(state.muzzleflashes);
+          muzzleflashes.delete(k);
+          return { muzzleflashes };
         }),
       setBrassModel: (k) =>
         set((state) => {
-          state.brassmodels.add(k);
-          return state;
+          const brassmodels = new Set(state.brassmodels);
+          brassmodels.add(k);
+          return { brassmodels };
         }),
       delBrassModel: (k) =>
         set((state) => {
-          state.brassmodels.delete(k);
-          return state;
+          const brassmodels = new Set(state.brassmodels);
+          brassmodels.delete(k);
+          return { brassmodels };
         }),
       setTracer: (k) =>
         set((state) => {
-          state.tracers.add(k);
-          return state;
+          const tracers = new Set(state.tracers);
+          tracers.add(k);
+          return { tracers };
         }),
       delTracer: (k) =>
         set((state) => {
-          state.tracers.delete(k);
-          return state;
+          const tracers = new Set(state.tracers);
+          tracers.delete(k);
+          return { tracers };
         }),
       setExplosionEffect: (k, v) =>
         set((state) => ({
@@ -100,8 +200,11 @@ const useStore = create(
         })),
       delExplosionEffect: (k) =>
         set((state) => {
-          delete state.explosioneffects[k];
-          return state;
+          const explosioneffects = {
+            ...state.explosioneffects,
+          };
+          delete explosioneffects[k];
+          return { explosioneffects };
         }),
       setPlayerExplosionEffect: (k, v) =>
         set((state) => ({
@@ -109,66 +212,14 @@ const useStore = create(
         })),
       delPlayerExplosionEffect: (k) =>
         set((state) => {
-          delete state.playerexplosions[k];
-          return state;
+          const playerexplosions = {
+            ...state.playerexplosions,
+          };
+          delete playerexplosions[k];
+          return { playerexplosions };
         }),
     }),
-    idbStorage(
-      "items",
-      6,
-      (persistedState, version) => {
-        // Explosion effects were wrong order
-        if (version === 0) {
-          for (const [key, val] of Object.entries(
-            persistedState.explosioneffects,
-          )) {
-            persistedState.explosioneffects[val] = key;
-            delete persistedState.explosioneffects[key];
-          }
-        }
-        // Incorrect migration
-        if (version < 3) {
-          for (const [key, val] of Object.entries(
-            persistedState.explosioneffects,
-          )) {
-            persistedState.explosioneffects[val] = explosionEffects[key];
-            delete persistedState.explosioneffects[key];
-          }
-        }
-        // Adding crosshair pack groups
-        if (version < 4) {
-          for (const [key, val] of Object.entries(persistedState.crosshairs)) {
-            persistedState.crosshairs[key] = `Valve.${val}`;
-          }
-        }
-        // Removing blocked items which were added post release
-        if (version < 6) {
-          for (const blockedItem of blockedItems) {
-            delete persistedState.crosshairs[blockedItem];
-            delete persistedState.crosshairColors[blockedItem];
-            delete persistedState.crosshairScales[blockedItem];
-            delete persistedState.zoomCrosshairs[blockedItem];
-            persistedState.muzzleflashes.delete(blockedItem);
-            persistedState.brassmodels.delete(blockedItem);
-            persistedState.tracers.delete(blockedItem);
-            delete persistedState.explosioneffects[blockedItem];
-            delete persistedState.playerexplosions[blockedItem];
-          }
-        }
-        return persistedState;
-      },
-      [
-        "crosshairs",
-        "crosshairColors",
-        "crosshairScales",
-        "zoomCrosshairs",
-        "muzzleflashes",
-        "brassmodels",
-        "tracers",
-        "explosioneffects",
-        "playerexplosions",
-      ],
-    ),
+    persistence,
   ),
 );
 
