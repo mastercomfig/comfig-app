@@ -700,6 +700,12 @@ export async function app() {
   const silentBannedDirectories = new Set([""]);
 
   function checkDirectory(directoryHandle) {
+    if (!directoryHandle.name) {
+      alert(
+        `Due to browser security policy, selected folders cannot be migrated to comfig.app. To continue using Direct Install, please reselect your "Team Fortress 2" folder.`,
+      );
+      return false;
+    }
     const name = directoryHandle.name;
     let fail = bannedDirectories.has(name);
     if (fail) {
