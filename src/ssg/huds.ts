@@ -287,7 +287,7 @@ export const fetchHuds = async function (all) {
 
   const results = Array.from(huds.values())
     .sort((a, b) => b.publishDate.valueOf() - a.publishDate.valueOf())
-    .filter((hud) => !hud.parent); // No children shown on the page
+    .filter((hud) => !hud.parent || hud.distinguishedFromParent); // No children shown on the page
 
   return results;
 };
