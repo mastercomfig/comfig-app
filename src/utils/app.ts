@@ -489,7 +489,7 @@ export async function app() {
       "https://github.com/mastercomfig/mastercomfig/releases",
       "https://api.comfig.app/download",
     );
-    return url;
+    return `${url}?v=2`;
   }
 
   function getAddonUrl(id) {
