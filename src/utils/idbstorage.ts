@@ -1,9 +1,15 @@
-import { get, set, del } from "idb-keyval";
+import { del, get, set } from "idb-keyval";
 
 const idbStorage = (name, version, migrate, keys) => ({
   name: name,
   storage: {
-    getItem: get,
+    getItem: (key) => {
+      const val = get(key);
+      if (val === undefined) {
+        return null;
+      }
+      return val;
+    },
     setItem: set,
     removeItem: del,
   },
