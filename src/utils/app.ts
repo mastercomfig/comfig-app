@@ -489,7 +489,7 @@ export async function app() {
       "https://github.com/mastercomfig/mastercomfig/releases",
       "https://api.comfig.app/download",
     );
-    return `${url}?v=2`;
+    return `${url}`;
   }
 
   function getAddonUrl(id) {
@@ -927,7 +927,6 @@ export async function app() {
         throw err;
       }
       return wait(delay).then(() => {
-        url = url.endsWith(".vpk") ? url + "?v=2" : url;
         return fetchRetry(url, delay * 2, triesLeft, fetchOptions);
       });
     }
