@@ -74,7 +74,7 @@ import Layout from "@layouts/Layout.astro";
           }
         }
 
-        const disallowed = new Set(["cachedData", "quickplay"]);
+        const disallowed = new Set(["cachedData", "quickplay", "directory"]);
         btn?.addEventListener("click", async () => {
           const obj = {};
           const keyval = await entries();
