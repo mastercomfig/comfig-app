@@ -425,9 +425,10 @@ async function handleRequest(request) {
     }
     if (url.pathname.startsWith("/download")) {
       let downloadUrl = url.pathname.substring(downloadLength);
-      let isDevDownload = downloadUrl.startsWith("/download/dev/");
-      let validDownload =
-        isDevDownload || downloadUrl.startsWith("/latest/download/");
+      let isUnversionedDownload =
+        downloadUrl.startsWith("/download/dev/") ||
+        downloadUrl.startsWith("/latest/download/");
+      let validDownload = isUnversionedDownload;
       if (!validDownload && downloadUrl.startsWith("/download/")) {
         let versionString = downloadUrl.substring(downloadSlashLength);
         let slashPos = versionString.indexOf("/");
@@ -449,7 +450,9 @@ async function handleRequest(request) {
             );
             const resHeaders = generateCommonHeaders(
               origin,
-              response.ok ? resAssetHeadersSuccess : resAssetHeaders,
+              response.ok && !isUnversionedDownload
+                ? resAssetHeadersSuccess
+                : resAssetHeaders,
             );
             let { readable, writable } = new TransformStream();
             response.body.pipeTo(writable);
