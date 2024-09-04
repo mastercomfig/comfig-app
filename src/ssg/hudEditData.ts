@@ -14,7 +14,7 @@ const supportedHuds = [
   "zeeshud",
 ];
 
-export const sharedDataName = "Shared/controls";
+export const sharedDataName = "shared-hud";
 
 const hudIdMap = {
   "hypnotize-hud": "hypnotizehud",
