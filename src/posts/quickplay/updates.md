@@ -1,3 +1,7 @@
+## October 5, 2024
+
+* Fixed display issue with text which appeared due to an unknown cause
+
 ## July 9, 2024
 
 * Added game mode selection as an advanced option, to allow for queuing for multiple game modes

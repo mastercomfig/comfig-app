@@ -36,7 +36,9 @@ const { hash } = await getQuickplayData();
         }
         @media (min-width: 576px) {
           .carousel {
-            height: min(max(calc(95vh * 3 / 4), 33.75rem), calc(100vw * 3 / 4));
+            height: calc(
+              min(max(calc(95vh * 3 / 4), 33.75rem), calc(100vw * 3 / 4)) + 1rem
+            );
           }
           .quickplay-container {
             min-width: min(85vh, 100vw);
@@ -45,7 +47,7 @@ const { hash } = await getQuickplayData();
             width: max(95vh, 60rem);
           }
         }
-        @media (min-width: 992px) {
+        @media (min-width: 576px) {
           #gm-desc {
             margin-top: -3rem;
           }
@@ -228,7 +230,7 @@ const { hash } = await getQuickplayData();
                   >
                     <div
                       class="flex-grow-1"
-                      style={`background-image: url('${resource.img.src}'); background-position: center; background-size: contain;background-repeat: no-repeat;aspect-ratio: 4 / 3`}
+                      style={`background-image: url('${resource.img.src}'); background-position: center; background-size: contain;background-repeat: no-repeat;aspect-ratio: 4 / 3;height: 100%`}
                     >
                       <h2
                         class="display-2"
