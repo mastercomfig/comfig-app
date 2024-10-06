@@ -104,6 +104,15 @@ const astroCSPHashExporter: AstroIntegration = {
   },
 };
 
+const astroCSPHashExporterSetup: AstroIntegration = {
+  name: "astro-csp-hash-exporter",
+  hooks: {
+    "astro:config:setup": async ({ updateConfig }) => {
+      updateConfig({ integrations: [astroCSPHashExporter] });
+    },
+  },
+};
+
 const modulePath = import.meta.env.DEV
   ? undefined
   : resolve(rootDir, "generated", "sriHashes.mjs");
@@ -131,7 +140,7 @@ export default defineConfig({
         hashesModule: modulePath,
       },
     }),
-    astroCSPHashExporter,
+    astroCSPHashExporterSetup,
     sitemap(),
   ],
   image: {

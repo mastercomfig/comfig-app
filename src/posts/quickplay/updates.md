@@ -1,6 +1,7 @@
 ## October 5, 2024
 
 * Fixed display issue with text which appeared due to an unknown cause
+* Fixed new map images not displaying
 
 ## July 9, 2024
 
