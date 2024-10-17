@@ -46,7 +46,7 @@
     "@typescript-eslint/parser": "^8.8.0",
     "@vite-pwa/astro": "^0.4.3",
     "@zip.js/zip.js": "^2.7.52",
-    "astro": "^4.15.11",
+    "astro": "^4.16.1",
     "astro-remote": "^0.3.3",
     "autoprefixer": "^10.4.20",
     "bootstrap": "^5.3.3",
