@@ -1,0 +1,13 @@
+---
+let { name, target } = Astro.props;
+
+if (!name) {
+  name = target;
+}
+---
+
+<!doctype html>
+<meta charset="utf-8" />
+<title>Redirecting to {name}</title>
+<meta http-equiv="refresh" content={`0; URL=${target}`} />
+<link rel="canonical" href={target} crossorigin="" rel="noreferrer" />
