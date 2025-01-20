@@ -8,6 +8,8 @@ import PreloadHead from "@components/head/PreloadHead.astro";
 import Sponsor from "@components/Sponsor.astro";
 import Layout from "@layouts/Layout.astro";
 import { getHudEditData, sharedDataName } from "@ssg/hudEditData";
+import { Form } from "react-bootstrap";
+import { RgbaColorPicker } from "react-colorful";
 
 const hudEditData = await getHudEditData();
 
@@ -37,11 +39,11 @@ const sharedControls = shared.Controls;
         Object.entries(hudEditData).map(([hud, data]) => {
           return (
             <div>
-              <h2>{hud}</h2>
+              <h2 class="mt-3">{hud}</h2>
               {Object.entries(data.Controls).map(([controlName, options]) => {
                 return (
                   <div>
-                    <h3 class="fw-semibold">{controlName}</h3>
+                    <h3 class="fw-semibold mt-3">{controlName}</h3>
                     {options.map((option) => {
                       let {
                         Name,
@@ -54,26 +56,77 @@ const sharedControls = shared.Controls;
                         ...rest
                       } = option;
 
+                      let Component = <div />;
                       if (Type === "IntegerUpDown") {
                         let { Minimum, Maximum, Increment, ...rest2 } = rest;
                         rest = rest2;
+                        Component = (
+                          <Form.Group className="mb-3">
+                            <Form.Control
+                              type="number"
+                              defaultValue={Value}
+                              min={Minimum}
+                              max={Maximum}
+                              step={Increment}
+                            />
+                          </Form.Group>
+                        );
+                      } else if (Type === "ColorPicker") {
+                        const [r, g, b, a] = Value.split(" ");
+                        Component = (
+                          <RgbaColorPicker
+                            color={{ r, g, b, a: a / 255.0 }}
+                            onChange={() => {}}
+                            client:load
+                          />
+                        );
+                      } else if (Type === "ComboBox") {
+                        let { Options } = rest;
+                        // TODO: RenameFile
+                        Component = (
+                          <Form.Select defaultValue={Value}>
+                            {Options.map((o) => {
+                              return <option value={o.Value}>{o.Label}</option>;
+                            })}
+                          </Form.Select>
+                        );
+                      } else if (Type.toLowerCase() === "checkbox") {
+                        Component = (
+                          <Form.Check type="switch" defaultValue={Value} />
+                        );
+                      } else if (Type === "TextBox") {
+                        Component = (
+                          <Form.Control type="text" defaultValue={Value} />
+                        );
+                      } else if (Type === "Crosshair") {
+                      } else if (Type === "CustomBackground") {
+                      } else {
+                        console.log(Type);
+                      }
+
+                      const width = rest["Width"]
+                        ? `${rest["Width"]}px`
+                        : undefined;
+
+                      if (Special) {
+                        console.log("Special", Special);
                       }
 
                       return (
-                        <div>
-                          <h5>{Label}</h5>
+                        <div style={{ width }}>
+                          <h5 class="mt-3">
+                            {Label}
+                            {Restart && <span class="text-danger">*</span>}
+                          </h5>
                           <p>
-                            {Type ?? "No Type"} | {Special ?? "No Special"} |{" "}
-                            {ToolTip ?? "No ToolTip"} |{" "}
-                            {Restart === undefined
-                              ? "No Restart"
-                              : JSON.stringify(Restart)}{" "}
-                            |{" "}
-                            {Value === undefined
+                            <!--{Type ?? "No Type"} | {Special ?? "No Special"} |{" "}-->
+                            {ToolTip}
+                            <!--{Value === undefined
                               ? "No Value"
-                              : JSON.stringify(Value)}
+                              : JSON.stringify(Value)}-->
                           </p>
-                          <pre>{JSON.stringify(rest, undefined, 2)}</pre>
+                          {Component}
+                          <!--<pre>{JSON.stringify(rest, undefined, 2)}</pre>-->
                         </div>
                       );
                     })}

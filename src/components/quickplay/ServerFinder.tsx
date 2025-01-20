@@ -9,6 +9,7 @@ import miscImg from "@img/gamemodes/sd.webp";
 import xMarkImg from "@img/xmark.webp";
 import * as Sentry from "@sentry/browser";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 import fastClone from "@utils/fastClone";
 import { filterString } from "@utils/filter";
@@ -275,12 +276,26 @@ export default function ServerFinder({ hash }: { hash: string }) {
   };
 
   const [schema, setSchema] = useState<any>(undefined);
-  const mapToGamemode = schema?.map_gamemodes ?? {};
-  const mapToThumbnail = schema?.map_thumbnails ?? {};
+  const mapToGamemode = useMemo(() => schema?.map_gamemodes ?? {}, [schema]);
+  const mapToThumbnail = useMemo(() => schema?.map_thumbnails ?? {}, [schema]);
+  const extraQueues = useMemo(() => schema?.gamemodes ?? {}, [schema]);
 
   const allMaps = useMemo(() => {
     return Object.keys(mapToGamemode).map((m, i) => ({ id: i, name: m }));
   }, [schema]);
+
+  // TODO: special queues
+  /*
+  useEffect(() => {
+    const queues = [];
+    for (const queue of Object.keys(extraQueues)) {
+      if (queue === "special_events") {
+      }
+      queues.push();
+    }
+    queues.push("pvp");
+  }, [extraQueues]);
+  */
 
   const [mapBanIndex, setMapBanIndex] = useState(-1);
   const [showServers, setShowServers] = useState(false);
@@ -1450,8 +1465,25 @@ export default function ServerFinder({ hash }: { hash: string }) {
           <div className="col-auto">
             <h4 style={{ fontWeight: 500 }}>Blocks</h4>
             <p>
-              You have {quickplayStore.blocklist.size}{" "}
-              {quickplayStore.blocklist.size === 1 ? "server" : "servers"}{" "}
+              You have{" "}
+              <OverlayTrigger
+                overlay={
+                  <Tooltip id="blocked-server-list">
+                    {quickplayStore.blocklist.size === 0
+                      ? "No blocks."
+                      : Array.from(quickplayStore.blocklist).join("\n")}
+                  </Tooltip>
+                }
+              >
+                <span
+                  style={{
+                    textDecoration: "underline dotted",
+                  }}
+                >
+                  {quickplayStore.blocklist.size}{" "}
+                  {quickplayStore.blocklist.size === 1 ? "server" : "servers"}
+                </span>
+              </OverlayTrigger>{" "}
               blocked.
             </p>
             <button
