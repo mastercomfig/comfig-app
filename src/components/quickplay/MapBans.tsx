@@ -36,14 +36,18 @@ export default function MapBans({
   setMapBanIndex,
 }) {
   const sortedMaps = useMemo(() => {
-    return maps.toSorted((a, b) => {
-      const pop = (mapPop[b.name] ?? 0) - (mapPop[a.name] ?? 0);
-      if (pop !== 0) {
-        return pop;
-      }
-      return a.name.localeCompare(b.name);
-    });
-  }, [maps, mapPop]);
+    return maps
+      .filter((map) => {
+        return !mapbans.has(map.name);
+      })
+      .toSorted((a, b) => {
+        const pop = (mapPop[b.name] ?? 0) - (mapPop[a.name] ?? 0);
+        if (pop !== 0) {
+          return pop;
+        }
+        return a.name.localeCompare(b.name);
+      });
+  }, [maps, mapPop, mapbans]);
 
   const { search, searchResults } = useMiniSearch(sortedMaps, searchOptions);
 
