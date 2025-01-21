@@ -1,3 +1,7 @@
+## January 21, 2025
+
+* Fixed thumbnails missing for a few maps
+
 ## January 20, 2025
 
 * Adjusted server filters and fixed some filtering bugs to improve population counts
