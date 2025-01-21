@@ -39,7 +39,7 @@ export default function MapBans({
 }) {
   const sortedMaps = useMemo(() => {
     return maps.toSorted((a, b) => {
-      const pop = mapPop[b] - mapPop[a];
+      const pop = (mapPop[b] ?? 0) - (mapPop[a] ?? 0);
       if (pop !== 0) {
         return pop;
       }
