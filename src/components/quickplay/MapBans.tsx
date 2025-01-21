@@ -1,4 +1,5 @@
 import { interpolateRdYlGn } from "d3-scale-chromatic";
+import { useMemo } from "react";
 import { useMiniSearch } from "react-minisearch";
 
 import { expOut } from "@utils/math";
@@ -36,9 +37,19 @@ export default function MapBans({
   addMapBan,
   setMapBanIndex,
 }) {
-  const { search, searchResults } = useMiniSearch(maps, searchOptions);
+  const sortedMaps = useMemo(() => {
+    return maps.toSorted((a, b) => {
+      const pop = mapPop[b] - mapPop[a];
+      if (pop !== 0) {
+        return pop;
+      }
+      return a.localeCompare(b);
+    });
+  }, [maps, mapPop]);
 
-  let mapList = maps;
+  const { search, searchResults } = useMiniSearch(sortedMaps, searchOptions);
+
+  let mapList = sortedMaps;
   if (searchResults?.length) {
     mapList = searchResults;
   }

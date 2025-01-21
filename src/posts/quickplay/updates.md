@@ -1,9 +1,9 @@
 ## January 21, 2025
 
-* Fixed thumbnails missing/incorrect for many maps
-* Fixed map ban list not being in alphabetical order
 * Added population counts for maps to the map ban list
-* Updated map list to include some maps from the 2024 Scream Fortress and Smissmas events, and remove some redundant / outdated maps
+  * Maps are sorted by population, and then alphabetically
+* Fixed thumbnails missing/incorrect for many maps
+* Updated quickplay maps to include some maps from the 2024 Scream Fortress and Smissmas events, and remove some redundant / outdated maps
 
 ## January 20, 2025
 
