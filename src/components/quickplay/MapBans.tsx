@@ -37,11 +37,11 @@ export default function MapBans({
 }) {
   const sortedMaps = useMemo(() => {
     return maps.toSorted((a, b) => {
-      const pop = (mapPop[b] ?? 0) - (mapPop[a] ?? 0);
+      const pop = (mapPop[b.name] ?? 0) - (mapPop[a.name] ?? 0);
       if (pop !== 0) {
         return pop;
       }
-      return a.localeCompare(b);
+      return a.name.localeCompare(b.name);
     });
   }, [maps, mapPop]);
 
