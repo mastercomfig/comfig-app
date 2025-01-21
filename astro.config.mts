@@ -149,6 +149,18 @@ export default defineConfig({
         protocol: "https",
         hostname: "teamwork.tf",
       },
+      {
+        protocol: "https",
+        hostname: "wiki.teamfortress.com",
+      },
+      {
+        protocol: "https",
+        hostname: "tf2maps.net",
+      },
+      {
+        protocol: "https",
+        hostname: "comp.tf",
+      },
     ],
   },
   build: {

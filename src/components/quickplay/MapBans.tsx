@@ -1,7 +1,7 @@
 import { interpolateRdYlGn } from "d3-scale-chromatic";
 import { useMiniSearch } from "react-minisearch";
 
-import { getGrad } from "@utils/math";
+import { expOut } from "@utils/math";
 
 const searchOptions = {
   fields: ["name"],
@@ -12,15 +12,19 @@ const searchOptions = {
   },
 };
 
-const MAX_POP = 200;
+const MAX_POP = 87;
 
-function getPopulationColor(pop) {
+function getPopulationPct(pop: number) {
   if (pop >= MAX_POP) {
     pop = 1.0;
   } else {
     pop /= MAX_POP;
   }
-  return interpolateRdYlGn(getGrad(pop));
+  return pop;
+}
+
+function getPopulationColor(pop: number) {
+  return interpolateRdYlGn(expOut(getPopulationPct(pop)));
 }
 
 export default function MapBans({
@@ -79,7 +83,7 @@ export default function MapBans({
           return (
             <div className="col-4" key={m.name}>
               <div
-                className="bg-dark px-4 py-3 text-center d-flex align-items-center justify-content-center position-relative"
+                className="bg-dark px-4 py-3 text-center d-flex flex-column align-items-center justify-content-center position-relative"
                 style={{
                   backgroundImage: `url('${mapToThumbnail[m.name]}')`,
                   backgroundSize: "cover",
@@ -98,10 +102,13 @@ export default function MapBans({
                 }}
               >
                 <span className="text-light fw-bold">{m.name}</span>
-                <br />
-                <br />
                 <span
-                  style={{ color: getPopulationColor(mapPop[m.name] ?? 0) }}
+                  className="text-light"
+                  style={{
+                    color: getPopulationColor(mapPop[m.name] ?? 0),
+                    minWidth: "fit-content",
+                    width: `${Math.round(getPopulationPct(mapPop[m.name] ?? 0) * 100)}%`,
+                  }}
                 >
                   {mapPop[m.name] ?? 0}
                 </span>
