@@ -2,8 +2,6 @@ import { interpolateRdYlGn } from "d3-scale-chromatic";
 import { useMemo } from "react";
 import { useMiniSearch } from "react-minisearch";
 
-import { expOut } from "@utils/math";
-
 const searchOptions = {
   fields: ["name"],
   storeFields: ["name"],
@@ -25,7 +23,7 @@ function getPopulationPct(pop: number) {
 }
 
 function getPopulationColor(pop: number) {
-  return interpolateRdYlGn(expOut(getPopulationPct(pop)));
+  return interpolateRdYlGn(getPopulationPct(pop));
 }
 
 export default function MapBans({
