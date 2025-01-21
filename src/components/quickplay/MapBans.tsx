@@ -105,7 +105,7 @@ export default function MapBans({
                 <span
                   className="text-light"
                   style={{
-                    color: getPopulationColor(mapPop[m.name] ?? 0),
+                    backgroundColor: getPopulationColor(mapPop[m.name] ?? 0),
                     minWidth: "fit-content",
                     width: `${Math.round(getPopulationPct(mapPop[m.name] ?? 0) * 100)}%`,
                   }}
