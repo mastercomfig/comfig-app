@@ -521,6 +521,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
   const [servers, setServers] = useState<Array<any>>([]);
   const [filteredServers, setFilteredServers] = useState<Array<any>>([]);
   const [gamemodePop, setGamemodePop] = useState<Record<string, number>>({});
+  const [mapPop, setMapPop] = useState<Record<string, number>>({});
   const [allFiltered, setAllFiltered] = useState(false);
 
   async function queryServerList() {
@@ -612,6 +613,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
     xhr.send();
 
     setGamemodePop({});
+    setMapPop({});
 
     // revisiting site
     const foundTime = quickplayStore.foundTime;
@@ -635,10 +637,6 @@ export default function ServerFinder({ hash }: { hash: string }) {
 
   useEffect(() => {
     const gm = quickplayStore.gamemode;
-    if (servers.length < 1) {
-      gamemodePop[gm] = 0;
-      return;
-    }
     let players = 0;
     for (const server of servers) {
       if (!filterServer(server)) {
@@ -666,6 +664,21 @@ export default function ServerFinder({ hash }: { hash: string }) {
     quickplayStore.classres,
     quickplayStore.pure,
   ]);
+
+  useEffect(() => {
+    if (!servers) {
+      return;
+    }
+    const perMap = {};
+    for (const server of servers) {
+      const map = server.map;
+      if (!(map in perMap)) {
+        perMap[map] = 0;
+      }
+      perMap[map] += server.players;
+    }
+    setMapPop(perMap);
+  }, [servers]);
 
   useEffect(() => {
     if (!quickplayStore.searching) {
@@ -1617,6 +1630,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
       >
         {allMaps.length && (
           <MapBans
+            mapPop={mapPop}
             maps={allMaps}
             mapbans={mapbans}
             index={mapBanIndex}
