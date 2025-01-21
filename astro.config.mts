@@ -161,6 +161,10 @@ export default defineConfig({
         protocol: "https",
         hostname: "comp.tf",
       },
+      {
+        protocol: "https",
+        hostname: "steamuserimages-a.akamaihd.net",
+      },
     ],
   },
   build: {
