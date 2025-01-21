@@ -1,4 +1,7 @@
+import { interpolateRdYlGn } from "d3-scale-chromatic";
 import { useMiniSearch } from "react-minisearch";
+
+import { getGrad } from "@utils/math";
 
 const searchOptions = {
   fields: ["name"],
@@ -9,7 +12,19 @@ const searchOptions = {
   },
 };
 
+const MAX_POP = 200;
+
+function getPopulationColor(pop) {
+  if (pop >= MAX_POP) {
+    pop = 1.0;
+  } else {
+    pop /= MAX_POP;
+  }
+  return interpolateRdYlGn(getGrad(pop));
+}
+
 export default function MapBans({
+  mapPop,
   maps,
   mapbans,
   index,
@@ -83,6 +98,13 @@ export default function MapBans({
                 }}
               >
                 <span className="text-light fw-bold">{m.name}</span>
+                <br />
+                <br />
+                <span
+                  style={{ color: getPopulationColor(mapPop[m.name] ?? 0) }}
+                >
+                  {mapPop[m.name] ?? 0}
+                </span>
               </div>
             </div>
           );
