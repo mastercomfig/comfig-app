@@ -582,6 +582,21 @@ const authors = await fetchAuthors();
               )
             }
             {
+              hud.social.bsky && (
+                <a
+                  href={`https://bsky.app/profile/${hud.social.bsky}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  class="list-group-item d-flex justify-content-between align-items-center"
+                >
+                  <span>
+                    <span class="fab fa-bluesky fa-fw" /> Bluesky
+                  </span>
+                  <span class="fas fa-square-arrow-up-right fa-fw" />
+                </a>
+              )
+            }
+            {
               hud.social.youtube && (
                 <a
                   href={`https://www.youtube.com/${hud.social.youtube}`}
