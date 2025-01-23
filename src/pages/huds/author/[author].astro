@@ -166,6 +166,20 @@ const {
           )
         }
         {
+          social.bsky && (
+            <a
+              href={`https://bsky.app/profile/${social.bsky}`}
+              target="_blank"
+              rel="noreferrer"
+              class="list-group-item d-flex justify-content-between align-items-center"
+            >
+              <span>
+                <span class="fab fa-bluesky fa-fw" /> Bluesky
+              </span>
+            </a>
+          )
+        }
+        {
           social.youtube && (
             <a
               href={`https://www.youtube.com/${social.youtube}`}
