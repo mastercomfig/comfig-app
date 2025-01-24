@@ -28,6 +28,8 @@ const state = (set) => ({
   setSessionCount: (sessionCount) => set(() => ({ sessionCount })),
   searching: 0,
   setSearching: (searching) => set(() => ({ searching })),
+  showServers: false,
+  setShowServers: (showServers) => set(() => ({ showServers })),
   recentServers: {},
   setRecentServer: (k, v) =>
     set((state) => ({ recentServers: { ...state.recentServers, [k]: v } })),
