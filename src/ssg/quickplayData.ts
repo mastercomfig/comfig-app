@@ -1,7 +1,9 @@
+
 import { getImage } from "astro:assets";
 
 import { sha256 } from "./appData";
 import { fetchCache } from "./fetchCache";
+
 
 let quickplayData: any = null;
 
