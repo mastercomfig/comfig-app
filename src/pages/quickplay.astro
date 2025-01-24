@@ -6,13 +6,11 @@ import ImportHead from "@components/head/ImportHead.astro";
 import MainHead from "@components/head/MainHead.astro";
 import PreloadHead from "@components/head/PreloadHead.astro";
 import NavSelector from "@components/NavSelector.astro";
-import ServerFinder from "@components/quickplay/ServerFinder.tsx";
 import CustomizeButton from "@components/quickplay/CustomizeButton.tsx";
+import { MatchGroupSelector } from "@components/quickplay/MatchGroupSelector";
 import Layout from "@layouts/Layout.astro";
 import { getQuickplayData } from "@ssg/quickplayData";
-import { getDefaultMatchGroups } from "@ssg/quickplayStaticData";
-
-const matchGroups = getDefaultMatchGroups();
+import "@styles/quickplay.scss";
 
 const { hash } = await getQuickplayData();
 ---
@@ -22,135 +20,21 @@ const { hash } = await getQuickplayData();
     <BaseHead />
     <PreloadHead />
     <ImportHead>
-      <style>
-        .quickplay-section {
-          max-width: 100vw;
-        }
-        @media (min-width: 576px) {
-          .carousel {
-            height: calc(
-              min(max(calc(95vh * 3 / 4), 33.75rem), calc(100vw * 3 / 4)) + 1rem
-            );
-          }
-          .quickplay-container {
-            min-width: min(85vh, 100vw);
-          }
-          .quickplay-section {
-            width: max(95vh, 60rem);
-          }
-        }
-        @media (min-width: 576px) {
-          #gm-desc {
-            margin-top: -3rem;
-          }
-        }
-        .carousel-item {
-          transition: none !important;
-        }
-        .carousel .carousel-control-prev-icon.carousel-dark-buttons,
-        .carousel .carousel-control-next-icon.carousel-dark-buttons {
-          filter: invert(1) grayscale(100) !important;
-        }
-      </style>
       <script>
         import { Carousel } from "bootstrap";
 
         import useQuickplayStore from "@store/quickplay";
 
         document.addEventListener("astro:page-load", () => {
-          const urlparms = new URLSearchParams(window.location.search);
           const carouselEl = document.getElementById("quickplayMatchGroups");
-          let carousel: Carousel | null = null;
-          function refreshCarousel(start: boolean = false) {
-            if (carouselEl) {
-              carousel = new Carousel(carouselEl, {
-                pause: false,
-              });
-              carouselEl.addEventListener("slide.bs.carousel", (event) => {
-                const code = useQuickplayStore.getState().availableMatchGroups[event.to];
-                useQuickplayStore.getState().setMatchGroup(code.code);
-              });
-              if (start) {
-                const gm = urlparms.get("gm");
-                if (gm) {
-                  let gamemodes: string[] = [];
-                  if (gm === "any") {
-                    gamemodes = [
-                      "payload",
-                      "koth",
-                      "attack_defense",
-                      "ctf",
-                      "capture_point",
-                      "payload_race",
-                    ];
-                  } else {
-                    gamemodes = gm.split(",");
-                  }
-                  useQuickplayStore.getState().setGamemodes(gamemodes);
-                }
-                carousel.to(
-                  useQuickplayStore
-                    .getState()
-                    .availableMatchGroups.findIndex(
-                      (k) => k.code === useQuickplayStore.getState().matchGroup,
-                    ),
-                );
-              }
-            }
+          if (!carouselEl) {
+            return;
           }
-          refreshCarousel(true);
-          const playNow = document.getElementById(
-            "quickplay-now",
-          ) as HTMLButtonElement;
-          const quickpickBtn = document.getElementById(
-            "quickpick-btn",
-          ) as HTMLButtonElement;
-          if (carouselEl) {
-            carouselEl.addEventListener("finished-searching", (event) => {
-              refreshCarousel();
-              if (playNow) {
-                if (event.imFeelingLucky) {
-                  playNow.innerText = "TRY AGAIN";
-                } else {
-                  playNow.innerText = "PLAY NOW!";
-                }
-                playNow.disabled = false;
-                quickpickBtn.disabled = false;
-              }
-            });
-          }
-          function startSearching(variant) {
-            if (useQuickplayStore.getState().searching) {
-              return;
-            }
-            playNow.disabled = true;
-            quickpickBtn.disabled = true;
-            useQuickplayStore.getState().setSearching(variant);
-            useQuickplayStore.getState().setFound(0);
-            if (carousel) {
-              carousel.dispose();
-              carousel = null;
-            }
-          }
-          if (playNow) {
-            playNow.addEventListener("click", () => {
-              startSearching(1);
-            });
-          }
-          if (urlparms.get("autostart") === "2") {
-            useQuickplayStore.getState().toggleCustomizing().click();
-          }
-          if (quickpickBtn) {
-            quickpickBtn.addEventListener("click", () => {
-              startSearching(2);
-            });
-          }
-          if (urlparms.get("autostart") === "1") {
-            startSearching(1);
-          }
-          if (urlparms.get("autostart") === "3") {
-            startSearching(2);
-          }
+          useQuickplayStore.getState().setCarousel(
+            new Carousel(carouselEl, {
+              pause: false,
+            }),
+          );
         });
       </script>
     </ImportHead>
@@ -192,124 +76,7 @@ const { hash } = await getQuickplayData();
         class="d-flex align-items-center justify-content-center"
         style="height: 100%"
       >
-        <div class="align-middle text-center">
-          <div
-            id="quickplayMatchGroups"
-            class="carousel quickplay-section carousel-light slide carousel-fade p-4"
-            style="background: #ece9d7"
-          >
-            <ServerFinder client:load hash={hash.substring(0, 8)} />
-            <div
-              id="quickplayCarouselIndicators"
-              class="carousel-indicators carousel-hidable d-none"
-            >
-              {
-                matchGroups.map((resource, index) => (
-                  <button
-                    type="button"
-                    data-bs-target="#quickplayMatchGroups"
-                    data-bs-slide-to={index}
-                    class={`${index == 0 ? "active" : ""}`}
-                    aria-current="true"
-                    aria-label={`Slide ${index + 1} ${resource}`}
-                  />
-                ))
-              }
-            </div>
-            <div id="quickplayCarouselInner" class="carousel-inner h-100">
-              {
-                matchGroups.map((resource, index) => (
-                  <div
-                    class={`carousel-item h-100 d-flex flex-column ${index == 0 ? "active" : ""}`}
-                  >
-                    <div
-                      class="flex-grow-1"
-                      style={`background-image: url('${resource.img}'); background-position: center; background-size: contain;background-repeat: no-repeat;height: 100%`}
-                    >
-                      <h2
-                        class="display-2"
-                        style="color: #4b3c2d; font-weight: 700; letter-spacing: 0.2rem; text-shadow: #4b3c2d 0 0 1px"
-                      >
-                        {resource.name}
-                      </h2>
-                    </div>
-                    <div style="color: #2b2f32">
-                      <p
-                        id="gm-desc"
-                        class="lead mb-0"
-                        style="font-size: 2.5rem"
-                      >
-                        <strong>{resource.description}</strong>
-                      </p>
-                      <div
-                        class="text-danger-emphasis"
-                        style="font-size: 1.2rem"
-                      >
-                        {resource.skill === 0 && (
-                          <p class="m-0">Recommended For All Skill Levels</p>
-                        )}
-                        {resource.skill === 1 && (
-                          <p class="m-0">Recommended For Advanced Players</p>
-                        )}
-                        {resource.skill === 2 && (
-                          <p class="m-0">Recommended For Expert Players</p>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                ))
-              }
-            </div>
-            {
-              matchGroups.length > 1 && (
-                <>
-                  <button
-                    class="carousel-control-prev carousel-hidable"
-                    type="button"
-                    data-bs-target="#quickplayMatchGroups"
-                    data-bs-slide="prev"
-                  >
-                    <span
-                      class="carousel-control-prev-icon carousel-dark-buttons"
-                      aria-hidden="true"
-                    />
-                    <span class="visually-hidden">Previous</span>
-                  </button>
-                  <button
-                    class="carousel-control-next carousel-hidable"
-                    type="button"
-                    data-bs-target="#quickplayMatchGroups"
-                    data-bs-slide="next"
-                  >
-                    <span
-                      class="carousel-control-next-icon carousel-dark-buttons"
-                      aria-hidden="true"
-                    />
-                    <span class="visually-hidden">Next</span>
-                  </button>
-                </>
-              )
-            }
-          </div>
-          <div class="row g-0">
-            <div class="col">
-              <button
-                id="quickplay-now"
-                class="btn btn-success w-100"
-                style="font-size: 2.5rem; font-weight: 800;box-shadow: 0 -5px 5px 2px inset #0d5e1b"
-                >PLAY NOW!</button
-              >
-            </div>
-            <div class="col-auto">
-              <button
-                id="quickpick-btn"
-                class="btn btn-info w-100"
-                style="font-size: 2.5rem; font-weight: 600;box-shadow: 0 -5px 5px 2px inset #5e0d4c"
-                ><span class="fas fa-list fa-fw m-1"></span></button
-              >
-            </div>
-          </div>
-        </div>
+        <MatchGroupSelector client:load hash={hash.substring(0, 8)} />
       </div>
       <br />
       <div class="container px-0 quickplay-section">

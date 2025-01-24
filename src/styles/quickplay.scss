@@ -1,0 +1,35 @@
+.quickplay-section {
+  max-width: 100vw;
+}
+
+@media (min-width: 576px) {
+  .carousel {
+    height: calc(min(max(calc(95vh * 3 / 4), 33.75rem), calc(100vw * 3 / 4)) + 1rem);
+  }
+
+  .quickplay-container {
+    min-width: min(85vh, 100vw);
+  }
+
+  .quickplay-section {
+    width: max(95vh, 60rem);
+  }
+}
+
+@media (min-width: 576px) {
+  #gm-desc {
+    margin-top: -3rem;
+  }
+}
+
+.quickplay-carousel {
+  background: #ece9d7
+}
+
+.carousel-item {
+  transition: none !important;
+}
+
+.carousel-inner {
+  height: 100%;
+}

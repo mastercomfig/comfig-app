@@ -3,7 +3,6 @@ import mvmImg from "@img/gamemodes/mvm.webp";
 import randomImg from "@img/gamemodes/random.webp";
 import workshopImg from "@img/gamemodes/workshop.webp";
 
-
 export function getDefaultMatchGroupSettings() {
   const availableSettings = {
     pvp: new Set([
@@ -75,5 +74,5 @@ export function getDefaultMatchGroups() {
       img: randomImg.src,
     },
   ];
-  return matchGroups;
+  return [matchGroups[0]];
 }

@@ -278,7 +278,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
   const [schema, setSchema] = useState<any>(undefined);
   const mapToGamemode = useMemo(() => schema?.map_gamemodes ?? {}, [schema]);
   const mapToThumbnail = useMemo(() => schema?.map_thumbnails ?? {}, [schema]);
-  const extraQueues = useMemo(() => schema?.gamemodes ?? {}, [schema]);
+  const extraMatchGroups = useMemo(() => schema?.matchGroups ?? {}, [schema]);
 
   const allMaps = useMemo(() => {
     return Object.keys(mapToGamemode).map((m, i) => ({ id: i, name: m }));
@@ -522,7 +522,9 @@ export default function ServerFinder({ hash }: { hash: string }) {
   const untilRef = useRef(0);
   const [servers, setServers] = useState<Array<any>>([]);
   const [filteredServers, setFilteredServers] = useState<Array<any>>([]);
-  const [matchGroupPop, setMatchGroupPop] = useState<Record<string, number>>({});
+  const [matchGroupPop, setMatchGroupPop] = useState<Record<string, number>>(
+    {},
+  );
   const [mapPop, setMapPop] = useState<Record<string, number>>({});
   const [allFiltered, setAllFiltered] = useState(false);
 
@@ -755,12 +757,10 @@ export default function ServerFinder({ hash }: { hash: string }) {
     setFilteredServers([]);
     setAllFiltered(false);
     setProgress(0);
-    const carouselEl = document.getElementById("quickplayGamemodes");
-    const event = new Event("finished-searching");
-    event.imFeelingLucky = imFeelingLucky;
-    if (carouselEl) {
-      carouselEl.dispatchEvent(event);
-    }
+    const event = new CustomEvent("finished-searching", {
+      detail: { imFeelingLucky },
+    });
+    document.dispatchEvent(event);
   }
 
   function copyConnect(imFeelingLucky) {
@@ -988,7 +988,9 @@ export default function ServerFinder({ hash }: { hash: string }) {
         {matchGroupPop[quickplayStore.matchGroup] !== undefined && (
           <p className="lead fw-bold">
             {matchGroupPop[quickplayStore.matchGroup]}{" "}
-            {matchGroupPop[quickplayStore.matchGroup] === 1 ? "player" : "players"}{" "}
+            {matchGroupPop[quickplayStore.matchGroup] === 1
+              ? "player"
+              : "players"}{" "}
             online with your filters
           </p>
         )}
@@ -1001,638 +1003,667 @@ export default function ServerFinder({ hash }: { hash: string }) {
           ADVANCED OPTIONS
         </h3>
         <div className="row mt-4 gy-2">
-          {availableSettings[quickplayStore.matchGroup].has("maxplayers") && <div className="col-auto">
-            <h4 style={{ fontWeight: 500 }}>Server capacity</h4>
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="radio"
-                readOnly
-                name="server-capacity"
-                id="server-capacity-0"
-                checked={maxPlayerIndex === 0}
-                onClick={() =>
-                  quickplayStore.setMaxPlayerCap(MAX_PLAYER_OPTIONS[0])
-                }
-              />
-              <label className="form-check-label" htmlFor="server-capacity-0">
-                24 players
-              </label>
+          {availableSettings[quickplayStore.matchGroup].has("maxplayers") && (
+            <div className="col-auto">
+              <h4 style={{ fontWeight: 500 }}>Server capacity</h4>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  readOnly
+                  name="server-capacity"
+                  id="server-capacity-0"
+                  checked={maxPlayerIndex === 0}
+                  onClick={() =>
+                    quickplayStore.setMaxPlayerCap(MAX_PLAYER_OPTIONS[0])
+                  }
+                />
+                <label className="form-check-label" htmlFor="server-capacity-0">
+                  24 players
+                </label>
+              </div>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  readOnly
+                  name="server-capacity"
+                  id="server-capacity-1"
+                  checked={maxPlayerIndex === 1}
+                  onClick={() =>
+                    quickplayStore.setMaxPlayerCap(MAX_PLAYER_OPTIONS[1])
+                  }
+                />
+                <label className="form-check-label" htmlFor="server-capacity-1">
+                  24-32 players
+                </label>
+              </div>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  readOnly
+                  name="server-capacity"
+                  id="server-capacity-2"
+                  checked={maxPlayerIndex === 2}
+                  onClick={() =>
+                    quickplayStore.setMaxPlayerCap(MAX_PLAYER_OPTIONS[2])
+                  }
+                />
+                <label className="form-check-label" htmlFor="server-capacity-2">
+                  18-32 players
+                </label>
+              </div>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  readOnly
+                  name="server-capacity"
+                  id="server-capacity-3"
+                  checked={maxPlayerIndex === 3}
+                  onClick={() =>
+                    quickplayStore.setMaxPlayerCap(MAX_PLAYER_OPTIONS[3])
+                  }
+                />
+                <label className="form-check-label" htmlFor="server-capacity-3">
+                  64-100 players
+                </label>
+              </div>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  readOnly
+                  name="server-capacity"
+                  id="server-capacity-any"
+                  checked={maxPlayerIndex === 4}
+                  onClick={() =>
+                    quickplayStore.setMaxPlayerCap(MAX_PLAYER_OPTIONS[4])
+                  }
+                />
+                <label
+                  className="form-check-label"
+                  htmlFor="server-capacity-any"
+                >
+                  Don't care
+                </label>
+              </div>
             </div>
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="radio"
-                readOnly
-                name="server-capacity"
-                id="server-capacity-1"
-                checked={maxPlayerIndex === 1}
-                onClick={() =>
-                  quickplayStore.setMaxPlayerCap(MAX_PLAYER_OPTIONS[1])
-                }
-              />
-              <label className="form-check-label" htmlFor="server-capacity-1">
-                24-32 players
-              </label>
+          )}
+          {availableSettings[quickplayStore.matchGroup].has("crits") && (
+            <div className="col-auto">
+              <h4 style={{ fontWeight: 500 }}>Random crits</h4>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  readOnly
+                  name="random-crits"
+                  id="random-crits-0"
+                  checked={quickplayStore.crits === 0}
+                  onClick={() => quickplayStore.setCrits(0)}
+                />
+                <label className="form-check-label" htmlFor="random-crits-0">
+                  Enabled
+                </label>
+              </div>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  readOnly
+                  name="random-crits"
+                  id="random-crits-1"
+                  checked={quickplayStore.crits === 1}
+                  onClick={() => quickplayStore.setCrits(1)}
+                />
+                <label className="form-check-label" htmlFor="random-crits-1">
+                  Disabled
+                </label>
+              </div>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  readOnly
+                  name="random-crits"
+                  id="random-crits-any"
+                  checked={quickplayStore.crits === -1}
+                  onClick={() => quickplayStore.setCrits(-1)}
+                />
+                <label className="form-check-label" htmlFor="random-crits-any">
+                  Don't care
+                </label>
+              </div>
             </div>
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="radio"
-                readOnly
-                name="server-capacity"
-                id="server-capacity-2"
-                checked={maxPlayerIndex === 2}
-                onClick={() =>
-                  quickplayStore.setMaxPlayerCap(MAX_PLAYER_OPTIONS[2])
-                }
-              />
-              <label className="form-check-label" htmlFor="server-capacity-2">
-                18-32 players
-              </label>
+          )}
+          {availableSettings[quickplayStore.matchGroup].has("respawntimes") && (
+            <div className="col-auto">
+              <h4 style={{ fontWeight: 500 }}>Respawn times</h4>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  readOnly
+                  name="respawn-times"
+                  id="respawn-times-0"
+                  checked={quickplayStore.respawntimes === 0}
+                  onClick={() => quickplayStore.setRespawnTimes(0)}
+                />
+                <label className="form-check-label" htmlFor="respawn-times-0">
+                  Default respawn times
+                </label>
+              </div>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  readOnly
+                  name="respawn-times"
+                  id="respawn-times-1"
+                  checked={quickplayStore.respawntimes === 1}
+                  onClick={() => quickplayStore.setRespawnTimes(1)}
+                />
+                <label className="form-check-label" htmlFor="respawn-times-1">
+                  Instant respawn
+                </label>
+              </div>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  readOnly
+                  name="respawn-times"
+                  id="respawn-times-any"
+                  checked={quickplayStore.respawntimes === -1}
+                  onClick={() => quickplayStore.setRespawnTimes(-1)}
+                />
+                <label className="form-check-label" htmlFor="respawn-times-any">
+                  Don't care
+                </label>
+              </div>
             </div>
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="radio"
-                readOnly
-                name="server-capacity"
-                id="server-capacity-3"
-                checked={maxPlayerIndex === 3}
-                onClick={() =>
-                  quickplayStore.setMaxPlayerCap(MAX_PLAYER_OPTIONS[3])
-                }
-              />
-              <label className="form-check-label" htmlFor="server-capacity-3">
-                64-100 players
-              </label>
+          )}
+          {availableSettings[quickplayStore.matchGroup].has("rtd") && (
+            <div className="col-auto">
+              <h4 style={{ fontWeight: 500 }}>
+                RTD{" "}
+                <HelpTooltip
+                  id="rtd-help"
+                  title="Roll the Dice. A common mod on some casual servers where players can apply a random effect to themselves every so often. You can change this setting to 'Don't care' to expand the server search pool."
+                />
+              </h4>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  readOnly
+                  name="rtd"
+                  id="rtd-0"
+                  checked={quickplayStore.rtd === 0}
+                  onClick={() => quickplayStore.setRtd(0)}
+                />
+                <label className="form-check-label" htmlFor="rtd-0">
+                  Disabled
+                </label>
+              </div>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  readOnly
+                  name="rtd"
+                  id="rtd-1"
+                  checked={quickplayStore.rtd === 1}
+                  onClick={() => quickplayStore.setRtd(1)}
+                />
+                <label className="form-check-label" htmlFor="rtd-1">
+                  Enabled
+                </label>
+              </div>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  readOnly
+                  name="rtd"
+                  id="rtd-any"
+                  checked={quickplayStore.rtd === -1}
+                  onClick={() => quickplayStore.setRtd(-1)}
+                />
+                <label className="form-check-label" htmlFor="rtd-any">
+                  Don't care
+                </label>
+              </div>
             </div>
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="radio"
-                readOnly
-                name="server-capacity"
-                id="server-capacity-any"
-                checked={maxPlayerIndex === 4}
-                onClick={() =>
-                  quickplayStore.setMaxPlayerCap(MAX_PLAYER_OPTIONS[4])
-                }
-              />
-              <label className="form-check-label" htmlFor="server-capacity-any">
-                Don't care
-              </label>
+          )}
+          {availableSettings[quickplayStore.matchGroup].has("classres") && (
+            <div className="col-auto">
+              <h4 style={{ fontWeight: 500 }}>Class restrictions</h4>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  readOnly
+                  name="classres"
+                  id="classres-0"
+                  checked={quickplayStore.classres === 0}
+                  onClick={() => quickplayStore.setClassRes(0)}
+                />
+                <label className="form-check-label" htmlFor="classres-0">
+                  None
+                </label>
+              </div>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  readOnly
+                  name="classres"
+                  id="classres-1"
+                  checked={quickplayStore.classres === 1}
+                  onClick={() => quickplayStore.setClassRes(1)}
+                />
+                <label className="form-check-label" htmlFor="classres-1">
+                  Class limits OK
+                </label>
+              </div>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  readOnly
+                  name="classres"
+                  id="classres-any"
+                  checked={quickplayStore.classres === -1}
+                  onClick={() => quickplayStore.setClassRes(-1)}
+                />
+                <label className="form-check-label" htmlFor="classres-any">
+                  Class limits and bans OK
+                </label>
+              </div>
             </div>
-          </div>}
-          {availableSettings[quickplayStore.matchGroup].has("crits") && <div className="col-auto">
-            <h4 style={{ fontWeight: 500 }}>Random crits</h4>
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="radio"
-                readOnly
-                name="random-crits"
-                id="random-crits-0"
-                checked={quickplayStore.crits === 0}
-                onClick={() => quickplayStore.setCrits(0)}
-              />
-              <label className="form-check-label" htmlFor="random-crits-0">
-                Enabled
-              </label>
+          )}
+          {availableSettings[quickplayStore.matchGroup].has("pure") && (
+            <div className="col-auto">
+              <h4 style={{ fontWeight: 500 }}>Client Mods</h4>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  readOnly
+                  name="pure"
+                  id="pure-0"
+                  checked={quickplayStore.pure === 0}
+                  onClick={() => quickplayStore.setPure(0)}
+                />
+                <label className="form-check-label" htmlFor="pure-0">
+                  Disallowed
+                </label>
+              </div>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  readOnly
+                  name="pure"
+                  id="pure-1"
+                  checked={quickplayStore.pure === 1}
+                  onClick={() => quickplayStore.setPure(1)}
+                />
+                <label className="form-check-label" htmlFor="pure-1">
+                  Allowed
+                </label>
+              </div>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  readOnly
+                  name="pure"
+                  id="pure-any"
+                  checked={quickplayStore.pure === -1}
+                  onClick={() => quickplayStore.setPure(-1)}
+                />
+                <label className="form-check-label" htmlFor="pure-any">
+                  Don't care
+                </label>
+              </div>
             </div>
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="radio"
-                readOnly
-                name="random-crits"
-                id="random-crits-1"
-                checked={quickplayStore.crits === 1}
-                onClick={() => quickplayStore.setCrits(1)}
-              />
-              <label className="form-check-label" htmlFor="random-crits-1">
-                Disabled
-              </label>
+          )}
+          {availableSettings[quickplayStore.matchGroup].has("nocap") && (
+            <div className="col-auto">
+              <h4 style={{ fontWeight: 500 }}>
+                Objectives{" "}
+                <HelpTooltip
+                  id="objectives-help"
+                  title="Whether to look for servers which remove map objectives for a more deathmatch-oriented experienced. You can change this setting to 'Don't care' to expand the server search pool."
+                />
+              </h4>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  readOnly
+                  name="nocap"
+                  id="nocap-0"
+                  checked={quickplayStore.nocap === 0}
+                  onClick={() => quickplayStore.setNoCap(0)}
+                />
+                <label className="form-check-label" htmlFor="nocap-0">
+                  Enabled
+                </label>
+              </div>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  readOnly
+                  name="nocap"
+                  id="nocap-1"
+                  checked={quickplayStore.nocap === 1}
+                  onClick={() => quickplayStore.setNoCap(1)}
+                />
+                <label className="form-check-label" htmlFor="nocap-1">
+                  Disabled
+                </label>
+              </div>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  readOnly
+                  name="nocap"
+                  id="nocap-any"
+                  checked={quickplayStore.nocap === -1}
+                  onClick={() => quickplayStore.setNoCap(-1)}
+                />
+                <label className="form-check-label" htmlFor="nocap-any">
+                  Don't care
+                </label>
+              </div>
             </div>
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="radio"
-                readOnly
-                name="random-crits"
-                id="random-crits-any"
-                checked={quickplayStore.crits === -1}
-                onClick={() => quickplayStore.setCrits(-1)}
-              />
-              <label className="form-check-label" htmlFor="random-crits-any">
-                Don't care
-              </label>
+          )}
+          {availableSettings[quickplayStore.matchGroup].has("beta") && (
+            <div className="col-auto">
+              <h4 style={{ fontWeight: 500 }}>Beta maps</h4>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  readOnly
+                  name="beta-maps"
+                  id="beta-maps-0"
+                  checked={quickplayStore.beta === 0}
+                  onClick={() => quickplayStore.setBeta(0)}
+                />
+                <label className="form-check-label" htmlFor="beta-maps-0">
+                  Play released maps
+                </label>
+              </div>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  readOnly
+                  name="beta-maps"
+                  id="beta-maps-1"
+                  checked={quickplayStore.beta === 1}
+                  onClick={() => quickplayStore.setBeta(1)}
+                />
+                <label className="form-check-label" htmlFor="beta-maps-1">
+                  Play beta maps
+                </label>
+              </div>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  readOnly
+                  name="beta-maps"
+                  id="beta-maps-any"
+                  checked={quickplayStore.beta === -1}
+                  onClick={() => quickplayStore.setBeta(-1)}
+                />
+                <label className="form-check-label" htmlFor="beta-maps-any">
+                  Don't care
+                </label>
+              </div>
             </div>
-          </div>}
-          {availableSettings[quickplayStore.matchGroup].has("respawntimes") && <div className="col-auto">
-            <h4 style={{ fontWeight: 500 }}>Respawn times</h4>
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="radio"
-                readOnly
-                name="respawn-times"
-                id="respawn-times-0"
-                checked={quickplayStore.respawntimes === 0}
-                onClick={() => quickplayStore.setRespawnTimes(0)}
-              />
-              <label className="form-check-label" htmlFor="respawn-times-0">
-                Default respawn times
-              </label>
-            </div>
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="radio"
-                readOnly
-                name="respawn-times"
-                id="respawn-times-1"
-                checked={quickplayStore.respawntimes === 1}
-                onClick={() => quickplayStore.setRespawnTimes(1)}
-              />
-              <label className="form-check-label" htmlFor="respawn-times-1">
-                Instant respawn
-              </label>
-            </div>
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="radio"
-                readOnly
-                name="respawn-times"
-                id="respawn-times-any"
-                checked={quickplayStore.respawntimes === -1}
-                onClick={() => quickplayStore.setRespawnTimes(-1)}
-              />
-              <label className="form-check-label" htmlFor="respawn-times-any">
-                Don't care
-              </label>
-            </div>
-          </div>}
-          {availableSettings[quickplayStore.matchGroup].has("rtd") && <div className="col-auto">
-            <h4 style={{ fontWeight: 500 }}>
-              RTD{" "}
-              <HelpTooltip
-                id="rtd-help"
-                title="Roll the Dice. A common mod on some casual servers where players can apply a random effect to themselves every so often. You can change this setting to 'Don't care' to expand the server search pool."
-              />
-            </h4>
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="radio"
-                readOnly
-                name="rtd"
-                id="rtd-0"
-                checked={quickplayStore.rtd === 0}
-                onClick={() => quickplayStore.setRtd(0)}
-              />
-              <label className="form-check-label" htmlFor="rtd-0">
-                Disabled
-              </label>
-            </div>
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="radio"
-                readOnly
-                name="rtd"
-                id="rtd-1"
-                checked={quickplayStore.rtd === 1}
-                onClick={() => quickplayStore.setRtd(1)}
-              />
-              <label className="form-check-label" htmlFor="rtd-1">
-                Enabled
-              </label>
-            </div>
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="radio"
-                readOnly
-                name="rtd"
-                id="rtd-any"
-                checked={quickplayStore.rtd === -1}
-                onClick={() => quickplayStore.setRtd(-1)}
-              />
-              <label className="form-check-label" htmlFor="rtd-any">
-                Don't care
-              </label>
-            </div>
-          </div>}
-          {availableSettings[quickplayStore.matchGroup].has("classres") && <div className="col-auto">
-            <h4 style={{ fontWeight: 500 }}>Class restrictions</h4>
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="radio"
-                readOnly
-                name="classres"
-                id="classres-0"
-                checked={quickplayStore.classres === 0}
-                onClick={() => quickplayStore.setClassRes(0)}
-              />
-              <label className="form-check-label" htmlFor="classres-0">
-                None
-              </label>
-            </div>
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="radio"
-                readOnly
-                name="classres"
-                id="classres-1"
-                checked={quickplayStore.classres === 1}
-                onClick={() => quickplayStore.setClassRes(1)}
-              />
-              <label className="form-check-label" htmlFor="classres-1">
-                Class limits OK
-              </label>
-            </div>
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="radio"
-                readOnly
-                name="classres"
-                id="classres-any"
-                checked={quickplayStore.classres === -1}
-                onClick={() => quickplayStore.setClassRes(-1)}
-              />
-              <label className="form-check-label" htmlFor="classres-any">
-                Class limits and bans OK
-              </label>
-            </div>
-          </div>}
-          {availableSettings[quickplayStore.matchGroup].has("pure") && <div className="col-auto">
-            <h4 style={{ fontWeight: 500 }}>Client Mods</h4>
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="radio"
-                readOnly
-                name="pure"
-                id="pure-0"
-                checked={quickplayStore.pure === 0}
-                onClick={() => quickplayStore.setPure(0)}
-              />
-              <label className="form-check-label" htmlFor="pure-0">
-                Disallowed
-              </label>
-            </div>
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="radio"
-                readOnly
-                name="pure"
-                id="pure-1"
-                checked={quickplayStore.pure === 1}
-                onClick={() => quickplayStore.setPure(1)}
-              />
-              <label className="form-check-label" htmlFor="pure-1">
-                Allowed
-              </label>
-            </div>
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="radio"
-                readOnly
-                name="pure"
-                id="pure-any"
-                checked={quickplayStore.pure === -1}
-                onClick={() => quickplayStore.setPure(-1)}
-              />
-              <label className="form-check-label" htmlFor="pure-any">
-                Don't care
-              </label>
-            </div>
-          </div>}
-          {availableSettings[quickplayStore.matchGroup].has("nocap") && <div className="col-auto">
-            <h4 style={{ fontWeight: 500 }}>
-              Objectives{" "}
-              <HelpTooltip
-                id="objectives-help"
-                title="Whether to look for servers which remove map objectives for a more deathmatch-oriented experienced. You can change this setting to 'Don't care' to expand the server search pool."
-              />
-            </h4>
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="radio"
-                readOnly
-                name="nocap"
-                id="nocap-0"
-                checked={quickplayStore.nocap === 0}
-                onClick={() => quickplayStore.setNoCap(0)}
-              />
-              <label className="form-check-label" htmlFor="nocap-0">
-                Enabled
-              </label>
-            </div>
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="radio"
-                readOnly
-                name="nocap"
-                id="nocap-1"
-                checked={quickplayStore.nocap === 1}
-                onClick={() => quickplayStore.setNoCap(1)}
-              />
-              <label className="form-check-label" htmlFor="nocap-1">
-                Disabled
-              </label>
-            </div>
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="radio"
-                readOnly
-                name="nocap"
-                id="nocap-any"
-                checked={quickplayStore.nocap === -1}
-                onClick={() => quickplayStore.setNoCap(-1)}
-              />
-              <label className="form-check-label" htmlFor="nocap-any">
-                Don't care
-              </label>
-            </div>
-          </div>}
-          {availableSettings[quickplayStore.matchGroup].has("beta") && <div className="col-auto">
-            <h4 style={{ fontWeight: 500 }}>Beta maps</h4>
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="radio"
-                readOnly
-                name="beta-maps"
-                id="beta-maps-0"
-                checked={quickplayStore.beta === 0}
-                onClick={() => quickplayStore.setBeta(0)}
-              />
-              <label className="form-check-label" htmlFor="beta-maps-0">
-                Play released maps
-              </label>
-            </div>
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="radio"
-                readOnly
-                name="beta-maps"
-                id="beta-maps-1"
-                checked={quickplayStore.beta === 1}
-                onClick={() => quickplayStore.setBeta(1)}
-              />
-              <label className="form-check-label" htmlFor="beta-maps-1">
-                Play beta maps
-              </label>
-            </div>
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="radio"
-                readOnly
-                name="beta-maps"
-                id="beta-maps-any"
-                checked={quickplayStore.beta === -1}
-                onClick={() => quickplayStore.setBeta(-1)}
-              />
-              <label className="form-check-label" htmlFor="beta-maps-any">
-                Don't care
-              </label>
-            </div>
-          </div>}
+          )}
         </div>
         <br />
         <div className="row">
-          {availableSettings[quickplayStore.matchGroup].has("pinglimit") && <div className="col-md-4">
-            <h4 style={{ fontWeight: 500 }}>
-              Ping Preference{" "}
-              <HelpTooltip
-                id="ping-help"
-                title="The maximum ping before starting to derank servers for too high ping. This is more effective in some lower populated regions when Strict regional matchmaking is selected."
-              />
-            </h4>
-            <input
-              type="range"
-              className="form-range"
-              value={quickplayStore.pinglimit}
-              onChange={(e) =>
-                quickplayStore.setPingLimit(parseInt(e.target.value, 10))
-              }
-              min={MIN_PING}
-              max={MAX_PING}
-              id="ping-range"
-            ></input>
-            <label htmlFor="ping-range" className="form-label">
-              {quickplayStore.pinglimit}ms
-            </label>
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                checked={quickplayStore.pingmode}
-                onChange={(e) =>
-                  quickplayStore.setPingMode(e.target.checked ? 1 : 0)
-                }
-                id="ping-mode-check"
-              />
-              <label className="form-check-label" htmlFor="ping-mode-check">
-                Strict regional matchmaking{" "}
+          {availableSettings[quickplayStore.matchGroup].has("pinglimit") && (
+            <div className="col-md-4">
+              <h4 style={{ fontWeight: 500 }}>
+                Ping Preference{" "}
                 <HelpTooltip
-                  id="regional-matchmaking-help"
-                  title="Strongly prefer servers close to you than far away servers with players."
+                  id="ping-help"
+                  title="The maximum ping before starting to derank servers for too high ping. This is more effective in some lower populated regions when Strict regional matchmaking is selected."
                 />
+              </h4>
+              <input
+                type="range"
+                className="form-range"
+                value={quickplayStore.pinglimit}
+                onChange={(e) =>
+                  quickplayStore.setPingLimit(parseInt(e.target.value, 10))
+                }
+                min={MIN_PING}
+                max={MAX_PING}
+                id="ping-range"
+              ></input>
+              <label htmlFor="ping-range" className="form-label">
+                {quickplayStore.pinglimit}ms
+              </label>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  checked={quickplayStore.pingmode}
+                  onChange={(e) =>
+                    quickplayStore.setPingMode(e.target.checked ? 1 : 0)
+                  }
+                  id="ping-mode-check"
+                />
+                <label className="form-check-label" htmlFor="ping-mode-check">
+                  Strict regional matchmaking{" "}
+                  <HelpTooltip
+                    id="regional-matchmaking-help"
+                    title="Strongly prefer servers close to you than far away servers with players."
+                  />
+                </label>
+              </div>
+            </div>
+          )}
+          {availableSettings[quickplayStore.matchGroup].has("partysize") && (
+            <div className="col-md-3">
+              <h4 style={{ fontWeight: 500 }}>
+                Party Size{" "}
+                <HelpTooltip
+                  id="party-size-help"
+                  title="Find a server which can fit a party of this size. You queue with this option, and then others in your party can join you once you have joined a server."
+                />
+              </h4>
+              <input
+                type="range"
+                className="form-range"
+                value={quickplayStore.partysize}
+                onChange={(e) =>
+                  quickplayStore.setPartySize(parseInt(e.target.value, 10))
+                }
+                min={1}
+                max={6}
+                id="ping-range"
+              ></input>
+              <label htmlFor="ping-range" className="form-label">
+                {quickplayStore.partysize}{" "}
+                {quickplayStore.partysize === 1 ? "player" : "players"}
               </label>
             </div>
-          </div>}
-          {availableSettings[quickplayStore.matchGroup].has("partysize") && <div className="col-md-3">
-            <h4 style={{ fontWeight: 500 }}>
-              Party Size{" "}
-              <HelpTooltip
-                id="party-size-help"
-                title="Find a server which can fit a party of this size. You queue with this option, and then others in your party can join you once you have joined a server."
-              />
-            </h4>
-            <input
-              type="range"
-              className="form-range"
-              value={quickplayStore.partysize}
-              onChange={(e) =>
-                quickplayStore.setPartySize(parseInt(e.target.value, 10))
-              }
-              min={1}
-              max={6}
-              id="ping-range"
-            ></input>
-            <label htmlFor="ping-range" className="form-label">
-              {quickplayStore.partysize}{" "}
-              {quickplayStore.partysize === 1 ? "player" : "players"}
-            </label>
-          </div>}
-          {<div className="col-auto">
-            <h4 style={{ fontWeight: 500 }}>Blocks</h4>
-            <p>
-              You have{" "}
-              <OverlayTrigger
-                overlay={
-                  <Tooltip id="blocked-server-list">
-                    {quickplayStore.blocklist.size === 0
-                      ? "No blocks."
-                      : Array.from(quickplayStore.blocklist).join("\n")}
-                  </Tooltip>
-                }
-              >
-                <span
-                  style={{
-                    textDecoration: "underline dotted",
-                  }}
+          )}
+          {
+            <div className="col-auto">
+              <h4 style={{ fontWeight: 500 }}>Blocks</h4>
+              <p>
+                You have{" "}
+                <OverlayTrigger
+                  overlay={
+                    <Tooltip id="blocked-server-list">
+                      {quickplayStore.blocklist.size === 0
+                        ? "No blocks."
+                        : Array.from(quickplayStore.blocklist).join("\n")}
+                    </Tooltip>
+                  }
                 >
-                  {quickplayStore.blocklist.size}{" "}
-                  {quickplayStore.blocklist.size === 1 ? "server" : "servers"}
-                </span>
-              </OverlayTrigger>{" "}
-              blocked.
-            </p>
-            <button
-              className="btn btn-danger btn-sm mb-2"
-              disabled={quickplayStore.blocklist.size === 0}
-              onClick={() => {
-                quickplayStore.setFound(0);
-                quickplayStore.clearBlocklist();
-              }}
-            >
-              <span className="fas fa-trash-can"></span> Clear blocked servers
-            </button>
-          </div>}
+                  <span
+                    style={{
+                      textDecoration: "underline dotted",
+                    }}
+                  >
+                    {quickplayStore.blocklist.size}{" "}
+                    {quickplayStore.blocklist.size === 1 ? "server" : "servers"}
+                  </span>
+                </OverlayTrigger>{" "}
+                blocked.
+              </p>
+              <button
+                className="btn btn-danger btn-sm mb-2"
+                disabled={quickplayStore.blocklist.size === 0}
+                onClick={() => {
+                  quickplayStore.setFound(0);
+                  quickplayStore.clearBlocklist();
+                }}
+              >
+                <span className="fas fa-trash-can"></span> Clear blocked servers
+              </button>
+            </div>
+          }
         </div>
         <br />
-        {availableSettings[quickplayStore.matchGroup].has("mapbans") && <div>
-          <h4 style={{ fontWeight: 500 }}>Map Bans</h4>
-          <div className="row g-4">
-            {MAP_BAN_INDICES.map((i) => {
-              if (quickplayStore.mapbanlist.length <= i) {
+        {availableSettings[quickplayStore.matchGroup].has("mapbans") && (
+          <div>
+            <h4 style={{ fontWeight: 500 }}>Map Bans</h4>
+            <div className="row g-4">
+              {MAP_BAN_INDICES.map((i) => {
+                if (quickplayStore.mapbanlist.length <= i) {
+                  return (
+                    <div className="col-2" key={i}>
+                      <div
+                        className="bg-dark px-4 py-3 text-center display-6 d-flex align-items-center justify-content-center"
+                        style={{
+                          height: "5rem",
+                          cursor: "pointer",
+                        }}
+                        onClick={() => {
+                          if (allMaps.length === 0) {
+                            return;
+                          }
+                          setMapBanIndex(i);
+                        }}
+                      >
+                        <span className="fas fa-ban text-body-secondary"></span>
+                      </div>
+                    </div>
+                  );
+                }
+                const mapName = quickplayStore.mapbanlist[i];
                 return (
                   <div className="col-2" key={i}>
                     <div
-                      className="bg-dark px-4 py-3 text-center display-6 d-flex align-items-center justify-content-center"
+                      className="bg-dark px-4 py-3 text-center d-flex align-items-center justify-content-center position-relative"
                       style={{
+                        backgroundImage: `url('${mapToThumbnail[mapName]}')`,
+                        backgroundSize: "cover",
                         height: "5rem",
+                        textShadow:
+                          "-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000",
                         cursor: "pointer",
+                        wordBreak: "break-all",
                       }}
-                      onClick={() => {
+                      onClick={(e) => {
+                        if (e.target.classList.contains("map-ban-remove")) {
+                          return;
+                        }
                         if (allMaps.length === 0) {
                           return;
                         }
                         setMapBanIndex(i);
                       }}
                     >
-                      <span className="fas fa-ban text-body-secondary"></span>
+                      <span className="text-light fw-bold">{mapName}</span>
+                      <span
+                        className="position-absolute top-0 start-100 translate-middle fas fa-circle-xmark map-ban-remove"
+                        onClick={() => {
+                          quickplayStore.delMapBan(i);
+                        }}
+                      ></span>
                     </div>
                   </div>
                 );
-              }
-              const mapName = quickplayStore.mapbanlist[i];
-              return (
-                <div className="col-2" key={i}>
-                  <div
-                    className="bg-dark px-4 py-3 text-center d-flex align-items-center justify-content-center position-relative"
-                    style={{
-                      backgroundImage: `url('${mapToThumbnail[mapName]}')`,
-                      backgroundSize: "cover",
-                      height: "5rem",
-                      textShadow:
-                        "-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000",
-                      cursor: "pointer",
-                      wordBreak: "break-all",
-                    }}
-                    onClick={(e) => {
-                      if (e.target.classList.contains("map-ban-remove")) {
-                        return;
-                      }
-                      if (allMaps.length === 0) {
-                        return;
-                      }
-                      setMapBanIndex(i);
-                    }}
-                  >
-                    <span className="text-light fw-bold">{mapName}</span>
-                    <span
-                      className="position-absolute top-0 start-100 translate-middle fas fa-circle-xmark map-ban-remove"
-                      onClick={() => {
-                        quickplayStore.delMapBan(i);
-                      }}
-                    ></span>
-                  </div>
-                </div>
-              );
-            })}
+              })}
+            </div>
           </div>
-        </div>}
+        )}
         <br />
-        {availableSettings[quickplayStore.matchGroup].has("gamemodes") && <div>
-          <h4 style={{ fontWeight: 500 }}>Game Modes</h4>
-          <div className="row g-4">
-            {Object.values(gamemodes).map((gm) => {
-              return (
-                <div
-                  key={gm.code}
-                  className="col-3 text-dark text-center"
-                  style={{
-                    height: "16rem",
-                    userSelect: "none",
-                    cursor:
-                      quickplayStore.gamemodes.size <= 1 &&
-                      quickplayStore.gamemodes.has(gm.code)
-                        ? "auto"
-                        : "pointer",
-                  }}
-                  onClick={() => {
-                    if (
-                      quickplayStore.gamemodes.size <= 1 &&
-                      quickplayStore.gamemodes.has(gm.code)
-                    ) {
-                      return;
-                    }
-                    quickplayStore.toggleGamemode(gm.code);
-                  }}
-                >
+        {availableSettings[quickplayStore.matchGroup].has("gamemodes") && (
+          <div>
+            <h4 style={{ fontWeight: 500 }}>Game Modes</h4>
+            <div className="row g-4">
+              {Object.values(gamemodes).map((gm) => {
+                return (
                   <div
-                    className="h-100 p-0 position-relative"
+                    key={gm.code}
+                    className="col-3 text-dark text-center"
                     style={{
-                      backgroundColor: "#ece9d7",
-                      backgroundImage: `url('${gm.img.src}')`,
-                      backgroundSize: "contain",
-                      backgroundRepeat: "no-repeat",
+                      height: "16rem",
+                      userSelect: "none",
+                      cursor:
+                        quickplayStore.gamemodes.size <= 1 &&
+                        quickplayStore.gamemodes.has(gm.code)
+                          ? "auto"
+                          : "pointer",
+                    }}
+                    onClick={() => {
+                      if (
+                        quickplayStore.gamemodes.size <= 1 &&
+                        quickplayStore.gamemodes.has(gm.code)
+                      ) {
+                        return;
+                      }
+                      quickplayStore.toggleGamemode(gm.code);
                     }}
                   >
                     <div
-                      className={`h-100 w-100 position-absolute${quickplayStore.gamemodes.has(gm.code) ? " d-none" : ""}`}
+                      className="h-100 p-0 position-relative"
                       style={{
-                        backgroundColor: "rgb(0 0 0 / 0.33)",
-                        backgroundImage: `url('${xMarkImg.src}')`,
+                        backgroundColor: "#ece9d7",
+                        backgroundImage: `url('${gm.img.src}')`,
                         backgroundSize: "contain",
                         backgroundRepeat: "no-repeat",
                       }}
-                    ></div>
-                    <div className="p-2">
-                      <h4 className="fw-bold">{gm.name}</h4>
+                    >
+                      <div
+                        className={`h-100 w-100 position-absolute${quickplayStore.gamemodes.has(gm.code) ? " d-none" : ""}`}
+                        style={{
+                          backgroundColor: "rgb(0 0 0 / 0.33)",
+                          backgroundImage: `url('${xMarkImg.src}')`,
+                          backgroundSize: "contain",
+                          backgroundRepeat: "no-repeat",
+                        }}
+                      ></div>
+                      <div className="p-2">
+                        <h4 className="fw-bold">{gm.name}</h4>
+                      </div>
                     </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
-        </div>}
+        )}
       </div>
 
       <div
