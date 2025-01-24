@@ -9,18 +9,10 @@ import NavSelector from "@components/NavSelector.astro";
 import ServerFinder from "@components/quickplay/ServerFinder.tsx";
 import CustomizeButton from "@components/quickplay/CustomizeButton.tsx";
 import Layout from "@layouts/Layout.astro";
-import randomImg from "@img/gamemodes/random.webp";
 import { getQuickplayData } from "@ssg/quickplayData";
+import { getDefaultMatchGroups } from "@ssg/quickplayStaticData";
 
-const gamemodes = [
-  {
-    name: "Start Playing",
-    code: "pvp",
-    description: "We'll match you into the best game we can find.",
-    skill: undefined,
-    img: randomImg,
-  },
-];
+const matchGroups = getDefaultMatchGroups();
 
 const { hash } = await getQuickplayData();
 ---
@@ -67,7 +59,7 @@ const { hash } = await getQuickplayData();
 
         document.addEventListener("astro:page-load", () => {
           const urlparms = new URLSearchParams(window.location.search);
-          const carouselEl = document.getElementById("quickplayGamemodes");
+          const carouselEl = document.getElementById("quickplayMatchGroups");
           let carousel: Carousel | null = null;
           function refreshCarousel(start: boolean = false) {
             if (carouselEl) {
@@ -75,8 +67,8 @@ const { hash } = await getQuickplayData();
                 pause: false,
               });
               carouselEl.addEventListener("slide.bs.carousel", (event) => {
-                const code = useQuickplayStore.getState().codeLookup[event.to];
-                useQuickplayStore.getState().setGamemode(code);
+                const code = useQuickplayStore.getState().availableMatchGroups[event.to];
+                useQuickplayStore.getState().setMatchGroup(code.code);
               });
               if (start) {
                 const gm = urlparms.get("gm");
@@ -99,7 +91,9 @@ const { hash } = await getQuickplayData();
                 carousel.to(
                   useQuickplayStore
                     .getState()
-                    .codeLookup.indexOf(useQuickplayStore.getState().gamemode),
+                    .availableMatchGroups.findIndex(
+                      (k) => k.code === useQuickplayStore.getState().matchGroup,
+                    ),
                 );
               }
             }
@@ -200,7 +194,7 @@ const { hash } = await getQuickplayData();
       >
         <div class="align-middle text-center">
           <div
-            id="quickplayGamemodes"
+            id="quickplayMatchGroups"
             class="carousel quickplay-section carousel-light slide carousel-fade p-4"
             style="background: #ece9d7"
           >
@@ -210,10 +204,10 @@ const { hash } = await getQuickplayData();
               class="carousel-indicators carousel-hidable d-none"
             >
               {
-                gamemodes.map((resource, index) => (
+                matchGroups.map((resource, index) => (
                   <button
                     type="button"
-                    data-bs-target="#hudScreenshots"
+                    data-bs-target="#quickplayMatchGroups"
                     data-bs-slide-to={index}
                     class={`${index == 0 ? "active" : ""}`}
                     aria-current="true"
@@ -224,13 +218,13 @@ const { hash } = await getQuickplayData();
             </div>
             <div id="quickplayCarouselInner" class="carousel-inner h-100">
               {
-                gamemodes.map((resource, index) => (
+                matchGroups.map((resource, index) => (
                   <div
                     class={`carousel-item h-100 d-flex flex-column ${index == 0 ? "active" : ""}`}
                   >
                     <div
                       class="flex-grow-1"
-                      style={`background-image: url('${resource.img.src}'); background-position: center; background-size: contain;background-repeat: no-repeat;aspect-ratio: 4 / 3;height: 100%`}
+                      style={`background-image: url('${resource.img}'); background-position: center; background-size: contain;background-repeat: no-repeat;height: 100%`}
                     >
                       <h2
                         class="display-2"
@@ -267,12 +261,12 @@ const { hash } = await getQuickplayData();
               }
             </div>
             {
-              gamemodes.length > 1 && (
+              matchGroups.length > 1 && (
                 <>
                   <button
                     class="carousel-control-prev carousel-hidable"
                     type="button"
-                    data-bs-target="#quickplayGamemodes"
+                    data-bs-target="#quickplayMatchGroups"
                     data-bs-slide="prev"
                   >
                     <span
@@ -284,7 +278,7 @@ const { hash } = await getQuickplayData();
                   <button
                     class="carousel-control-next carousel-hidable"
                     type="button"
-                    data-bs-target="#quickplayGamemodes"
+                    data-bs-target="#quickplayMatchGroups"
                     data-bs-slide="next"
                   >
                     <span

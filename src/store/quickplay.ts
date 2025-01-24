@@ -2,12 +2,15 @@ import cloneDeep from "lodash/cloneDeep";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+import { getDefaultMatchGroups, getDefaultMatchGroupSettings } from "@ssg/quickplayStaticData";
 import idbStorage from "@utils/idbstorage";
+
 
 const useStore = create(
   persist(
     (set) => ({
-      codeLookup: ["pvp"],
+      availableMatchGroups: getDefaultMatchGroups(),
+      matchGroupSettings: getDefaultMatchGroupSettings(),
       customizing: 0,
       toggleCustomizing: () =>
         set((state) => ({ customizing: !state.customizing })),
@@ -36,8 +39,8 @@ const useStore = create(
         }),
       maxPlayerCap: [24, 32],
       setMaxPlayerCap: (cap) => set(() => ({ maxPlayerCap: cap })),
-      gamemode: "pvp",
-      setGamemode: (gamemode) => set(() => ({ gamemode })),
+      matchGroup: "pvp",
+      setMatchGroup: (matchGroup) => set(() => ({ matchGroup })),
       gamemodes: new Set([
         "payload",
         "koth",

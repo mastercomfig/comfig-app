@@ -1,8 +1,13 @@
 import { useMemo } from "react";
 
+
+
 import { getMaxPlayerIndex } from "@utils/quickplay";
 
+
+
 import useQuickplayStore from "@store/quickplay";
+
 
 const MAX_PLAYERS_STATUS = ["24", "24-32", "18-32", "64-100", "At least 18"];
 const RESPAWN_STATUS = [
@@ -72,6 +77,8 @@ function genMaxPlayerString(setting) {
 export default function CustomizeButton() {
   const quickplayStore = useQuickplayStore((state) => state);
 
+  const availableSettings = quickplayStore.matchGroupSettings;
+
   const prefString = useMemo(() => {
     const maxPlayerStatus = genMaxPlayerString(quickplayStore.maxPlayerCap);
     const critStatus = genPrefString(
@@ -134,16 +141,29 @@ export default function CustomizeButton() {
       }
     }
     const strings = [
-      gamemodeString,
-      maxPlayerStatus,
-      critStatus,
-      respawnStatus,
-      rtdStatus,
-      classResStatus,
-      objectiveStatus,
+      availableSettings[quickplayStore.matchGroup].has("gamemodes")
+        ? gamemodeString
+        : "",
+      availableSettings[quickplayStore.matchGroup].has("maxplayers")
+        ? maxPlayerStatus
+        : "",
+      availableSettings[quickplayStore.matchGroup].has("crits")
+        ? critStatus
+        : "",
+      availableSettings[quickplayStore.matchGroup].has("respawntimes")
+        ? respawnStatus
+        : "",
+      availableSettings[quickplayStore.matchGroup].has("rtd") ? rtdStatus : "",
+      availableSettings[quickplayStore.matchGroup].has("classres")
+        ? classResStatus
+        : "",
+      availableSettings[quickplayStore.matchGroup].has("nocap")
+        ? objectiveStatus
+        : "",
     ].filter((s) => s);
     return strings.join("; ");
   }, [
+    quickplayStore.matchGroup,
     quickplayStore.maxPlayerCap,
     quickplayStore.gamemodes,
     quickplayStore.respawntimes,

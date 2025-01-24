@@ -300,6 +300,8 @@ export default function ServerFinder({ hash }: { hash: string }) {
   const [mapBanIndex, setMapBanIndex] = useState(-1);
   const [showServers, setShowServers] = useState(false);
 
+  const availableSettings = quickplayStore.matchGroupSettings;
+
   useEffect(() => {
     fetch(`/quickplay/data/${hash}.cached.json`)
       .then((res) => res.json())
@@ -374,8 +376,8 @@ export default function ServerFinder({ hash }: { hash: string }) {
   };
 
   const filterServerForGamemodes = (server, tags: Set<string>) => {
-    const expectedGamemode = quickplayStore.gamemode;
-    if (expectedGamemode === "pvp") {
+    const currentMatchGroup = quickplayStore.matchGroup;
+    if (currentMatchGroup === "pvp") {
       return gamemodeList.some((gm) =>
         filterServerForGamemode(gm, server, tags),
       );
@@ -520,7 +522,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
   const untilRef = useRef(0);
   const [servers, setServers] = useState<Array<any>>([]);
   const [filteredServers, setFilteredServers] = useState<Array<any>>([]);
-  const [gamemodePop, setGamemodePop] = useState<Record<string, number>>({});
+  const [matchGroupPop, setMatchGroupPop] = useState<Record<string, number>>({});
   const [mapPop, setMapPop] = useState<Record<string, number>>({});
   const [allFiltered, setAllFiltered] = useState(false);
 
@@ -560,7 +562,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
     Sentry.metrics.increment("custom.servers.satisfaction_found", 1, {
       tags: {
         maxPlayerCap: getMaxPlayerIndex(quickplayStore.maxPlayerCap),
-        gamemode: quickplayStore.gamemode,
+        matchGroup: quickplayStore.matchGroup,
         respawntimes: quickplayStore.respawntimes,
         crits: quickplayStore.crits,
         rtd: quickplayStore.rtd,
@@ -574,7 +576,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
       {
         tags: {
           maxPlayerCap: getMaxPlayerIndex(quickplayStore.maxPlayerCap),
-          gamemode: quickplayStore.gamemode,
+          matchGroup: quickplayStore.matchGroup,
           respawntimes: quickplayStore.respawntimes,
           crits: quickplayStore.crits,
           rtd: quickplayStore.rtd,
@@ -612,7 +614,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
     xhr.open("POST", "https://worker.comfig.app/api/quickplay/hello");
     xhr.send();
 
-    setGamemodePop({});
+    setMatchGroupPop({});
     setMapPop({});
 
     // revisiting site
@@ -636,7 +638,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
   }, [quickplayStore.searching]);
 
   useEffect(() => {
-    const gm = quickplayStore.gamemode;
+    const mg = quickplayStore.matchGroup;
     let players = 0;
     for (const server of servers) {
       if (!filterServer(server)) {
@@ -644,13 +646,13 @@ export default function ServerFinder({ hash }: { hash: string }) {
       }
       players += server.players;
     }
-    setGamemodePop({
-      ...gamemodePop,
-      [gm]: players,
+    setMatchGroupPop({
+      ...matchGroupPop,
+      [mg]: players,
     });
   }, [
     servers,
-    quickplayStore.gamemode,
+    quickplayStore.matchGroup,
     quickplayStore.gamemodes,
     quickplayStore.maxPlayerCap,
     quickplayStore.respawntimes,
@@ -742,7 +744,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
     servers,
     schema,
     quickplayStore.maxPlayerCap,
-    quickplayStore.gamemode,
+    quickplayStore.matchGroup,
     quickplayStore.blocklist,
     quickplayStore.pinglimit,
   ]);
@@ -815,7 +817,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
           Sentry.metrics.increment("custom.servers.server_refind", 1, {
             tags: {
               maxPlayerCap: getMaxPlayerIndex(quickplayStore.maxPlayerCap),
-              gamemode: quickplayStore.gamemode,
+              matchGroup: quickplayStore.matchGroup,
               respawntimes: quickplayStore.respawntimes,
               crits: quickplayStore.crits,
               rtd: quickplayStore.rtd,
@@ -830,7 +832,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
     Sentry.metrics.increment("custom.servers.found", 1, {
       tags: {
         maxPlayerCap: getMaxPlayerIndex(quickplayStore.maxPlayerCap),
-        gamemode: quickplayStore.gamemode,
+        matchGroup: quickplayStore.matchGroup,
         respawntimes: quickplayStore.respawntimes,
         crits: quickplayStore.crits,
         rtd: quickplayStore.rtd,
@@ -876,7 +878,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
         {
           tags: {
             maxPlayerCap: getMaxPlayerIndex(quickplayStore.maxPlayerCap),
-            gamemode: quickplayStore.gamemode,
+            matchGroup: quickplayStore.matchGroup,
             respawntimes: quickplayStore.respawntimes,
             crits: quickplayStore.crits,
             rtd: quickplayStore.rtd,
@@ -894,7 +896,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
         {
           tags: {
             maxPlayerCap: getMaxPlayerIndex(quickplayStore.maxPlayerCap),
-            gamemode: quickplayStore.gamemode,
+            matchGroup: quickplayStore.matchGroup,
             respawntimes: quickplayStore.respawntimes,
             crits: quickplayStore.crits,
             rtd: quickplayStore.rtd,
@@ -935,7 +937,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
       Sentry.metrics.increment("no_servers_found", 1, {
         tags: {
           maxPlayerCap: getMaxPlayerIndex(quickplayStore.maxPlayerCap),
-          gamemode: quickplayStore.gamemode,
+          matchGroup: quickplayStore.matchGroup,
           respawntimes: quickplayStore.respawntimes,
           crits: quickplayStore.crits,
           rtd: quickplayStore.rtd,
@@ -975,16 +977,18 @@ export default function ServerFinder({ hash }: { hash: string }) {
     };
   }, [quickplayStore.pinglimit]);
 
+  console.log(quickplayStore.matchGroup);
+
   // Look, I know this is bad. I'll split it into components later.
   return (
     <>
       <div
         className={`position-absolute text-start z-2 top-0 end-0 text-info py-2 px-3`}
       >
-        {gamemodePop[quickplayStore.gamemode] !== undefined && (
+        {matchGroupPop[quickplayStore.matchGroup] !== undefined && (
           <p className="lead fw-bold">
-            {gamemodePop[quickplayStore.gamemode]}{" "}
-            {gamemodePop[quickplayStore.gamemode] === 1 ? "player" : "players"}{" "}
+            {matchGroupPop[quickplayStore.matchGroup]}{" "}
+            {matchGroupPop[quickplayStore.matchGroup] === 1 ? "player" : "players"}{" "}
             online with your filters
           </p>
         )}
@@ -997,7 +1001,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
           ADVANCED OPTIONS
         </h3>
         <div className="row mt-4 gy-2">
-          <div className="col-auto">
+          {availableSettings[quickplayStore.matchGroup].has("maxplayers") && <div className="col-auto">
             <h4 style={{ fontWeight: 500 }}>Server capacity</h4>
             <div className="form-check">
               <input
@@ -1079,8 +1083,8 @@ export default function ServerFinder({ hash }: { hash: string }) {
                 Don't care
               </label>
             </div>
-          </div>
-          <div className="col-auto">
+          </div>}
+          {availableSettings[quickplayStore.matchGroup].has("crits") && <div className="col-auto">
             <h4 style={{ fontWeight: 500 }}>Random crits</h4>
             <div className="form-check">
               <input
@@ -1124,8 +1128,8 @@ export default function ServerFinder({ hash }: { hash: string }) {
                 Don't care
               </label>
             </div>
-          </div>
-          <div className="col-auto">
+          </div>}
+          {availableSettings[quickplayStore.matchGroup].has("respawntimes") && <div className="col-auto">
             <h4 style={{ fontWeight: 500 }}>Respawn times</h4>
             <div className="form-check">
               <input
@@ -1169,8 +1173,8 @@ export default function ServerFinder({ hash }: { hash: string }) {
                 Don't care
               </label>
             </div>
-          </div>
-          <div className="col-auto">
+          </div>}
+          {availableSettings[quickplayStore.matchGroup].has("rtd") && <div className="col-auto">
             <h4 style={{ fontWeight: 500 }}>
               RTD{" "}
               <HelpTooltip
@@ -1220,8 +1224,8 @@ export default function ServerFinder({ hash }: { hash: string }) {
                 Don't care
               </label>
             </div>
-          </div>
-          <div className="col-auto">
+          </div>}
+          {availableSettings[quickplayStore.matchGroup].has("classres") && <div className="col-auto">
             <h4 style={{ fontWeight: 500 }}>Class restrictions</h4>
             <div className="form-check">
               <input
@@ -1265,8 +1269,8 @@ export default function ServerFinder({ hash }: { hash: string }) {
                 Class limits and bans OK
               </label>
             </div>
-          </div>
-          <div className="col-auto d-none">
+          </div>}
+          {availableSettings[quickplayStore.matchGroup].has("pure") && <div className="col-auto">
             <h4 style={{ fontWeight: 500 }}>Client Mods</h4>
             <div className="form-check">
               <input
@@ -1310,8 +1314,8 @@ export default function ServerFinder({ hash }: { hash: string }) {
                 Don't care
               </label>
             </div>
-          </div>
-          <div className="col-auto">
+          </div>}
+          {availableSettings[quickplayStore.matchGroup].has("nocap") && <div className="col-auto">
             <h4 style={{ fontWeight: 500 }}>
               Objectives{" "}
               <HelpTooltip
@@ -1361,8 +1365,8 @@ export default function ServerFinder({ hash }: { hash: string }) {
                 Don't care
               </label>
             </div>
-          </div>
-          <div className="col-auto d-none">
+          </div>}
+          {availableSettings[quickplayStore.matchGroup].has("beta") && <div className="col-auto">
             <h4 style={{ fontWeight: 500 }}>Beta maps</h4>
             <div className="form-check">
               <input
@@ -1406,11 +1410,11 @@ export default function ServerFinder({ hash }: { hash: string }) {
                 Don't care
               </label>
             </div>
-          </div>
+          </div>}
         </div>
         <br />
         <div className="row">
-          <div className="col-md-4">
+          {availableSettings[quickplayStore.matchGroup].has("pinglimit") && <div className="col-md-4">
             <h4 style={{ fontWeight: 500 }}>
               Ping Preference{" "}
               <HelpTooltip
@@ -1450,8 +1454,8 @@ export default function ServerFinder({ hash }: { hash: string }) {
                 />
               </label>
             </div>
-          </div>
-          <div className="col-md-3">
+          </div>}
+          {availableSettings[quickplayStore.matchGroup].has("partysize") && <div className="col-md-3">
             <h4 style={{ fontWeight: 500 }}>
               Party Size{" "}
               <HelpTooltip
@@ -1474,8 +1478,8 @@ export default function ServerFinder({ hash }: { hash: string }) {
               {quickplayStore.partysize}{" "}
               {quickplayStore.partysize === 1 ? "player" : "players"}
             </label>
-          </div>
-          <div className="col-auto">
+          </div>}
+          {<div className="col-auto">
             <h4 style={{ fontWeight: 500 }}>Blocks</h4>
             <p>
               You have{" "}
@@ -1509,116 +1513,126 @@ export default function ServerFinder({ hash }: { hash: string }) {
             >
               <span className="fas fa-trash-can"></span> Clear blocked servers
             </button>
-          </div>
+          </div>}
         </div>
         <br />
-        <h4 style={{ fontWeight: 500 }}>Map Bans</h4>
-        <div className="row g-4">
-          {MAP_BAN_INDICES.map((i) => {
-            if (quickplayStore.mapbanlist.length <= i) {
+        {availableSettings[quickplayStore.matchGroup].has("mapbans") && <div>
+          <h4 style={{ fontWeight: 500 }}>Map Bans</h4>
+          <div className="row g-4">
+            {MAP_BAN_INDICES.map((i) => {
+              if (quickplayStore.mapbanlist.length <= i) {
+                return (
+                  <div className="col-2" key={i}>
+                    <div
+                      className="bg-dark px-4 py-3 text-center display-6 d-flex align-items-center justify-content-center"
+                      style={{
+                        height: "5rem",
+                        cursor: "pointer",
+                      }}
+                      onClick={() => {
+                        if (allMaps.length === 0) {
+                          return;
+                        }
+                        setMapBanIndex(i);
+                      }}
+                    >
+                      <span className="fas fa-ban text-body-secondary"></span>
+                    </div>
+                  </div>
+                );
+              }
+              const mapName = quickplayStore.mapbanlist[i];
               return (
                 <div className="col-2" key={i}>
                   <div
-                    className="bg-dark px-4 py-3 text-center display-6 d-flex align-items-center justify-content-center"
+                    className="bg-dark px-4 py-3 text-center d-flex align-items-center justify-content-center position-relative"
                     style={{
+                      backgroundImage: `url('${mapToThumbnail[mapName]}')`,
+                      backgroundSize: "cover",
                       height: "5rem",
+                      textShadow:
+                        "-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000",
                       cursor: "pointer",
+                      wordBreak: "break-all",
                     }}
-                    onClick={() => {
+                    onClick={(e) => {
+                      if (e.target.classList.contains("map-ban-remove")) {
+                        return;
+                      }
+                      if (allMaps.length === 0) {
+                        return;
+                      }
                       setMapBanIndex(i);
                     }}
                   >
-                    <span className="fas fa-ban text-body-secondary"></span>
+                    <span className="text-light fw-bold">{mapName}</span>
+                    <span
+                      className="position-absolute top-0 start-100 translate-middle fas fa-circle-xmark map-ban-remove"
+                      onClick={() => {
+                        quickplayStore.delMapBan(i);
+                      }}
+                    ></span>
                   </div>
                 </div>
               );
-            }
-            const mapName = quickplayStore.mapbanlist[i];
-            return (
-              <div className="col-2" key={i}>
+            })}
+          </div>
+        </div>}
+        <br />
+        {availableSettings[quickplayStore.matchGroup].has("gamemodes") && <div>
+          <h4 style={{ fontWeight: 500 }}>Game Modes</h4>
+          <div className="row g-4">
+            {Object.values(gamemodes).map((gm) => {
+              return (
                 <div
-                  className="bg-dark px-4 py-3 text-center d-flex align-items-center justify-content-center position-relative"
+                  key={gm.code}
+                  className="col-3 text-dark text-center"
                   style={{
-                    backgroundImage: `url('${mapToThumbnail[mapName]}')`,
-                    backgroundSize: "cover",
-                    height: "5rem",
-                    textShadow:
-                      "-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000",
-                    cursor: "pointer",
-                    wordBreak: "break-all",
+                    height: "16rem",
+                    userSelect: "none",
+                    cursor:
+                      quickplayStore.gamemodes.size <= 1 &&
+                      quickplayStore.gamemodes.has(gm.code)
+                        ? "auto"
+                        : "pointer",
                   }}
-                  onClick={(e) => {
-                    if (e.target.classList.contains("map-ban-remove")) {
+                  onClick={() => {
+                    if (
+                      quickplayStore.gamemodes.size <= 1 &&
+                      quickplayStore.gamemodes.has(gm.code)
+                    ) {
                       return;
                     }
-                    setMapBanIndex(i);
-                  }}
-                >
-                  <span className="text-light fw-bold">{mapName}</span>
-                  <span
-                    className="position-absolute top-0 start-100 translate-middle fas fa-circle-xmark map-ban-remove"
-                    onClick={() => {
-                      quickplayStore.delMapBan(i);
-                    }}
-                  ></span>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-        <br />
-        <h4 style={{ fontWeight: 500 }}>Game Modes</h4>
-        <div className="row g-4">
-          {Object.values(gamemodes).map((gm) => {
-            return (
-              <div
-                key={gm.code}
-                className="col-3 text-dark text-center"
-                style={{
-                  height: "16rem",
-                  userSelect: "none",
-                  cursor:
-                    quickplayStore.gamemodes.size <= 1 &&
-                    quickplayStore.gamemodes.has(gm.code)
-                      ? "auto"
-                      : "pointer",
-                }}
-                onClick={() => {
-                  if (
-                    quickplayStore.gamemodes.size <= 1 &&
-                    quickplayStore.gamemodes.has(gm.code)
-                  ) {
-                    return;
-                  }
-                  quickplayStore.toggleGamemode(gm.code);
-                }}
-              >
-                <div
-                  className="h-100 p-0 position-relative"
-                  style={{
-                    backgroundColor: "#ece9d7",
-                    backgroundImage: `url('${gm.img.src}')`,
-                    backgroundSize: "contain",
-                    backgroundRepeat: "no-repeat",
+                    quickplayStore.toggleGamemode(gm.code);
                   }}
                 >
                   <div
-                    className={`h-100 w-100 position-absolute${quickplayStore.gamemodes.has(gm.code) ? " d-none" : ""}`}
+                    className="h-100 p-0 position-relative"
                     style={{
-                      backgroundColor: "rgb(0 0 0 / 0.33)",
-                      backgroundImage: `url('${xMarkImg.src}')`,
+                      backgroundColor: "#ece9d7",
+                      backgroundImage: `url('${gm.img.src}')`,
                       backgroundSize: "contain",
                       backgroundRepeat: "no-repeat",
                     }}
-                  ></div>
-                  <div className="p-2">
-                    <h4 className="fw-bold">{gm.name}</h4>
+                  >
+                    <div
+                      className={`h-100 w-100 position-absolute${quickplayStore.gamemodes.has(gm.code) ? " d-none" : ""}`}
+                      style={{
+                        backgroundColor: "rgb(0 0 0 / 0.33)",
+                        backgroundImage: `url('${xMarkImg.src}')`,
+                        backgroundSize: "contain",
+                        backgroundRepeat: "no-repeat",
+                      }}
+                    ></div>
+                    <div className="p-2">
+                      <h4 className="fw-bold">{gm.name}</h4>
+                    </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        </div>}
       </div>
 
       <div
@@ -1628,7 +1642,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
           height: "95%",
         }}
       >
-        {allMaps.length && (
+        {allMaps.length > 0 && (
           <MapBans
             mapPop={mapPop}
             maps={allMaps}
