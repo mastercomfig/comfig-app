@@ -298,7 +298,8 @@ export default function ServerFinder({ hash }: { hash: string }) {
   */
 
   const [mapBanIndex, setMapBanIndex] = useState(-1);
-  const [showServers, setShowServers] = useState(false);
+  const showServers = quickplayStore.showServers;
+  const setShowServers = quickplayStore.setShowServers;
 
   const availableSettings = quickplayStore.matchGroupSettings;
 

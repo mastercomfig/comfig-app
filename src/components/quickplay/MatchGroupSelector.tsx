@@ -230,12 +230,12 @@ export function MatchGroupSelector({ hash }) {
               fontWeight: 800,
               boxShadow: "0 -5px 5px 2px inset #0d5e1b",
             }}
-            disabled={!!quickplayStore.searching}
+            disabled={!!quickplayStore.searching || quickplayStore.showServers}
             onClick={() => {
               startSearching(1);
             }}
           >
-            {playNowText}
+            {quickplayStore.showServers ? "PLAY NOW!" : playNowText}
           </button>
         </div>
         <div className="col-auto">
