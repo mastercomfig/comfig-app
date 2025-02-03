@@ -13,7 +13,7 @@
 ## January 20, 2025
 
 * Adjusted server filters and fixed some filtering bugs to improve population counts
-* Servers are no longer allowed to put tags for unrelated gamemodes in addition to the relevant one. Before, we only banned not having the relevant one. Now, server owners cannot falsely advertise multiple gamemodes within their tags. Servers must advertise only the gamemode they are currently running.
+* Servers are no longer allowed to put tags for unrelated gamemodes in addition to the relevant one. Before, we only detected not having the relevant one. Now, server owners cannot falsely advertise multiple gamemodes within their tags. Servers must advertise only the gamemode they are currently running. This was an oversight in the quickplay coordinator.
 * Added a tooltip listing out blocked server IDs, so users can view and report servers they have blocked for additional investigation
 
 ## October 5, 2024
