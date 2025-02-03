@@ -1,3 +1,8 @@
+## January 24, 2025
+
+* Reworked the match group frontend to support upcoming features
+* Fixed play now button while server list is up
+
 ## January 21, 2025
 
 * Added population counts for maps to the map ban list
