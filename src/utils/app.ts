@@ -1697,24 +1697,51 @@ export async function app() {
           blob: file,
         });
       }
-      const crosshairExtensions = [".vtf", ".vmt"];
       const crosshairSrcBase = `/assets/app/crosshairs/`;
       let hasAlerted = false;
+      const crosshairMaterialTemplate = {
+        UnlitGeneric: {
+          $translucent: 1,
+          $basetexture: crosshairTargetBase,
+          $vertexcolor: 1,
+          $no_fullbright: 1,
+          $ignorez: 1,
+        },
+      };
       for (const crosshairFile of Array.from(crosshairsToDownload)) {
-        for (const ext of crosshairExtensions) {
-          const src = `${crosshairSrcBase}${crosshairFile}${ext}`;
-          const crosshairResult = await writeRemoteFile(
-            src,
-            materialsDirectory,
+        const src = `${crosshairSrcBase}${crosshairFile}.vtf`;
+        const crosshairResult = await writeRemoteFile(src, materialsDirectory);
+        if (crosshairResult) {
+          // now generate the vmt
+          const crosshairMaterial = { ...crosshairMaterialTemplate };
+          // crosshair file name
+          crosshairMaterial.UnlitGeneric["$basetexture"] += crosshairFile;
+          // get the VDF formatted contents
+          const crosshairMaterialContents = stringify(crosshairMaterial, {
+            pretty: true,
+          });
+          // write to the vmt file
+          const crosshairMaterialFileName = `${crosshairFile}.vmt`;
+          const file = newFile(
+            crosshairMaterialContents,
+            crosshairMaterialFileName,
+            scriptsDirectory,
           );
-          if (crosshairResult) {
-            const dst = `${crosshairTarget}${crosshairFile}${ext}`;
-            crosshairResult.path = dst;
-            downloads.push(crosshairResult);
-          } else if (!hasAlerted) {
-            hasAlerted = true;
-            alert("Failed to download crosshair file. Please try again later.");
+          if (!file) {
+            continue;
           }
+          // push vmt to downloads
+          downloads.push({
+            name: crosshairMaterialFileName,
+            path: `tf/custom/comfig-custom/${crosshairTarget}/${fileName}`,
+            blob: file,
+          });
+          const dst = `${crosshairTarget}${crosshairFile}.vtf`;
+          crosshairResult.path = dst;
+          downloads.push(crosshairResult);
+        } else if (!hasAlerted) {
+          hasAlerted = true;
+          alert("Failed to download crosshair file. Please try again later.");
         }
       }
     }
