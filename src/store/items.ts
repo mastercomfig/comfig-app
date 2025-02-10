@@ -1,7 +1,7 @@
-import cloneDeep from "lodash/cloneDeep";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+import fastClone from "@utils/fastClone";
 import "@utils/game.js";
 import idbStorage from "@utils/idbstorage";
 
@@ -9,7 +9,7 @@ const persistence = idbStorage(
   "items",
   7,
   (inPersistedState, version) => {
-    const persistedState = cloneDeep(inPersistedState);
+    const persistedState = fastClone(inPersistedState);
     try {
       // Explosion effects were wrong order
       if (version === 0) {

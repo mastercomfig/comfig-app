@@ -2,10 +2,10 @@ import {
   getDefaultMatchGroupSettings,
   getDefaultMatchGroups,
 } from "@ssg/quickplayStaticData";
-import cloneDeep from "lodash/cloneDeep";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
+import fastClone from "@utils/fastClone";
 import idbStorage from "@utils/idbstorage";
 
 const state = (set) => ({
@@ -141,7 +141,7 @@ const useStore = create(
       "quickplay",
       6,
       (inPersistedState, version) => {
-        const persistedState = cloneDeep(inPersistedState);
+        const persistedState = fastClone(inPersistedState);
         if (version < 2) {
           persistedState.pinglimit = 50;
         }
