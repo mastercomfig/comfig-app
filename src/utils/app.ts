@@ -1713,7 +1713,7 @@ export async function app() {
         const crosshairResult = await writeRemoteFile(src, materialsDirectory);
         if (crosshairResult) {
           // now generate the vmt
-          const crosshairMaterial = { ...crosshairMaterialTemplate };
+          const crosshairMaterial = fastClone(crosshairMaterialTemplate);
           // crosshair file name
           crosshairMaterial.UnlitGeneric["$basetexture"] += crosshairFile;
           // get the VDF formatted contents
