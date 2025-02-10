@@ -1733,7 +1733,7 @@ export async function app() {
           // push vmt to downloads
           downloads.push({
             name: crosshairMaterialFileName,
-            path: `${crosshairTarget}/${crosshairMaterialFileName}`,
+            path: `${crosshairTarget}${crosshairMaterialFileName}`,
             blob: file,
           });
           const dst = `${crosshairTarget}${crosshairFile}.vtf`;
