@@ -371,9 +371,16 @@ export async function app() {
     element.classList.remove("disabled", "text-light");
   }
 
+  function isDirectInstallAllowed() {
+    return window.showDirectoryPicker;
+  }
+
   async function isDirectInstallEnabled() {
-    //return await tryDBGet("enable-direct-install");
-    return false;
+    if (!isDirectInstallAllowed()) {
+      return false;
+    }
+    const userEnabled = await tryDBGet("enable-direct-install");
+    return userEnabled;
   }
 
   // Once user clicks to multi-download, we download and swap our behavior to in-progress
@@ -3597,7 +3604,7 @@ export async function app() {
     handleConnectivityChange();
   }
 
-  if (window.showDirectoryPicker && false) {
+  if (isDirectInstallAllowed()) {
     getEl("game-folder-wrapper").classList.remove("d-none");
     const directInstallCheckbox = getEl("direct-install");
     directInstallCheckbox.checked = await tryDBGet("enable-direct-install");
