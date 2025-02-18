@@ -371,6 +371,11 @@ export async function app() {
     element.classList.remove("disabled", "text-light");
   }
 
+  async function isDirectInstallEnabled() {
+    //return await tryDBGet("enable-direct-install");
+    return false;
+  }
+
   // Once user clicks to multi-download, we download and swap our behavior to in-progress
   async function downloadClickEvent(id, fnGatherUrls) {
     // Make sure we block clicks, since onclick state is not managed in offline mode
@@ -381,7 +386,7 @@ export async function app() {
     const element = getEl(id);
     element.onclick = null; // Ignore clicks
     disableDownload(element);
-    const directInstall = await tryDBGet("enable-direct-install");
+    const directInstall = isDirectInstallEnabled();
     element.innerHTML = element.innerHTML
       .replace("Install", directInstall ? "Installing" : "Downloading")
       .replace("Download", directInstall ? "Installing" : "Downloading")
@@ -629,7 +634,7 @@ export async function app() {
   let bindDirectInstall = true;
 
   async function updateDirectInstall() {
-    const directInstall = await tryDBGet("enable-direct-install");
+    const directInstall = isDirectInstallEnabled();
     if (!directInstall) {
       getEl("game-folder-container").classList.add("d-none");
       await restoreDirectoryInstructions();
@@ -3592,7 +3597,7 @@ export async function app() {
     handleConnectivityChange();
   }
 
-  if (window.showDirectoryPicker) {
+  if (window.showDirectoryPicker && false) {
     getEl("game-folder-wrapper").classList.remove("d-none");
     const directInstallCheckbox = getEl("direct-install");
     directInstallCheckbox.checked = await tryDBGet("enable-direct-install");
