@@ -372,15 +372,23 @@ export async function app() {
   }
 
   function isDirectInstallAllowed() {
-    return window.showDirectoryPicker;
+    return !!window.showDirectoryPicker;
   }
+
+  let isDirectInstallUserEnabled = false;
 
   async function isDirectInstallEnabled() {
     if (!isDirectInstallAllowed()) {
       return false;
     }
-    const userEnabled = await tryDBGet("enable-direct-install");
+    //const userEnabled = await tryDBGet("enable-direct-install");
+    const userEnabled = isDirectInstallUserEnabled;
     return userEnabled;
+  }
+
+  async function setDirectInstallEnabled(enable) {
+    //await tryDBSet("enable-direct-install", enable);
+    isDirectInstallUserEnabled = enable;
   }
 
   // Once user clicks to multi-download, we download and swap our behavior to in-progress
@@ -731,7 +739,7 @@ export async function app() {
   }
 
   async function promptDirectory() {
-    if (!window.showDirectoryPicker) {
+    if (!isDirectInstallAllowed()) {
       return;
     }
     try {
@@ -757,7 +765,7 @@ export async function app() {
 
   // TODO: use this in more places, when things error out
   async function clearDirectory() {
-    if (!window.showDirectoryPicker) {
+    if (!isDirectInstallAllowed()) {
       return;
     }
     await tryDBDelete("directory");
@@ -772,7 +780,7 @@ export async function app() {
   }
 
   async function updateDirectory() {
-    if (!window.showDirectoryPicker) {
+    if (!isDirectInstallAllowed()) {
       return;
     }
     try {
@@ -795,7 +803,7 @@ export async function app() {
   }
 
   async function accessDirectory() {
-    if (!window.showDirectoryPicker) {
+    if (!isDirectInstallAllowed()) {
       return true;
     }
     if (!gameDirectory) {
@@ -3607,10 +3615,10 @@ export async function app() {
   if (isDirectInstallAllowed()) {
     getEl("game-folder-wrapper").classList.remove("d-none");
     const directInstallCheckbox = getEl("direct-install");
-    directInstallCheckbox.checked = await tryDBGet("enable-direct-install");
+    directInstallCheckbox.checked = await isDirectInstallEnabled();
     await updateDirectInstall();
     directInstallCheckbox.addEventListener("input", async (e) => {
-      await tryDBSet("enable-direct-install", e.currentTarget.checked);
+      await setDirectInstallEnabled(e.currentTarget.checked);
       await updateDirectInstall();
     });
   }
