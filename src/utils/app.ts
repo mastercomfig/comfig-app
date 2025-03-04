@@ -1745,7 +1745,7 @@ export async function app() {
           const file = newFile(
             crosshairMaterialContents,
             crosshairMaterialFileName,
-            scriptsDirectory,
+            materialsDirectory,
           );
           if (!file) {
             continue;
