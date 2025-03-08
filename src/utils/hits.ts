@@ -243,8 +243,8 @@ export async function createPlayer(
     wave.on("ready", () => {
       player.classList.remove("loading-bg");
     });
-    console.log(`Fetching https://hits.mastercomfig.com/${hash}.wav`);
-    const response = await fetch(`https://hits.mastercomfig.com/${hash}.wav`);
+    console.log(`Fetching https://hits.comfig.app/${hash}.wav`);
+    const response = await fetch(`https://hits.comfig.app/${hash}.wav`);
     const buffer = await response.arrayBuffer();
     const wav = readWav(buffer);
     const samples = decodeMsAdpcm(wav);
