@@ -4,7 +4,7 @@
 
 <script>
   import { addGlobalStylesToShadowRoot } from "@utils/globalStyles";
-  import { createPlayer } from "@utils/hits";
+import { createPlayer } from "@utils/hits";
 
   class MiniHitsPlayer extends HTMLElement {
     constructor() {
@@ -55,7 +55,7 @@
 
       const resultLink = document.createElement("a");
       resultLink.classList.add("stretched-link");
-      resultLink.href = `https://hits.mastercomfig.com/${hash}.wav`;
+      resultLink.href = `https://hits.comfig.app/${hash}.wav`;
       resultLink.download = `${type}.wav`;
       resultLink.innerHTML = '<span class="fas fa-download fa-fw"></span>';
       resultBody.appendChild(resultLink);
