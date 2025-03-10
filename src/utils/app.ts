@@ -7,12 +7,11 @@ import noneImg from "@img/presets/none.webp";
 import ultraImg from "@img/presets/ultra.webp";
 import veryLowImg from "@img/presets/very-low.webp";
 import { BlobReader, BlobWriter, ZipWriter } from "@zip.js/zip.js";
-import { Modal, ScrollSpy, Tab } from "bootstrap";
-import { del, get, set, setMany } from "idb-keyval";
+import { ScrollSpy, Tab } from "bootstrap";
+import { del, get, set } from "idb-keyval";
 import { stringify } from "vdf-parser";
 
 import fastClone from "./fastClone.ts";
-import TSON from "./tson";
 
 const idbKeyval = {
   get,
@@ -43,31 +42,7 @@ export async function app() {
   }
   console.log("App loading...");
 
-  if (window.location.hostname === "mastercomfig.com") {
-    window.location.assign("/deprecated_app");
-    return;
-  }
-
   const parms = new URLSearchParams(window.location.search);
-  if (parms.get("migrate") === "1") {
-    const migrateModal = new Modal("#migrateModal");
-    const migrateBtn = document.getElementById("comfig-migrate-btn");
-    if (migrateBtn) {
-      migrateBtn.addEventListener("click", async () => {
-        if (!navigator.clipboard) {
-          console.error("Clipboard import unsupported.");
-          window.location.assign("/app");
-          return;
-        }
-        const data = await navigator.clipboard.readText();
-        const obj = TSON.parse(data);
-        const entries = Object.entries(obj);
-        setMany(entries);
-        window.location.assign("/app");
-      });
-      migrateModal.show();
-    }
-  }
 
   const dfirebase = import("firebase/compat/app")
     .then(async (firebase) => {
@@ -720,12 +695,6 @@ export async function app() {
   const silentBannedDirectories = new Set([""]);
 
   function checkDirectory(directoryHandle) {
-    if (!directoryHandle.name) {
-      alert(
-        `Due to browser security policy, selected folders cannot be migrated to comfig.app. To continue using Direct Install, please reselect your "Team Fortress 2" folder.`,
-      );
-      return false;
-    }
     const name = directoryHandle.name;
     let fail = bannedDirectories.has(name);
     if (fail) {

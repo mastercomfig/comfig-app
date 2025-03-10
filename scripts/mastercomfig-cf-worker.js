@@ -11,12 +11,13 @@ async function gatherResponse(response) {
 }
 
 const allowedOrigins = new Set([
-  "https://mastercomfig.com",
-  "https://comfig.app",
   "http://localhost:4321",
   "http://127.0.0.1:4321",
 ]);
 const secureOrigin = new Set(["https://comfig.app"]);
+for (const origin of secureOrigin) {
+  allowedOrigins.add(origin);
+}
 
 // Cloudflare supports the GET, POST, HEAD, and OPTIONS methods from any origin,
 // and allow any header on requests. These headers must be present
