@@ -1,7 +1,9 @@
 ## March 11, 2025
 
 * Stopped almost full servers from being filtered out completely, instead, they are penalized slightly
-* Fixed player count scoring being too high for some high player servers
+* Adjusted scoring algorithm to reduce the score of low population servers more, to offset momentum bonus
+* Adjusted scoring algorithm to not punish high population servers (above ideal) so harshly
+* Fixed player count scoring always being treated as ideal for high player cap servers, instead, we treat 24 players as ideal always, and gradually phase out populated server bonus as player count increases past that for high player cap servers
 * Fixed map thumbnails for some maps
 * Fixed display in map bans player count for low player counts
 
