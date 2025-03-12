@@ -121,6 +121,8 @@ export default function MapBans({
                     backgroundColor: getPopulationColor(mapPop[m.name] ?? 0),
                     minWidth: "fit-content",
                     width: `${Math.round(getPopulationPct(mapPop[m.name] ?? 0) * 100)}%`,
+                    paddingLeft: "0.4rem",
+                    paddingRight: "0.4rem",
                   }}
                 >
                   {mapPop[m.name] ?? 0}
