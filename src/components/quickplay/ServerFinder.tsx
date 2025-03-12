@@ -465,16 +465,21 @@ export default function ServerFinder({ hash }: { hash: string }) {
     const newTotalPlayers = newHumans;
 
     const realMaxPlayers = maxPlayers;
-    if (newTotalPlayers + SERVER_HEADROOM > realMaxPlayers) {
+
+    if (newTotalPlayers > realMaxPlayers) {
       return -100;
     }
 
-    if (maxPlayers > FULL_PLAYERS) {
-      maxPlayers = FULL_PLAYERS - partySize;
+    if (newTotalPlayers > realMaxPlayers - SERVER_HEADROOM) {
+      return -0.3;
     }
 
     if (humans === 0) {
       return -0.3;
+    }
+
+    if (maxPlayers > FULL_PLAYERS) {
+      maxPlayers = FULL_PLAYERS;
     }
 
     const countLow = toNearestEven(maxPlayers / 3);

@@ -1,3 +1,10 @@
+## March 11, 2025
+
+* Stopped almost full servers from being filtered out completely, instead, they are penalized slightly
+* Fixed player count scoring being too high for some high player servers
+* Fixed map thumbnails for some maps
+* Fixed display in map bans player count for low player counts
+
 ## January 24, 2025
 
 * Reworked the match group frontend to support upcoming features
