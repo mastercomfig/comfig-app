@@ -376,7 +376,7 @@ export async function app() {
     const element = getEl(id);
     element.onclick = null; // Ignore clicks
     disableDownload(element);
-    const directInstall = isDirectInstallEnabled();
+    const directInstall = await isDirectInstallEnabled();
     element.innerHTML = element.innerHTML
       .replace("Install", directInstall ? "Installing" : "Downloading")
       .replace("Download", directInstall ? "Installing" : "Downloading")
@@ -624,7 +624,7 @@ export async function app() {
   let bindDirectInstall = true;
 
   async function updateDirectInstall() {
-    const directInstall = isDirectInstallEnabled();
+    const directInstall = await isDirectInstallEnabled();
     if (!directInstall) {
       getEl("game-folder-container").classList.add("d-none");
       await restoreDirectoryInstructions();
