@@ -1,6 +1,7 @@
 import { Howl } from "howler";
 
 import fastClone from "./fastClone";
+import { filterString } from "./filter";
 import {
   addInventory,
   addListing,
@@ -38,6 +39,9 @@ export function giftCard() {
   ) as HTMLElement;
   const saleListingsEl = document.getElementById(
     "giftCardSales",
+  ) as HTMLElement;
+  const accountNameBanner = document.getElementById(
+    "account-name-banner",
   ) as HTMLElement;
   const timeouts = {};
 
@@ -91,6 +95,8 @@ export function giftCard() {
 
   function onUser(user) {
     let walletTotal = -1;
+    const username = user.email.split("@")[0];
+    accountNameBanner.innerText = username;
     subscribeWallet(user.uid, (data) => {
       const promo = 50;
       const funds = data?.["funds"] ?? 0;
@@ -99,7 +105,7 @@ export function giftCard() {
         coinGrab.play();
       }
       if (!data.name) {
-        updateWalletName(user.uid, user.email.split("@")[0]);
+        updateWalletName(user.uid, username);
       }
       walletTotal = promo + funds;
       walletEl.innerText = `$${walletTotal.toFixed(2)}`;
@@ -134,7 +140,7 @@ export function giftCard() {
         if (total <= 50) {
           continue;
         }
-        walletStrBuild += ` <b>${curPlace}</b>. ${wallet.name} .... $${total.toFixed(2)}<br/>`;
+        walletStrBuild += ` <b>${curPlace}</b>. ${filterString(wallet.name)} .... $${total.toFixed(2)}<br/>`;
         curPlace += 1;
         if (curPlace > 10) {
           break;
