@@ -104,7 +104,7 @@ export function giftCard() {
       if (walletTotal >= 0 && newTotal > walletTotal) {
         coinGrab.play();
       }
-      if (!data.name) {
+      if (!data?.name) {
         updateWalletName(user.uid, username);
       }
       walletTotal = promo + funds;
