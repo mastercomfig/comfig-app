@@ -15,6 +15,7 @@ import {
   subscribeRaffleListing,
   subscribeWallet,
   updateInventoryExpire,
+  updateWalletName,
   withdrawListing,
 } from "./giftCard";
 
@@ -97,6 +98,9 @@ export function giftCard() {
       if (walletTotal >= 0 && newTotal > walletTotal) {
         coinGrab.play();
       }
+      if (!data.name) {
+        updateWalletName(user.uid, user.email.split("@")[0]);
+      }
       walletTotal = promo + funds;
       walletEl.innerText = `$${walletTotal.toFixed(2)}`;
     });
@@ -111,7 +115,11 @@ export function giftCard() {
       const wallets = [];
       for (const [uid, wallet] of Object.entries(data)) {
         const funds = wallet?.["funds"] ?? 0;
-        wallets.push({ uid, funds: Math.max(funds, 0) });
+        const name = wallet?.["name"];
+        if (!name) {
+          continue;
+        }
+        wallets.push({ uid, funds: Math.max(funds, 0), name });
       }
       console.log(wallets);
       wallets.sort(
@@ -119,7 +127,20 @@ export function giftCard() {
       );
       const place =
         wallets.findIndex((element) => element.uid === user.uid) + 1;
-      leaderboardEl.innerHTML = `<p>You are in ${ordinalSuffixOf(place)} place.`;
+      let walletStrBuild = "";
+      let curPlace = 1;
+      for (const wallet of wallets) {
+        const total = wallet.funds + 50;
+        if (total <= 50) {
+          continue;
+        }
+        walletStrBuild += ` <b>${curPlace}</b>. ${wallet.name} .... $${total.toFixed(2)}<br/>`;
+        curPlace += 1;
+        if (curPlace > 10) {
+          break;
+        }
+      }
+      leaderboardEl.innerHTML = `<p>You are in <b>${ordinalSuffixOf(place)}</b> place.<br/>${walletStrBuild}</p>`;
     });
     const selling = { v: false };
     subscribeInventory(user.uid, (data) => {

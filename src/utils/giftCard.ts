@@ -152,6 +152,13 @@ export function updateWallet(userId: string, funds: number) {
   return update(ref(db), updates);
 }
 
+export function updateWalletName(userId: string, name: string) {
+  const updates = {
+    [`wallet/${userId}/name`]: name,
+  };
+  return update(ref(db), updates);
+}
+
 export function subscribeInventory(
   userId: string,
   callback: (data: object | null) => void,
