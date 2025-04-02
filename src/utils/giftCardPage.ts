@@ -1,3 +1,5 @@
+import { Howl } from "howler";
+
 import fastClone from "./fastClone";
 import {
   addInventory,
@@ -17,6 +19,9 @@ import {
 } from "./giftCard";
 
 export function giftCard() {
+  const coinGrab = new Howl({
+    src: "/assets/giftcard/coingrab.wav",
+  });
   const walletEl = document.getElementById("giftCardWallet") as HTMLElement;
   const inventoryEls: Record<string, HTMLElement> = {};
   const marketEls: Record<string, HTMLElement> = {};
@@ -84,10 +89,14 @@ export function giftCard() {
   }
 
   function onUser(user) {
-    let walletTotal = 0;
+    let walletTotal = -1;
     subscribeWallet(user.uid, (data) => {
       const promo = 50;
       const funds = data?.["funds"] ?? 0;
+      const newTotal = promo + funds;
+      if (walletTotal >= 0 && newTotal > walletTotal) {
+        coinGrab.play();
+      }
       walletTotal = promo + funds;
       walletEl.innerText = `$${walletTotal.toFixed(2)}`;
     });
@@ -248,6 +257,8 @@ export function giftCard() {
         saleListingsEl.appendChild(row);
       }
       for (const [item, itemEl] of Object.entries(marketEls)) {
+        const curAmount = itemEl?.querySelector(".cur-amount") as HTMLElement;
+        curAmount.innerText = itemCount[item] ?? 0;
         const listing = bestListing[item];
         const curPrice = itemEl.querySelector(".cur-price") as HTMLElement;
         const diffPrice = itemEl.querySelector(".diff-price") as HTMLElement;
