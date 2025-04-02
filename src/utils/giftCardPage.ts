@@ -342,6 +342,14 @@ export function giftCard() {
         raffleEl.innerHTML = "<p>No raffles available</p>";
         return;
       }
+      const counterCache = {};
+      const counters = raffleEl.querySelectorAll(
+        ".raffle-counter",
+      ) as NodeListOf<HTMLElement>;
+      for (const counter of counters) {
+        counterCache[counter.id] = counter.innerText;
+      }
+
       raffleEl.innerHTML = "";
       for (const [raffleId, raffle] of Object.entries(data)) {
         const container = document.createElement("div");
@@ -356,8 +364,9 @@ export function giftCard() {
         const button = document.createElement("button");
         const para = document.createElement("p");
         const counter = document.createElement("p");
-        counter.innerText = "0 / 0";
+        counter.classList.add("raffle-counter");
         counter.id = `count_${raffleId}`;
+        counter.innerText = counterCache[counter.id] ?? "0 / 0";
         mid.appendChild(counter);
         left.appendChild(para);
         right.appendChild(button);
