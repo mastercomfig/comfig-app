@@ -127,7 +127,6 @@ export function giftCard() {
         }
         wallets.push({ uid, funds: Math.max(funds, 0), name });
       }
-      console.log(wallets);
       wallets.sort(
         (a, b) => b.funds - a.funds || a.toString().localeCompare(b.toString()),
       );

@@ -297,14 +297,17 @@ export function enterRaffle(userId: string, raffleId: string) {
         canAfford = false;
         return {
           funds: item.funds,
+          name: item.name,
         };
       }
       return {
         funds: item.funds + rafflePrice,
+        name: item.name,
       };
     } else {
       return {
         funds: rafflePrice,
+        name: item.name,
       };
     }
   }).then(() => {
