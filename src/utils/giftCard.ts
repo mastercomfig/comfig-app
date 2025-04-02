@@ -226,6 +226,19 @@ export function addListing(userId: string, item: string, price: number) {
   });
 }
 
+export function withdrawListing(
+  userId: string,
+  listingId: string,
+  item: string,
+) {
+  const listingRef = ref(db, `listing/${userId}/${listingId}`);
+  const p = set(listingRef, null);
+  addInventory(userId, {
+    [item]: 1,
+  });
+  return p;
+}
+
 export function buyListing(
   buyerId: string,
   sellerId: string,

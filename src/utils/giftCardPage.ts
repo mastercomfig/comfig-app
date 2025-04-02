@@ -13,6 +13,7 @@ import {
   subscribeRaffleListing,
   subscribeWallet,
   updateInventoryExpire,
+  withdrawListing,
 } from "./giftCard";
 
 export function giftCard() {
@@ -28,6 +29,9 @@ export function giftCard() {
   const raffleEl = document.getElementById("giftCardRaffle") as HTMLElement;
   const leaderboardEl = document.getElementById(
     "giftCardLeaderboard",
+  ) as HTMLElement;
+  const saleListingsEl = document.getElementById(
+    "giftCardSales",
   ) as HTMLElement;
   const timeouts = {};
 
@@ -155,6 +159,7 @@ export function giftCard() {
     });
     let bestListing = {};
     const buying = { v: false };
+    const withdrawing = { v: false };
     subscribeListing((data) => {
       if (!data) {
         data = {};
@@ -163,19 +168,28 @@ export function giftCard() {
       for (const [k, v] of Object.entries(diff)) {
         diff[k] = v.price;
       }
+      const itemCount = {};
       bestListing = {};
+      const myListings = {};
       for (const [sellerId, listings] of Object.entries(data)) {
-        if (sellerId === user.uid) {
-          continue;
-        }
         for (const [listingId, listing] of Object.entries(listings)) {
-          const bestListingItem = bestListing[listing.item];
+          const item = listing.item;
+          if (itemCount[item] === undefined) {
+            itemCount[item] = 0;
+          }
+          itemCount[item] += 1;
+          if (sellerId === user.uid) {
+            myListings[listingId] = listing;
+            continue;
+          }
+          const bestListingItem = bestListing[item];
           const bestListingPrice = bestListingItem?.price ?? Infinity;
-          if (listing.price < bestListingPrice) {
-            bestListing[listing.item] = {
+          const price = listing.price;
+          if (price < bestListingPrice) {
+            bestListing[item] = {
               sellerId,
               listingId,
-              price: listing.price,
+              price,
             };
           }
         }
@@ -187,6 +201,51 @@ export function giftCard() {
       }
       for (const itemKey of Object.keys(bestListing)) {
         diff[itemKey] = bestListing[itemKey].price - (diff[itemKey] ?? 0);
+      }
+
+      if (Object.keys(myListings).length < 1) {
+        saleListingsEl.innerHTML = "<p>No market listings</p>";
+      } else {
+        saleListingsEl.innerHTML = "";
+      }
+      for (const [listingId, listing] of Object.entries(myListings)) {
+        const row = document.createElement("div");
+        row.classList.add(
+          "row",
+          "align-items-center",
+          "bg-body",
+          "my-2",
+          "py-1",
+        );
+        const first = document.createElement("div");
+        first.classList.add("col");
+        const img = document.createElement("img");
+        img.classList.add("img-fluid");
+        img.style.maxHeight = "4rem";
+        img.src = `/img/giftcard/items/${listing.item}.png`;
+        first.appendChild(img);
+        row.appendChild(first);
+        const second = document.createElement("div");
+        second.classList.add("col");
+        second.innerText = `$${listing.price.toFixed(2)}`;
+        row.appendChild(second);
+        const third = document.createElement("div");
+        third.classList.add("col");
+        const btn = document.createElement("button");
+        btn.classList.add("btn", "btn-danger", "btn-sm");
+        btn.innerText = "Cancel";
+        btn.onclick = () => {
+          if (withdrawing.v) {
+            return;
+          }
+          withdrawing.v = true;
+          withdrawListing(user.uid, listingId, listing.item).then(() => {
+            withdrawing.v = false;
+          });
+        };
+        third.appendChild(btn);
+        row.appendChild(third);
+        saleListingsEl.appendChild(row);
       }
       for (const [item, itemEl] of Object.entries(marketEls)) {
         const listing = bestListing[item];
