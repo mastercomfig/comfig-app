@@ -125,7 +125,9 @@ export function giftCard() {
         ) as HTMLButtonElement;
         const curCount = myItem?.querySelector(".cur-count") as HTMLElement;
         if (v.count > 0) {
-          addTimeout(user.uid, k, v.expire);
+          if (v.expire) {
+            addTimeout(user.uid, k, v.expire);
+          }
           myItem?.classList.add("has-items");
           myItem?.classList.remove("no-items");
           sellPrice.disabled = false;
@@ -210,7 +212,7 @@ export function giftCard() {
             diffPrice.classList.add("text-success");
             diffPrice.classList.remove("text-danger");
           } else {
-            diffPrice.innerText = `-${Number(delta).toFixed(2)}`;
+            diffPrice.innerText = `${Number(delta).toFixed(2)}`;
             diffPrice.classList.add("text-danger");
             diffPrice.classList.remove("text-success");
           }

@@ -174,7 +174,7 @@ export function addInventory(userId: string, inventory: InventoryAdd) {
         item.count += v;
         if (item.count <= 0) {
           item.count = 0;
-          item.expire = null;
+          item.expire = 0;
         } else if (!item.expire) {
           item.expire = now + expirationTime[k] * 1000;
         }
