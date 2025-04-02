@@ -143,7 +143,22 @@ export function giftCard() {
         if (total <= 50) {
           continue;
         }
-        walletStrBuild += ` <b>${curPlace}</b>. ${filterString(wallet.name)} .... $${total.toFixed(2)}<br/>`;
+        const name = wallet.name;
+        const displayName = name
+          .replaceAll("&", "&amp;")
+          .replaceAll("|", "&#124;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll("[", "&#91;")
+          .replaceAll("]", "&#93;")
+          .replaceAll("`", "&#96;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#39;")
+          .replaceAll("$", "&#36;")
+          .replaceAll("\n", "<br/>")
+          .replaceAll("\r", "")
+          .replaceAll("\\", "&#92;");
+        walletStrBuild += ` <b>${curPlace}</b>. ${filterString(displayName)} .... $${total.toFixed(2)}<br/>`;
         curPlace += 1;
         if (curPlace > 10) {
           break;
