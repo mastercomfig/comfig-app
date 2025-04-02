@@ -153,10 +153,7 @@ export function updateWallet(userId: string, funds: number) {
 }
 
 export function updateWalletName(userId: string, name: string) {
-  const updates = {
-    [`wallet/${userId}/name`]: name,
-  };
-  return update(ref(db), updates);
+  return set(ref(db, `wallet/${userId}/name`), name);
 }
 
 export function subscribeInventory(
