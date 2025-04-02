@@ -7,7 +7,13 @@
 <script>
   class HudFormLoader extends HTMLElement {
     async connectedCallback() {
-      const formElement = document.getElementById("hud-form");
+      const formElement = document.getElementById(
+        "hud-form",
+      ) as HTMLFormElement | null;
+
+      if (!formElement) {
+        return;
+      }
 
       function generateFormObject(elements) {
         const formObject = {};

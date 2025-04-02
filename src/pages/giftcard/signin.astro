@@ -1,0 +1,189 @@
+---
+import Body from "@components/Body.astro";
+import Footer from "@components/Footer.astro";
+import BaseHead from "@components/head/BaseHead.astro";
+import ImportHead from "@components/head/ImportHead.astro";
+import MainHead from "@components/head/MainHead.astro";
+import PreloadHead from "@components/head/PreloadHead.astro";
+import Layout from "@layouts/Layout.astro";
+---
+
+<style>
+  .text-shteam {
+    color: rgb(25, 153, 255) !important;
+  }
+  .bg-shteam {
+    background: rgb(24, 26, 33);
+  }
+  .btn {
+    border-radius: 0.25rem;
+  }
+  .btn-primary {
+    background: linear-gradient(90deg, #06bfff 0%, #2d73ff 100%);
+  }
+  .btn-primary:hover {
+    background: linear-gradient(90deg, #06bfff 30%, #2d73ff 100%);
+  }
+  body {
+    background-color: #181a21;
+  }
+  .bg-center {
+    background: #1b2838;
+  }
+</style>
+
+<Layout>
+  <head>
+    <BaseHead />
+    <PreloadHead />
+    <ImportHead />
+    <MainHead
+      title="Sign In - Shteam Commumity"
+      noSite={true}
+      description="sign in for free shteam gift card reward"
+      image="https://comfig.app/img/giftcard/cover.png"
+      favicon="/img/giftcard/shteam.png"
+    />
+  </head>
+  <Body>
+    <section style=`background: rgb(23, 29, 37);height: 104px`>
+      <div class="container" style="height: 100%">
+        <a href="/giftcard/" class="text-light">
+          <img
+            src="/img/giftcard/shteam.png"
+            alt="logo"
+            style="height: 150%; width: auto;"
+          />
+          <span
+            style="font-weight: 500;letter-spacing: 0.3rem;font-size: 1.5rem;margin-top: 0.2rem"
+            >SHTEAM</span
+          >
+          <sup style="top: -2em;font-size: 0.5rem">LOL</sup>
+        </a>
+      </div>
+    </section>
+    <section class="bg-center mb-5">
+      <div
+        class="container bg-shteam p-5"
+        style="margin-top: 4rem;margin-bottom: 4rem"
+      >
+        <div class="row">
+          <div class="col">
+            <form id="giftCardForm" class="needs-validation" novalidate>
+              <div class="mb-3">
+                <label for="account" class="form-label"
+                  >SIGN IN WITH ACCOUNT NAME</label
+                >
+                <input
+                  type="text"
+                  id="account"
+                  class="form-control"
+                  required
+                  minlength="1"
+                  maxlength="32"
+                  pattern="[a-z0-9._]+"
+                />
+              </div>
+              <div class="mb-3">
+                <label for="password" class="form-label">PASSWORD</label>
+                <input
+                  type="password"
+                  id="password"
+                  class="form-control"
+                  required
+                  minlength="6"
+                  maxlength="4096"
+                />
+              </div>
+              <div class="text-center w-100">
+                <button
+                  id="signin-btn"
+                  type="submit"
+                  class="btn btn-primary"
+                  style="padding-left: 6rem;padding-right:6rem">Sign In</button
+                >
+              </div>
+            </form>
+          </div>
+          <div class="col">
+            <h4 class="text-shteam">
+              By signing into shteamcommumity.com through Shteam:
+            </h4>
+            <ul>
+              <li>
+                Your Shteam login credentials <strong>will be</strong> shared
+              </li>
+              <li>
+                Through this, shteamcommumity.com will be able to access your
+                Shteam commumity profile and access your accounts and inventory,
+                regardless of your Profile Privacy Settings
+              </li>
+              <li>Any items you own can be stolen by shteamcommumity.com</li>
+            </ul>
+            <h4 class="text-shteam">
+              By clicking "Sign In" you agree to this data being shared.
+            </h4>
+          </div>
+        </div>
+      </div>
+    </section>
+    <Footer>
+      <a href="/giftcard/terms">Terms</a>
+      <br /><br />
+    </Footer>
+    <script>
+      import { giftSignIn, redirectOnAuth } from "@utils/giftCard";
+      document.addEventListener("astro:page-load", () => {
+        const giftCardForm = document.getElementById(
+          "giftCardForm",
+        ) as HTMLFormElement | null;
+        if (!giftCardForm) {
+          return;
+        }
+        redirectOnAuth();
+        giftCardForm.addEventListener("submit", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+
+          const isValid = giftCardForm.checkValidity();
+          const validatedElements =
+            giftCardForm.querySelectorAll(".form-control");
+
+          for (const element of validatedElements) {
+            const input = element as HTMLInputElement;
+            if (input.value || input.required) {
+              (input.parentNode as HTMLElement | undefined)?.classList.add(
+                "was-validated",
+              );
+            }
+          }
+
+          if (!isValid) {
+            return;
+          }
+
+          const form = giftCardForm.elements;
+
+          const formObject = { account: "", password: "" };
+          for (const element of form) {
+            const input = element as HTMLInputElement;
+            const id = input.id;
+            formObject[id] = input.value;
+          }
+
+          if (!formObject.account.length || !formObject.password.length) {
+            window.location.reload();
+            return;
+          }
+
+          giftSignIn(formObject.account, formObject.password, (user, err) => {
+            if (err || !user) {
+              window.location.reload();
+              return;
+            }
+          });
+        });
+      });
+    </script>
+  </Body>
+</Layout>
