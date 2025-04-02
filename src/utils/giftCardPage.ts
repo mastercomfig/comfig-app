@@ -366,10 +366,13 @@ export function giftCard() {
         row.appendChild(right);
         container.appendChild(row);
         button.innerText = "Enter raffle ($1)";
+        if (raffle.type) {
+          button.innerText = `Enter raffle (1 ${raffle.type})`;
+        }
         button.classList.add("btn", "btn-success", "btn-sm");
         button.onclick = () => {
           button.disabled = true;
-          enterRaffle(user.uid, raffleId).then(() => {
+          enterRaffle(user.uid, raffleId, raffle.type).then(() => {
             button.disabled = false;
           });
         };

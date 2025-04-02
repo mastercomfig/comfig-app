@@ -287,13 +287,48 @@ export function subscribeRaffleListing(
   );
 }
 
-export function enterRaffle(userId: string, raffleId: string) {
-  const walletRef = ref(db, `wallet/${userId}`);
-  const rafflePrice = -1;
+export function enterRaffle(
+  userId: string,
+  raffleId: string,
+  type: string | undefined = undefined,
+) {
   let canAfford = true;
+  if (type) {
+    const itemRef = ref(db, `inventory/${userId}/${type}`);
+    return runTransaction(itemRef, (item) => {
+      if (item && item.count !== undefined) {
+        if (item.count < 1) {
+          canAfford = false;
+          return item;
+        }
+        return {
+          count: item.count - 1,
+          expire: item.expire,
+        };
+      } else {
+        canAfford = false;
+        return item;
+      }
+    }).then(() => {
+      if (canAfford) {
+        const raffleListingRef = ref(db, `raffleListing/${userId}/${raffleId}`);
+        runTransaction(raffleListingRef, (item) => {
+          console.log(item);
+          if (item) {
+            item++;
+            return item;
+          } else {
+            return 1;
+          }
+        });
+      }
+    });
+  }
+  const walletRef = ref(db, `wallet/${userId}`);
+  const rafflePrice = 1;
   return runTransaction(walletRef, (item) => {
     if (item && item.funds !== undefined) {
-      if (item.funds + 50 < 1) {
+      if (item.funds + 50 < rafflePrice) {
         canAfford = false;
         return {
           funds: item.funds,
@@ -301,12 +336,12 @@ export function enterRaffle(userId: string, raffleId: string) {
         };
       }
       return {
-        funds: item.funds + rafflePrice,
+        funds: item.funds - rafflePrice,
         name: item.name,
       };
     } else {
       return {
-        funds: rafflePrice,
+        funds: -rafflePrice,
         name: item.name,
       };
     }
