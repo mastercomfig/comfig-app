@@ -199,6 +199,7 @@ export function giftCard() {
     let bestListing = {};
     const buying = { v: false };
     const withdrawing = { v: false };
+    const newItems = new Set(["pepper", "pan"]);
     subscribeListing((data) => {
       if (!data) {
         data = {};
@@ -261,7 +262,9 @@ export function giftCard() {
         const img = document.createElement("img");
         img.classList.add("img-fluid");
         img.style.maxHeight = "4rem";
-        img.src = `/img/giftcard/items/${listing.item}.png`;
+        img.src = newItems.has(listing.item)
+          ? `/img/giftcard/items/${listing.item}.v2.png`
+          : `/img/giftcard/items/${listing.item}.png`;
         first.appendChild(img);
         row.appendChild(first);
         const second = document.createElement("div");
