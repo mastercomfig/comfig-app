@@ -425,6 +425,9 @@ export function giftCard() {
 
       for (const [raffleId, counts] of Object.entries(raffleCounts)) {
         const counter = document.getElementById(`count_${raffleId}`);
+        if (!counter) {
+          continue;
+        }
         counter.innerText = `${counts.mine} / ${counts.theirs + counts.mine}`;
       }
     });
