@@ -155,7 +155,7 @@ export function giftCard() {
           .replaceAll('"', "&quot;")
           .replaceAll("'", "&#39;")
           .replaceAll("$", "&#36;")
-          .replaceAll("\n", "<br/>")
+          .replaceAll("\n", "")
           .replaceAll("\r", "")
           .replaceAll("\\", "&#92;");
         walletStrBuild += ` <b>${curPlace}</b>. ${filterString(displayName)} .... $${total.toFixed(2)}<br/>`;
