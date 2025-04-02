@@ -131,8 +131,12 @@ export function giftCard() {
       wallets.sort(
         (a, b) => b.funds - a.funds || a.toString().localeCompare(b.toString()),
       );
-      const place =
-        wallets.findIndex((element) => element.uid === user.uid) + 1;
+      let place = wallets.findIndex((element) => element.uid === user.uid) + 1;
+      if (place === 0) {
+        place = "last";
+      } else {
+        place = ordinalSuffixOf(place);
+      }
       let walletStrBuild = "";
       let curPlace = 1;
       for (const wallet of wallets) {
@@ -146,7 +150,7 @@ export function giftCard() {
           break;
         }
       }
-      leaderboardEl.innerHTML = `<p>You are in <b>${ordinalSuffixOf(place)}</b> place.<br/>${walletStrBuild}</p>`;
+      leaderboardEl.innerHTML = `<p>You are in <b>${place}</b> place.<br/>${walletStrBuild}</p>`;
     });
     const selling = { v: false };
     subscribeInventory(user.uid, (data) => {
