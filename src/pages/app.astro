@@ -696,14 +696,50 @@ const { hash } = await getGameData();
                   <div class="collapse-wrapper">
                     <p>
                       Looking for something else (like config templates and
-                      alternative formats, like ZIP or cfg)? You can find it on
-                      GitHub <a
+                      alternative formats, like ZIP or autoexec.cfg)? You can
+                      find it on GitHub <a
                         href="https://github.com/mastercomfig/mastercomfig/releases/latest"
                         class="text-light"
                         id="assets-link"
                         style="text-decoration: underline dotted;"
                         rel="noopener">release assets</a
-                      >.
+                      >. Under the assets section, there you'll find:
+
+                      <ul>
+                        <li>
+                          <strong>full autoexec</strong> &mdash; a version of mastercomfig
+                          in the older autoexec.cfg editable format, which <a
+                            href="https://docs.comfig.app/latest/faq/#why-does-mastercomfig-use-a-vpk"
+                            >lacks certain features</a
+                          > of the mod version, but is a single file, is editable
+                          and has comments
+                        </li>
+                        <li>
+                          <strong>mastercomfig zip package</strong> &mdash; a version
+                          of mastercomfig in the fully-featured mod format, but is
+                          editable and retains comments, albeit with worse load performance
+                          compared to the VPK and may cause issues with the
+                          <a
+                            href="https://docs.comfig.app/latest/faq/#what-is-the-mastercomfig-way-of-doing-things"
+                            >layer appropach in mastercomfig</a
+                          >
+                        </li>
+                        <li>
+                          <strong>overrides template</strong> &mdash; a ZIP you can
+                          extract to <code>cfg/overrides</code> which gives you all
+                          the files you can use to override mastercomfig at specific
+                          points, like class configs, modules, autoexec, and other
+                          hooks
+                        </li>
+                        <li>
+                          <strong>overrides autoexec template</strong> &mdash; a
+                          fully commented version of the mastercomfig autoexec.cfg,
+                          which you can use in <code
+                            >cfg/overrides/autoexec.cfg</code
+                          > to override specific settings in finer detail than just
+                          modules
+                        </li>
+                      </ul>
                     </p>
                   </div>
                 </div>
