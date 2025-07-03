@@ -3,6 +3,7 @@ import { fetchCacheText } from "./fetchCache";
 const supportedHuds = [
   "berryhud",
   "budhud",
+  "eve-plus",
   "flawhud",
   "hexhud",
   "hud-fixes",
@@ -21,7 +22,7 @@ const hudIdMap = {
 };
 
 const baseDataUrl =
-  "https://raw.githubusercontent.com/CriticalFlaw/TF2HUD.Editor/master/src/TF2HUD.Editor/JSON/";
+  "https://raw.githubusercontent.com/CriticalFlaw/TF2HUD.Editor/master/src/HUDEditor/JSON/";
 
 const hudDataUrl = (hud) => `${baseDataUrl}${hud}.json`;
 
