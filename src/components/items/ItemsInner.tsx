@@ -28,9 +28,10 @@ function calculateItemSlots(playerClass, items) {
       slots[slot] = [];
     }
     slots[slot].push(item);
-    if (!slot) {
-      slotNames.push(slot);
-    }
+    // TODO: what is this for?
+    //if (!slot) {
+    //  slotNames.push(slot);
+    //}
   }
 
   for (const item of stockItems[playerClass]) {
@@ -62,8 +63,7 @@ function calculateCrosshairs(items) {
   let crosshairs = {};
   const crosshairPreviews = { "Valve.default.default": null };
   const itemClasses = Object.values(items);
-  const isDefault =
-    itemClasses.length === 1 && itemClasses[0].classname === "default";
+  const isDefault = itemClasses[0].classname === "default";
   if (isDefault) {
     crosshairs = { "Valve.default.default": "Default" };
   }

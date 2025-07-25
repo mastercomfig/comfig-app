@@ -300,22 +300,18 @@ addEventListener("scheduled", (event) => {
 const webhookPathname = "/" + GH_WEBHOOK_ID;
 
 const validNames = new Set([
-  "mastercomfig-ultra-preset.vpk",
-  "mastercomfig-high-preset.vpk",
-  "mastercomfig-medium-high-preset.vpk",
-  "mastercomfig-medium-preset.vpk",
-  "mastercomfig-medium-low-preset.vpk",
-  "mastercomfig-low-preset.vpk",
-  "mastercomfig-very-low-preset.vpk",
-  "mastercomfig-none-preset.vpk",
-  "mastercomfig-null-canceling-movement-addon.vpk",
-  "mastercomfig-flat-mouse-addon.vpk",
-  "mastercomfig-no-tutorial-addon.vpk",
-  "mastercomfig-disable-pyroland-addon.vpk",
-  "mastercomfig-no-footsteps-addon.vpk",
-  "mastercomfig-no-soundscapes-addon.vpk",
-  "mastercomfig-transparent-viewmodels-addon.vpk",
-  "mastercomfig-lowmem-addon.vpk",
+  "mastercomfig-base.vpk",
+  "mastercomfig-addon-null-canceling-movement.vpk",
+  "mastercomfig-addon-flat-mouse.vpk",
+  "mastercomfig-addon-no-tutorial.vpk",
+  "mastercomfig-addon-no-pyroland.vpk",
+  "mastercomfig-addon-no-footsteps.vpk",
+  "mastercomfig-addon-no-soundscapes.vpk",
+  "mastercomfig-addon-transparent-viewmodels.vpk",
+  "mastercomfig-addon-lowmem.vpk",
+  "mastercomfig-addon-override-1.vpk",
+  "mastercomfig-addon-override-2.vpk",
+  "mastercomfig-addon-override-3.vpk",
 ]);
 
 const downloadLength = "/download".length;

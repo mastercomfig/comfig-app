@@ -73,6 +73,11 @@ const crosshairPacks = {
       preview: "squarebracket.webp",
     },
   },
+  none: {
+    _0_0: {
+      name: "None",
+    },
+  },
   crosshair1: {
     _0_0: {
       name: "Crosshair Dot",
@@ -253,6 +258,21 @@ const crosshairPacks = {
       name: "yz50's Wings",
     },
   },
+  yzdefault: {
+    _0_0: {
+      name: "yz50's Default",
+    },
+  },
+  yz50remake: {
+    _0_0: {
+      name: "yz50 Remake",
+    },
+  },
+  yz50sollyremake: {
+    _0_0: {
+      name: "yz50 Remake (Solly)",
+    },
+  },
   tob_rocketcross: {
     _0_0: {
       name: "Circle Cross",
@@ -263,9 +283,24 @@ const crosshairPacks = {
       name: "Wings Cross",
     },
   },
+  tob_wingscross_thick: {
+    _0_0: {
+      name: "Wings Cross Thick",
+    },
+  },
+  tob_seeker: {
+    _0_0: {
+      name: "Seeker",
+    },
+  },
   tob_wingsdot: {
     _0_0: {
       name: "Wings Dot",
+    },
+  },
+  tob_YZ: {
+    _0_0: {
+      name: "YZ Wings",
     },
   },
   xhairshadowdefault: {
@@ -483,10 +518,65 @@ const crosshairPacks = {
       name: "Quake 19",
     },
   },
+  ql_stor: {
+    _0_0: {
+      name: "Quake Stor",
+    },
+  },
+  ut2k4_shock: {
+    _0_0: {
+      name: "UT2K4 Shock Rifle",
+    },
+  },
+  ut2k4_shock_shadow: {
+    _0_0: {
+      name: "UT2K4 Shock Rifle Shadow",
+    },
+  },
+  ut2k4_shock_short: {
+    _0_0: {
+      name: "UT2K4 Shock Rifle Short",
+    },
+  },
+  ut99_1: {
+    _0_0: {
+      name: "UT99 1",
+    },
+  },
+  ut99_1: {
+    _0_0: {
+      name: "UT99 1",
+    },
+  },
+  ut99_1: {
+    _0_0: {
+      name: "UT99 1",
+    },
+  },
+  ut99_1: {
+    _0_0: {
+      name: "UT99 1",
+    },
+  },
+  ut99_1: {
+    _0_0: {
+      name: "UT99 1",
+    },
+  },
+  ut99_1: {
+    _0_0: {
+      name: "UT99 1",
+    },
+  },
+  ut99_1: {
+    _0_0: {
+      name: "UT99 1",
+    },
+  },
 };
 
 const crosshairPackGroups = {
-  Valve: ["default", "sprites/crosshairs"],
+  Valve: ["default", "sprites/crosshairs", "none"],
   Leth: [
     "crosshair1",
     "crosshair1OL",
@@ -525,9 +615,16 @@ const crosshairPackGroups = {
     "snipercircleOL",
     "sniperOL",
     "thalashseeker",
-    "yzwings",
   ],
-  Tob: ["tob_rocketcross", "tob_wingscross", "tob_wingsdot"],
+  yz50: ["yzwings", "yzdefault", "yz50remake", "yz50sollyremake"],
+  Tob: [
+    "tob_rocketcross",
+    "tob_wingscross",
+    "tob_wingscross_thick",
+    "tob_wingsdot",
+    "tob_seeker",
+    "tob_YZ",
+  ],
   wavesui: [
     "xhairshadowdefault",
     "xhairshadowdots",
@@ -576,6 +673,13 @@ const crosshairPackGroups = {
     "ql_17",
     "ql_18",
     "ql_19",
+    "ql_stor",
+  ],
+  "Unreal Tournament": [
+    "ut2k4_shock",
+    "ut2k4_shock_shadow",
+    "ut2k4_shock_short",
+    "ut99_1",
   ],
 };
 

@@ -1,0 +1,161 @@
+---
+import Body from "@components/Body.astro";
+import Footer from "@components/Footer.astro";
+import BaseHead from "@components/head/BaseHead.astro";
+import ImportHead from "@components/head/ImportHead.astro";
+import MainHead from "@components/head/MainHead.astro";
+import PreloadHead from "@components/head/PreloadHead.astro";
+import tfLogoImg from "@img/tc2/team-comtress-2.png";
+import lairImg from "@img/update/lair.webp";
+import lairOutsideImg from "@img/update/lairoutside.webp";
+import quicklimeImg from "@img/update/quicklime.webp";
+import Layout from "@layouts/Layout.astro";
+---
+
+<style>
+  .header-links > a {
+    color: #1ed5b6;
+  }
+  .header-links > a:hover {
+    color: #55e2b3;
+  }
+  .btn-outline-primary {
+    border: 1px solid #009688;
+    border-radius: 0.25rem;
+    --bs-btn-color: #fff;
+  }
+  .btn-xl {
+    font-size: 1.7rem;
+  }
+</style>
+
+<Layout>
+  <head>
+    <BaseHead />
+    <PreloadHead />
+    <ImportHead />
+    <MainHead
+      title="Team Comtress 2"
+      noSite={true}
+      description=""
+      image="https://comfig.app/img/tc2/team-comtress-2.png"
+      favicon="/img/tc2/favicon.ico"
+    />
+  </head>
+  <Body>
+    <nav></nav>
+    <section
+      class="jumbotron jumbotron-fluid"
+      style=`background: linear-gradient(rgba(38, 50, 56, 0.7) 10%, rgba(38, 50, 56, 0.7)),url(${lairOutsideImg.src});background-size: cover; background-position: center;background-position: center;min-height: 66vh;padding-top:10vh`
+    >
+      <div class="container d-flex align-items-center justify-content-center">
+        <div class="align-middle text-center">
+          <img
+            class="img-logo"
+            src={tfLogoImg.src}
+            alt="Team Fortress 2 logo"
+          />
+          <h1 class="display-3" style="letter-spacing: 0.2rem;font-weight: 600">
+            "THE MOST FUN YOU CAN HAVE ONLINE"
+          </h1>
+          <h1 class="display-1" style="letter-spacing: 0.2rem;font-weight: 600">
+            GIVEN A WHOLE NEW LIFE
+          </h1>
+          <hr style="margin-bottom: 2rem" />
+          <a
+            href="https://mastercoms.itch.io/tc2"
+            class="btn btn-outline-primary btn-xl"
+            style="line-height:1.6rem;padding-top:1.3rem"
+          >
+            <strong>PLAY FOR FREE</strong><br />
+            <small style="color:#c2c2c2;font-size:1rem">DOWNLOAD ON ITCH</small>
+          </a>
+        </div>
+      </div>
+    </section>
+    <section style="background: rgb(255 255 255 / 5%)">
+      <div class="container">
+        <h1>
+          Latest News <small style="font-size: 1rem"
+            ><a href="/tc2/news">View all »</a></small>
+        </h1>
+      </div>
+    </section>
+    <section style="background: rgb(255 255 255 / 5%)">
+      <div class="container">
+        <h1>
+          Patches <small style="font-size: 1rem"
+            ><a href="/tc2/news">View all »</a></small>
+        </h1>
+      </div>
+    </section>
+    <section class="text-center container">
+      <h2
+        class="display-2"
+        style="color: #1ef5e3; font-weight: 700; letter-spacing: 0.2rem"
+      >
+        THE SAME GAME<br />YOU KNOW AND LOVE
+      </h2>
+      <p class="lead" style="font-size: 1.5rem">
+        TF2 is a classic, decades-long title beloved by millions. So despite all
+        the changes, we've made sure to make you feel right at home. Your items
+        and cosmetics will carry over, and all gameplay content from the
+        original game is here. We take the legacy of such a legendary title
+        seriously, and we hope to continue to provide an enjoyable experience
+        worthy to carry the torch.
+      </p>
+    </section>
+    <section
+      class="jumbotron jumbotron-fluid"
+      style=`background: linear-gradient(rgba(38, 50, 56, 0.4) 10%, rgba(38, 50, 56, 0.4)),url(${quicklimeImg.src});background-size: cover; background-position: center;background-position: center;min-height: 25vh`
+    >
+    </section>
+    <section class="text-center container">
+      <h2
+        class="display-2"
+        style="color: #1ef5e3; font-weight: 700; letter-spacing: 0.2rem"
+      >
+        CONSTANTLY UPDATED
+      </h2>
+      <p class="lead" style="font-size: 1.5rem">
+        We're continuing where Team Fortress 2 started, giving it countless new
+        updates to fix bugs, and make the game more fun and more consistent.
+        Dive right in and play any of the beloved nine classes, with the perfect
+        gameplay feel they deserve, unhampered by annoyances or bugs.
+      </p>
+    </section>
+    <section
+      class="jumbotron jumbotron-fluid"
+      style=`background: linear-gradient(rgba(38, 50, 56, 0.4) 10%, rgba(38, 50, 56, 0.4)),url(${lairImg.src});background-size: cover; background-position: center;background-position: center;min-height: 25vh`
+    >
+    </section>
+    <section class="text-center container" id="qol">
+      <h2
+        class="display-3"
+        style="color: #13ccad; font-weight: 700; letter-spacing: 0.2rem"
+      >
+        YOUR GAME TO DEVELOP
+      </h2>
+      <h2
+        class="display-2"
+        style="color: #1ef5e3; font-weight: 700; letter-spacing: 0.2rem"
+      >
+        WHAT WILL YOU MAKE OF IT?
+      </h2>
+      <h3 style="color: #d3d3d3; font-weight: 700; letter-spacing: 0.2rem">
+        COMMUNITY-MADE ON GITHUB
+      </h3>
+      <p class="lead" style="font-size: 1.5rem">
+        Not only do we constantly iterate upon and listen to community feedback,
+        we also have our full development process in the open on GitHub. Anyone
+        is free to pitch in and suggest a change that they feel will make the
+        game better. Join up in the effort to make our beloved game even better!
+      </p>
+      <a
+        href="https://github.com/mastercomfig/tc2"
+        class="btn btn-primary btn-lg">View the GitHub</a
+      >
+    </section>
+    <Footer />
+  </Body>
+</Layout>

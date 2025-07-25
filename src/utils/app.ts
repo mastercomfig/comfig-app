@@ -1,11 +1,8 @@
 import highImg from "@img/presets/high.webp";
 import lowImg from "@img/presets/low.webp";
 import mediumHighImg from "@img/presets/medium-high.webp";
-import mediumLowImg from "@img/presets/medium-low.webp";
-import mediumImg from "@img/presets/medium.webp";
 import noneImg from "@img/presets/none.webp";
 import ultraImg from "@img/presets/ultra.webp";
-import veryLowImg from "@img/presets/very-low.webp";
 import { BlobReader, BlobWriter, ZipWriter } from "@zip.js/zip.js";
 import { ScrollSpy, Tab } from "bootstrap";
 import { del, get, set } from "idb-keyval";
@@ -169,50 +166,30 @@ export async function app() {
   const presets = {
     none: {
       name: "None",
-      description:
-        "<h4>Special preset which skips setting quality options.</h4>",
+      description: "<h4>Skip setting quality options unless set by you</h4>",
     },
     ultra: {
       name: "Ultra",
-      description:
-        "<h4>Absolute maximum quality, with even the slightest and most performance-intensive quality improvements included.</h4>",
+      description: "<h4>Absolute maximum graphical quality</h4>",
     },
     high: {
       name: "High",
-      description:
-        "<h4>Enables all graphical features without making them extremely high quality.</h4>",
-    },
-    "medium-high": {
-      name: "Medium High",
-      description:
-        "<h4>Disables unoptimized features and optimizes the game without making the game look bad.</h4>",
+      description: "<h4>High graphical quality</h4>",
     },
     medium: {
       name: "Medium",
-      description:
-        "<h4>The maximum performance you can get while enabling a few effects that may give you a slight edge.</h4>",
-    },
-    "medium-low": {
-      name: "Medium Low",
-      description:
-        "<h4>The maximum performance you can get without making the game too hard to play because of awful visual quality and glitches.</h4>",
+      description: "<h4>Medium graphical quality</h4>",
     },
     low: {
       name: "Low",
-      description:
-        "<h4>Maximum performance without caring much about visibility or possible visual glitches.</h4>",
-    },
-    "very-low": {
-      name: "Very Low",
-      description:
-        "<h4>Negatively affects playability by <strong>a lot</strong> and disables very essential features like HUD elements in desperation for performance.</h4>Not recommended unless the game has such low performance that it is more of a hinderance than not having HUD elements and good player visibility.<br/><strong>BY DOWNLOADING THIS PRESET YOU UNDERSTAND THAT IT <em>REMOVES HUD ELEMENTS AND REDUCES VISIBILITY</em>. IF YOU DON'T WANT THIS <em>USE LOW</em>, THAT'S THE <em>ONLY</em> DIFFERENCE.</strong><br/>",
+      description: "<h4>Low graphical quality</h4>",
     },
   };
 
   // The only addons we can override when preset switches
   const recommendableAddons = [
     "no-footsteps",
-    "disable-pyroland",
+    "no-pyroland",
     "no-soundscapes",
     "no-tutorial",
   ];
@@ -234,16 +211,8 @@ export async function app() {
   setRecommendedAddons("none", []);
   setRecommendedAddons("ultra", []);
   setRecommendedAddons("high", []);
-  setRecommendedAddons("medium-high", []);
   setRecommendedAddons("medium", []);
-  setRecommendedAddons("medium-low", []);
-  setRecommendedAddons("low", ["disable-pyroland", "no-soundscapes"]);
-  setRecommendedAddons("very-low", [
-    "no-footsteps",
-    "disable-pyroland",
-    "no-soundscapes",
-    "no-tutorial",
-  ]);
+  setRecommendedAddons("low", ["no-pyroland", "no-soundscapes"]);
   // End preset -> recommended addon mapping
 
   // Base release URL
@@ -258,10 +227,10 @@ export async function app() {
   // Prefix for mastercomfig files
   const mastercomfigFileUrl = "mastercomfig-";
   // Addon extension format string to download
-  const addonFileUrl = mastercomfigFileUrl + "{1}-addon.vpk";
+  const addonFileUrl = mastercomfigFileUrl + "addon-{1}.vpk";
   const addonUrl = releaseDownloadUrl + addonFileUrl;
   // Preset extension format string to download
-  const presetFileUrl = mastercomfigFileUrl + "{1}-preset.vpk";
+  const presetFileUrl = mastercomfigFileUrl + "base.vpk";
   const presetUrl = releaseDownloadUrl + presetFileUrl;
 
   // Current mastercomfig version, comes in from API
@@ -279,9 +248,9 @@ export async function app() {
   const addons = [];
 
   // Currently selected preset
-  let selectedPreset = null;
+  let selectedPreset: string | null = null;
   // Currently selected addons
-  let selectedAddons = [];
+  let selectedAddons: string[] = [];
   // Current state of autoexec binds
   let selectedBinds = {};
   // Overlaid bind layers
@@ -477,9 +446,7 @@ export async function app() {
   }
 
   // Helper functions to format download URLs
-  function getDownloadUrl(id, preset) {
-    let url = preset ? presetUrl : addonUrl;
-    url = url.format(version, id);
+  function getDownloadUrl(url: string) {
     url = url.replace(
       "https://github.com/mastercomfig/mastercomfig/releases",
       "https://api.comfig.app/download",
@@ -487,12 +454,12 @@ export async function app() {
     return `${url}`;
   }
 
-  function getAddonUrl(id) {
-    return getDownloadUrl(id, false);
+  function getAddonUrl(id: string) {
+    return getDownloadUrl(addonUrl.format(version, id));
   }
 
   function getPresetUrl() {
-    return getDownloadUrl(selectedPreset, true);
+    return getDownloadUrl(presetUrl.format(version));
   }
   // End download URL helpers
 
@@ -944,6 +911,11 @@ export async function app() {
     progressBar.setAttribute("aria-valuenow", progress);
   }
 
+  const staticModules = {
+    decals: new Set(["off"]),
+    sound: new Set(["low"]),
+  };
+
   async function getVPKDownloadUrls() {
     // We need permissions for the directory
     if (!(await accessDirectory())) {
@@ -957,12 +929,9 @@ export async function app() {
       console.log("Using Direct Install.");
       filesInUse = false;
       // Clear out all existing files
-      const presetKeys = Object.keys(presets);
-      for (const preset of presetKeys) {
-        const presetFile = presetFileUrl.format(null, preset);
-        await safeUnlink(presetFile, customDirectory);
-        await safeUnlink(presetFile + ".sound.cache", customDirectory);
-      }
+      const presetFile = presetFileUrl;
+      await safeUnlink(presetFile, customDirectory);
+      await safeUnlink(presetFile + ".sound.cache", customDirectory);
       for (const addon of addons) {
         const addonFile = addonFileUrl.format(null, addon);
         await safeUnlink(addonFile, customDirectory);
@@ -986,8 +955,23 @@ export async function app() {
     } else {
       alert("Failed to download preset file. Please try again later.");
     }
+    // Handle static module addons
+    const staticModuleKeys = Object.keys(staticModules);
+    let staticModuleBits = 0;
+    for (let i = 0; i < staticModuleKeys.length; i++) {
+      const k = staticModuleKeys[i];
+      const v = staticModules[k];
+      if (v.has(selectedModules[k])) {
+        const val = 1 << i;
+        staticModuleBits |= val;
+      }
+    }
+    const addonsToDownload = selectedAddons.slice();
+    if (staticModuleBits > 0) {
+      addonsToDownload.push(`static-${staticModuleBits}`);
+    }
     // Then push all our addon downloads
-    for (const selection of selectedAddons) {
+    for (const selection of addonsToDownload) {
       const addonUrl = getAddonUrl(selection);
       const addonResult = await writeRemoteFile(addonUrl, customDirectory);
       if (addonResult) {
@@ -1391,6 +1375,7 @@ export async function app() {
       delete items.default;
       const itemsToDownload = new Set();
       const crosshairsToDownload = new Set();
+      const crosshairsWithCustomMaterial = new Set();
       const crosshairTargetBase = "vgui/replay/thumbnails/";
       const crosshairTarget = `tf/custom/comfig-custom/materials/${crosshairTargetBase}`;
       const crosshairPacks = globalThis.crosshairPacks;
@@ -1447,61 +1432,123 @@ export async function app() {
       if (Object.keys(crosshairs).length > 0) {
         configContents["autoexec.cfg"] += 'cl_crosshair_file""\ncrosshair 1\n';
       }
-      if (crosshairs["default"]) {
+      // get the crosshair data for this item
+      function getCrosshairForItem(itemClass) {
         const [crosshairGroup, crosshairFile, crosshairKey] = crosshairs[
-          "default"
+          itemClass
         ].split(".", 3);
         const crosshairPack = crosshairPacks[crosshairFile];
         const crosshairInfo = crosshairPack[crosshairKey] ?? crosshairPack;
         if (!crosshairInfo) {
           console.error("Unknown crosshair pack", crosshairFile, crosshairKey);
+          return null;
         }
-        for (const classname of Object.keys(items)) {
-          const item = items[classname];
-          const itemCrosshair = item.TextureData.crosshair;
-          if (crosshairFile.indexOf("/") === -1) {
-            itemCrosshair.file = `${crosshairTargetBase}${crosshairFile}`;
-            crosshairsToDownload.add(crosshairFile);
-          } else {
-            itemCrosshair.file = crosshairFile;
+        return {
+          crosshairGroup,
+          crosshairFile,
+          crosshairInfo,
+        };
+      }
+      // apply the crosshair to item script
+      function addCrosshairToItem(
+        itemClass: string,
+        crosshairFile: string,
+        crosshairInfo,
+      ) {
+        const item = items[itemClass];
+        const itemCrosshair = item.TextureData.crosshair;
+        if (crosshairFile.indexOf("/") === -1) {
+          itemCrosshair.file = `${crosshairTargetBase}${crosshairFile}`;
+          crosshairsToDownload.add(crosshairFile);
+          if (crosshairInfo.hasCustomMaterial) {
+            crosshairsWithCustomMaterial.add(crosshairFile);
           }
-          itemCrosshair.x = crosshairInfo.pos?.[0] ?? "0";
-          itemCrosshair.y = crosshairInfo.pos?.[1] ?? "0";
-          itemCrosshair.width = crosshairInfo.size ?? "64";
-          itemCrosshair.height = crosshairInfo.size ?? "64";
-          itemsToDownload.add(classname);
+        } else {
+          itemCrosshair.file = crosshairFile;
         }
-      } else {
-        for (const classname of Object.keys(crosshairs)) {
-          const item = items[classname];
-          if (!item) {
-            console.log("missing crosshair item", classname);
-            continue;
-          }
-          const [crosshairGroup, crosshairFile, crosshairKey] = crosshairs[
-            classname
-          ].split(".", 3);
-          const crosshairPack = crosshairPacks[crosshairFile];
-          const crosshairInfo = crosshairPack[crosshairKey];
-          if (!crosshairInfo) {
-            console.error(
-              "Unknown crosshair pack",
-              crosshairFile,
-              crosshairKey,
+        itemCrosshair.x = crosshairInfo.pos?.[0] ?? "0";
+        itemCrosshair.y = crosshairInfo.pos?.[1] ?? "0";
+        itemCrosshair.width = crosshairInfo.size ?? "64";
+        itemCrosshair.height = crosshairInfo.size ?? "64";
+        itemsToDownload.add(itemClass);
+      }
+      // defaulted crosshairs
+      function setDefaultCrosshairs(itemKey, itemSet) {
+        if (!crosshairs[itemKey]) {
+          return;
+        }
+        const crosshairData = getCrosshairForItem(itemKey);
+        if (crosshairData) {
+          for (const itemClass of itemSet) {
+            addCrosshairToItem(
+              itemClass,
+              crosshairData.crosshairFile,
+              crosshairData.crosshairInfo,
             );
           }
-          const itemCrosshair = item.TextureData.crosshair;
-          if (crosshairFile.indexOf("/") === -1) {
-            itemCrosshair.file = `${crosshairTargetBase}${crosshairFile}`;
-            crosshairsToDownload.add(crosshairFile);
-          } else {
-            itemCrosshair.file = crosshairFile;
+        }
+      }
+
+      // Default
+      const allItems = Object.keys(items);
+      setDefaultCrosshairs("default", allItems);
+
+      // Gather all slots
+      const allSlots = {};
+      for (const itemClass of allItems) {
+        const item = items[itemClass];
+        const slot = getNormalizedSlotName(item);
+        if (!(slot in allSlots)) {
+          allSlots[slot] = [];
+        }
+        allSlots[slot].push(itemClass);
+      }
+
+      // Slot defaults
+      for (const [slot, slotItems] of Object.entries(allSlots)) {
+        setDefaultCrosshairs(`default_slot_${slot}`, slotItems);
+      }
+
+      // Class defaults and class slot defaults
+      for (const playerClass of classes) {
+        const playerClassItems = itemUsedBy[playerClass];
+        setDefaultCrosshairs(`default_${playerClass}`, playerClassItems);
+        const slots = {};
+        function addItemToSlot(itemClass) {
+          const item = items[itemClass];
+          const slot = getNormalizedSlotName(item);
+          if (!(slot in slots)) {
+            slots[slot] = [];
           }
-          itemCrosshair.x = crosshairInfo.pos?.[0] ?? "0";
-          itemCrosshair.y = crosshairInfo.pos?.[1] ?? "0";
-          itemCrosshair.width = crosshairInfo.size ?? "64";
-          itemCrosshair.height = crosshairInfo.size ?? "64";
-          itemsToDownload.add(classname);
+          slots[slot].push(itemClass);
+        }
+        for (const itemClass of playerClassItems) {
+          addItemToSlot(itemClass);
+        }
+        for (const [slot, slotItems] of Object.entries(slots)) {
+          setDefaultCrosshairs(`default_${playerClass}_${slot}`, slotItems);
+        }
+      }
+
+      // all class items
+      setDefaultCrosshairs("default_all", itemUsedBy["All-Class"]);
+      setDefaultCrosshairs("default_all_actionitem", itemUsedBy["All-Class"]);
+      setDefaultCrosshairs("default_all_utility", itemUsedBy["All-Class"]);
+
+      // weapon specific crosshairs
+      for (const itemClass of Object.keys(crosshairs)) {
+        const item = items[itemClass];
+        if (!item) {
+          console.log("Missing crosshair item", itemClass);
+          continue;
+        }
+        const crosshairData = getCrosshairForItem(itemClass);
+        if (crosshairData) {
+          addCrosshairToItem(
+            itemClass,
+            crosshairData.crosshairFile,
+            crosshairData.crosshairInfo,
+          );
         }
       }
       for (const classname of Object.keys(zoomCrosshairs)) {
@@ -1817,7 +1864,10 @@ export async function app() {
       addonHandler[id]?.disabled?.();
     }
     // Make sure the UI reflects the selected state
-    getEl(id).classList.toggle("active", checked);
+    const addonCard = getEl(id);
+    if (addonCard) {
+      addonCard.classList.toggle("active", checked);
+    }
   }
 
   function updateDocsLinks(version) {
@@ -1870,12 +1920,9 @@ export async function app() {
   }
 
   const presetImg = {
-    "medium-high": mediumHighImg,
     low: lowImg,
-    "medium-low": mediumLowImg,
-    medium: mediumImg,
+    medium: mediumHighImg,
     ultra: ultraImg,
-    "very-low": veryLowImg,
     high: highImg,
     none: noneImg,
   };
@@ -2755,7 +2802,7 @@ export async function app() {
       downloadStatusEl.classList.add("download-status-fill");
     }
   } else {
-    await setPreset("medium-high", true);
+    await setPreset("medium", true);
   }
 
   if (getEl("launch-options")) {

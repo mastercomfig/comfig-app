@@ -22,7 +22,16 @@
         const carousel = carouselList[i];
         carouselEl.parentNode.parentNode.parentNode.addEventListener(
           "mouseenter",
-          () => carousel.cycle(),
+          () => {
+            // remove lazy load from images in prepration for cycling
+            const carouselInner = carouselEl.firstElementChild;
+            for (const carouselItem of carouselInner.children) {
+              const img = carouselItem.firstElementChild;
+              img.removeAttribute("loading");
+            }
+            // cycle the carousel
+            carousel.cycle();
+          },
         );
         carouselEl.parentNode.parentNode.parentNode.addEventListener(
           "mouseleave",
