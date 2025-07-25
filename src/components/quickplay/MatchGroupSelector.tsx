@@ -104,7 +104,9 @@ export function MatchGroupSelector({ hash }) {
     };
   }, []);
 
-  const matchGroups = quickplayStore.availableMatchGroups;
+  const matchGroups = quickplayStore.availableMatchGroups.filter(
+    (r) => r.active,
+  );
 
   return (
     <div className="align-middle text-center">

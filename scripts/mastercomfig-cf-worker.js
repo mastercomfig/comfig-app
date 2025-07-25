@@ -14,7 +14,10 @@ const allowedOrigins = new Set([
   "http://localhost:4321",
   "http://127.0.0.1:4321",
 ]);
-const secureOrigin = new Set(["https://comfig.app"]);
+const secureOrigin = new Set([
+  "https://comfig.app",
+  "https://staging.mastercomfig-site.pages.dev",
+]);
 for (const origin of secureOrigin) {
   allowedOrigins.add(origin);
 }
