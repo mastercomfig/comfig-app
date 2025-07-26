@@ -88,7 +88,7 @@ export function getDefaultMatchGroupSettings() {
 export function getDefaultMatchGroups() {
   const matchGroups = [
     {
-      name: "Start Playing",
+      name: "Casual",
       code: "pvp",
       description: "We'll match you into the best casual game we can find.",
       skill: 0,
