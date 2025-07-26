@@ -83,6 +83,7 @@ export function getDefaultMatchGroups() {
       description: "We'll match you into the best casual game we can find.",
       skill: 0,
       img: randomImg.src,
+      active: true,
     },
     {
       name: "Workshop Maps",
