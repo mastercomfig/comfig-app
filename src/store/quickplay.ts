@@ -11,8 +11,12 @@ import idbStorage from "@utils/idbstorage";
 const state = (set) => ({
   carousel: null,
   setCarousel: (carousel) => set(() => ({ carousel })),
-  availableMatchGroups: getDefaultMatchGroups(),
+  availableMatchGroups: getDefaultMatchGroups().filter((r) => r.active),
+  setAvailableMatchGroups: (availableMatchGroups) =>
+    set(() => ({ availableMatchGroups })),
   matchGroupSettings: getDefaultMatchGroupSettings(),
+  setMatchGroupSettings: (matchGroupSettings) =>
+    set(() => ({ matchGroupSettings })),
   customizing: 0,
   toggleCustomizing: () =>
     set((state) => ({ customizing: !state.customizing })),
