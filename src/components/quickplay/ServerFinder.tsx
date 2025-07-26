@@ -416,6 +416,13 @@ export default function ServerFinder({ hash }: { hash: string }) {
         filterServerForGamemode(gm, server, tags),
       );
     } else {
+      if (currentMatchGroup === "jump") {
+        const mapPrefix = server.map.split("_")[0];
+        if (mapPrefix === "jump" || mapPrefix === "surf") {
+          return true;
+        }
+        return false;
+      }
       if (filterServerForGamemode(currentMatchGroup, server, tags)) {
         return true;
       }
@@ -1018,8 +1025,6 @@ export default function ServerFinder({ hash }: { hash: string }) {
       return "success";
     };
   }, [quickplayStore.pinglimit]);
-
-  console.log(quickplayStore.matchGroup);
 
   // Look, I know this is bad. I'll split it into components later.
   return (

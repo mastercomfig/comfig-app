@@ -1,5 +1,5 @@
 import halloweenImg from "@img/gamemodes/halloween.webp";
-import jumpImg from "@img/gamemodes/jump1.webp";
+import jumpImg from "@img/gamemodes/jump.webp";
 import mvmImg from "@img/gamemodes/mvm.webp";
 import randomImg from "@img/gamemodes/random.webp";
 import smissmasImg from "@img/gamemodes/smissmas.webp";
@@ -118,12 +118,13 @@ export function getDefaultMatchGroups() {
       img: randomImg.src,
     },
     {
-      name: "Jump",
+      name: "Jump / Surf",
       code: "jump",
       description:
-        "Use your blast jumping skills to navigate through tutorials and courses.",
+        "Use your movement skills to navigate through tutorials and courses.",
       skill: 2,
       img: jumpImg.src,
+      active: true,
     },
     {
       name: "Surf",
