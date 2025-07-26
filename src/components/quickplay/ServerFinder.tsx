@@ -8,6 +8,10 @@ import plrImg from "@img/gamemodes/plr.webp";
 import miscImg from "@img/gamemodes/sd.webp";
 import xMarkImg from "@img/xmark.webp";
 import * as Sentry from "@sentry/browser";
+import {
+  getDefaultMatchGroups,
+  getSpecialEventDesc,
+} from "@ssg/quickplayStaticData";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
@@ -278,7 +282,36 @@ export default function ServerFinder({ hash }: { hash: string }) {
   const [schema, setSchema] = useState<any>(undefined);
   const mapToGamemode = useMemo(() => schema?.map_gamemodes ?? {}, [schema]);
   const mapToThumbnail = useMemo(() => schema?.map_thumbnails ?? {}, [schema]);
-  const extraMatchGroups = useMemo(() => schema?.matchGroups ?? {}, [schema]);
+  const extraMatchGroups = useMemo(() => schema?.gamemodes ?? {}, [schema]);
+
+  useEffect(() => {
+    const matchGroups = getDefaultMatchGroups().filter((r) => r.active);
+    const liveMatchGroups: object[] = [];
+    const newMatchGroupSettings = {};
+    for (const matchGroup of Object.keys(extraMatchGroups)) {
+      let newMatchGroupDesc: object = null;
+      if (matchGroup === "special_events") {
+        newMatchGroupDesc = getSpecialEventDesc();
+      }
+      if (!newMatchGroupDesc) {
+        console.log(`Unknown match group ${matchGroup}, skipping`);
+        continue;
+      }
+      liveMatchGroups.push(newMatchGroupDesc);
+      const code = newMatchGroupDesc["code"];
+      if (!quickplayStore.matchGroupSettings[code]) {
+        newMatchGroupSettings[code] = new Set(["pinglimit", "partysize"]);
+      }
+    }
+    quickplayStore.setAvailableMatchGroups([
+      ...liveMatchGroups,
+      ...matchGroups,
+    ]);
+    quickplayStore.setMatchGroupSettings({
+      ...newMatchGroupSettings,
+      ...quickplayStore.matchGroupSettings,
+    });
+  }, [extraMatchGroups]);
 
   const allMaps = useMemo(() => {
     return Object.keys(mapToGamemode).map((m, i) => ({ id: i, name: m }));
@@ -383,6 +416,9 @@ export default function ServerFinder({ hash }: { hash: string }) {
         filterServerForGamemode(gm, server, tags),
       );
     } else {
+      if (filterServerForGamemode(currentMatchGroup, server, tags)) {
+        return true;
+      }
       return false;
     }
   };

@@ -1,3 +1,7 @@
+## July 26, 2025
+
+* Added support for featured match groups
+
 ## March 11, 2025
 
 * Stopped almost full servers from being filtered out completely, instead, they are penalized slightly

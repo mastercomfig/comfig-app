@@ -102,11 +102,9 @@ export function MatchGroupSelector({ hash }) {
     return () => {
       carouselEl?.removeEventListener("slide.bs.carousel", listener);
     };
-  }, []);
+  }, [quickplayStore.availableMatchGroups]);
 
-  const matchGroups = quickplayStore.availableMatchGroups.filter(
-    (r) => r.active,
-  );
+  const matchGroups = quickplayStore.availableMatchGroups;
 
   return (
     <div className="align-middle text-center">
@@ -127,6 +125,7 @@ export function MatchGroupSelector({ hash }) {
               className={`${index == 0 ? "active" : ""}`}
               aria-current="true"
               aria-label={`Slide ${index + 1} ${resource}`}
+              key={resource.code}
             />
           ))}
         </div>

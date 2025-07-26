@@ -1,13 +1,8 @@
 import { useMemo } from "react";
 
-
-
 import { getMaxPlayerIndex } from "@utils/quickplay";
 
-
-
 import useQuickplayStore from "@store/quickplay";
-
 
 const MAX_PLAYERS_STATUS = ["24", "24-32", "18-32", "64-100", "At least 18"];
 const RESPAWN_STATUS = [
