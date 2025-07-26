@@ -32,15 +32,17 @@ export default function ServerList({
             }}
           >
             <div className="d-flex py-2">
-              <div className="flex-shrink-0">
-                <img
-                  className="object-fit-cover"
-                  src={mapToThumbnail[server.map]}
-                  alt={server.map}
-                  style={{ width: "10rem", height: "10rem" }}
-                  crossOrigin=""
-                />
-              </div>
+              {mapToThumbnail[server.map] && (
+                <div className="flex-shrink-0">
+                  <img
+                    className="object-fit-cover"
+                    src={mapToThumbnail[server.map]}
+                    alt={server.map}
+                    style={{ width: "10rem", height: "10rem" }}
+                    crossOrigin=""
+                  />
+                </div>
+              )}
               <div className="flex-grow-1 ms-3">
                 <h3
                   className="mb-1 mt-2"
