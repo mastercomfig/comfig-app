@@ -1,11 +1,12 @@
 import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
-import tailwind from "@astrojs/tailwind";
 import { shield } from "@kindspells/astro-shield";
 import sentry from "@sentry/astro";
+import tailwindcss from "@tailwindcss/vite";
 import AstroPWA from "@vite-pwa/astro";
 import type { AstroIntegration } from "astro";
 import { defineConfig, envField } from "astro/config";
+import childProcess from "node:child_process";
 import crypto from "node:crypto";
 import fs from "node:fs";
 import { resolve } from "node:path";
@@ -80,26 +81,25 @@ const astroCSPHashExporter: AstroIntegration = {
       if (import.meta.env.DEV) {
         return;
       }
-      const sriHashes = await import("./generated/sriHashes.mjs");
-      const headersFilePath = resolve(rootDir, "public", "_headers");
-      let headersFile = fs.readFileSync(headersFilePath, {
-        encoding: "utf-8",
+      const nonceFileWritePath = resolve(rootDir, "generated", "nonce.txt");
+      fs.writeFileSync(nonceFileWritePath, nonce);
+
+      const process = childProcess.fork(
+        resolve(rootDir, "scripts", "generate-headers-file.js"),
+      );
+
+      return new Promise((resolve, reject) => {
+        process.on("error", function (err) {
+          if (!err) return;
+          reject(err);
+        });
+
+        process.on("exit", function (code) {
+          const err = code === 0 ? null : new Error("exit code " + code);
+          if (!err) resolve();
+          reject(err);
+        });
       });
-      const scriptSrcHashes = `'${sriHashes.inlineScriptHashes.join("' '")}'`;
-      headersFile = headersFile.replace(
-        "{{SCRIPT_SRC_HASHES}}",
-        scriptSrcHashes,
-      );
-      // Not ideal, but protects against non-targeted attacks. We don't really have options for non-dynamic content.
-      const srcNonce = `'nonce-${nonce}'`;
-      headersFile = headersFile.replaceAll("{{SRC_NONCE}}", srcNonce);
-      const styleSrcElementHashes = `'${sriHashes.inlineStyleHashes.join("' '")}'`;
-      headersFile = headersFile.replace(
-        "{{STYLE_SRC_ELEM_HASHES}}",
-        styleSrcElementHashes,
-      );
-      const headersFileWritePath = resolve(rootDir, "dist", "_headers");
-      fs.writeFileSync(headersFileWritePath, headersFile);
     },
   },
 };
@@ -122,10 +122,6 @@ export default defineConfig({
   site: "https://comfig.app",
   integrations: [
     react(),
-    tailwind({
-      applyBaseStyles: false,
-      nesting: true,
-    }),
     pwa,
     sentry({
       dsn: "https://42c25ee2fb084eb5a832ee92d97057d5@o182209.ingest.us.sentry.io/6265934",
@@ -175,15 +171,19 @@ export default defineConfig({
       sourcemap: true,
       assetsInlineLimit: 0,
     },
+
     html: {
       cspNonce: nonce,
     },
+
     resolve: {
       alias: {
         "~bootstrap": resolve(rootDir, "node_modules", "bootstrap"),
         "~bootswatch": resolve(rootDir, "node_modules", "bootswatch"),
       },
     },
+
+    plugins: [tailwindcss()],
   },
   prefetch: false,
   env: {

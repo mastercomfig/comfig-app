@@ -543,36 +543,6 @@ const crosshairPacks = {
       name: "UT99 1",
     },
   },
-  ut99_1: {
-    _0_0: {
-      name: "UT99 1",
-    },
-  },
-  ut99_1: {
-    _0_0: {
-      name: "UT99 1",
-    },
-  },
-  ut99_1: {
-    _0_0: {
-      name: "UT99 1",
-    },
-  },
-  ut99_1: {
-    _0_0: {
-      name: "UT99 1",
-    },
-  },
-  ut99_1: {
-    _0_0: {
-      name: "UT99 1",
-    },
-  },
-  ut99_1: {
-    _0_0: {
-      name: "UT99 1",
-    },
-  },
 };
 
 const crosshairPackGroups = {
