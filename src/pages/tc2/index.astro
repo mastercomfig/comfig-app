@@ -10,6 +10,17 @@ import lairImg from "@img/update/lair.webp";
 import lairOutsideImg from "@img/update/lairoutside.webp";
 import quicklimeImg from "@img/update/quicklime.webp";
 import Layout from "@layouts/Layout.astro";
+import { getCollection } from "astro:content";
+
+const news = (await getCollection("tc2News"))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .filter((post) => !post.data.draft)
+  .slice(0, 3);
+
+const patches = (await getCollection("tc2Patches"))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .filter((post) => !post.data.draft)
+  .slice(0, 3);
 ---
 
 <style>
@@ -77,18 +88,66 @@ import Layout from "@layouts/Layout.astro";
       <div class="container">
         <h1>
           Latest News <small style="font-size: 1rem"
-            ><a href="/tc2/news">View all »</a></small>
+            ><a href="/tc2/news">View all »</a></small
+          >
         </h1>
+        <div class="row g-4 mt-1">
+          {
+            news.map((post) => (
+              <div class="card m-3 col-4">
+                <div class="card-body">
+                  <h5 class="card-title" style="color: #fff;font-weight: 600">
+                    {post.data.title}
+                  </h5>
+                  <p class="card-text" style="color: #c2c2c2">
+                    {post.data.description}
+                    <br />
+                    <small class="text-muted">
+                      <a
+                        href={
+                          post.data.update
+                            ? `/tc2/updates/${post.data.update}`
+                            : `/tc2/news/${post.id}`
+                        }
+                      >
+                        Read more »
+                      </a>
+                    </small>
+                  </p>
+                </div>
+                <div class="card-footer">
+                  <small class="text-muted">
+                    {post.data.date.toLocaleDateString()}
+                  </small>
+                </div>
+              </div>
+            ))
+          }
+        </div>
       </div>
     </section>
-    <section style="background: rgb(255 255 255 / 5%)">
+    <!--<section style="background: rgb(255 255 255 / 5%)">
       <div class="container">
         <h1>
           Patches <small style="font-size: 1rem"
-            ><a href="/tc2/news">View all »</a></small>
+            ><a href="/tc2/patches">View all »</a></small
+          >
         </h1>
+        <div class="row g-4 mt-1">
+          {
+            patches.map((post) => (
+              <div class="card m-3 col-4">
+                <div class="card-body p-4">
+                  <h5 class="card-title m-0">
+                    <a href={`/tc2/patches/${post.id}`}>{post.data.title}</a>
+                  </h5>
+                </div>
+              </div>
+            ))
+          }
+        </div>
       </div>
-    </section>
+    </section> -->
     <section class="text-center container">
       <h2
         class="display-2"

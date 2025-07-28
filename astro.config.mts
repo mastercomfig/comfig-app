@@ -186,19 +186,16 @@ export default defineConfig({
     },
   },
   prefetch: false,
-  experimental: {
-    directRenderScript: true,
-    clientPrerender: true,
-    globalRoutePriority: true,
-    contentCollectionCache: true,
-    env: {
-      schema: {
-        NONCE: envField.string({
-          context: "server",
-          access: "secret",
-          default: nonce,
-        }),
-      },
+  env: {
+    schema: {
+      NONCE: envField.string({
+        context: "server",
+        access: "secret",
+        default: nonce,
+      }),
     },
+  },
+  experimental: {
+    clientPrerender: true,
   },
 });

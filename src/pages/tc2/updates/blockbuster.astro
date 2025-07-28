@@ -1,0 +1,752 @@
+---
+import Body from "@components/Body.astro";
+import Footer from "@components/Footer.astro";
+import BaseHead from "@components/head/BaseHead.astro";
+import ImportHead from "@components/head/ImportHead.astro";
+import MainHead from "@components/head/MainHead.astro";
+import PreloadHead from "@components/head/PreloadHead.astro";
+import tfLogoImg from "@img/tc2/team-comtress-2.png";
+import lairImg from "@img/update/lair.webp";
+import lairOutsideImg from "@img/update/lairoutside.webp";
+import quicklimeImg from "@img/update/quicklime.webp";
+import Layout from "@layouts/Layout.astro";
+---
+
+<style>
+  .header-links > a {
+    color: #fcf195;
+  }
+  .header-links > a:hover {
+    color: #faf4ba;
+  }
+  .btn-xl {
+    font-size: 1.7rem;
+  }
+  @font-face {
+    font-family: "Monoton";
+    font-style: normal;
+    font-display: swap;
+    font-weight: 400;
+    src: url(@fontsource/monoton/files/monoton-latin-400-normal.woff2)
+      format("woff2");
+    unicode-range:
+      U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+      U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+      U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+  @font-face {
+    font-family: "Righteous";
+    font-style: normal;
+    font-display: swap;
+    font-weight: 400;
+    src: url(@fontsource/righteous/files/righteous-latin-400-normal.woff2)
+      format("woff2");
+    unicode-range:
+      U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+      U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+      U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  .display-2,
+  .display-3,
+  .display-4,
+  .display-5,
+  .display-6 {
+    font-family:
+      "Righteous",
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      "Helvetica Neue",
+      Arial,
+      sans-serif;
+  }
+  .display-1 {
+    font-family:
+      "Monoton",
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      "Helvetica Neue",
+      Arial,
+      sans-serif;
+  }
+  .glow {
+    animation: glow 1s ease-in-out infinite alternate;
+  }
+  @keyframes glow {
+    from {
+      text-shadow:
+        0 0 2px #fff,
+        0 0 5px #fff,
+        0 0 7px #e60073,
+        0 0 10px #e60073,
+        0 0 12px #e60073,
+        0 0 15px #e60073,
+        0 0 17px #e60073;
+    }
+    to {
+      text-shadow:
+        0 0 5px #fff,
+        0 0 7px #ff4da6,
+        0 0 10px #ff4da6,
+        0 0 12px #ff4da6,
+        0 0 15px #ff4da6,
+        0 0 17px #ff4da6,
+        0 0 20px #ff4da6;
+    }
+  }
+</style>
+
+<Layout>
+  <head>
+    <BaseHead />
+    <PreloadHead />
+    <ImportHead />
+    <MainHead
+      title="Blockbuster Update | Team Comtress 2"
+      noSite={true}
+      description="The Team Comtress 2 Blockbuster Update. Performance improvements, gameplay fixes and quality of life updates."
+      image="https://comfig.app/img/tc2/team-comtress-2.png"
+      favicon="/img/tc2/favicon.ico"
+    />
+  </head>
+  <Body>
+    <section
+      class="container p-0"
+      style=`background: linear-gradient(rgba(38, 50, 56, 0.7) 10%, rgba(38, 50, 56, 0.7)),url(${lairOutsideImg.src});background-size: cover; background-position: center;background-position: center`
+    >
+      <div
+        class="d-flex flex-column align-items-center justify-content-between text-center p-4"
+        style="min-height: 100vh"
+      >
+        <div>
+          <img
+            class="img-logo-sm"
+            src={tfLogoImg.src}
+            alt="Team Fortress 2 logo"
+          />
+          <h1
+            class="display-5 mt-5"
+            style="letter-spacing: 0.2rem;font-weight: 600"
+          >
+            THIS SUMMER...
+          </h1>
+        </div>
+        <div style="margin-top: -4rem">
+          <h1
+            class="display-1"
+            style="letter-spacing: 0.2rem;font-weight: 600;color: #fcf195;text-shadow: 1px 1px 2px #e60073"
+          >
+            THE
+          </h1>
+          <h1
+            class="display-1 glow"
+            style="letter-spacing: 0.2rem;font-weight: 600;font-size: 8rem;color: #fcf195"
+          >
+            BLOCK<wbr />BUSTER
+          </h1>
+          <h1
+            class="display-1"
+            style="letter-spacing: 0.2rem;font-weight: 600;font-size:6rem;color: #fcf195;text-shadow: 1px 1px 2px #ff00dd"
+          >
+            UPDATE
+          </h1>
+        </div>
+        <div>
+          <p
+            class="display-6 header-links m-0 mb-2"
+            style="color: #ccc47d;font-weight: 100;letter-spacing: 0.3rem"
+          >
+            |
+            <a style="font-weight: 600" href="#performance">PERFORMANCE</a>
+            |
+            <a style="font-weight: 600" href="#gameplay">GAMEPLAY</a>
+            |
+            <a style="font-weight: 600" href="#qol">QUALITY OF LIFE</a>
+            |
+          </p>
+        </div>
+      </div>
+    </section>
+    <section class="text-center" style="background: rgb(255 255 255 / 5%)">
+      <h1 style="font-size: 2rem">
+        Summer is here, and with it, a blockbuster hit for Team Comtress 2's
+        debut!
+      </h1>
+      <p class="lead container" style="font-size: 1.5rem">
+        <br />
+        This update is packed with performance improvements, gameplay fixes, and
+        quality of life updates that will make your experience buttery smooth and
+        more enjoyable than ever. We've been hard at work listening to your feedback
+        and addressing the issues that matter most to you. From optimizing the game's
+        performance to fixing hundreds of gameplay bugs, this update is a testament
+        to our commitment to making Team Comtress 2 the best it can be.
+        <br /><br />
+      </p>
+      <h2 style="font-size: 1.75rem">
+        So grab your popcorn, sit back, and get ready for a summer of fun.
+      </h2>
+    </section>
+    <section class="text-center container" id="performance">
+      <h2
+        class="display-2"
+        style="color: #fcf195; font-weight: 700; letter-spacing: 0.2rem"
+      >
+        PERFORMANCE
+      </h2>
+      <p class="lead" style="font-size: 1.5rem">
+        Improving the game's performance is a long term focus for us, and this
+        is just the beginning of a much smoother experience.
+      </p>
+      <hr />
+      <ul class="text-start lead">
+        <li>Improved cases of overhead with econ and cosmetics on gameplay.</li>
+        <li>Optimized various aspects of the animation system.</li>
+        <li>
+          Fixed cases of stutters encountered when moving between different
+          sections of the map.
+        </li>
+        <li>Greatly improved game startup and map load time.</li>
+        <li>Added options to reduce bullet impact effects.</li>
+        <li>Fixed performance issues with ragdolls.</li>
+        <li>Many other minor performance and stability improvements.</li>
+      </ul>
+    </section>
+    <section
+      class="jumbotron jumbotron-fluid"
+      style=`background: linear-gradient(rgba(38, 50, 56, 0.4) 10%, rgba(38, 50, 56, 0.4)),url(${quicklimeImg.src});background-size: cover; background-position: center;background-position: center;min-height: 25vh`
+    >
+    </section>
+    <section class="text-center container" id="gameplay">
+      <h2
+        class="display-2"
+        style="color: #fcf195; font-weight: 700; letter-spacing: 0.2rem"
+      >
+        GAMEPLAY
+      </h2>
+      <p class="lead" style="font-size: 1.5rem">
+        As it turns out, there were a <em>few</em> gameplay bugs in TF2. Well, hundreds
+        of them. So we've been listening to your feedback, and have made changes
+        and fixes to the game based on what we've heard.
+      </p>
+      <hr />
+      <div class="text-start">
+        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
+          CORE GAMEPLAY
+        </h2>
+        <ul class="lead">
+          <li>
+            Fixed switch speed bonuses not being used for applying a holster
+            speed bonus. For example, The Degreaser's holster bonus was only
+            applied after it has been deployed for the base deploy time (0.5
+            seconds), rather using the deploy time with its switch bonus (0.33
+            seconds). This caused an awkward situation where you had to wait
+            longer than expected to benefit from The Degreaser's holster bonus.
+          </li>
+          <ul>
+            <li>
+              Fixed holster speed penalties, such as on The Fists of Steel,
+              being bypassable.
+            </li>
+            <li>
+              Fixed holster speed bonuses being able to be accidentally
+              cancelled by switching through multiple weapons.
+            </li>
+          </ul>
+          <li>
+            Fixed movement speed slows not being applied consistently from
+            weapons like from the Natascha and the Sandman.
+          </li>
+          <li>
+            Added lag compensation for teammates, to fix issues with players
+            unexpectedly blocking bullets and The Sydney Sleeper extinguish not
+            applying as expected.
+          </li>
+          <li>
+            Fixed damage to buildings rounding down instead of up like damage to
+            players.
+          </li>
+          <li>
+            Fixed melee random critical hits damage range boost being 0-&gt;533
+            damage for 15%-&gt;60% instead of 0-&gt;1600 damage.
+          </li>
+          <li>
+            Fixed random critical hits damage range boost being 0-&gt;533 damage
+            for 2%-&gt;8% instead of 0-&gt;800 damage for 2%-&gt;12%.
+          </li>
+          <li>Added Medic Übercharge amount to the Match Status HUD.</li>
+          <li>
+            Fixed pre-round movement freeze not working correctly (requiring
+            weapon switching, not being timed correctly, etc).
+          </li>
+          <li>Fixed movement taunts being usable during freeze time.</li>
+          <li>
+            Fixed firing speeds being slightly inaccurate/delayed in some cases.
+          </li>
+          <li>
+            Explosions now check in a 5% inner radius for a trace, so that small
+            differences in geometry do not block explosion damage entirely. This
+            is a 8 point box additional check if the center point fails, and
+            damage is scaled based on how many points hit.
+          </li>
+        </ul>
+        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
+          SCOUT
+        </h2>
+        <ul class="lead">
+          <li>
+            Fixed The Winger providing a Jump Height bonus before being fully
+            deployed.
+          </li>
+          <li>Fixed The Baby Face's Blaster not applying boost when slowed.</li>
+          <li>
+            Fixed The Force-A-Nature fixed spread pattern being biased to the
+            right side.
+          </li>
+          <li>
+            Fixed Scout Sandman baseballs and Wrap Assassin ornaments computing
+            random critical hits incorrectly.
+          </li>
+          <li>
+            Fixed the Boston Basher not hitting yourself when missing a nearby
+            enemy, unless you swung at an enemy which quit the game or died from
+            another source within the swing time.
+          </li>
+        </ul>
+        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
+          PYRO
+        </h2>
+        <ul class="lead">
+          <li>
+            Fixed many bugs involving Pyro's Compression Blast reflection.
+          </li>
+          <ul>
+            <li>
+              Fixed various reflected projectiles applying incorrect
+              self-damage.
+            </li>
+            <li>
+              Fixed various reflected projectiles not reversing team color.
+            </li>
+            <li>
+              Fixed reflected rockets not having the correct properties of the
+              original Rocket Launcher, like blast radius, particles, spells,
+              speed, etc.
+            </li>
+            <li>Fixed reflected Sandman balls not dealing damage.</li>
+            <li>
+              Fixed reflected Wrap Assassin ornaments not dealing damage or
+              bleed properly.
+            </li>
+            <li>
+              Fixed reflected Rescue Ranger bolts not healing friendly
+              buildings.
+            </li>
+            <li>
+              Fixed reflected flares not exhibiting their specific Flare Gun's
+              properties.
+            </li>
+            <li>
+              Fixed many cases of incorrect application of Strange and
+              Killstreak effects for reflected projectiles.
+            </li>
+            <li>
+              Fixed reflected Huntsman arrows not applying the correct knockback
+              force.
+            </li>
+            <li>
+              Fixed enemy Snipers receiving extinguish bonus from reflected
+              Jarate.
+            </li>
+            <li>
+              Fixed reflected Loose Cannon cannonballs not applying Double Donk.
+            </li>
+            <li>Fixed and restored various kill icons for many projectiles.</li>
+            <li>
+              Fixed reflecting Sentry Gun rockets resulting in the Flamethrower
+              playing its primary fire sound.
+            </li>
+            <li>Fixed reflected projectiles not having correct lifetimes.</li>
+          </ul>
+          <li>
+            Fixed The Phlogistinator MMPH! taunt cancelling early if the player
+            was knocked off of a surface.
+          </li>
+          <li>
+            Fixed the Detonator and The Scorch Shot blast jumps not working
+            during knockback immunity, like as applied by a Quick-Fix
+            Übercharge.
+          </li>
+          <li>
+            Temporarily reverted Flamethrower flame density mechanic causing
+            massive DPS reduction in all but ideal circumstances while we
+            investigate a fix.
+          </li>
+          <li>
+            Fixed the Dragon's Fury range being dependent on its radius, and
+            instead restored the original radius but clipped off the
+            projectile's effects to exactly its range of 3000.
+          </li>
+        </ul>
+        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
+          DEMOMAN
+        </h2>
+        <ul class="lead">
+          <li>
+            Added a ConVar tf_pipebomb_disable_random_launch to disable
+            randomness on Demoman projectiles.
+          </li>
+          <li>
+            Fixed The Ullapool Caber damage being affected inconsistently by
+            falloff.
+          </li>
+          <li>
+            Fixed The Ullapool Caber and The Pain Train not receiving the
+            Mini-Crit buff from charging.
+          </li>
+        </ul>
+        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
+          HEAVY
+        </h2>
+        <ul class="lead">
+          <li>
+            Fixed The Buffalo Steak Sandvich reducing speed when the Heavy
+            already has a greater speed boost.
+          </li>
+          <li>
+            The Holiday Punch now uses backstab logic to detect attacks from
+            behind, making them more lenient and skill-based.
+          </li>
+        </ul>
+        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
+          ENGINEER
+        </h2>
+        <ul class="lead">
+          <li>
+            Fixed various cases of Sentry rockets not being counted as Sentry
+            damage:
+          </li>
+          <ul class="lead">
+            <li>
+              Sentry rocket falloff/rampup was based upon Engineer's position,
+              rather than the Sentry's.
+            </li>
+            <li>
+              An ally Engineer repairing the Sentry did not get an assist on
+              rocket kill.
+            </li>
+            <li>
+              A Medic got an assist when healing an Engineer whose Sentry got a
+              rocket kill, even though the Engineer himself was not involved in
+              the kill.
+            </li>
+            <li>
+              Sentry damage reduction attributes did not resist Sentry Gun
+              rockets. For example, the Battalion's Backup did not have 50%
+              resistance to Sentry Gun damage from rockets.
+            </li>
+            <li>
+              The achievement <em>Texas Two-Step</em> would not count if your Sentry
+              Gun had only dealt rocket damage.
+            </li>
+            <li>
+              Sentry Gun damage and kills from rockets would not be considered
+              for spawning Sentry Busters.
+            </li>
+            <li>
+              MvM robots and TF bots would not be aware of a Sentry Gun attack
+              if they had only been damaged by rockets.
+            </li>
+          </ul>
+          <li>Fixed the Short Circuit applying self-damage inconsistently.</li>
+          <li>
+            Fixed the Wrangler, as well as Firing Speed Upgrades and Crit
+            Canteens in MvM not boosting the Sentry Gun fire rate appropriately.
+          </li>
+          <li>
+            Fixed The Eureka Effect providing teleport functionality before
+            being fully deployed.
+          </li>
+          <li>
+            Fixed The Jag dealing less damage than intended to enemy Engineer
+            buildings.
+          </li>
+        </ul>
+        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
+          MEDIC
+        </h2>
+        <ul class="lead">
+          <li>
+            Players under the effect of a Quick-Fix Übercharge can now block
+            captures.
+          </li>
+          <li>
+            Fixed Medics having an accelerated Übercharge build-rate when
+            healing a Heavy who is using The Fists of Steel.
+          </li>
+        </ul>
+        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
+          SNIPER
+        </h2>
+        <ul class="lead">
+          <li>
+            Fixed the Sniper Rifle's laser dot not following the Sniper's view
+            point accurately.
+          </li>
+          <li>
+            Made the Huntsman headshot hit detection consistent rather than
+            being based upon map angle.
+          </li>
+        </ul>
+        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">SPY</h2>
+        <ul class="lead">
+          <li>Fixed inaccuracies with backstab detection.</li>
+          <li>
+            Fixed Sapper cosmetics not appearing as attachments. (thanks
+            OfficerSpy!)
+          </li>
+          <li>
+            Fixed Disguise Kit team selection not working properly at high ping.
+            (thanks nosoop!)
+          </li>
+        </ul>
+        <h3 class="h5" style="font-weight: 600">Enforcer</h3>
+        <ul class="lead">
+          <li>
+            Fixed ignoring bullet damage vulnerability, like on The Pain Train.
+          </li>
+          <li>
+            Fixed not piercing through The Battalion's Backup crit resistance
+            buff.
+          </li>
+          <li>
+            Fixed not piercing through Sentry Gun's reduced taken damage while
+            Sapped.<br />Although not technically a resistance, this may serve
+            as a worthwhile niche within the Enforcer's kit.
+          </li>
+        </ul>
+        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
+          COMPETITIVE
+        </h2>
+        <ul class="lead">
+          <li>
+            Fixed class limit being bypassable if two or more players switched
+            to that class during a respawn wave.
+          </li>
+          <li>
+            Added the ConVar tf_taunt_first_person_always to force taunts from
+            first-person.
+          </li>
+          <li>Match Status HUD now orders by class in competitive matches.</li>
+          <li>
+            Added various features from Competitive Matchmaking to community
+            competitive games:
+          </li>
+          <ul>
+            <li>Disabled respawning automatically on loadout changes.</li>
+            <li>Added chat messages for class switching.</li>
+            <li>Added team wipe announcer messages.</li>
+            <li>
+              Fixed Contract messages appearing in community competitive. We
+              love you Miss Pauling, but that job can wait until after the
+              scrim.
+            </li>
+            <li>
+              Disabled dominations, soldier statue, item notifications and
+              holiday ammo packs in community competitive.
+            </li>
+            <li>
+              Ready Up panel now always keeps BLU on the left and RED on the
+              right in community competitive.
+            </li>
+          </ul>
+        </ul>
+        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
+          MANN VS MACHINE
+        </h2>
+        <ul class="lead">
+          <li>Fixed damage to Tank not giving Critical Hit bonus chance.</li>
+          <li>Non-giants can now be tickled by The Holiday Punch.</li>
+          <li>
+            Fixed Sniper Rifle reload upgrade not fully applying without auto
+            rezoom.
+          </li>
+          <li>
+            Fixed Sniper Rifle Explosive Headshot upgrade ignoring resistances.
+            Now applies bullet damage.
+          </li>
+          <li>
+            Fixed Heavy's Minigun firing speed upgrades not applying the
+            appropriate firing speed in some cases.
+          </li>
+          <li>
+            Fixed revives on players in between waves affecting revive speed
+            penalty.
+          </li>
+          <li>Fixed ammo canteens not affecting energy weapons.</li>
+          <li>
+            Fixed Strength powerup not affecting damage dealt to Tanks
+            (community request).
+          </li>
+          <li>
+            Fixed the Destroy Entity Task being non-functional in
+            func_nav_prerequisite.
+          </li>
+        </ul>
+      </div>
+    </section>
+    <section
+      class="jumbotron jumbotron-fluid"
+      style=`background: linear-gradient(rgba(38, 50, 56, 0.4) 10%, rgba(38, 50, 56, 0.4)),url(${lairImg.src});background-size: cover; background-position: center;background-position: center;min-height: 25vh`
+    >
+    </section>
+    <section class="text-center container" id="qol">
+      <h2
+        class="display-2"
+        style="color: #fcf195; font-weight: 700; letter-spacing: 0.2rem"
+      >
+        QUALITY OF LIFE
+      </h2>
+      <p class="lead" style="font-size: 1.5rem">
+        Turns out when a game has been around for over 15 years, it can get a
+        little dusty. So we've been busy polishing it up, and generally making
+        things better. These are small but important fixes that should improve
+        your overall experience.
+      </p>
+      <hr />
+      <div class="text-start">
+        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
+          VISUAL
+        </h2>
+        <ul class="lead">
+          <li>
+            Showcase your bling with the new live character model on the main
+            menu!
+          </li>
+          <li>Updated the default FOV to 90.</li>
+          <li>Enabled hitsounds and killsounds by default.</li>
+          <li>
+            Removed the new player prompt regarding the 3D model in the HUD.
+          </li>
+          <li>
+            Added ConVar tf_viewmodels_offset_override to adjust the position
+            (within limits!) of your viewmodel on screen beyond the min
+            viewmodels presets.
+          </li>
+          <li>Fixed camera roll getting stuck when observing.</li>
+          <li>Fixed jittering when spectating ragdolls. (thanks ficool2!)</li>
+          <li>Fixed ragdoll velocity being reset. (thanks ficool2!)</li>
+          <li>
+            Networked and predicted gravity on entities. (thanks ficool2!)
+          </li>
+          <li>Fixed viewpunch not being interpolated. (thanks ficool2!)</li>
+          <li>
+            Fixed voice labels being shown on enemy Spies. (thanks ficool2!)
+          </li>
+          <li>Fixed match HUD being disabled incorrectly. (thanks ficool2!)</li>
+          <li>
+            Improved resolution scaling on the bonus overheal health icon.
+            (thanks Niterux!)
+          </li>
+          <li>
+            Fixed attachments on viewmodels being inverted on flipped
+            viewmodels. (thanks marxvee!)
+          </li>
+        </ul>
+        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
+          NETWORKING
+        </h2>
+        <ul class="lead">
+          <li>
+            Upgraded the networking rates to be in sync with game update rates.
+          </li>
+          <li>Changed tickrate from 66 to 64 to fix alignment issues.</li>
+          <li>Updated the client interp limit to 200ms instead of 500ms.</li>
+          <li>
+            Fixed a server networking protection system causing worse than
+            expected packet loss on unreliable connections.
+          </li>
+          <li>
+            Fixed cases where prediction could be out of date from server data.
+          </li>
+          <li>
+            Decreased the lag compensation window from 1 second to 600ms, which
+            reduces the impact of exploits.
+          </li>
+        </ul>
+        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
+          DEMOS
+        </h2>
+        <ul class="lead">
+          <li>
+            Fixed Demo Support automatically recording Casual matches when
+            selecting Competitive matches.
+          </li>
+          <li>Fixed Demo Support not being able to log every kill.</li>
+          <li>Fixed Demo Support recording pre and post-game by default.</li>
+          <li>
+            Servers are informed when a client stops recording a demo, just like
+            they were informed when a client starts recording.
+          </li>
+        </ul>
+        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
+          GENERAL
+        </h2>
+        <ul class="lead">
+          <li>Various settings were updated to popular modern defaults.</li>
+          <li>
+            Fixed a gameplay information exploit related to an old LCD keyboard
+            system.
+          </li>
+          <li>
+            Fixed a gameplay information exploit related to VGUI commands.
+          </li>
+          <li>
+            Fixed some sounds unintentionally having no cooldown between plays.
+          </li>
+          <li>Fixed Noisemakers being able to be spammed.</li>
+          <li>
+            cl_disablehtmlmotd is no longer queryable by servers. (thanks
+            megascatterbomb!)
+          </li>
+          <li>
+            Added tf_dingaling_lasthit_repeat_delay to prevent playback of
+            duplicate sounds when killing multiple players at once.
+          </li>
+          <li>
+            Added a ConVar tf_skip_equip_action_hint to disable reminders to
+            equip the relevant action item.
+          </li>
+        </ul>
+        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
+          MODDING
+        </h2>
+        <ul class="lead">
+          <li>
+            Added an ability for VScript mods to ignore class achievements and
+            quests. (thanks LizardOfOz!)
+          </li>
+        </ul>
+        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
+          STABILITY
+        </h2>
+        <ul class="lead">
+          <li>Fixed crashes on maps with large lightmaps.</li>
+          <li>Fixed a crash when there are no observable entities.</li>
+          <li>
+            Fixed a crash related to a TF damage filter and PASS Time ball when
+            it hasn't been thrown yet.
+          </li>
+          <li>Fixed many desync issues and exploits.</li>
+        </ul>
+      </div>
+    </section>
+    <Footer />
+  </Body>
+</Layout>
