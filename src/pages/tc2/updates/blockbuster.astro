@@ -282,6 +282,12 @@ import Layout from "@layouts/Layout.astro";
           </li>
           <li>Added Medic Übercharge amount to the Match Status HUD.</li>
           <li>
+            Changed pre-round freeze logic to match Casual/Competitive
+            matchmaking: the last 3 seconds of pre-round time unfreezes movement
+            before starting the round, to allow players to move from their
+            random spawn position to the doors.
+          </li>
+          <li>
             Fixed pre-round movement freeze not working correctly (requiring
             weapon switching, not being timed correctly, etc).
           </li>
@@ -544,12 +550,12 @@ import Layout from "@layouts/Layout.astro";
             first-person.
           </li>
           <li>Match Status HUD now orders by class in competitive matches.</li>
+          <li>Disabled respawning automatically on loadout changes.</li>
           <li>
             Added various features from Competitive Matchmaking to community
             competitive games:
           </li>
           <ul>
-            <li>Disabled respawning automatically on loadout changes.</li>
             <li>Added chat messages for class switching.</li>
             <li>Added team wipe announcer messages.</li>
             <li>
