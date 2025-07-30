@@ -264,6 +264,10 @@ import Layout from "@layouts/Layout.astro";
             weapons like from the Natascha and the Sandman.
           </li>
           <li>
+            Resupplying now removes "in-combat" penalties from recently taking
+            damage.
+          </li>
+          <li>
             Added lag compensation for teammates, to fix issues with players
             unexpectedly blocking bullets and The Sydney Sleeper extinguish not
             applying as expected.
@@ -274,11 +278,12 @@ import Layout from "@layouts/Layout.astro";
           </li>
           <li>
             Fixed melee random critical hits damage range boost being 0-&gt;533
-            damage for 15%-&gt;60% instead of 0-&gt;1600 damage.
+            damage for 15%-&gt;60% chance instead of 0-&gt;1600 damage.
           </li>
           <li>
             Fixed random critical hits damage range boost being 0-&gt;533 damage
-            for 2%-&gt;8% instead of 0-&gt;800 damage for 2%-&gt;12%.
+            for 2%-&gt;8% chance instead of 0-&gt;800 damage for 2%-&gt;12%
+            chance.
           </li>
           <li>Added Medic Übercharge amount to the Match Status HUD.</li>
           <li>
@@ -301,6 +306,43 @@ import Layout from "@layouts/Layout.astro";
             is a 8 point box additional check if the center point fails, and
             damage is scaled based on how many points hit.
           </li>
+        </ul>
+
+        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
+          COMPETITIVE
+        </h2>
+        <ul class="lead">
+          <li>
+            Respawn rooms no longer give instant respawns in competitive games.
+            You must resupply to respawn for loadout or class changes.
+          </li>
+          <li>
+            Fixed class limit being bypassable if two or more players switched
+            to that class during a respawn wave.
+          </li>
+          <li>
+            Taunts are forced into first person perspective in competitive
+            games.
+          </li>
+          <li>Match Status HUD now orders by class in competitive matches.</li>
+          <li>Disabled respawning automatically on loadout changes.</li>
+          <li>
+            Added various features from Competitive Matchmaking to community
+            competitive games:
+          </li>
+          <ul>
+            <li>Added chat messages for class switching.</li>
+            <li>Added team wipe announcer messages.</li>
+            <li>
+              Fixed Contract messages appearing in community competitive. We
+              love you Miss Pauling, but that job can wait until after the
+              scrim.
+            </li>
+            <li>
+              Disabled dominations, soldier statue, item notifications and
+              holiday ammo packs in community competitive.
+            </li>
+          </ul>
         </ul>
         <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
           SCOUT
@@ -549,42 +591,6 @@ import Layout from "@layouts/Layout.astro";
             Sapped.<br />Although not technically a resistance, this may serve
             as a worthwhile niche within the Enforcer's kit.
           </li>
-        </ul>
-        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
-          COMPETITIVE
-        </h2>
-        <ul class="lead">
-          <li>
-            Fixed class limit being bypassable if two or more players switched
-            to that class during a respawn wave.
-          </li>
-          <li>
-            Added the ConVar tf_taunt_first_person_always to force taunts from
-            first-person.
-          </li>
-          <li>Match Status HUD now orders by class in competitive matches.</li>
-          <li>Disabled respawning automatically on loadout changes.</li>
-          <li>
-            Added various features from Competitive Matchmaking to community
-            competitive games:
-          </li>
-          <ul>
-            <li>Added chat messages for class switching.</li>
-            <li>Added team wipe announcer messages.</li>
-            <li>
-              Fixed Contract messages appearing in community competitive. We
-              love you Miss Pauling, but that job can wait until after the
-              scrim.
-            </li>
-            <li>
-              Disabled dominations, soldier statue, item notifications and
-              holiday ammo packs in community competitive.
-            </li>
-            <li>
-              Ready Up panel now always keeps BLU on the left and RED on the
-              right in community competitive.
-            </li>
-          </ul>
         </ul>
         <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
           MANN VS MACHINE
