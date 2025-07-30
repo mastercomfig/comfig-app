@@ -398,6 +398,19 @@ import Layout from "@layouts/Layout.astro";
             Fixed the Dragon's Fury range being dependent on its radius, and
             instead restored the original radius but clipped off the
             projectile's effects to exactly its range of 3000.
+            <br />Developer note:
+            <em
+              >The Dragon's Fury range is not like most weapons. It has a
+              physics based projectile which tries to stop itself before
+              overextending its range, but due to this and the larger projectile
+              radius, it was changed to have a smaller radius to prevent issues
+              with the front of the fireball touching players way past its
+              range. Now, the fireball is hard limited to only affect players it
+              hits if they were actually within the distance range, rather than
+              if they simply touched the fireball at any distance. Thus, we have
+              restored the original radius, making the fireball more intuitive
+              and less awkward to aim, while fixing unfair cases of hits.</em
+            >
           </li>
         </ul>
         <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
