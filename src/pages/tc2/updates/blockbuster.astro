@@ -304,11 +304,18 @@ import Layout from "@layouts/Layout.astro";
             Fixed firing speeds being slightly inaccurate/delayed in some cases.
           </li>
           <li>
-            Explosions now check in a 5% inner radius for a trace, so that small
+            Explosions now check in a 4% inner radius for a trace, so that small
             differences in geometry do not block explosion damage entirely. This
             is a 8 point box additional check if the center point fails, and
             damage is scaled based on how many points hit.
           </li>
+          <ul>
+            <li>
+              We are aware this changes the behavior of sticky traps. However,
+              following this change you should be damaged by them if and only if
+              you can see the stickies, so fairness should be maintained.
+            </li>
+          </ul>
         </ul>
 
         <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
