@@ -30,9 +30,9 @@ const { Content } = await render(post);
     <PreloadHead />
     <ImportHead />
     <MainHead
-      title=`${post.data.title} | Team Comtress 2`
+      title=`${post.id} Update | Team Comtress 2`
       noSite={true}
-      description={post.data.title}
+      description=`Team Comtress 2 Update - ${post.id}`
       image="https://comfig.app/img/tc2/team-comtress-2.png"
       favicon="/img/tc2/favicon.ico"
     />
@@ -49,7 +49,7 @@ const { Content } = await render(post);
     </div>
 
     <section class="container p-4 bg-dark mb-4">
-      <h1>{post.id}</h1>
+      <h1>Team Comtress 2 Update - {post.id}</h1>
       <Content />
     </section>
     <Footer />
