@@ -1,0 +1,57 @@
+---
+import Body from "@components/Body.astro";
+import Footer from "@components/Footer.astro";
+import BaseHead from "@components/head/BaseHead.astro";
+import ImportHead from "@components/head/ImportHead.astro";
+import MainHead from "@components/head/MainHead.astro";
+import PreloadHead from "@components/head/PreloadHead.astro";
+import tfLogoImg from "@img/tc2/team-comtress-2.png";
+import Layout from "@layouts/Layout.astro";
+import { getCollection, render } from "astro:content";
+
+export async function getStaticPaths() {
+  const patches = (await getCollection("tc2Patches")).filter(
+    (post) => !post.data.draft,
+  );
+  return patches.map((post) => ({
+    params: {
+      patch: post.id,
+    },
+    props: { post },
+  }));
+}
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<Layout>
+  <head>
+    <BaseHead />
+    <PreloadHead />
+    <ImportHead />
+    <MainHead
+      title=`${post.data.title} | Team Comtress 2`
+      noSite={true}
+      description={post.data.title}
+      image="https://comfig.app/img/tc2/team-comtress-2.png"
+      favicon="/img/tc2/favicon.ico"
+    />
+  </head>
+  <Body>
+    <div class="text-center p-4">
+      <a href="/tc2">
+        <img
+          class="img-logo-sm"
+          src={tfLogoImg.src}
+          alt="Team Comtress 2 logo"
+        />
+      </a>
+    </div>
+
+    <section class="container p-4 bg-dark mb-4">
+      <h1>{post.id}</h1>
+      <Content />
+    </section>
+    <Footer />
+  </Body>
+</Layout>

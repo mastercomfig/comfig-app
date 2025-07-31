@@ -264,8 +264,8 @@ import Layout from "@layouts/Layout.astro";
             weapons like from the Natascha and the Sandman.
           </li>
           <li>
-            Resupplying now removes "in-combat" penalties from recently taking
-            damage.
+            Resupplying now removes in-combat penalties from recently taking
+            damage, aka giving "crit heals".
           </li>
           <li>
             Added lag compensation for teammates, to fix issues with players
@@ -289,8 +289,9 @@ import Layout from "@layouts/Layout.astro";
           <li>
             Changed pre-round freeze logic to match Casual/Competitive
             matchmaking: the last 3 seconds of pre-round time unfreezes movement
-            before starting the round, to allow players to move from their
-            random spawn position to the doors.
+            before starting the round, to allow players to move from their spawn
+            position to the doors. Spawn doors are now also locked during this
+            time.
           </li>
           <li>
             Fixed pre-round movement freeze not working correctly (requiring
@@ -320,6 +321,15 @@ import Layout from "@layouts/Layout.astro";
             Fixed class limit being bypassable if two or more players switched
             to that class during a respawn wave.
           </li>
+          <li>
+            Added a reset class button for 6s games to allow class swapping
+            without conflicting with class limits, like Highlander.
+          </li>
+          <li>
+            Spawn points are now selected based on the player's class, to
+            improve consistency in spawns.
+          </li>
+          <li>Improved support for 6s class selection and limits.</li>
           <li>
             Taunts are forced into first person perspective in competitive
             games.
@@ -748,6 +758,7 @@ import Layout from "@layouts/Layout.astro";
             Fixed a gameplay information exploit related to an old LCD keyboard
             system.
           </li>
+          <li>Fixed accuracy of reported ping throughout the UI</li>
           <li>
             Fixed a gameplay information exploit related to VGUI commands.
           </li>

@@ -15,13 +15,9 @@ const tc2News = defineCollection({
   }),
 });
 const tc2Patches = defineCollection({
-  loader: glob({ pattern: "**/*.json", base: "./src/posts/tc2Patches" }),
+  loader: glob({ pattern: "**/*.md", base: "./src/posts/tc2Patches" }),
   schema: z.object({
-    title: z.string(),
-    date: z
-      .string()
-      .date()
-      .transform((str) => new Date(str)),
+    date: z.date(),
     draft: z.boolean().optional(),
   }),
 });
