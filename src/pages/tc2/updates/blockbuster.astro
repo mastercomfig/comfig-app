@@ -315,10 +315,6 @@ import Layout from "@layouts/Layout.astro";
           </li>
           <ul>
             <li>
-              Fixed random damage spread reduction intended for grenade direct
-              hits affecting falloff damage range of rolling grenades.
-            </li>
-            <li>
               Fixed Smissmas 2014 stickybomb damage variance nerf not actually
               affecting stickies.
             </li>
@@ -626,26 +622,19 @@ import Layout from "@layouts/Layout.astro";
         <h3 class="h5" style="font-weight: 600">All Grenade Launchers</h3>
         <ul class="lead">
           <li>
-            Grenade direct hits now have damage rampup/falloff, based upon their
-            old random damage spread.
+            Grenades now have minor damage rampup/falloff, based upon their old
+            random damage spread.
           </li>
           <ul>
             <li>
-              Direct hits ramp up to their max damage (+3% of normal) at minimum
+              Grenades ramp up to their max damage (+3% of normal) at minimum
               distance, to normal damage at 146 units.
             </li>
             <li>
-              Direct hits fall off to their minimum damage (-15% of normal) at
-              1024 units, to normal damage at 682 units.
+              Grenades fall off to their minimum damage (-15% of normal) at 1024
+              units, to normal damage at 682 units.
             </li>
           </ul>
-          <li>
-            As a result of aforementioned damage spread changes spoken about in
-            the core balance updates section, rolling grenades deal 50% damage
-            at max range (1024 units), instead of dealing 90% damage as
-            introduced inadvertently in the Smissmas 2014 patch. Rolling grenade
-            ramp up at close range was kept the same, at 10%.
-          </li>
         </ul>
         <h3 class="h5" style="font-weight: 600">All Stickybomb Launchers</h3>
         <ul class="lead">
