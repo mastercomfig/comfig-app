@@ -310,17 +310,14 @@ import Layout from "@layouts/Layout.astro";
         <h3 class="h5" style="font-weight: 600">Distance-Based Damage Ramp</h3>
         <ul class="lead">
           <li>
-            Fixed various bugs involving distance-based damage ramp not working
-            as intended when damage spread is disabled (the default).
+            Fixed a bug involving distance-based damage ramp not working as
+            intended when damage spread is disabled (the default).
           </li>
           <ul>
             <li>
-              Fixed Smissmas 2014 stickybomb damage variance nerf not actually
-              affecting stickies.
-            </li>
-            <li>
-              Fixed damage falloff not fully falling off to 50% damage at max
-              distance (1024 units) when damage spread was disabled.
+              Damage falloff was not fully falling off to 50% damage at max
+              distance (1024 units) when damage spread was disabled. Instead, it
+              was falling off to 53% at 922 units.
             </li>
           </ul>
           <li>
@@ -345,11 +342,11 @@ import Layout from "@layouts/Layout.astro";
                 the general distance-based engagement rules of Team Fortress 2.
               </small>
             </li>
+            <li>
+              For more information, see the sections for the affected weapons:
+              Grenade Launcher and Sniper Rifle
+            </li>
           </ul>
-          <li>
-            For more information, see the sections for the affected weapons:
-            Grenade Launcher, Stickybomb Launcher, and Sniper Rifle
-          </li>
         </ul>
         <h3 class="h5" style="font-weight: 600">General Weapon Changes</h3>
         <ul class="lead">
@@ -635,15 +632,6 @@ import Layout from "@layouts/Layout.astro";
               units, to normal damage at 682 units.
             </li>
           </ul>
-        </ul>
-        <h3 class="h5" style="font-weight: 600">All Stickybomb Launchers</h3>
-        <ul class="lead">
-          <li>
-            As a result of aforementioned damage spread changes spoken about in
-            the core balance updates section, offensive stickybombs deal 4% ramp
-            up at close range, rather than 22% ramp up. This means stickybombs
-            will deal 125 damage rather than 146 damage at point blank range.
-          </li>
         </ul>
         <h3 class="h5" style="font-weight: 600">The Ullapool Caber</h3>
         <ul class="lead">
