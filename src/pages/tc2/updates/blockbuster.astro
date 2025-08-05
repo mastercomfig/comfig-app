@@ -806,6 +806,18 @@ import Layout from "@layouts/Layout.astro";
         <ul class="lead">
           <li>Fixed inaccuracies with backstab detection.</li>
           <li>
+            Dynamic crosshair scale now shows for all revolvers. The crosshair
+            scale is increased when not accurate. Normal scale is shown when the
+            Revolver is perfectly accurate. 75% scale is shown for when you can
+            headshot.
+          </li>
+          <ul>
+            <li>
+              Dynamic crosshair can now be disabled with the new ConVar
+              tf_revolver_dynamic_crosshair
+            </li>
+          </ul>
+          <li>
             Fixed Sapper cosmetics not appearing as attachments. (thanks
             OfficerSpy!)
           </li>
