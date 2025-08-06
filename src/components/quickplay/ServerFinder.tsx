@@ -283,6 +283,15 @@ export default function ServerFinder({ hash }: { hash: string }) {
   const mapToGamemode = useMemo(() => schema?.map_gamemodes ?? {}, [schema]);
   const mapToThumbnail = useMemo(() => schema?.map_thumbnails ?? {}, [schema]);
   const extraMatchGroups = useMemo(() => schema?.gamemodes ?? {}, [schema]);
+  const mapToMatchGroup = useMemo(() => {
+    const mapToMatchGroup: Record<string, string> = {};
+    for (const [matchGroup, maps] of Object.entries(extraMatchGroups)) {
+      for (const map of maps) {
+        mapToMatchGroup[map] = matchGroup;
+      }
+    }
+    return mapToMatchGroup;
+  }, [extraMatchGroups]);
 
   useEffect(() => {
     const matchGroups = getDefaultMatchGroups().filter((r) => r.active);
@@ -368,7 +377,12 @@ export default function ServerFinder({ hash }: { hash: string }) {
     server,
     tags: Set<string>,
   ) => {
-    if (expectedGamemode !== "any") {
+    if (expectedGamemode in extraMatchGroups) {
+      const mapMatchGroup = mapToMatchGroup[server.map];
+      if (mapMatchGroup !== expectedGamemode) {
+        return false;
+      }
+    } else if (expectedGamemode !== "any") {
       const mapGamemode = mapToGamemode[server.map];
       if (mapGamemode) {
         if (mapGamemode !== expectedGamemode) {
