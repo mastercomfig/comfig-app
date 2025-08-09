@@ -7,7 +7,6 @@ import MainHead from "@components/head/MainHead.astro";
 import PreloadHead from "@components/head/PreloadHead.astro";
 import tfLogoImg from "@img/tc2/team-comtress-2.png";
 import lairImg from "@img/update/lair.webp";
-import lairOutsideImg from "@img/update/lairoutside.webp";
 import quicklimeImg from "@img/update/quicklime.webp";
 import Layout from "@layouts/Layout.astro";
 import { getCollection } from "astro:content";
@@ -38,6 +37,18 @@ const patches = (await getCollection("tc2Patches"))
   .btn-xl {
     font-size: 1.7rem;
   }
+  #bg-video-wrapper {
+    width: 100vw;
+    height: 66vh;
+    position: absolute;
+    z-index: -1;
+  }
+  #bg-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 30%;
+  }
 </style>
 
 <Layout>
@@ -54,12 +65,27 @@ const patches = (await getCollection("tc2Patches"))
     />
   </head>
   <Body>
-    <nav></nav>
+    <div id="bg-video-wrapper">
+      <video
+        id="bg-video"
+        disablepictureinpicture
+        playsinline
+        autoplay
+        muted
+        loop
+      >
+        <source src="/videos/tc2reel.webm" type="video/webm" />
+        <source src="/videos/tc2reel.mp4" type="video/mp4" />
+      </video>
+    </div>
     <section
       class="jumbotron jumbotron-fluid"
-      style=`background: linear-gradient(rgba(38, 50, 56, 0.7) 10%, rgba(38, 50, 56, 0.7)),url(${lairOutsideImg.src});background-size: cover; background-position: center;background-position: center;min-height: 66vh;padding-top:10vh`
+      style=`background: linear-gradient(rgba(38, 50, 56, 0.7) 10%, rgba(38, 50, 56, 0.7));background-size: cover; background-position: center;background-position: center;min-height: 66vh`
     >
-      <div class="container d-flex align-items-center justify-content-center">
+      <div
+        class="container d-flex align-items-center justify-content-center"
+        style="padding-top:10vh"
+      >
         <div class="align-middle text-center">
           <img
             class="img-logo"
@@ -81,6 +107,28 @@ const patches = (await getCollection("tc2Patches"))
             <strong>PLAY FOR FREE</strong><br />
             <small style="color:#c2c2c2;font-size:1rem">DOWNLOAD ON ITCH</small>
           </a>
+        </div>
+      </div>
+    </section>
+    <section style="background: rgb(255 255 255 / 20%)">
+      <div class="container">
+        <div class="row">
+          <div class="col d-flex align-items-center justify-content-center">
+            <h1 class="display-1">
+              NOW IN <strong class="fw-bold">BETA</strong>
+            </h1>
+          </div>
+          <div class="col">
+            Team Comtress 2 is currently beta testing its launch update, and we
+            are working hard to get it right. <strong
+              >Join our Discord to get involved with our daily playtests and
+              give your feedback.</strong
+            > We appreciate it!
+            <br /><br />
+            <a href="https://comfig.app/discord" class="btn btn-primary fw-bold"
+              ><span class="fab fa-discord fa-fw" aria-hidden="true"></span> DISCORD</a
+            >
+          </div>
         </div>
       </div>
     </section>
