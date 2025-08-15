@@ -921,21 +921,7 @@ import Layout from "@layouts/Layout.astro";
           VISUAL
         </h2>
         <ul class="lead">
-          <li>
-            Showcase your bling with the new live character model on the main
-            menu!
-          </li>
-          <li>Fixed various issues in class selection:</li>
-          <ul>
-            <li>Selection animations now play instantly and smoothly</li>
-            <li>Facial expressions now start from neutral</li>
-            <li>Character model lighting uses a filmic 3-point setup</li>
-            <li>Various foley sounds now play for the classes</li>
-          </ul>
           <li>Updated the default FOV to 90.</li>
-          <li>
-            Removed the new player prompt regarding the 3D model in the HUD.
-          </li>
           <li>
             Removed distance fade for high quality water. See 2Fort's water in
             all its glory from the battlements!
@@ -953,6 +939,35 @@ import Layout from "@layouts/Layout.astro";
           </li>
           <li>Fixed viewpunch not being interpolated. (thanks ficool2!)</li>
           <li>
+            Fixed attachments on viewmodels being inverted on flipped
+            viewmodels. (thanks marxvee!)
+          </li>
+        </ul>
+        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">HUD</h2>
+        <ul class="lead">
+          <li>
+            Showcase your bling with the new live character model on the main
+            menu!
+          </li>
+          <li>Fixed various issues in class selection:</li>
+          <ul>
+            <li>Class selection animations now play instantly and smoothly</li>
+            <li>
+              Facial expressions now start from neutral, rather than from open
+              mouth, on class selection animations
+            </li>
+            <li>
+              Character model lighting revamped to better showcase the classes
+            </li>
+            <li>
+              Various foley sounds now play for the class selection animations
+            </li>
+          </ul>
+          <li>
+            Removed the new player prompt regarding the performance of the 3D
+            model in the HUD, as it has been optimized.
+          </li>
+          <li>
             Fixed voice labels being shown on enemy Spies. (thanks ficool2!)
           </li>
           <li>Fixed match HUD being disabled incorrectly. (thanks ficool2!)</li>
@@ -961,9 +976,11 @@ import Layout from "@layouts/Layout.astro";
             (thanks Niterux!)
           </li>
           <li>
-            Fixed attachments on viewmodels being inverted on flipped
-            viewmodels. (thanks marxvee!)
+            Added improved messaging surround class changes / loadout changes
+            outside of a respawn room
           </li>
+          <li>Disabled auto-kill upon class change by default</li>
+          <li>Improved the efficiency of loadout changes</li>
         </ul>
         <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
           DAMAGE FEEDBACK
@@ -977,6 +994,10 @@ import Layout from "@layouts/Layout.astro";
           </li>
           <li>Damage numbers and hitsounds now play even when dead.</li>
           <li>Improved damage hit feedback for bullets.</li>
+          <li>
+            As a Medic, hitsounds and killsounds will be replicated from your
+            heal target.
+          </li>
         </ul>
         <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
           NETWORKING
@@ -994,10 +1015,7 @@ import Layout from "@layouts/Layout.astro";
           <li>
             Fixed cases where prediction could be out of date from server data.
           </li>
-          <li>
-            Decreased the lag compensation window from 1 second to 600ms, which
-            reduces the impact of exploits.
-          </li>
+          <li>Decreased the lag compensation window from 1 second to 600ms.</li>
         </ul>
         <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
           DEMOS
