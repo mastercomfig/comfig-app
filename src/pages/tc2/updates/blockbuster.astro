@@ -487,7 +487,7 @@ import Layout from "@layouts/Layout.astro";
         </h2>
         <ul class="lead">
           <li>
-            Fixed The Winger providing a Jump Height bonus before being fully
+            The Winger now only provides a Jump Height bonus after being fully
             deployed.
           </li>
           <li>Fixed The Baby Face's Blaster not applying boost when slowed.</li>
@@ -496,7 +496,7 @@ import Layout from "@layouts/Layout.astro";
             right side.
           </li>
           <li>
-            Fixed Scout Sandman baseballs and Wrap Assassin ornaments computing
+            Fixed Scout Sandman baseballs and Wrap Assassin baubles computing
             random critical hits incorrectly.
           </li>
           <li>
@@ -662,10 +662,12 @@ import Layout from "@layouts/Layout.astro";
             Fixed The Buffalo Steak Sandvich reducing speed when the Heavy
             already has a greater speed boost.
           </li>
+          <!--
           <li>
             The Holiday Punch now uses backstab logic to detect attacks from
             behind, making them more lenient and skill-based.
           </li>
+           -->
         </ul>
         <hr />
         <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
@@ -782,6 +784,17 @@ import Layout from "@layouts/Layout.astro";
             healing a Heavy who is using The Fists of Steel.
           </li>
           <li>Added Medic Übercharge amount to the Match Status HUD.</li>
+          <li>
+            Improved healing sound feedback for allies who are injured,
+            overhealing, or at max health
+          </li>
+          <li>
+            Medics can now hear adjusted damage sounds from the person they are
+            healing
+          </li>
+          <li>
+            Medics now see overhealing done to allies in their healing numbers
+          </li>
         </ul>
         <hr />
         <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
@@ -848,12 +861,10 @@ import Layout from "@layouts/Layout.astro";
             Fixed ignoring bullet damage vulnerability, like on The Pain Train.
           </li>
           <li>
-            Fixed not piercing through The Battalion's Backup crit resistance
-            buff.
+            Now pierces through The Battalion's Backup crit resistance buff.
           </li>
           <li>
-            Fixed not piercing through Sentry Gun's reduced taken damage while
-            Sapped.
+            Now pierces through Sentry Gun's reduced taken damage while Sapped.
           </li>
           <ul>
             <li>
@@ -867,7 +878,7 @@ import Layout from "@layouts/Layout.astro";
           MANN VS MACHINE
         </h2>
         <ul class="lead">
-          <li>Fixed damage to Tank not giving Critical Hit bonus chance.</li>
+          <li>Updated Tank to give Critical Hit bonus chance.</li>
           <li>Non-giants can now be tickled by The Holiday Punch.</li>
           <li>
             Fixed Sniper Rifle reload upgrade not fully applying without auto
