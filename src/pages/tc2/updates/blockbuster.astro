@@ -329,6 +329,7 @@ import Layout from "@layouts/Layout.astro";
             applied if they were inside each other perfectly. This should make
             max damage from ramp-up more intuitive and consistent.
           </li>
+          <!--
           <li>
             Reintroduced damage ranges seen on certain no-falloff weapons when
             random damage spread was enabled, by integrating them into
@@ -350,6 +351,7 @@ import Layout from "@layouts/Layout.astro";
               Grenade Launcher and Sniper Rifle
             </li>
           </ul>
+           -->
         </ul>
         <h3 class="h5" style="font-weight: 600">General Weapon Changes</h3>
         <ul class="lead">
@@ -574,8 +576,10 @@ import Layout from "@layouts/Layout.astro";
             <li>Fixed reflected projectiles not having correct lifetimes.</li>
           </ul>
           <li>
-            Fixed The Phlogistinator MMPH! taunt cancelling early if the player
-            was knocked off of a surface.
+            Changed The Phlogistinator MMPH! taunt to not cancel early if the
+            player was knocked off of a surface. Now the full taunt will play,
+            even if air, preventing Uber from the taunt invulnerability period
+            from being used while attacking.
           </li>
           <li>
             Fixed the Detonator and The Scorch Shot blast jumps not working
@@ -619,6 +623,7 @@ import Layout from "@layouts/Layout.astro";
             randomness on Demoman projectiles. (default on in competitive matches)
           </li>
         </ul>
+        <!--
         <h3 class="h5" style="font-weight: 600">All Grenade Launchers</h3>
         <ul class="lead">
           <li>
@@ -636,6 +641,7 @@ import Layout from "@layouts/Layout.astro";
             </li>
           </ul>
         </ul>
+         -->
         <h3 class="h5" style="font-weight: 600">The Ullapool Caber</h3>
         <ul class="lead">
           <li>
@@ -711,7 +717,7 @@ import Layout from "@layouts/Layout.astro";
         <h3 class="h5" style="font-weight: 600">Short Circuit</h3>
         <ul class="lead">
           <li>Fixed the Short Circuit applying self-damage inconsistently.</li>
-          <li>Damage per orb increased from 15 to 20.</li>
+          <!--<li>Damage per orb increased from 15 to 20.</li>
           <li>Zap targets per orb increased from 2 to 4.</li>
           <li>
             Instead of destroying projectiles, the orb now applies a stacking
@@ -725,22 +731,25 @@ import Layout from "@layouts/Layout.astro";
               disabling it, while also encouraging cooperative play between Engineers.</small
             >
           </li>
+           -->
         </ul>
         <h3 class="h5" style="font-weight: 600">Wrangler</h3>
         <ul class="lead">
+          <!--
           <li>
             Shield is now only active when the Sentry Gun is disabled, either
             from the Engineer dying, or him switching off the Wrangler.
-          </li>
-          <li>
-            Fixed the Wrangler, as well as Firing Speed Upgrades and Crit
-            Canteens in MvM not boosting the Sentry Gun fire rate appropriately.
           </li>
           <li>Increased rocket fire speed bonus from 33% to 100%.</li>
           <li>
             Sentry Gun firing rate is now doubled, rather than being 66% faster
             on a Level 1, and 50% faster on Levels 2 & 3. Mini-Sentries already
             fired 100% faster.
+          </li>
+           -->
+          <li>
+            Fixed the Wrangler, as well as Firing Speed Upgrades and Crit
+            Canteens in MvM not boosting the Sentry Gun fire rate appropriately.
           </li>
         </ul>
         <h3 class="h5" style="font-weight: 600">Eureka Effect</h3>
@@ -762,10 +771,12 @@ import Layout from "@layouts/Layout.astro";
           MEDIC
         </h2>
         <ul class="lead">
+          <!-- 
           <li>
             Players under the effect of a Quick-Fix Übercharge can now block
             captures.
           </li>
+           -->
           <li>
             Fixed Medics having an accelerated Übercharge build-rate when
             healing a Heavy who is using The Fists of Steel.
@@ -776,6 +787,7 @@ import Layout from "@layouts/Layout.astro";
         <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
           SNIPER
         </h2>
+        <!--
         <h3 class="h5" style="font-weight: 600">All Sniper Rifles</h3>
         <ul class="lead">
           <li>
@@ -797,6 +809,7 @@ import Layout from "@layouts/Layout.astro";
             </li>
           </ul>
         </ul>
+         -->
         <h3 class="h5" style="font-weight: 600">Huntsman</h3>
         <ul class="lead">
           <li>
@@ -988,10 +1001,12 @@ import Layout from "@layouts/Layout.astro";
         <ul class="lead">
           <li>Enabled hitsounds and killsounds by default.</li>
           <li>Enabled damage numbers now combine by default.</li>
+          <li>Damage number combining now also can show individual numbers.</li>
           <li>
-            Changed hitsound defaults to be more responsive and satisfying for
+            Improved damage number style for readability and feedback during
             gameplay.
           </li>
+          <li>Changed hitsound defaults to be more responsive for gameplay.</li>
           <li>Damage numbers and hitsounds now play even when dead.</li>
           <li>Improved damage hit feedback for bullets.</li>
           <li>
