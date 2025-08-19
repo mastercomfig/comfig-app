@@ -528,7 +528,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
     }
 
     if (newTotalPlayers > realMaxPlayers - SERVER_HEADROOM) {
-      return -0.3;
+      return -0.05;
     }
 
     if (humans === 0) {
