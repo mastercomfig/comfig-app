@@ -119,6 +119,17 @@ import Layout from "@layouts/Layout.astro";
       >
         GAMEPLAY
       </h2>
+      <p class="lead container" style="font-size: 1.5rem">
+        <br />
+        We have now listed out balance changes that we're testing in beta separately
+        from the the initial major update, to reduce confusion. To make things clear
+        again: the initial major update will just be a bunch of fixes. Balance changes
+        from the beta will be reverted, kept for the next update afterwards. The
+        major update after the first one will introduce these balance changes, pending
+        feedback and iteration. The update page as it stands just documents what
+        we're testing in the beta period.
+        <br />
+      </p>
       <hr />
       <div class="text-start">
         <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
@@ -149,52 +160,6 @@ import Layout from "@layouts/Layout.astro";
         </ul>
         <hr />
         <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
-          COMPETITIVE
-        </h2>
-        <ul class="lead">
-          <li>
-            Respawn rooms no longer give instant respawns in competitive games.
-            You must resupply to respawn for loadout or class changes.
-          </li>
-          <li>
-            Fixed class limit being bypassable if two or more players switched
-            to that class during a respawn wave.
-          </li>
-          <li>
-            Added a reset class button for 6s games to allow class swapping
-            without conflicting with class limits, like Highlander.
-          </li>
-          <li>
-            Spawn points are now selected based on the player's class, to
-            improve consistency in spawns.
-          </li>
-          <li>Improved support for 6s class selection and limits.</li>
-          <li>
-            Taunts are forced into first person perspective in competitive
-            games.
-          </li>
-          <li>Match Status HUD now orders by class in competitive matches.</li>
-          <li>Disabled respawning automatically on loadout changes.</li>
-          <li>
-            Added various features from Competitive Matchmaking to community
-            competitive games:
-          </li>
-          <ul>
-            <li>Added chat messages for class switching.</li>
-            <li>Added team wipe announcer messages.</li>
-            <li>
-              Fixed Contract messages appearing in community competitive. We
-              love you Miss Pauling, but that job can wait until after the
-              scrim.
-            </li>
-            <li>
-              Disabled dominations, soldier statue, item notifications and
-              holiday ammo packs in community competitive.
-            </li>
-          </ul>
-        </ul>
-        <hr />
-        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
           SCOUT
         </h2>
         <h3 class="h5" style="font-weight: 600">Soda Popper</h3>
@@ -209,6 +174,23 @@ import Layout from "@layouts/Layout.astro";
           <li>You are marked for death while Hype is activated</li>
           <li>Hype is lost upon touching the ground</li>
           <li>Reduced damage needed to gain Hype from 400 to 160</li>
+        </ul>
+        <h3 class="h5" style="font-weight: 600">
+          Crit-a-Cola (not implemented yet)
+        </h3>
+        <ul class="lead">
+          <li>
+            Drinking the Crit-a-Cola no longer immediately provides any bonuses.
+          </li>
+          <li>
+            Upon drinking, you now receive a 10 second buff, during which any
+            kills or dealing 150 damage will grant you mini-crits for the
+            remainder of the buff.
+          </li>
+          <li>
+            You are initially Marked for Death during the buff, but it is
+            cleared when you earn mini-crits.
+          </li>
         </ul>
         <h3 class="h5" style="font-weight: 600">Sandman</h3>
         <ul class="lead">
@@ -306,7 +288,9 @@ import Layout from "@layouts/Layout.astro";
             </li>
           </ul>
         </ul>
-        <h3 class="h5" style="font-weight: 600">The Ullapool Caber</h3>
+        <h3 class="h5" style="font-weight: 600">
+          The Ullapool Caber (not implemented yet)
+        </h3>
         <ul class="lead">
           <li>
             Detonating the Caber explodes in your face, dealing massive lethal
@@ -387,21 +371,27 @@ import Layout from "@layouts/Layout.astro";
             they are slower than the Medic healing them.
           </li>
         </ul>
-        <h3 class="h5" style="font-weight: 600">Syringe Gun</h3>
+        <h3 class="h5" style="font-weight: 600">
+          Syringe Gun (not implemented yet)
+        </h3>
         <ul class="lead">
           <li>
             Syringe Gun grants you damage resistance while active, based upon
             your Ubercharge level, up to 75% at maximum Ubercharge.
           </li>
         </ul>
-        <h3 class="h5" style="font-weight: 600">Blutsauger</h3>
+        <h3 class="h5" style="font-weight: 600">
+          Blutsauger (not implemented yet)
+        </h3>
         <ul class="lead">
           <li>
             Needles deal more damage, based upon your Ubercharge level, up 1.5x
             damage at maximum Ubercharge.
           </li>
         </ul>
-        <h3 class="h5" style="font-weight: 600">Overdose</h3>
+        <h3 class="h5" style="font-weight: 600">
+          Overdose (not implemented yet)
+        </h3>
         <ul class="lead">
           <li>
             Now also grants jump height based upon your Ubercharge level, up to
@@ -444,7 +434,9 @@ import Layout from "@layouts/Layout.astro";
             attack slightly before becoming fully visible.
           </li>
         </ul>
-        <h3 class="h5" style="font-weight: 600">All Revolvers</h3>
+        <h3 class="h5" style="font-weight: 600">
+          All Revolvers (not implemented yet)
+        </h3>
         <ul class="lead">
           <li>
             All Revolvers, except for the Diamondback and L'Etranger, can now
@@ -464,7 +456,9 @@ import Layout from "@layouts/Layout.astro";
           <li>Damage penalty while cloaked: 50%.</li>
           <li>Firing while cloaked briefly reveals you.</li>
         </ul>
-        <h3 class="h5" style="font-weight: 600">Ambassador</h3>
+        <h3 class="h5" style="font-weight: 600">
+          Ambassador (not implemented yet)
+        </h3>
         <ul class="lead">
           <li>Now always accurate when fired.</li>
         </ul>
