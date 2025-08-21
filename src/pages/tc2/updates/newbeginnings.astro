@@ -1,0 +1,629 @@
+---
+import Body from "@components/Body.astro";
+import Footer from "@components/Footer.astro";
+import BaseHead from "@components/head/BaseHead.astro";
+import ImportHead from "@components/head/ImportHead.astro";
+import MainHead from "@components/head/MainHead.astro";
+import PreloadHead from "@components/head/PreloadHead.astro";
+import Layout from "@layouts/Layout.astro";
+---
+
+<style>
+  .header-links > a {
+    color: #fcf195;
+  }
+  .header-links > a:hover {
+    color: #faf4ba;
+  }
+  .btn-xl {
+    font-size: 1.7rem;
+  }
+  @font-face {
+    font-family: "Monoton";
+    font-style: normal;
+    font-display: swap;
+    font-weight: 400;
+    src: url(@fontsource/monoton/files/monoton-latin-400-normal.woff2)
+      format("woff2");
+    unicode-range:
+      U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+      U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+      U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+  @font-face {
+    font-family: "Righteous";
+    font-style: normal;
+    font-display: swap;
+    font-weight: 400;
+    src: url(@fontsource/righteous/files/righteous-latin-400-normal.woff2)
+      format("woff2");
+    unicode-range:
+      U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+      U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+      U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+  h1,
+  h2,
+  h4,
+  h5,
+  h6,
+  .display-2,
+  .display-3,
+  .display-4,
+  .display-5,
+  .display-6 {
+    font-family:
+      "Righteous",
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      "Helvetica Neue",
+      Arial,
+      sans-serif;
+  }
+  .display-1 {
+    font-family:
+      "Monoton",
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      "Helvetica Neue",
+      Arial,
+      sans-serif;
+  }
+  .glow {
+    animation: glow 1s ease-in-out infinite alternate;
+  }
+  @keyframes glow {
+    from {
+      text-shadow:
+        0 0 2px #fff,
+        0 0 5px #fff,
+        0 0 7px #e60073,
+        0 0 10px #e60073,
+        0 0 12px #e60073,
+        0 0 15px #e60073,
+        0 0 17px #e60073;
+    }
+    to {
+      text-shadow:
+        0 0 5px #fff,
+        0 0 7px #ff4da6,
+        0 0 10px #ff4da6,
+        0 0 12px #ff4da6,
+        0 0 15px #ff4da6,
+        0 0 17px #ff4da6,
+        0 0 20px #ff4da6;
+    }
+  }
+</style>
+
+<Layout>
+  <head>
+    <BaseHead />
+    <PreloadHead />
+    <ImportHead />
+    <MainHead
+      title="New Beginnings - Gameplay Update | Team Comtress 2"
+      noSite={true}
+      description="New Beginnings, a Gameplay Update for Team Comtress 2."
+      image="https://comfig.app/img/tc2/team-comtress-2.png"
+      favicon="/img/tc2/favicon.ico"
+    />
+  </head>
+  <Body>
+    <section class="text-center container" id="gameplay">
+      <h2
+        class="display-2"
+        style="color: #fcf195; font-weight: 700; letter-spacing: 0.2rem"
+      >
+        GAMEPLAY
+      </h2>
+      <hr />
+      <div class="text-start">
+        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
+          CORE GAMEPLAY
+        </h2>
+        <h3 class="h5" style="font-weight: 600">Random Crits</h3>
+        <ul class="lead">
+          <li>
+            Fixed melee random critical hits damage range boost being 0-&gt;533
+            damage for 15%-&gt;60% chance instead of 0-&gt;1600 damage.
+          </li>
+          <li>
+            Fixed random critical hits damage range boost being 0-&gt;533 damage
+            for 2%-&gt;8% chance instead of 0-&gt;800 damage for 2%-&gt;12%
+            chance.
+          </li>
+          <li>
+            <small
+              ><em>Developer Note:</em> When random crit chance was <a
+                href="https://www.teamfortress.com/post.php?id=2221"
+                >changed in 2009</a
+              >, the intention was to make random critical hits more skill /
+              performance based for non-melee random crits. Thus, the values for
+              crit chance and crit chance boost were changed. However, due to
+              crit chance being shared between melee and non-melee, melee random
+              crit chance was affected, keeping the chance boost based on damage
+              the same, but more than halving the damage required to gain the
+              max boost. This runs counter to the stated intention: less skill /
+              performance is needed for the same high crit chance. Furthermore,
+              due to how the chance boosts were applied, non-melee only got a
+              max 8% chance based upon 533 damage, rather than the stated 12%
+              chance from 800 damage, reducing the peak reward from your
+              performance. These fixes now separate melee crit chance boost from
+              non-melee, thus allowing melee to retain its 4x boost from 1600
+              damage, while non-melee now has a 6x boost from 800 damage.</small
+            >
+          </li>
+        </ul>
+        <h3 class="h5" style="font-weight: 600">Bullet Spread</h3>
+        <ul class="lead">
+          <li>Changed the default for fixed weapon spread to on.</li>
+          <ul>
+            <li>
+              <small
+                ><em>Developer Note:</em> Although fixed spread was on average equal
+                to random spread, maximum values for random spread still could proc
+                much wider spread than fixed spread, resulting in real gameplay balance
+                differences. This issue was further exacerbated by the incorrect
+                random distribution of spread. Rather than attempting to reconcile
+                the differences between casual and competitive play, we find it best
+                to disable random bullet spread for all modes, making risk/reward
+                at each distance consistent, similarly to disabling random damage
+                spread.</small
+              >
+            </li>
+          </ul>
+          <li>
+            Spread is now based upon a real Gaussian distribution (circular).
+            This will improve evenness of pellet distribution.
+          </li>
+          <li>
+            Single-shot guns like the Pistol and Revolver now recover their
+            accuracy 66% slower than their fire rate, rather than a fixed 1.25
+            second cooldown. Accuracy recovery time cannot be lower than 0.25
+            seconds or higher than 1.25 seconds.
+          </li>
+          <ul>
+            <li>
+              Effectively, this means you can exchange lower ideal DPS for
+              better accuracy / guaranteed DPS by tap firing.
+            </li>
+          </ul>
+        </ul>
+        <ul class="lead">
+          <li>
+            Reintroduced damage ranges seen on certain no-falloff weapons when
+            random damage spread was enabled, by integrating them into
+            falloff/rampup.
+          </li>
+          <ul>
+            <li>
+              <small
+                ><em>Developer Note:</em> Falloff/rampup is an integral part of Team
+                Fortress 2, dictating ideal ranges for fights, thus balancing engagements.
+                So it's an incredibly powerful attribute when a weapon ignores falloff.
+                We decided to reintroduce damage threshold variance as seen in damage
+                spread for these weapons, and integrate them in a way which follows
+                the general distance-based engagement rules of Team Fortress 2.
+              </small>
+            </li>
+            <li>
+              For more information, see the sections for the affected weapons:
+              Grenade Launcher and Sniper Rifle
+            </li>
+          </ul>
+        </ul>
+        <h3 class="h5" style="font-weight: 600">General Weapon Changes</h3>
+        <ul class="lead">
+          <li>
+            Fixed switch speed bonuses not being used for applying a holster
+            speed bonus. For example, The Degreaser's holster bonus was only
+            applied after it has been deployed for the base deploy time (0.5
+            seconds), rather using the deploy time with its switch bonus (0.33
+            seconds). This caused an awkward situation where you had to wait
+            longer than expected to benefit from The Degreaser's holster bonus.
+          </li>
+          <ul>
+            <li>
+              Fixed holster speed penalties, such as on The Fists of Steel,
+              being bypassable.
+            </li>
+            <li>
+              Fixed holster speed bonuses being able to be accidentally
+              cancelled by switching through multiple weapons.
+            </li>
+          </ul>
+          <li>
+            Fixed movement speed slows not being applied consistently from
+            weapons like from the Natascha and the Sandman.
+          </li>
+          <li>
+            Added lag compensation for teammates, to fix issues with players
+            unexpectedly blocking bullets and The Sydney Sleeper extinguish not
+            applying as expected.
+          </li>
+          <li>
+            Fixed firing speeds being slightly inaccurate/delayed in some cases.
+          </li>
+          <li>
+            Explosions now check in a 4% inner radius for a trace, so that small
+            differences in geometry do not block explosion damage entirely. This
+            is a 8 point box additional check if the center point fails, and
+            damage is scaled based on how many points hit.
+          </li>
+          <ul>
+            <li>
+              We are aware this changes the behavior of sticky traps. However,
+              following this change you should be damaged by them if and only if
+              you can see the stickies, so fairness should be maintained.
+            </li>
+          </ul>
+          <li>
+            Fixed damage to buildings rounding down instead of up like damage to
+            players.
+          </li>
+        </ul>
+        <h3 class="h5" style="font-weight: 600">Pre-Round</h3>
+        <ul class="lead">
+          <li>
+            Changed pre-round freeze logic to match Casual/Competitive
+            matchmaking: the last 3 seconds of pre-round time unfreezes movement
+            before starting the round, to allow players to move from their spawn
+            position to the doors. Spawn doors are now also locked during this
+            time.
+          </li>
+          <li>
+            Fixed pre-round movement freeze not working correctly (requiring
+            weapon switching, not being timed correctly, etc).
+          </li>
+          <li>
+            Fixed movement taunts being usable during freeze time in some cases.
+          </li>
+        </ul>
+        <h3 class="h5" style="font-weight: 600">Misc</h3>
+        <ul class="lead">
+          <li>
+            Added respawn feature during the first 7 seconds after spawning. By
+            pressing your Interact key (default F) during this time, you will
+            respawn. This allows players to switch spawn rooms, and switch
+            loadouts / class without a resupply cabinet. If you leave the spawn
+            room, you will no longer be able to use this feature.
+          </li>
+          <li>
+            Resupplying now removes in-combat penalties from recently taking
+            damage, aka giving "crit heals".
+          </li>
+          <li>Disabled fall damage variance.</li>
+        </ul>
+        <hr />
+        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
+          COMPETITIVE
+        </h2>
+        <ul class="lead">
+          <li>
+            Respawn rooms no longer give instant respawns in competitive games.
+            You must resupply to respawn for loadout or class changes.
+          </li>
+          <li>
+            Fixed class limit being bypassable if two or more players switched
+            to that class during a respawn wave.
+          </li>
+          <li>
+            Added a reset class button for 6s games to allow class swapping
+            without conflicting with class limits, like Highlander.
+          </li>
+          <li>
+            Spawn points are now selected based on the player's class, to
+            improve consistency in spawns.
+          </li>
+          <li>Improved support for 6s class selection and limits.</li>
+          <li>
+            Taunts are forced into first person perspective in competitive
+            games.
+          </li>
+          <li>Match Status HUD now orders by class in competitive matches.</li>
+          <li>Disabled respawning automatically on loadout changes.</li>
+          <li>
+            Added various features from Competitive Matchmaking to community
+            competitive games:
+          </li>
+          <ul>
+            <li>Added chat messages for class switching.</li>
+            <li>Added team wipe announcer messages.</li>
+            <li>
+              Fixed Contract messages appearing in community competitive. We
+              love you Miss Pauling, but that job can wait until after the
+              scrim.
+            </li>
+            <li>
+              Disabled dominations, soldier statue, item notifications and
+              holiday ammo packs in community competitive.
+            </li>
+          </ul>
+        </ul>
+        <hr />
+        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
+          SCOUT
+        </h2>
+        <h3 class="h5" style="font-weight: 600">Soda Popper</h3>
+        <ul class="lead">
+          <li>
+            Hype glow now always show on the Soda Popper when Hype is available
+          </li>
+          <li>
+            Hype is activated by jumping a third time while the Soda Popper is
+            fully deployed
+          </li>
+          <li>You are marked for death while Hype is activated</li>
+          <li>Hype is lost upon touching the ground</li>
+          <li>Reduced damage needed to gain Hype from 400 to 160</li>
+        </ul>
+        <h3 class="h5" style="font-weight: 600">Sandman</h3>
+        <ul class="lead">
+          <li>Increased the base damage from 15 to 20</li>
+          <li>Increased moonshot base damage from 23 to 30</li>
+          <li>Slow now applies to hits at point blank range</li>
+          <li>Increased the base slow duration from 0.6 seconds to 1 second</li>
+          <li>Maximum slow duration changed from 2 to 3</li>
+          <li>
+            Slow duration now scales lower at close range, and ramps up higher
+            at further away
+          </li>
+          <li>
+            Moonshot bonus is still 1 extra second, so moonshots have 4 second
+            slow duration
+          </li>
+          <li>Halved the distance required for a moonshot</li>
+          <li>
+            The Sandman instantly replenishes its ball and becomes crit boosted
+            for the next ball swing or melee attack after landing a moonshot
+          </li>
+          <li>
+            Note: the ball is only replenished if it was not granted through a
+            moonshot already, to prevent chaining moonshots.
+          </li>
+          <li>
+            In Mann vs. Machine, the Sandman regains its ability to stun both
+            players and robots.
+          </li>
+          <li>Removed random critical hits</li>
+        </ul>
+        <h3 class="h5" style="font-weight: 600">Wrap Assassin</h3>
+        <ul class="lead">
+          <li>Removed charge rate bonus</li>
+          <li>Receives charge upon dealing any bleed damage</li>
+          <li>Reduced base bauble damage from 15 to 5</li>
+          <li>Reduced base bleed duration from 5 to 2</li>
+          <li>Halved the distance required for a moonshot</li>
+          <li>Removed random critical hits</li>
+          <li>
+            Shard damage now always does 6 damage, regardless of distance or
+            direct hit. Previously, damage was inconsistent (dealing up to 14
+            damage) and sometimes did double damage.
+          </li>
+          <li>Shard damage now crits when the ornament crits</li>
+          <li>
+            Critical shard damage applies applies a 4 second bleed in an AoE
+          </li>
+        </ul>
+        <hr />
+        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
+          SOLDIER
+        </h2>
+        <h3 class="h5" style="font-weight: 600">Beggar's Bazooka</h3>
+        <ul class="lead">
+          <li>
+            Overloading now only expends reserve ammo, keeping already loaded
+            rockets.
+          </li>
+        </ul>
+        <h3 class="h5" style="font-weight: 600">Cow Mangler</h3>
+        <ul class="lead">
+          <li>-15% reload start speed</li>
+        </ul>
+        <h3 class="h5" style="font-weight: 600">Righteous Bison</h3>
+        <ul class="lead">
+          <li>Projectile moves slower through enemies</li>
+          <li>Deals damage every 0.1 seconds, rather than 0.025 seconds</li>
+        </ul>
+        <h3 class="h5" style="font-weight: 600">Equalizer</h3>
+        <ul class="lead">
+          <li>
+            Now also grants damage resistance while fully deployed, from 20% at
+            50% HP to 50% at 10% HP
+          </li>
+        </ul>
+        <hr />
+        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
+          DEMOMAN
+        </h2>
+        <h3 class="h5" style="font-weight: 600">All Grenade Launchers</h3>
+        <ul class="lead">
+          <li>
+            Grenades now have minor damage rampup/falloff, based upon their old
+            random damage spread.
+          </li>
+          <ul>
+            <li>
+              Grenades ramp up to their max damage (+3% of normal) at minimum
+              distance, to normal damage at 146 units.
+            </li>
+            <li>
+              Grenades fall off to their minimum damage (-15% of normal) at 1024
+              units, to normal damage at 682 units.
+            </li>
+          </ul>
+        </ul>
+        <h3 class="h5" style="font-weight: 600">The Ullapool Caber</h3>
+        <ul class="lead">
+          <li>
+            Detonating the Caber explodes in your face, dealing massive lethal
+            self-damage.
+          </li>
+          <li>Increased the explosion radius from 100 to 146.</li>
+          <li>
+            After the impact explosion, the Caber will fall to the ground,
+            exploding again upon impact for 100 damage.
+          </li>
+          <li>
+            The secondary explosion will be crit-boosted if the initial attack
+            was a crit.
+          </li>
+        </ul>
+        <hr />
+        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
+          HEAVY
+        </h2>
+        <h3 class="h5" style="font-weight: 600">All Miniguns</h3>
+        <ul class="lead">
+          <li>Minigun now spins-up 15% slower</li>
+          <li>Removed penalty period to accuracy and damage after spin-up</li>
+        </ul>
+        <h3 class="h5" style="font-weight: 600">Holiday Punch</h3>
+        <ul class="lead">
+          <li>Now uses a more advanced check to detect attacks from behind.</li>
+        </ul>
+        <hr />
+        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
+          ENGINEER
+        </h2>
+        <h3 class="h5" style="font-weight: 600">Short Circuit</h3>
+        <ul class="lead">
+          <li>Damage per orb increased from 15 to 20.</li>
+          <li>Zap targets per orb increased from 2 to 4.</li>
+          <li>
+            Instead of destroying projectiles, the orb now applies a stacking
+            -35% damage penalty to projectiles.
+          </li>
+          <li>
+            <small
+              ><em>Developer Note:</em> Completely destroying a player's projectile
+              felt too unfair and frustrating. Now, the Engineer retains the ability
+              to reduce the effectiveness of projectile spam, rather than completely
+              disabling it, while also encouraging cooperative play between Engineers.</small
+            >
+          </li>
+        </ul>
+        <h3 class="h5" style="font-weight: 600">Wrangler</h3>
+        <ul class="lead">
+          <li>
+            Shield is now only active when the Sentry Gun is disabled, either
+            from the Engineer dying, or him switching off the Wrangler.
+          </li>
+          <li>Increased rocket fire speed bonus from 33% to 100%.</li>
+          <li>
+            Sentry Gun firing rate is now doubled, rather than being 66% faster
+            on a Level 1, and 50% faster on Levels 2 & 3. Mini-Sentries already
+            fired 100% faster.
+          </li>
+        </ul>
+        <hr />
+        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
+          MEDIC
+        </h2>
+        <ul class="lead">
+          <li>
+            Players under the effect of a Quick-Fix Übercharge can now block
+            captures.
+          </li>
+          <li>
+            Medic now gains a minimum flat speed boost to 360 move speed when
+            healing classes not faster than him.
+          </li>
+          <li>
+            Players healed by the Medi-Gun get a 10% boost to their speed, if
+            they are slower than the Medic healing them.
+          </li>
+        </ul>
+        <h3 class="h5" style="font-weight: 600">Syringe Gun</h3>
+        <ul class="lead">
+          <li>
+            Syringe Gun grants you damage resistance while active, based upon
+            your Ubercharge level, up to 75% at maximum Ubercharge.
+          </li>
+        </ul>
+        <h3 class="h5" style="font-weight: 600">Blutsauger</h3>
+        <ul class="lead">
+          <li>
+            Needles deal more damage, based upon your Ubercharge level, up 1.5x
+            damage at maximum Ubercharge.
+          </li>
+        </ul>
+        <h3 class="h5" style="font-weight: 600">Overdose</h3>
+        <ul class="lead">
+          <li>
+            Now also grants jump height based upon your Ubercharge level, up to
+            20% at maximum Ubercharge.
+          </li>
+        </ul>
+        <hr />
+        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
+          SNIPER
+        </h2>
+        <h3 class="h5" style="font-weight: 600">All Sniper Rifles</h3>
+        <ul class="lead">
+          <li>Removed quickscope delay for headshots.</li>
+          <li>Reduced headshot damage by 50.</li>
+          <li>
+            Critical headshots now apply head trauma: a 16 damage per second
+            incurable bleed which lasts for 4 seconds.
+          </li>
+          <li>
+            Bodyshots now have damage rampup/falloff, based upon their old
+            random damage spread.
+          </li>
+          <ul>
+            <li>
+              Bodyshots ramp up to their max damage (+15% of normal) at minimum
+              distance, to normal damage at 300 units.
+            </li>
+            <li>
+              Bodyshots fall off to their minimum damage (-15% of normal) at
+              2560 units, to normal damage at 1680 units.
+            </li>
+          </ul>
+        </ul>
+        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">SPY</h2>
+        <ul class="lead">
+          <li>Base cloak time reduced from 1 second to 0.7 seconds</li>
+          <li>Decloak attack delay reduced from 2 seconds to 1.4 seconds.</li>
+          <li>
+            Note that decloak time remains at 2 seconds. So you will be able to
+            attack slightly before becoming fully visible.
+          </li>
+        </ul>
+        <h3 class="h5" style="font-weight: 600">All Revolvers</h3>
+        <ul class="lead">
+          <li>
+            All Revolvers, except for the Diamondback and L'Etranger, can now
+            headshot.
+          </li>
+          <li>
+            Revolvers, excluding the Ambassador and Diamondback, deal -15% base
+            damage on headshot. So, the base Revolver deals 102 damage on a
+            headshot, but otherwise deals its full base damage of 40.
+          </li>
+          <li>Headshots have damage falloff.</li>
+          <li>Revolvers can no longer score random critical hits.</li>
+        </ul>
+        <h3 class="h5" style="font-weight: 600">L’Etranger</h3>
+        <ul class="lead">
+          <li>Can fire while cloaked.</li>
+          <li>Damage penalty while cloaked: 50%.</li>
+          <li>Firing while cloaked briefly reveals you.</li>
+        </ul>
+        <h3 class="h5" style="font-weight: 600">Ambassador</h3>
+        <ul class="lead">
+          <li>Now always accurate when fired.</li>
+        </ul>
+        <h3 class="h5" style="font-weight: 600">Diamondback</h3>
+        <ul class="lead">
+          <li>Revenge Crits now have damage falloff.</li>
+        </ul>
+      </div>
+    </section>
+    <Footer />
+  </Body>
+</Layout>
