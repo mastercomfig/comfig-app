@@ -7,7 +7,7 @@
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build",
-    "build-tc2": "mv src/pages/tc2 src/tc2 && rm -rf src/pages && mv src/tc2/* src/pages && pnpm build",
+    "build-tc2": "mv src/pages/tc2 src/tc2 && rm -rf src/pages/* && mv src/tc2/* src/pages && pnpm build",
     "preview": "astro preview",
     "prod": "astro build",
     "format": "prettier --write . --plugin=prettier-plugin-astro",
