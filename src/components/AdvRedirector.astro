@@ -1,0 +1,32 @@
+---
+
+---
+
+<adv-redirector></adv-redirector>
+
+<script>
+  class AdvRedirector extends HTMLElement {
+    async connectedCallback() {
+      // don't run if our hostname is already correct
+      if (
+        window.location.hostname.endsWith("teamcomtress.com") ||
+        window.location.hostname.endsWith("teamcomtress.pages.dev")
+      ) {
+        return;
+      }
+
+      // don't run if this isn't a tc2 path
+      if (!window.location.pathname.startsWith("/tc2/")) {
+        return;
+      }
+
+      const newPath = window.location.pathname.replace("/tc2/", "");
+
+      window.location.assign(`https://teamcomtress.com/${newPath}`);
+    }
+  }
+
+  if (!customElements.get("adv-redirector")) {
+    customElements.define("adv-redirector", AdvRedirector);
+  }
+</script>
