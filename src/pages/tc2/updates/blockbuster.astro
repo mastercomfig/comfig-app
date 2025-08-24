@@ -1,4 +1,5 @@
 ---
+import AdvRedirector from "@components/AdvRedirector.astro";
 import Body from "@components/Body.astro";
 import Footer from "@components/Footer.astro";
 import BaseHead from "@components/head/BaseHead.astro";
@@ -116,6 +117,7 @@ import Layout from "@layouts/Layout.astro";
     />
   </head>
   <Body>
+    <AdvRedirector />
     <section
       class="container p-0"
       style=`background: linear-gradient(rgba(38, 50, 56, 0.7) 10%, rgba(38, 50, 56, 0.7)),url(${lairOutsideImg.src});background-size: cover; background-position: center;background-position: center`

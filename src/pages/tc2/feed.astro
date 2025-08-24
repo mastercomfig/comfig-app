@@ -59,8 +59,8 @@ const patches = (await getCollection("tc2Patches"))
                     <a
                       href={
                         post.data.update
-                          ? `/tc2/updates/${post.data.update}`
-                          : `/tc2/news/${post.id}`
+                          ? `/updates/${post.data.update}`
+                          : `/news/${post.id}`
                       }
                     >
                       Read more »
@@ -85,7 +85,7 @@ const patches = (await getCollection("tc2Patches"))
             <div class="card m-3 col-3">
               <div class="card-body p-4">
                 <h5 class="card-title m-0">
-                  <a href={`/tc2/patches/${post.id}`}>{post.id}</a>
+                  <a href={`/patches/${post.id}`}>{post.id}</a>
                 </h5>
               </div>
             </div>
