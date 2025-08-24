@@ -164,6 +164,7 @@ import Layout from "@layouts/Layout.astro";
         </h2>
         <h3 class="h5" style="font-weight: 600">Soda Popper</h3>
         <ul class="lead">
+          <li>Instantly reloads while double jumping</li>
           <li>
             Hype glow now always show on the Soda Popper when Hype is available
           </li>
@@ -172,8 +173,11 @@ import Layout from "@layouts/Layout.astro";
             fully deployed
           </li>
           <li>You are marked for death while Hype is activated</li>
+          <li>Each additional air jump will expend Hype</li>
+          <li>
+            Hype can be maintained by dealing damage to enemies while hyped
+          </li>
           <li>Hype is lost upon touching the ground</li>
-          <li>Reduced damage needed to gain Hype from 400 to 170</li>
         </ul>
         <h3 class="h5" style="font-weight: 600">
           Crit-a-Cola (not implemented yet)
@@ -373,13 +377,13 @@ import Layout from "@layouts/Layout.astro";
         <ul class="lead">
           <li>
             Syringe Gun grants you damage resistance while active, based upon
-            your Ubercharge level, up to 75% at maximum Ubercharge.
+            your Ubercharge level, up to 35% at maximum Ubercharge.
           </li>
         </ul>
         <h3 class="h5" style="font-weight: 600">Blutsauger</h3>
         <ul class="lead">
           <li>
-            Needles deal more damage, based upon your Ubercharge level, up 1.5x
+            Needles deal more damage, based upon your Ubercharge level, up 1.7x
             damage at maximum Ubercharge.
           </li>
         </ul>
@@ -417,6 +421,15 @@ import Layout from "@layouts/Layout.astro";
             </li>
           </ul>
         </ul>
+        <h3 class="h5" style="font-weight: 600">All SMGs</h3>
+        <ul class="lead">
+          <li>Can now headshot.</li>
+          <li>Headshots have falloff.</li>
+        </ul>
+        <h3 class="h5" style="font-weight: 600">Jarate</h3>
+        <ul class="lead">
+          <li>Sniper can now drink his Jarate for minicrits.</li>
+        </ul>
         <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">SPY</h2>
         <ul class="lead">
           <li>Base cloak time reduced from 1 second to 0.7 seconds</li>
@@ -429,15 +442,16 @@ import Layout from "@layouts/Layout.astro";
         <h3 class="h5" style="font-weight: 600">All Revolvers</h3>
         <ul class="lead">
           <li>
-            All Revolvers, except for the Diamondback and L'Etranger, can now
+            All Revolvers, except for the Diamondback and L’Etranger, can now
             headshot.
           </li>
           <li>
-            Revolvers, excluding the Ambassador and Diamondback, deal -15% base
-            damage on headshot. So, the base Revolver deals 102 damage on a
+            Revolvers, excluding the Ambassador and Diamondback, deal -30% base
+            damage on headshot. So, the base Revolver deals 84 damage on a
             headshot, but otherwise deals its full base damage of 40.
           </li>
-          <li>Headshots have damage falloff.</li>
+          <li>Removed maximum range for headshots.</li>
+          <li>Increased falloff for headshots at longer ranges.</li>
           <li>Revolvers can no longer score random critical hits.</li>
         </ul>
         <h3 class="h5" style="font-weight: 600">L’Etranger</h3>
@@ -448,7 +462,12 @@ import Layout from "@layouts/Layout.astro";
         </ul>
         <h3 class="h5" style="font-weight: 600">Ambassador</h3>
         <ul class="lead">
-          <li>Now always accurate when fired.</li>
+          <li>Now always accurate and capable of headshots when fired.</li>
+          <li>Headshots deal full damage, unlike other revolvers.</li>
+          <li>Reduced firing speed from 0.6 seconds to 0.8 seconds.</li>
+          <li>Increased reload time from 1.1 seconds to 1.5 seconds.</li>
+          <li>Has longer falloff range on headshot.</li>
+          <li>Fires tracer rounds.</li>
         </ul>
         <h3 class="h5" style="font-weight: 600">Diamondback</h3>
         <ul class="lead">
