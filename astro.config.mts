@@ -117,9 +117,13 @@ const modulePath = import.meta.env.DEV
   ? undefined
   : resolve(rootDir, "generated", "sriHashes.mjs");
 
+const defaultHost = "comfig.app";
+
+const hostname = process.env["ASTRO_DOMAIN_OVERRIDE"] || defaultHost;
+
 // https://astro.build/config
 export default defineConfig({
-  site: "https://comfig.app",
+  site: `https://${hostname}`,
   integrations: [
     react(),
     pwa,
