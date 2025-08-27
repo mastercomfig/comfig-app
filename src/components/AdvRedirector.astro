@@ -16,11 +16,11 @@
       }
 
       // don't run if this isn't a tc2 path
-      if (!window.location.pathname.startsWith("/tc2/")) {
+      if (!window.location.pathname.startsWith("/tc2")) {
         return;
       }
 
-      const newPath = window.location.pathname.replace("/tc2/", "");
+      const newPath = window.location.pathname.replace("/tc2", "");
 
       window.location.assign(`https://teamcomtress.com/${newPath}`);
     }
