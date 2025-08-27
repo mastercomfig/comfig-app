@@ -59,6 +59,9 @@ const gamemodeToPrefix = {
   special_events: "",
   halloween: "",
   christmas: "",
+  payload: "pl",
+  capture_point: "cp",
+  payload_race: "plr",
 };
 
 const SERVER_HEADROOM = 1;
