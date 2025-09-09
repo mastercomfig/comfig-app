@@ -59,6 +59,9 @@ const gamemodeToPrefix = {
   special_events: "",
   halloween: "",
   christmas: "",
+  payload: "pl",
+  capture_point: "cp",
+  payload_race: "plr",
 };
 
 const SERVER_HEADROOM = 1;
@@ -283,6 +286,15 @@ export default function ServerFinder({ hash }: { hash: string }) {
   const mapToGamemode = useMemo(() => schema?.map_gamemodes ?? {}, [schema]);
   const mapToThumbnail = useMemo(() => schema?.map_thumbnails ?? {}, [schema]);
   const extraMatchGroups = useMemo(() => schema?.gamemodes ?? {}, [schema]);
+  const mapToMatchGroup = useMemo(() => {
+    const mapToMatchGroup: Record<string, string> = {};
+    for (const [matchGroup, maps] of Object.entries(extraMatchGroups)) {
+      for (const map of maps) {
+        mapToMatchGroup[map] = matchGroup;
+      }
+    }
+    return mapToMatchGroup;
+  }, [extraMatchGroups]);
 
   useEffect(() => {
     const matchGroups = getDefaultMatchGroups().filter((r) => r.active);
@@ -368,7 +380,12 @@ export default function ServerFinder({ hash }: { hash: string }) {
     server,
     tags: Set<string>,
   ) => {
-    if (expectedGamemode !== "any") {
+    if (expectedGamemode in extraMatchGroups) {
+      const mapMatchGroup = mapToMatchGroup[server.map];
+      if (mapMatchGroup !== expectedGamemode) {
+        return false;
+      }
+    } else if (expectedGamemode !== "any") {
       const mapGamemode = mapToGamemode[server.map];
       if (mapGamemode) {
         if (mapGamemode !== expectedGamemode) {
@@ -416,6 +433,13 @@ export default function ServerFinder({ hash }: { hash: string }) {
         filterServerForGamemode(gm, server, tags),
       );
     } else {
+      if (currentMatchGroup === "jump") {
+        const mapPrefix = server.map.split("_")[0];
+        if (mapPrefix === "jump" || mapPrefix === "surf") {
+          return true;
+        }
+        return false;
+      }
       if (filterServerForGamemode(currentMatchGroup, server, tags)) {
         return true;
       }
@@ -507,7 +531,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
     }
 
     if (newTotalPlayers > realMaxPlayers - SERVER_HEADROOM) {
-      return -0.3;
+      return -0.05;
     }
 
     if (humans === 0) {
@@ -1018,8 +1042,6 @@ export default function ServerFinder({ hash }: { hash: string }) {
       return "success";
     };
   }, [quickplayStore.pinglimit]);
-
-  console.log(quickplayStore.matchGroup);
 
   // Look, I know this is bad. I'll split it into components later.
   return (

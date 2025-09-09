@@ -1,6 +1,7 @@
 ## July 26, 2025
 
-* Added support for featured match groups
+* Added support for dynamic match groups
+* Added featured and jump/surf match groups
 
 ## March 11, 2025
 
