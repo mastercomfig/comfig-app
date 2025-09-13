@@ -247,6 +247,9 @@ function constructDataResponse(updated, version, v, m, p) {
   if (updated[2]) {
     p = updated[2];
   }
+  if (!v || !m || !p) {
+    return null;
+  }
   let resBody = '{"v":' + v + "," + '"m":' + m + "," + '"p":' + p + "}";
   return resBody;
 }
@@ -282,6 +285,9 @@ async function getApiData(version, force) {
       updated = await updateData([v ? null : rv, m ? null : rm, p ? null : rp]);
     }
     resBody = constructDataResponse(updated, version, v, m, p);
+    if (!resBody) {
+      return getApiData(version, false);
+    }
     await storeData(
       getVersionedKey("mastercomfig-api-response", version),
       resBody,
