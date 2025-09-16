@@ -14,7 +14,8 @@
       "@utils/*": ["src/utils/*"],
       "@store/*": ["src/store/*"],
       "@ssg/*": ["src/ssg/*"],
-      "@img/*": ["src/img/*"]
+      "@img/*": ["src/img/*"],
+      "@posts/*": ["src/posts/*"]
     }
   }
 }

@@ -10,7 +10,9 @@
       // don't run if our hostname is already correct
       if (
         window.location.hostname.endsWith("teamcomtress.com") ||
-        window.location.hostname.endsWith("teamcomtress.pages.dev")
+        window.location.hostname.endsWith("teamcomtress.pages.dev") ||
+        window.location.hostname.endsWith("localhost") ||
+        window.location.hostname.endsWith("127.0.0.1")
       ) {
         return;
       }
