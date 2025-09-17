@@ -1,3 +1,4 @@
+import mdx from "@astrojs/mdx";
 import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
 import { shield } from "@kindspells/astro-shield";
@@ -142,6 +143,7 @@ export default defineConfig({
     }),
     astroCSPHashExporterSetup,
     sitemap(),
+    mdx(),
   ],
   image: {
     remotePatterns: [

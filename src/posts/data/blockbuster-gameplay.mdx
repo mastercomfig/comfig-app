@@ -1,3 +1,8 @@
+---
+---
+import BlockbusterBlock from "@components/tc2/BlockbusterBlock.astro";
+
+<BlockbusterBlock>
 ## Core Gameplay
 
 ### Random Crits
@@ -30,7 +35,7 @@
   * Fixed various issues with crits getting removed early / lingering while crit boosted from another source
 * Secondary actions, like cloak, Stickybomb Launcher detonate, building haul now behave more responsively and do not ignore inputs
 * Melee hits now pass through teammates except in MvM and Medieval Mode.
-  * Server operators can force melee hits ignoring teammates in these modes with `tf_melee_enemy_priority 1`
+  * Server operators can force melee hits ignoring teammates in these modes with tf_melee_enemy_priority 1
   * Due to how melee hit detection works, there were extremely common cases of backstabs and other melee hits not connecting properly due to off screen teammates.
   * By limiting this to only normal gamemodes, we do not feel like there will be serious cases of melee hit stacking or any other concerns, in exchange for the gameplay benefit.
 * Disabled fall damage variance by default
@@ -46,14 +51,14 @@
 * Reworked respawn behavior.
 * Class switching or loadout changes off of initial spawn do not change your spawn location.
 * You can press the Inspect key (F by default) to switch spawn points after initially spawning. In Casual, this is unlimited. In Competitive, this is limited to once per life and only within 7 seconds of spawning if you have not taken damage.
-* Reasoning: changing spawn location from class switching is awkward and looks visually like a bug to those unfamiliar. This also gives the ability to players to choose between switching their spawn location or changing class.<br><br>
+* Reasoning: changing spawn location from class switching is awkward and looks visually like a bug to those unfamiliar. This also gives the ability to players to choose between switching their spawn location or changing class.<br/><br/>
 * Reworked automatic respawns for competitive play.
 * Automatic respawns are defined as respawns done within the spawn room, as a consequence of changing loadout or class
 * You cannot automatically respawn if you have taken damage or have moved out spawn, or if it has been 7 seconds after you have spawned.
-* Otherwise, you must touch a resupply cabinet for loadout or class changes.<br><br>
+* Otherwise, you must touch a resupply cabinet for loadout or class changes.<br/><br/>
 * Touching a resupply cabinet while having a new class selected will spawn you as that class.
 * Disabled auto self-kill upon changing class outside of a respawn room by default.
-* Improved messaging instructing players on how to switch class / loadout when they cannot automatically respawn.<br><br>
+* Improved messaging instructing players on how to switch class / loadout when they cannot automatically respawn.<br/><br/>
 * Resupplying now removes in-combat penalties from recently taking damage, aka giving "crit heals"
   * Note that taking damage again will immediately cancel this out, and the resupply cabinet only resupplies every 3 seconds, so this does not necessarily help in tanking damage through accelerated healing.
 
@@ -67,19 +72,19 @@
   * Various other streamlining improvements
 * Taunts are forced into first person perspective in competitive games
 * Fixed class limit being bypassable if two or more players switched to that class during a respawn wave. 
-* Added `demostop` server command to notify the server when the client stopped recording a demo
+* Added demostop server command to notify the server when the client stopped recording a demo
 * Added a Reset Class button on the Class Selection screen to allow for easy access to self-kills and class swapping without conflicting with class limits
 * Fixed stats incrementing outside of rounds in community competitive
 * Disconnecting will now force a self-kill, providing kill credit to anyone who finished the quitter off
-* Added `tf_tournament_classchange_allowed` and `tf_tournament_classchange_ready_allowed` ConVars, which allow for formats that restrict changing class during a game
-* Added `mp_sixes` ConVar which opts into various Sixes enhancements and defaults
-* Added `tf_tournament_respawn_multiplier` ConVar
+* Added tf_tournament_classchange_allowed and tf_tournament_classchange_ready_allowed ConVars, which allow for formats that restrict changing class during a game
+* Added mp_sixes ConVar which opts into various Sixes enhancements and defaults
+* Added tf_tournament_respawn_multiplier ConVar
   * Context: by default, team sizes below 8 players scale down respawn times from the designed default of 10 seconds per respawn wave
   * Set by default 0.8 for 6s matches by default, and 1.0 otherwise.
   * This preserves team respawn timers even while players are disconnected
   * This will also allow for more structured respawn time determinations, rather than just a simple proportion of players on a team
 * Improved flexibility of class limit ConVars for greater flexibility
-  * `classlimits` tag will apply to any server customizing class limits
+  * classlimits tag will apply to any server customizing class limits
 
 ### Matchmaking
 
@@ -104,6 +109,8 @@
 * Fixed throwables going through thin walls and doors in some cases
   * This includes the Flyin' Guillotine cleaver
 * Enabled icon indicators for Jarate and Mad Milk by default
+
+---
 
 ## Scout
 
@@ -149,6 +156,8 @@
 
 * Health kits on kill now spawn as cupcakes
 
+---
+
 ## Soldier
 
 * Made the Soldier Grenade taunt follow the same splash damage rules as other explosions
@@ -157,6 +166,8 @@
 ### Beggar's Bazooka
 
 * Now solely detonates from reserve ammo when overloaded
+
+---
 
 ## Pyro
 
@@ -199,14 +210,16 @@
 ### Dragon's Fury
 
 * Fixed the Dragon's Fury range being dependent on its radius, and instead restored the original radius but clipped off the projectile's effects to exactly its range of 3000. 
-  * Developer Note: The Dragon's Fury range is not like most weapons. It has a physics based projectile which tries to stop itself before overextending its range, but due to this and the larger projectile radius, it was changed to have a smaller radius to prevent issues with the front of the fireball touching players way past its range. Now, the fireball is hard limited to only affect players it hits if they were actually within the distance range, rather than if they simply touched the fireball at any distance. Thus, we have restored the original radius, making the fireball more intuitive and less awkward to aim, while fixing unfair cases of hits.
+  * _Developer Note:_ The Dragon's Fury range is not like most weapons. It has a physics based projectile which tries to stop itself before overextending its range, but due to this and the larger projectile radius, it was changed to have a smaller radius to prevent issues with the front of the fireball touching players way past its range. Now, the fireball is hard limited to only affect players it hits if they were actually within the distance range, rather than if they simply touched the fireball at any distance. Thus, we have restored the original radius, making the fireball more intuitive and less awkward to aim, while fixing unfair cases of hits.
 * Projectile now fires from the center, down the crosshair
   * The damage bonus on an accurate shot at burning players was very awkward and hard to achieve with a misaligned projectile
 
 ### Gas Passer
 
 * Fixed Gas Passer not extinguishing teammates on direct hit
-  * Developer Note: the Gas Passer can already extinguish teammates, this just adds a quality of life feature which the Jarate and Mad Milk have, which allows direct hitting teammates who are burning, so you can extinguish them more easily.
+  * _Developer Note:_ the Gas Passer can already extinguish teammates, this just adds a quality of life feature which the Jarate and Mad Milk have, which allows direct hitting teammates who are burning, so you can extinguish them more easily.
+
+---
 
 ## Demoman
 
@@ -222,6 +235,8 @@
 * Fixed damage inconsistencies for the Caber's explosion
 * Fixed the Caber's explosion not being boosted by a minicrit hit
 
+---
+
 ## Heavy
 
 ### Natascha
@@ -236,6 +251,8 @@
 
 * Fixed holster speed penalty being bypassable, such as when switching through multiple weapons
 * Fixed UberCharge rate being higher than intended due to max overheal penalty
+
+---
 
 ## Engineer
 
@@ -281,6 +298,8 @@
 
 * Fixed Dispensers not updating their dispense trigger position while being moved
 
+---
+
 ## Medic
 
 ### All Medi-Guns
@@ -291,6 +310,8 @@
 * Fixed movement issues while healing a patient
 * Damage feedback for a patient now plays back to the Medic
 * Added Medic Übercharge amount to the Match Status HUD for all teammates to see
+
+---
 
 ## Sniper
 
@@ -312,18 +333,22 @@
 * Darwin's Danger Shield no longer provides full Afterburn Immunity. Instead, it gives the same level of Afterburn Protection as a Pyro has, e.g, the Dragon's Fury now works against it.
   * Afterburn does not cause flinching for the Sniper
 
+---
+
 ## Spy
 
 * Fixed inaccuracies with backstab detection, making it less dependent on latency.
 * Removed cases of facestabs, on both the Spy's and victim's point of view.
 * Dynamic crosshair scale based on accuracy now shows for all revolvers rather than just the Ambassador
-  * Dynamic crosshair can now be disabled with the new ConVar `tf_revolver_dynamic_crosshair`
+  * Dynamic crosshair can now be disabled with the new ConVar tf_revolver_dynamic_crosshair
 * Fixed Sapper cosmetics not appearing as attachments. (thanks OfficerSpy!)
 * Fixed Disguise Kit team selection not working properly at high ping. (thanks nosoop!) 
 
 ### Enforcer
 
 * Fixed the Enforcer "piercing" bullet vulnerability
+
+---
 
 ## Mann vs. Machine
 
@@ -340,23 +365,30 @@
 * Fixed Strength powerup not affecting damage dealt to Tanks (community request)
 * Fixed the Destroy Entity Task being non-functional in func_nav_prerequisite (community request)
 
+---
+
 ## General Bot Fixes
 
 * Fixed bots not using their non-primary weapons properly
 * Fixed Spy bots not using their Revolver
 * Fixed Heavy bots using the Sandvich and Second Banana incorrectly
 * Fixed bots not using explosive weapons if enemies were too close to them and it was safe to take self-damage
-* Added `bot_explode` command, exploding them into gibs
-* Added the `tf_bot_random_items` ConVar, which, when set, equips random items on bots
+* Added bot_explode command, exploding them into gibs
+* Added the tf_bot_random_items ConVar, which, when set, equips random items on bots
 * Players replacing bots in quota mode now respects bots with an active role on the team: for example Medics with UberCharge building, or Engineers with buildings, and will prefer not to kick them
 * Bots now use a competitive roster in community competitive games
 * Bots no longer taunt in competitive games
+
+---
 
 ## Halloween
 
 * Fixed Mirvbomb spell not falling splash damage falloff rules of other explosions.
 
+---
+
 ## Mannpower
 
 * Fixed third person reload animations not getting faster from powerups
 * Fixed passive reload on the Crusader's Crossbow not speeding up from powerups
+</BlockbusterBlock>
