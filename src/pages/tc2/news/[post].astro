@@ -33,6 +33,7 @@ const { Content } = await render(post);
     <ImportHead />
     <MainHead
       title=`${post.data.title} | Team Comtress 2`
+      site="Team Comtress"
       noSite={true}
       description={post.data.description}
       image="https://teamcomtress.com/img/tc2/team-comtress-2.png"
@@ -64,6 +65,6 @@ const { Content } = await render(post);
       </p>
       <Content />
     </section>
-    <Footer />
+    <Footer product={"Team Comtress"} />
   </Body>
 </Layout>
