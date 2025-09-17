@@ -12,6 +12,7 @@ import lairOutsideImg from "@img/update/lairoutside.webp";
 import quicklimeImg from "@img/update/quicklime.webp";
 import Layout from "@layouts/Layout.astro";
 import { Content as GameplayBlock } from "@posts/data/blockbuster-gameplay.mdx";
+import { Content as PerfBlock } from "@posts/data/blockbuster-perf.mdx";
 ---
 
 <style>
@@ -211,18 +212,9 @@ import { Content as GameplayBlock } from "@posts/data/blockbuster-gameplay.mdx";
         is just the beginning of a much smoother experience.
       </p>
       <hr />
-      <ul class="text-start lead">
-        <li>Improved cases of overhead with econ and cosmetics on gameplay.</li>
-        <li>Optimized various aspects of the animation system.</li>
-        <li>
-          Fixed cases of stutters encountered when moving between different
-          sections of the map.
-        </li>
-        <li>Greatly improved game startup and map load time.</li>
-        <li>Added options to reduce bullet impact effects.</li>
-        <li>Fixed performance issues with ragdolls.</li>
-        <li>Many other minor performance and stability improvements.</li>
-      </ul>
+      <div class="text-start">
+        <PerfBlock />
+      </div>
     </section>
     <section
       class="jumbotron jumbotron-fluid"
@@ -242,7 +234,7 @@ import { Content as GameplayBlock } from "@posts/data/blockbuster-gameplay.mdx";
         and fixes to the game based on what we've heard.
       </p>
       <hr />
-      <div class="text-start change-block">
+      <div class="text-start">
         <GameplayBlock />
       </div>
     </section>
