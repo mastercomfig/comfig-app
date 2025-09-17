@@ -1,4 +1,5 @@
 ---
+import AdvRedirector from "@components/AdvRedirector.astro";
 import Body from "@components/Body.astro";
 import Footer from "@components/Footer.astro";
 import BaseHead from "@components/head/BaseHead.astro";
@@ -32,6 +33,7 @@ const patches = (await getCollection("tc2Patches"))
     />
   </head>
   <Body>
+    <AdvRedirector />
     <div class="text-center p-4">
       <a href="/">
         <img
