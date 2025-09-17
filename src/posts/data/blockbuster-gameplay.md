@@ -206,6 +206,7 @@
 ### Gas Passer
 
 * Fixed Gas Passer not extinguishing teammates on direct hit
+  * Developer Note: the Gas Passer can already extinguish teammates, this just adds a quality of life feature which the Jarate and Mad Milk have, which allows direct hitting teammates who are burning, so you can extinguish them more easily.
 
 ## Demoman
 
