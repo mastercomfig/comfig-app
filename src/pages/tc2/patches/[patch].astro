@@ -25,11 +25,24 @@ const { post } = Astro.props;
 
 const postParts = post.id.split("-");
 
+const postDate = post.data.date.toLocaleDateString("en-US", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+  timeZone: "UTC",
+});
+
 let postTitle;
 if (postParts.length === 3) {
-  postTitle = post.id;
+  postTitle = postDate;
 } else {
-  postTitle = postParts.slice(0, 3).join("-") + " " + postParts.slice(3).map((str) => str.charAt(0).toUpperCase() + str.slice(1)).join(" ");
+  postTitle =
+    postDate +
+    " " +
+    postParts
+      .slice(3)
+      .map((str) => str.charAt(0).toUpperCase() + str.slice(1))
+      .join(" ");
 }
 
 const { Content } = await render(post);

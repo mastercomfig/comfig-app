@@ -47,9 +47,11 @@ const patches = (await getCollection("tc2Patches"))
         {
           patches.map((post) => (
             <div class="card m-3 col-3">
-              <div class="card-body p-4">
-                <h5 class="card-title m-0">
-                  <a href={`/patches/${post.id}`}>{post.id.split("-").slice(0, 3).join("-")} Beta</a>
+              <div class="card-body">
+                <h5 class="card-title m-0 text-center">
+                  <a class="stretched-link" href={`/patches/${post.id}`}>
+                    {post.id.split("-").slice(0, 3).join("-")} Beta
+                  </a>
                 </h5>
               </div>
             </div>

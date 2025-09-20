@@ -47,10 +47,10 @@ const patches = (await getCollection("tc2Patches"))
 
     <section class="container p-4 bg-dark mb-4">
       <h1 id="news">All News</h1>
-      <div class="row g-4 mt-1">
+      <div class="row mt-1">
         {
           news.map((post) => (
-            <div class="card m-3 col-4">
+            <div class="card me-3 col-4">
               <div class="card-body">
                 <h5 class="card-title" style="color: #fff;font-weight: 600">
                   {post.data.title}
@@ -60,6 +60,7 @@ const patches = (await getCollection("tc2Patches"))
                   <br />
                   <small class="text-muted">
                     <a
+                      class="stretched-link"
                       href={
                         post.data.update
                           ? `/updates/${post.data.update}`
@@ -71,9 +72,14 @@ const patches = (await getCollection("tc2Patches"))
                   </small>
                 </p>
               </div>
-              <div class="card-footer">
+              <div class="card-footer mb-2">
                 <small class="text-muted">
-                  {post.data.date.toLocaleDateString()}
+                  {post.data.date.toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                    timeZone: "UTC",
+                  })}
                 </small>
               </div>
             </div>
@@ -82,20 +88,33 @@ const patches = (await getCollection("tc2Patches"))
       </div>
       <hr />
       <h1 id="patches">All Patches</h1>
-      <div class="row g-4 mt-1">
+      <div class="row g-2 mt-1">
         {
           patches.map((post) => (
-            <div class="card m-3 col-3">
-              <div class="card-body p-4">
-                <h5 class="card-title m-0">
-                  <a href={`/patches/${post.id}`}>{post.id}</a>
-                </h5>
+            <div class="col-3 pe-1">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title m-0 text-center">
+                    <a class="stretched-link" href={`/patches/${post.id}`}>
+                      {post.data.date.toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                        timeZone: "UTC",
+                      })}
+                    </a>
+                  </h5>
+                </div>
               </div>
             </div>
           ))
         }
       </div>
-      <p>Looking for beta patch notes? Check out the <a href="/beta_patches">beta test patch list</a>.</p>
+      <p class="mt-4">
+        Looking for beta patch notes? Check out the <a href="/beta_patches"
+          >beta test patch list</a
+        >.
+      </p>
     </section>
     <Footer product={"Team Comtress"} />
   </Body>
