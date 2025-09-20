@@ -33,6 +33,9 @@ import { Content as PerfBlock } from "@posts/data/blockbuster-perf.mdx";
     border: 5px solid white;
     box-shadow: 0 0 60px 10px #000;
   }
+  .tiny-credits small {
+    font-size: 0.3rem;
+  }
   @media only screen and (min-width: 976px) {
     .movie-poster {
       aspect-ratio: 2 / 3;
@@ -141,8 +144,8 @@ import { Content as PerfBlock } from "@posts/data/blockbuster-perf.mdx";
     <AdvRedirector />
     <div style=`background: url(${curtainImg.src});background-size: cover`>
       <div
-        class="w-100 h-100 pb-3"
-        style="backdrop-filter: blur(40px) hue-rotate(340deg);"
+        class="w-100 h-100"
+        style="backdrop-filter: blur(40px) hue-rotate(340deg);padding-bottom:2.5rem"
       >
         <section
           class="movie-poster p-0"
@@ -201,6 +204,17 @@ import { Content as PerfBlock } from "@posts/data/blockbuster-perf.mdx";
                 |&gt;&gt;&nbsp;<a style="font-weight: 600" href="#qol"
                   >QUALITY&nbsp;OF&nbsp;LIFE</a
                 >&nbsp;&lt;&lt;|
+              </p>
+              <p
+                class="tiny-credits"
+                style="color: #ccc47d;font-weight: 300;letter-spacing: 0.1rem;font-size: 0.4rem"
+              >
+                COPYRIGHT <small>LOLOLOL</small> MASTERCOMS <small
+                  >PRESENTS A</small
+                > MASTERCOMFIG <small>PRODUCTION </small>
+                <small>IN ASSOCIATION WITH</small> MASTERCOMS
+                <small>PRODUCED BY</small> MASTERCOMS <small>DIRECTED BY</small>
+                MASTERCOMS <small>THIS UPDATE IS SO COOL!</small>
               </p>
             </div>
           </div>
