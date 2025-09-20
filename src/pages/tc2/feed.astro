@@ -16,7 +16,7 @@ const news = (await getCollection("tc2News"))
 
 const patches = (await getCollection("tc2Patches"))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-  .filter((post) => !post.data.draft);
+  .filter((post) => !post.data.draft && !post.id.endsWith("beta"));
 ---
 
 <Layout>
@@ -95,6 +95,7 @@ const patches = (await getCollection("tc2Patches"))
           ))
         }
       </div>
+      <p>Looking for beta patch notes? Check out the <a href="/beta_patches">beta test patch list</a>.</p>
     </section>
     <Footer product={"Team Comtress"} />
   </Body>

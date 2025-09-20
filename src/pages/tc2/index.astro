@@ -19,7 +19,7 @@ const news = (await getCollection("tc2News"))
 
 const patches = (await getCollection("tc2Patches"))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-  .filter((post) => !post.data.draft)
+  .filter((post) => !post.data.draft && !post.id.endsWith("beta"))
   .slice(0, 3);
 ---
 

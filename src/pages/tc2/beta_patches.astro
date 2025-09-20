@@ -8,31 +8,11 @@ import MainHead from "@components/head/MainHead.astro";
 import PreloadHead from "@components/head/PreloadHead.astro";
 import tfLogoImg from "@img/tc2/team-comtress-2.png";
 import Layout from "@layouts/Layout.astro";
-import { getCollection, render } from "astro:content";
+import { getCollection } from "astro:content";
 
-export async function getStaticPaths() {
-  const patches = (await getCollection("tc2Patches")).filter(
-    (post) => !post.data.draft,
-  );
-  return patches.map((post) => ({
-    params: {
-      patch: post.id,
-    },
-    props: { post },
-  }));
-}
-const { post } = Astro.props;
-
-const postParts = post.id.split("-");
-
-let postTitle;
-if (postParts.length === 3) {
-  postTitle = post.id;
-} else {
-  postTitle = postParts.slice(0, 3).join("-") + " " + postParts.slice(3).map((str) => str.charAt(0).toUpperCase() + str.slice(1)).join(" ");
-}
-
-const { Content } = await render(post);
+const patches = (await getCollection("tc2Patches"))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .filter((post) => !post.data.draft && post.id.endsWith("beta"));
 ---
 
 <Layout>
@@ -41,10 +21,10 @@ const { Content } = await render(post);
     <PreloadHead />
     <ImportHead />
     <MainHead
-      title=`${postTitle} Update | Team Comtress 2`
+      title=`Beta Test Patches | Team Comtress 2`
       site="Team Comtress"
       noSite={true}
-      description=`Team Comtress 2 Update - ${postTitle}`
+      description="Latest news and updates for Team Comtress 2 Beta testing"
       image="https://teamcomtress.com/img/tc2/team-comtress-2.png"
       favicon="/img/tc2/favicon.ico"
     />
@@ -62,8 +42,20 @@ const { Content } = await render(post);
     </div>
 
     <section class="container p-4 bg-dark mb-4">
-      <h1>Team Comtress 2 Update - {postTitle}</h1>
-      <Content />
+      <h1 id="patches">All Beta Test Patches</h1>
+      <div class="row g-4 mt-1">
+        {
+          patches.map((post) => (
+            <div class="card m-3 col-3">
+              <div class="card-body p-4">
+                <h5 class="card-title m-0">
+                  <a href={`/patches/${post.id}`}>{post.id.split("-").slice(0, 3).join("-")} Beta</a>
+                </h5>
+              </div>
+            </div>
+          ))
+        }
+      </div>
     </section>
     <Footer product={"Team Comtress"} />
   </Body>
