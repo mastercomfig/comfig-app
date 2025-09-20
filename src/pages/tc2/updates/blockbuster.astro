@@ -6,12 +6,14 @@ import BaseHead from "@components/head/BaseHead.astro";
 import ImportHead from "@components/head/ImportHead.astro";
 import MainHead from "@components/head/MainHead.astro";
 import PreloadHead from "@components/head/PreloadHead.astro";
+import curtainImg from "@img/stuff/curtain.jpg";
 import tfLogoImg from "@img/tc2/team-comtress-2.png";
 import lairImg from "@img/update/lair.webp";
 import lairOutsideImg from "@img/update/lairoutside.webp";
 import quicklimeImg from "@img/update/quicklime.webp";
 import Layout from "@layouts/Layout.astro";
 import { Content as GameplayBlock } from "@posts/data/blockbuster-gameplay.mdx";
+import { Content as OtherBlock } from "@posts/data/blockbuster-other.mdx";
 import { Content as PerfBlock } from "@posts/data/blockbuster-perf.mdx";
 ---
 
@@ -24,6 +26,22 @@ import { Content as PerfBlock } from "@posts/data/blockbuster-perf.mdx";
   }
   .btn-xl {
     font-size: 1.7rem;
+  }
+  .movie-poster {
+    height: 100vh;
+    margin: auto;
+    border: 5px solid white;
+    box-shadow: 0 0 60px 10px #000;
+  }
+  @media only screen and (min-width: 976px) {
+    .movie-poster {
+      aspect-ratio: 2 / 3;
+    }
+  }
+  @media only screen and (max-width: 575px) {
+    .movie-poster {
+      aspect-ratio: 3 / 4;
+    }
   }
   @font-face {
     font-family: "Monoton";
@@ -121,65 +139,74 @@ import { Content as PerfBlock } from "@posts/data/blockbuster-perf.mdx";
   </head>
   <Body>
     <AdvRedirector />
-    <section
-      class="container p-0"
-      style=`background: linear-gradient(rgba(38, 50, 56, 0.7) 10%, rgba(38, 50, 56, 0.7)),url(${lairOutsideImg.src});background-size: cover; background-position: center;background-position: center`
-    >
+    <div style=`background: url(${curtainImg.src});background-size: cover`>
       <div
-        class="d-flex flex-column align-items-center justify-content-between text-center p-4"
-        style="min-height: 100vh"
+        class="w-100 h-100 pb-3"
+        style="backdrop-filter: blur(40px) hue-rotate(340deg);"
       >
-        <div>
-          <a href="/">
-            <img
-              class="img-logo-sm"
-              src={tfLogoImg.src}
-              alt="Team Comtress 2 logo"
-            />
-          </a>
-          <h1
-            class="display-5 mt-5"
-            style="letter-spacing: 0.2rem;font-weight: 600"
+        <section
+          class="movie-poster p-0"
+          style=`background: linear-gradient(rgba(38, 50, 56, 0.7) 10%, rgba(38, 50, 56, 0.7)),url(${lairOutsideImg.src});background-size: cover; background-position: center;background-position: center`
+        >
+          <div
+            class="d-flex flex-column align-items-center justify-content-between text-center p-4"
+            style="min-height: 100vh"
           >
-            THIS SUMMER...
-          </h1>
-        </div>
-        <div style="margin-top: -4rem">
-          <h1
-            class="display-1"
-            style="letter-spacing: 0.2rem;font-weight: 600;color: #fcf195;text-shadow: 1px 1px 2px #e60073"
-          >
-            THE
-          </h1>
-          <h1
-            class="display-1 glow"
-            style="letter-spacing: 0.2rem;font-weight: 600;font-size: 8rem;color: #fcf195"
-          >
-            BLOCK<wbr />BUSTER
-          </h1>
-          <h1
-            class="display-1"
-            style="letter-spacing: 0.2rem;font-weight: 600;font-size:6rem;color: #fcf195;text-shadow: 1px 1px 2px #ff00dd"
-          >
-            UPDATE
-          </h1>
-        </div>
-        <div>
-          <p
-            class="display-6 header-links m-0 mb-2"
-            style="color: #ccc47d;font-weight: 100;letter-spacing: 0.3rem"
-          >
-            |
-            <a style="font-weight: 600" href="#performance">PERFORMANCE</a>
-            |
-            <a style="font-weight: 600" href="#gameplay">GAMEPLAY</a>
-            |
-            <a style="font-weight: 600" href="#qol">QUALITY OF LIFE</a>
-            |
-          </p>
-        </div>
+            <div>
+              <a href="/">
+                <img
+                  class="img-logo-sm"
+                  src={tfLogoImg.src}
+                  alt="Team Comtress 2 logo"
+                />
+              </a>
+              <h1
+                class="display-5 mt-5"
+                style="letter-spacing: 0.2rem;font-weight: 600"
+              >
+                THIS SUMMER...
+              </h1>
+            </div>
+            <div style="margin-top: -4rem">
+              <h1
+                class="display-1"
+                style="letter-spacing: 0.2rem;font-weight: 600;color: #fcf195;text-shadow: 1px 1px 2px #e60073"
+              >
+                THE
+              </h1>
+              <h1
+                class="display-1 glow"
+                style="letter-spacing: 0.2rem;font-weight: 600;font-size: 8rem;color: #fcf195"
+              >
+                BLOCK<wbr />BUSTER
+              </h1>
+              <h1
+                class="display-1"
+                style="letter-spacing: 0.2rem;font-weight: 600;font-size:6rem;color: #fcf195;text-shadow: 1px 1px 2px #ff00dd"
+              >
+                UPDATE
+              </h1>
+            </div>
+            <div>
+              <p
+                class="display-6 header-links m-0 mb-2"
+                style="color: #ccc47d;font-weight: 100;letter-spacing: 0.3rem;font-size: 2rem"
+              >
+                |&gt;&gt;&nbsp;<a style="font-weight: 600" href="#performance"
+                  >PERFORMANCE</a
+                >&nbsp;&lt;&lt;|<br />
+                |&gt;&gt;&nbsp;<a style="font-weight: 600" href="#gameplay"
+                  >GAMEPLAY</a
+                >&nbsp;&lt;&lt;|<br />
+                |&gt;&gt;&nbsp;<a style="font-weight: 600" href="#qol"
+                  >QUALITY&nbsp;OF&nbsp;LIFE</a
+                >&nbsp;&lt;&lt;|
+              </p>
+            </div>
+          </div>
+        </section>
       </div>
-    </section>
+    </div>
     <section class="text-center" style="background: rgb(255 255 255 / 5%)">
       <h1 style="font-size: 2rem">
         Summer is here, and with it, a blockbuster hit for Team Comtress 2's
@@ -257,175 +284,7 @@ import { Content as PerfBlock } from "@posts/data/blockbuster-perf.mdx";
       </p>
       <hr />
       <div class="text-start">
-        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
-          VISUAL
-        </h2>
-        <ul class="lead">
-          <li>Updated the default FOV to 90.</li>
-          <li>
-            Removed distance fade for high quality water. See 2Fort's water in
-            all its glory from the battlements!
-          </li>
-          <li>
-            Added ConVar tf_viewmodels_offset_override to adjust the position
-            (within limits!) of your viewmodel on screen beyond the min
-            viewmodels presets.
-          </li>
-          <li>Fixed camera roll getting stuck when observing.</li>
-          <li>Fixed jittering when spectating ragdolls. (thanks ficool2!)</li>
-          <li>Fixed ragdoll velocity being reset. (thanks ficool2!)</li>
-          <li>
-            Networked and predicted gravity on entities. (thanks ficool2!)
-          </li>
-          <li>Fixed viewpunch not being interpolated. (thanks ficool2!)</li>
-          <li>
-            Fixed attachments on viewmodels being inverted on flipped
-            viewmodels. (thanks marxvee!)
-          </li>
-        </ul>
-        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">HUD</h2>
-        <ul class="lead">
-          <li>
-            Showcase your bling with the new live character model on the main
-            menu!
-          </li>
-          <li>Fixed various issues in class selection:</li>
-          <ul>
-            <li>Class selection animations now play instantly and smoothly</li>
-            <li>
-              Facial expressions now start from neutral, rather than from open
-              mouth, on class selection animations
-            </li>
-            <li>
-              Character model lighting revamped to better showcase the classes
-            </li>
-            <li>
-              Various foley sounds now play for the class selection animations
-            </li>
-          </ul>
-          <li>
-            Removed the new player prompt regarding the performance of the 3D
-            model in the HUD, as it has been optimized.
-          </li>
-          <li>
-            Fixed voice labels being shown on enemy Spies. (thanks ficool2!)
-          </li>
-          <li>Fixed match HUD being disabled incorrectly. (thanks ficool2!)</li>
-          <li>
-            Improved resolution scaling on the bonus overheal health icon.
-            (thanks Niterux!)
-          </li>
-          <li>
-            Added improved messaging surround class changes / loadout changes
-            outside of a respawn room
-          </li>
-          <li>Disabled auto-kill upon class change by default</li>
-          <li>Improved the efficiency of loadout changes</li>
-        </ul>
-        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
-          DAMAGE FEEDBACK
-        </h2>
-        <ul class="lead">
-          <li>Enabled hitsounds and killsounds by default.</li>
-          <li>Enabled damage numbers now combine by default.</li>
-          <li>Damage number combining now also can show individual numbers.</li>
-          <li>
-            Improved damage number style for readability and feedback during
-            gameplay.
-          </li>
-          <li>Changed hitsound defaults to be more responsive for gameplay.</li>
-          <li>Damage numbers and hitsounds now play even when dead.</li>
-          <li>Improved damage hit feedback for bullets.</li>
-          <li>
-            As a Medic, hitsounds and killsounds will be replicated from your
-            heal target.
-          </li>
-        </ul>
-        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
-          NETWORKING
-        </h2>
-        <ul class="lead">
-          <li>
-            Upgraded the networking rates to be in sync with game update rates.
-          </li>
-          <li>Changed tickrate from 66 to 64 to fix alignment issues.</li>
-          <li>Updated the client interp limit to 200ms instead of 500ms.</li>
-          <li>
-            Fixed a server networking protection system causing worse than
-            expected packet loss on unreliable connections.
-          </li>
-          <li>
-            Fixed cases where prediction could be out of date from server data.
-          </li>
-          <li>Decreased the lag compensation window from 1 second to 600ms.</li>
-        </ul>
-        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
-          DEMOS
-        </h2>
-        <ul class="lead">
-          <li>
-            Fixed Demo Support automatically recording Casual matches when
-            selecting Competitive matches.
-          </li>
-          <li>Fixed Demo Support not being able to log every kill.</li>
-          <li>Fixed Demo Support recording pre and post-game by default.</li>
-          <li>
-            Servers are informed when a client stops recording a demo, just like
-            they were informed when a client starts recording.
-          </li>
-        </ul>
-        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
-          GENERAL
-        </h2>
-        <ul class="lead">
-          <li>Various settings were updated to popular modern defaults.</li>
-          <li>
-            Fixed a gameplay information exploit related to an old LCD keyboard
-            system.
-          </li>
-          <li>Fixed accuracy of reported ping throughout the UI</li>
-          <li>
-            Fixed a gameplay information exploit related to VGUI commands.
-          </li>
-          <li>
-            Fixed some sounds unintentionally having no cooldown between plays.
-          </li>
-          <li>Fixed Noisemakers being able to be spammed.</li>
-          <li>
-            cl_disablehtmlmotd is no longer queryable by servers. (thanks
-            megascatterbomb!)
-          </li>
-          <li>
-            Added tf_dingaling_lasthit_repeat_delay to prevent playback of
-            duplicate sounds when killing multiple players at once.
-          </li>
-          <li>
-            Added a ConVar tf_skip_equip_action_hint to disable reminders to
-            equip the relevant action item.
-          </li>
-          <li>env_smokestack map entity now supports up to 8 materials</li>
-        </ul>
-        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
-          MODDING
-        </h2>
-        <ul class="lead">
-          <li>
-            Added an ability for VScript mods to ignore class achievements and
-            quests. (thanks LizardOfOz!)
-          </li>
-        </ul>
-        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
-          STABILITY
-        </h2>
-        <ul class="lead">
-          <li>Fixed crashes on maps with large lightmaps.</li>
-          <li>Fixed a crash when there are no observable entities.</li>
-          <li>
-            Fixed a crash related to a TF damage filter and PASS Time ball when
-            it hasn't been thrown yet.
-          </li>
-          <li>Fixed many desync issues and exploits.</li>
-        </ul>
+        <OtherBlock />
       </div>
     </section>
     <Footer product={"Team Comtress"} />

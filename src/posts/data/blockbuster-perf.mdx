@@ -22,7 +22,9 @@ import BlockbusterBlock from "@components/tc2/BlockbusterBlock.astro";
 * Fixed cheap water being forced off in some situations
 * Fixed class select model lingering while in-game in some cases
 * Added r_waterforcecheap to lower quality of the water on lower-end systems
+* Added tf_dropped_weapon_glows to disable dropped weapon glows on lower-end systems
 * Ported over various quality settings from DX8 to DX9, controlled by Shader Quality: Low setting
+* DirectX 9 is now required
 * Optimized water splashes on lower-end systems
 * Optimized file system loading
 * Optimized occlusion system
@@ -31,5 +33,9 @@ import BlockbusterBlock from "@components/tc2/BlockbusterBlock.astro";
 * Reduced the performance impact on weapon drops on lower-end systems
 * The game now launches with above normal priority by default
 * Optimized item schema loading (thanks ficool2!)
+* Fixed FPS drops when loading/updating the friends panel
+* Fixed overhead from achievement tracker HUD when it was disabled
+* Optimized facial expressions and gestures
+* Server MOTD will now be unloaded upon closing
 * Various minor performance and stability fixes
 </BlockbusterBlock>

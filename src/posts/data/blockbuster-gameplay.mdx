@@ -7,9 +7,9 @@ import BlockbusterBlock from "@components/tc2/BlockbusterBlock.astro";
 
 ### Random Crits
 
-* Fixed melee random critical hits damage range boost being 0->533 damage for 15%->60% chance instead of 0->1600 damage.
+* Fixed melee random critical hits damage range boost being 0->533 damage for 15%->60% chance instead of 0->1600 damage for 15%->60% chance.
 * Fixed random critical hits damage range boost being 0->533 damage for 2%->8% chance instead of 0->800 damage for 2%->12% chance.
-* _Developer Note:_ When random crit chance was changed in 2009, the intention was to make random critical hits more skill / performance based for non-melee random crits. Thus, the values for crit chance and crit chance boost were changed. However, due to crit chance being shared between melee and non-melee, melee random crit chance was affected, keeping the chance boost based on damage the same, but more than halving the damage required to gain the max boost. This runs counter to the stated intention: less skill / performance is needed for the same high crit chance. Furthermore, due to how the chance boosts were applied, non-melee only got a max 8% chance based upon 533 damage, rather than the stated 12% chance from 800 damage, reducing the peak reward from your performance. These fixes now separate melee crit chance boost from non-melee, thus allowing melee to retain its 4x boost from 1600 damage, while non-melee now has a 6x boost from 800 damage.
+* _Developer Note:_ When random crit chance was [changed in 2009](https://www.teamfortress.com/post.php?id=2221), the intention was to make random critical hits more skill / performance based for non-melee random crits. Thus, the values for crit chance and crit chance boost were changed. However, due to crit chance being shared between melee and non-melee, melee random crit chance was affected, keeping the chance boost based on damage the same, but more than halving the damage required to gain the max boost. This runs counter to the stated intention: less skill / performance is needed for the same high crit chance. Furthermore, due to how the chance boosts were applied, non-melee only got a max 8% chance based upon 533 damage, rather than the stated 12% chance from 800 damage, reducing the peak reward from your performance. These fixes now separate melee crit chance boost from non-melee, thus allowing melee to retain its 4x boost from 1600 damage, while non-melee now has a 6x boost from 800 damage.
 
 ### Bullet Spread
 
@@ -85,15 +85,8 @@ import BlockbusterBlock from "@components/tc2/BlockbusterBlock.astro";
   * This will also allow for more structured respawn time determinations, rather than just a simple proportion of players on a team
 * Improved flexibility of class limit ConVars for greater flexibility
   * classlimits tag will apply to any server customizing class limits
-
-### Matchmaking
-
-* Added Casual MVP screen
-* Re-enabled stopwatch for Casual
-* Changed Casual from a best of 3 to a best of 5
-  * This helps with game restart fatigue in matchmaking
-* Enabled map voting during play rather than at the end of a match
-* Increased draw time from 4.5 seconds to 5 seconds
+* Match Status HUD is now ordered by class in competitive games
+* Fixed Match Status HUD not using proper team size display in 6s games for community competitive
 
 ### Explosives
 
@@ -142,14 +135,14 @@ import BlockbusterBlock from "@components/tc2/BlockbusterBlock.astro";
 * Fixed slow not applying movement speed penalty correctly
 * Fixed slow not applying at close ranges
 * Fixed slow not applying underwater
-* Fixed baseballs disappearing prematurely
+* Fixed baseballs disappearing prematurely (thanks Marxvee!)
 * Fixed baseballs computing random critical hits incorrectly
 
 ### Wrap Assassin
 
 * Fixed bauble shard explosion dealing between 3 to 36 splash damage. Now deals a consistent 6 damage to everyone in range.
 * Fixed baubles computing random critical hits incorrectly
-* Fixed bauble projectile trail abruptly ending on impact
+* Fixed bauble projectile trail abruptly ending on impact (thanks Marxvee!)
 * Fixed baubles exploding in your face if a teammate was in the way. Ouch!
 
 ### Candy Cane
@@ -159,6 +152,8 @@ import BlockbusterBlock from "@components/tc2/BlockbusterBlock.astro";
 ---
 
 ## Soldier
+
+### Grenade Taunt
 
 * Made the Soldier Grenade taunt follow the same splash damage rules as other explosions
 * Fixed the Soldier Grenade taunt damage passing through walls
@@ -176,9 +171,11 @@ import BlockbusterBlock from "@components/tc2/BlockbusterBlock.astro";
 * Fixed issues with flamethrower DPS
   * Reworked flame density mechanic which appromixated accuracy into being aware of accuracy thresholds of the Flamethrower
   * New strategy is to simply track missed flames in between flame damage checks, reducing damage based upon the missed fraction, which provides a provides a smoother ramp between actually missing flame damage checks, and only missing some particles in between
-  * Initial flame damage is set to full DPS again, and decays upon missing, but can quickly be regained upon maintain accuracy
+  * Initial flame damage ramps up full DPS slightly faster, and decays upon missing, but can quickly be regained upon maintaining accuracy
   * The lifetime of the oldest flames no longer adversely effect DPS
   * DPS is consistent and correct regardless of range or wall reflection
+* Changed the particles to be clearer
+  * Included from the Ultimate TF2 Visual Fix Pack
 
 ### Compression Blast
 
@@ -213,10 +210,12 @@ import BlockbusterBlock from "@components/tc2/BlockbusterBlock.astro";
   * _Developer Note:_ The Dragon's Fury range is not like most weapons. It has a physics based projectile which tries to stop itself before overextending its range, but due to this and the larger projectile radius, it was changed to have a smaller radius to prevent issues with the front of the fireball touching players way past its range. Now, the fireball is hard limited to only affect players it hits if they were actually within the distance range, rather than if they simply touched the fireball at any distance. Thus, we have restored the original radius, making the fireball more intuitive and less awkward to aim, while fixing unfair cases of hits.
 * Projectile now fires from the center, down the crosshair
   * The damage bonus on an accurate shot at burning players was very awkward and hard to achieve with a misaligned projectile
+* Changed the projectile to be clearer and less performance intensive
+  * Included from the Ultimate TF2 Visual Fix Pack
 
 ### Gas Passer
 
-* Fixed Gas Passer not extinguishing teammates on direct hit
+* Fixed Gas Passer not extinguishing teammates on direct hit (thanks Marxvee!)
   * _Developer Note:_ the Gas Passer can already extinguish teammates, this just adds a quality of life feature which the Jarate and Mad Milk have, which allows direct hitting teammates who are burning, so you can extinguish them more easily.
 
 ---
@@ -243,6 +242,10 @@ import BlockbusterBlock from "@components/tc2/BlockbusterBlock.astro";
 
 * Fixed slow not applying movement speed penalty correctly
 
+### Buffalo Steak Sandvich
+
+* Move speed bonus now only applies up to 30% base speed, rather than capping move speed to that amount
+
 ### Holiday Punch
 
 * Enhanced hit from behind detection on the Holiday Punch
@@ -250,7 +253,7 @@ import BlockbusterBlock from "@components/tc2/BlockbusterBlock.astro";
 ### Fists of Steel
 
 * Fixed holster speed penalty being bypassable, such as when switching through multiple weapons
-* Fixed UberCharge rate being higher than intended due to max overheal penalty
+* Fixed Übercharge rate being higher than intended due to max overheal penalty
 
 ---
 
@@ -259,6 +262,10 @@ import BlockbusterBlock from "@components/tc2/BlockbusterBlock.astro";
 ### Short Circuit
 
 * Fixed the Short Circuit applying self-damage inconsistently
+
+### Wrangler
+
+* Fixed rocket fire animation not playing when using the Wrangler (thanks horiuchii!)
 
 ### All Wrenches
 
@@ -337,6 +344,8 @@ import BlockbusterBlock from "@components/tc2/BlockbusterBlock.astro";
 
 ## Spy
 
+### General
+
 * Fixed inaccuracies with backstab detection, making it less dependent on latency.
 * Removed cases of facestabs, on both the Spy's and victim's point of view.
 * Dynamic crosshair scale based on accuracy now shows for all revolvers rather than just the Ambassador
@@ -375,7 +384,7 @@ import BlockbusterBlock from "@components/tc2/BlockbusterBlock.astro";
 * Fixed bots not using explosive weapons if enemies were too close to them and it was safe to take self-damage
 * Added bot_explode command, exploding them into gibs
 * Added the tf_bot_random_items ConVar, which, when set, equips random items on bots
-* Players replacing bots in quota mode now respects bots with an active role on the team: for example Medics with UberCharge building, or Engineers with buildings, and will prefer not to kick them
+* Players replacing bots in quota mode now respects bots with an active role on the team: for example Medics with Übercharge building, or Engineers with buildings, and will prefer not to kick them
 * Bots now use a competitive roster in community competitive games
 * Bots no longer taunt in competitive games
 
@@ -383,7 +392,7 @@ import BlockbusterBlock from "@components/tc2/BlockbusterBlock.astro";
 
 ## Halloween
 
-* Fixed Mirvbomb spell not falling splash damage falloff rules of other explosions.
+* Fixed Pumpkin MIRV spell not following splash damage falloff rules of other explosions.
 
 ---
 

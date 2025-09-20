@@ -46,3 +46,7 @@ All commands are run from the root of the project, from a terminal:
 ## Want to learn more?
 
 Feel free to check the [Astro documentation](https://docs.astro.build/en/getting-started/).
+
+## Credits
+
+* Curtain background by simplu27 (pixabay.com)
