@@ -47,10 +47,10 @@ const patches = (await getCollection("tc2Patches"))
 
     <section class="container p-4 bg-dark mb-4">
       <h1 id="news">All News</h1>
-      <div class="row mt-1">
+      <div class="row gy-4 gx-0 ms-0">
         {
           news.map((post) => (
-            <div class="card me-3 col-4">
+            <div class="card me-4 col-5">
               <div class="card-body">
                 <h5 class="card-title" style="color: #fff;font-weight: 600">
                   {post.data.title}
