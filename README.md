@@ -50,3 +50,4 @@ Feel free to check the [Astro documentation](https://docs.astro.build/en/getting
 ## Credits
 
 * Curtain background by simplu27 (pixabay.com)
+* [Hologram Globe](https://tf2maps.net/downloads/hologram-globe.15718/) by The Tiny Desk Engineer

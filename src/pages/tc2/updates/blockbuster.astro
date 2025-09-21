@@ -7,6 +7,17 @@ import ImportHead from "@components/head/ImportHead.astro";
 import MainHead from "@components/head/MainHead.astro";
 import PreloadHead from "@components/head/PreloadHead.astro";
 import curtainImg from "@img/stuff/curtain.jpg";
+import mainmenuMedicImg from "@img/tc2/blockbuster/Main_menu_medic.png";
+import mainmenuPyroImg from "@img/tc2/blockbuster/Main_menu_pyro.png";
+import mainmenuSpyImg from "@img/tc2/blockbuster/Main_menu_spy.png";
+import combattextImg from "@img/tc2/blockbuster/combattext.png";
+import engineerpdaImg from "@img/tc2/blockbuster/engineerpda.png";
+import fovImg from "@img/tc2/blockbuster/fov.png";
+import hologlobeImg from "@img/tc2/blockbuster/hologlobe_neutral.png";
+import matchhudImg from "@img/tc2/blockbuster/matchhud.png";
+import mvpImg from "@img/tc2/blockbuster/mvp.png";
+import reloadImg from "@img/tc2/blockbuster/resupply.png";
+import viewmodelImg from "@img/tc2/blockbuster/viewmodel.png";
 import tfLogoImg from "@img/tc2/team-comtress-2.png";
 import lairImg from "@img/update/lair.webp";
 import lairOutsideImg from "@img/update/lairoutside.webp";
@@ -15,6 +26,7 @@ import Layout from "@layouts/Layout.astro";
 import { Content as GameplayBlock } from "@posts/data/blockbuster-gameplay.mdx";
 import { Content as OtherBlock } from "@posts/data/blockbuster-other.mdx";
 import { Content as PerfBlock } from "@posts/data/blockbuster-perf.mdx";
+import { Image } from "astro:assets";
 ---
 
 <style>
@@ -241,6 +253,8 @@ import { Content as PerfBlock } from "@posts/data/blockbuster-perf.mdx";
       </h2>
     </section>
     <section class="text-center container" id="performance">
+      <Image src={engineerpdaImg} style="height: 20rem;width: auto" alt="" />
+      <hr class="mt-0" style="color: #000" />
       <h2
         class="display-2"
         style="color: #fcf195; font-weight: 700; letter-spacing: 0.2rem"
@@ -274,6 +288,58 @@ import { Content as PerfBlock } from "@posts/data/blockbuster-perf.mdx";
         and fixes to the game based on what we've heard.
       </p>
       <hr />
+      <h2 class="display-3">HIGHLIGHTS</h2>
+      <div class="row">
+        <div class="col">
+          <Image
+            src={mainmenuPyroImg}
+            class="img-fluid"
+            style="height: 40rem;width: auto"
+            alt=""
+          />
+          <hr class="mt-0" style="color: #000" />
+          <h2 class="display-4">PYRO</h2>
+          <p class="lead">
+            Our silly pyromaniac friend had more things wrong with them than
+            right. We've fixed all that &mdash; well, besides their craziness.
+          </p>
+        </div>
+        <div class="col">
+          <Image
+            src={mainmenuMedicImg}
+            class="img-fluid"
+            style="height: 40rem;width: auto"
+            alt=""
+          />
+          <hr class="mt-0" style="color: #000" />
+          <h2 class="display-4">MEDIC</h2>
+          <p class="lead">
+            Fixed all sorts of annoyances and improved healing feedback to make
+            tending to your patients more satisfying.
+          </p>
+        </div>
+        <div class="col">
+          <Image
+            src={mainmenuSpyImg}
+            class="img-fluid"
+            style="height: 40rem;width: auto"
+            alt=""
+          />
+          <hr class="mt-0" style="color: #000" />
+          <h2 class="display-4">SPY</h2>
+          <p class="lead">
+            Made backstabs much more reliable, added QoL for your pitiful
+            revolver aim, and fixed a critical Enforcer bug.
+          </p>
+        </div>
+      </div>
+      <p class="lead" style="font-size: 1.6rem">
+        Attention those of you with short attention spans: the highlights don't
+        even BEGIN to cover all the changes. Maybe that's because we started
+        with Pyro instead of Scout. And also because we've made a LOT of
+        improvements.
+      </p>
+      <hr />
       <div class="text-start">
         <GameplayBlock />
       </div>
@@ -296,6 +362,105 @@ import { Content as PerfBlock } from "@posts/data/blockbuster-perf.mdx";
         things better. These are small but important fixes that should improve
         your overall experience.
       </p>
+      <hr />
+      <div class="row text-center">
+        <div class="col">
+          <Image
+            src={hologlobeImg}
+            class="p-4 rounded-5"
+            style="height: 22rem;width: auto"
+            alt=""
+          />
+          <h1 class="display-6">IMPROVED NETWORKING</h1>
+          <p class="lead">
+            We've added subtick and a bunch of other improvements to get you
+            feeling like you're on LAN.
+          </p>
+        </div>
+        <div class="col">
+          <Image
+            src={viewmodelImg}
+            class="p-4 rounded-5"
+            style="height: 22rem;width: auto"
+            alt=""
+          />
+          <h1 class="display-6">GRAPHICAL IMPROVEMENTS</h1>
+          <p class="lead">
+            Get a fresh cinematic experience with new explosion effects, weapon
+            lighting, water shading, flames, bullet effects, and more.
+          </p>
+        </div>
+      </div>
+      <div class="row text-center">
+        <div class="col">
+          <Image
+            src={combattextImg}
+            class="p-4 rounded-5"
+            style="height: 22rem;width: auto"
+            alt=""
+          />
+          <h1 class="display-6">NEW CUSTOMIZATION</h1>
+          <p class="lead">
+            Weapon config scripts, damage number improvements, and other
+            customization options will get your game just how you like it.
+          </p>
+        </div>
+        <div class="col">
+          <Image
+            src={mvpImg}
+            class="p-4 rounded-5"
+            style="height: 22rem;width: auto"
+            alt=""
+          />
+          <h1 class="display-6">CASUAL MVP</h1>
+          <p class="lead">
+            It's a race to the top! Carry your team to victory, and get the
+            center stage at the end of the match.
+          </p>
+        </div>
+      </div>
+      <div class="row text-center">
+        <div class="col">
+          <Image
+            src={reloadImg}
+            class="p-4 rounded-5"
+            style="height: 16rem;width: auto"
+            alt=""
+          />
+          <h1 class="h2">CLIP/AMMO FIXES</h1>
+          <p class="lead">
+            We fixed all sorts of weapon firing and reload issues. And yeah, we
+            fixed that stubborn 4/19 glitch on resupply too.
+          </p>
+        </div>
+        <div class="col">
+          <Image
+            src={fovImg}
+            class="p-4 rounded-5"
+            style="height: 16rem;width: auto"
+            alt=""
+          />
+          <h1 class="h2">UPDATED DEFAULTS</h1>
+          <p class="lead">
+            Get a fresh new look with 90 FOV, auto healing, injured teammate
+            callouts, and net settings made for 2025 instead of dial-up.
+          </p>
+        </div>
+        <div class="col">
+          <Image
+            src={matchhudImg}
+            class="rounded-5"
+            style="width: 100%;height: auto;padding: 5.5rem 0 5.5rem 0"
+            alt=""
+          />
+          <h1 class="h2">MATCH HUD UPDATES</h1>
+          <p class="lead">
+            See your Medic's Übercharge so you know when it's time to push, and
+            see your team's class lineup more easily in competitive mode.
+          </p>
+        </div>
+      </div>
+
       <hr />
       <div class="text-start">
         <OtherBlock />
