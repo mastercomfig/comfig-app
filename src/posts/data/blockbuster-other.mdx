@@ -155,7 +155,7 @@ import BlockbusterBlock from "@components/tc2/BlockbusterBlock.astro";
 * Updated the client interp limit to 200ms instead of 500ms
 * Changed the lag compensation window from 1 second to 500ms
 * Added subtick support to lag compensation, fixing an issue where lag compensation would not rewind exactly to the player's view
-  * Players are now lag compensated back to the frame your shot
+  * Players are now lag compensated back to the frame you shot
 * Client interp updates
   * Removed cl_interp. Now only cl_interp_ratio determines client interpolation amount to reduce confusion.
   * This effectively makes the default interpolation amount 0.03125 (down from 0.1)
