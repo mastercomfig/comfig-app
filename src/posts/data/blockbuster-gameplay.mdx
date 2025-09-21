@@ -169,8 +169,8 @@ import BlockbusterBlock from "@components/tc2/BlockbusterBlock.astro";
 ### All Flamethrowers
 
 * Fixed issues with flamethrower DPS
-  * Reworked flame density mechanic which appromixated accuracy into being aware of accuracy thresholds of the Flamethrower
-  * New strategy is to simply track missed flames in between flame damage checks, reducing damage based upon the missed fraction, which provides a provides a smoother ramp between actually missing flame damage checks, and only missing some particles in between
+  * Reworked flame density mechanic which previously approximated accuracy into being aware of accuracy thresholds of the Flamethrower
+  * New strategy is to simply track missed flames in between flame damage checks, reducing damage based upon the missed fraction, which provides a smoother ramp between actually missing flame damage checks, and only missing some particles in between
   * Initial flame damage ramps up full DPS slightly faster, and decays upon missing, but can quickly be regained upon maintaining accuracy
   * The lifetime of the oldest flames no longer adversely effect DPS
   * DPS is consistent and correct regardless of range or wall reflection
