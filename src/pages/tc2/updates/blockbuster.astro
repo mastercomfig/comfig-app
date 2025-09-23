@@ -39,14 +39,51 @@ import { Image } from "astro:assets";
   .btn-xl {
     font-size: 1.7rem;
   }
-  .movie-poster {
-    height: max(100vh, 60rem);
-    margin: auto;
-    border: 5px solid white;
-    box-shadow: 0 0 60px 10px #000;
+  .tiny-credits {
+    font-size: 0.4rem;
   }
   .tiny-credits small {
     font-size: 0.3rem;
+  }
+  @media only screen and (min-width: 576px) {
+    .blockbuster-title {
+      font-size: 8rem;
+    }
+    .update-title {
+      font-size: 6rem;
+    }
+    .header-links {
+      font-size: 2rem;
+    }
+    .movie-poster {
+      --movie-poster-height: max(100vh, 60rem);
+    }
+  }
+  @media only screen and (max-width: 575px) {
+    .blockbuster-title {
+      font-size: 4rem;
+    }
+    .update-title {
+      font-size: 3.75rem;
+    }
+    .tiny-credits {
+      font-size: 0.2rem;
+    }
+    .tiny-credits small {
+      font-size: 0.15rem;
+    }
+    .header-links {
+      font-size: 1.2rem;
+    }
+    .movie-poster {
+      --movie-poster-height: 45rem;
+    }
+  }
+  .movie-poster {
+    height: var(--movie-poster-height);
+    margin: auto;
+    border: 5px solid white;
+    box-shadow: 0 0 60px 10px #000;
   }
   @media only screen and (min-width: 976px) {
     .movie-poster {
@@ -165,7 +202,7 @@ import { Image } from "astro:assets";
         >
           <div
             class="d-flex flex-column align-items-center justify-content-between text-center p-4"
-            style="min-height: max(60rem, 100vh)"
+            style="min-height: var(--movie-poster-height)"
           >
             <div>
               <a href="/">
@@ -190,14 +227,14 @@ import { Image } from "astro:assets";
                 THE
               </h1>
               <h1
-                class="display-1 glow"
-                style="letter-spacing: 0.2rem;font-weight: 600;font-size: 8rem;color: #fcf195"
+                class="display-1 glow blockbuster-title"
+                style="letter-spacing: 0.2rem;font-weight: 600;color: #fcf195"
               >
                 BLOCK<wbr />BUSTER
               </h1>
               <h1
-                class="display-1"
-                style="letter-spacing: 0.2rem;font-weight: 600;font-size:6rem;color: #fcf195;text-shadow: 1px 1px 2px #ff00dd"
+                class="display-1 update-title"
+                style="letter-spacing: 0.2rem;font-weight: 600;color: #fcf195;text-shadow: 1px 1px 2px #ff00dd"
               >
                 UPDATE
               </h1>
@@ -205,7 +242,7 @@ import { Image } from "astro:assets";
             <div>
               <p
                 class="display-6 header-links m-0 mb-2"
-                style="color: #ccc47d;font-weight: 100;letter-spacing: 0.3rem;font-size: 2rem"
+                style="color: #ccc47d;font-weight: 100;letter-spacing: 0.3rem"
               >
                 |&gt;&gt;&nbsp;<a style="font-weight: 600" href="#performance"
                   >PERFORMANCE</a
@@ -219,7 +256,7 @@ import { Image } from "astro:assets";
               </p>
               <p
                 class="tiny-credits"
-                style="color: #ccc47d;font-weight: 300;letter-spacing: 0.1rem;font-size: 0.4rem"
+                style="color: #ccc47d;font-weight: 300;letter-spacing: 0.1rem"
               >
                 COPYRIGHT <small>LOLOLOL</small> MASTERCOMS <small
                   >PRESENTS A</small
@@ -290,7 +327,7 @@ import { Image } from "astro:assets";
       <hr />
       <h2 class="display-3">HIGHLIGHTS</h2>
       <div
-        class="d-flex justify-content-around align-self-stretch align-items-end w-100"
+        class="d-none d-sm-flex justify-content-around align-self-stretch align-items-end w-100"
       >
         <div class="w-100">
           <Image
@@ -315,7 +352,10 @@ import { Image } from "astro:assets";
         </div>
       </div>
       <div class="row">
-        <div class="col">
+        <div class="col-12 col-sm">
+          <div class="w-100 d-block d-sm-none">
+            <Image src={mainmenuPyroImg} class="img-fluid" alt="" />
+          </div>
           <hr class="mt-0" style="color: #000" />
           <h2 class="display-4">PYRO</h2>
           <p class="lead">
@@ -323,7 +363,10 @@ import { Image } from "astro:assets";
             right. We've fixed all that &mdash; well, besides their craziness.
           </p>
         </div>
-        <div class="col">
+        <div class="col-12 col-sm">
+          <div class="w-100 d-block d-sm-none">
+            <Image src={mainmenuMedicImg} class="img-fluid" alt="" />
+          </div>
           <hr class="mt-0" style="color: #000" />
           <h2 class="display-4">MEDIC</h2>
           <p class="lead">
@@ -331,7 +374,10 @@ import { Image } from "astro:assets";
             tending to your patients more satisfying.
           </p>
         </div>
-        <div class="col">
+        <div class="col-12 col-sm">
+          <div class="w-100 d-block d-sm-none">
+            <Image src={mainmenuSpyImg} class="img-fluid" alt="" />
+          </div>
           <hr class="mt-0" style="color: #000" />
           <h2 class="display-4">SPY</h2>
           <p class="lead">
@@ -374,8 +420,8 @@ import { Image } from "astro:assets";
         <div class="col">
           <Image
             src={hologlobeImg}
-            class="p-4 rounded-5"
-            style="height: 22rem;width: auto"
+            class="p-4 px-0 px-sm-4 rounded-5"
+            style="height: min(22rem, 100vw)"
             alt=""
           />
           <h1 class="display-6">IMPROVED NETWORKING</h1>
@@ -387,8 +433,8 @@ import { Image } from "astro:assets";
         <div class="col">
           <Image
             src={viewmodelImg}
-            class="p-4 rounded-5"
-            style="height: 22rem;width: auto"
+            class="p-4 px-0 px-sm-4 rounded-5"
+            style="height: min(22rem, 56.25vw);width: auto"
             alt=""
           />
           <h1 class="display-6">GRAPHICAL IMPROVEMENTS</h1>
@@ -402,8 +448,8 @@ import { Image } from "astro:assets";
         <div class="col">
           <Image
             src={combattextImg}
-            class="p-4 rounded-5"
-            style="height: 22rem;width: auto"
+            class="p-4 px-0 px-sm-4 rounded-5"
+            style="height: min(22rem, 56.25vw);width: auto"
             alt=""
           />
           <h1 class="display-6">NEW CUSTOMIZATION</h1>
@@ -415,8 +461,8 @@ import { Image } from "astro:assets";
         <div class="col">
           <Image
             src={mvpImg}
-            class="p-4 rounded-5"
-            style="height: 22rem;width: auto"
+            class="p-4 px-0 px-sm-4 rounded-5"
+            style="height: min(22rem, 56.25vw);width: auto"
             alt=""
           />
           <h1 class="display-6">CASUAL MVP</h1>
@@ -427,11 +473,11 @@ import { Image } from "astro:assets";
         </div>
       </div>
       <div class="row text-center">
-        <div class="col">
+        <div class="col-12 col-sm">
           <Image
             src={reloadImg}
-            class="p-4 rounded-5"
-            style="height: 16rem;width: auto"
+            class="p-4 px-0 px-sm-4 rounded-5"
+            style="height: min(16rem, 56.25vw);width: auto"
             alt=""
           />
           <h1 class="h2">CLIP/AMMO FIXES</h1>
@@ -440,11 +486,11 @@ import { Image } from "astro:assets";
             fixed that stubborn 4/19 glitch on resupply too.
           </p>
         </div>
-        <div class="col">
+        <div class="col-12 col-sm">
           <Image
             src={fovImg}
-            class="p-4 rounded-5"
-            style="height: 16rem;width: auto"
+            class="p-4 px-0 px-sm-4 rounded-5"
+            style="height: min(16rem, 56.25vw);width: auto"
             alt=""
           />
           <h1 class="h2">UPDATED DEFAULTS</h1>
@@ -453,7 +499,7 @@ import { Image } from "astro:assets";
             callouts, and net settings made for 2025 instead of dial-up.
           </p>
         </div>
-        <div class="col">
+        <div class="col-12 col-sm">
           <Image
             src={matchhudImg}
             class="rounded-5"
