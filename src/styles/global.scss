@@ -100,7 +100,8 @@ section {
 
 // Header logo
 .img-logo {
-  height: 10rem;
+  max-height: 10rem;
+  max-width: 100%;
 }
 
 .img-logo-sm {
