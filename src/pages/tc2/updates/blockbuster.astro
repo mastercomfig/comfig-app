@@ -289,14 +289,33 @@ import { Image } from "astro:assets";
       </p>
       <hr />
       <h2 class="display-3">HIGHLIGHTS</h2>
-      <div class="row">
-        <div class="col">
+      <div
+        class="d-flex justify-content-around align-self-stretch align-items-end w-100"
+      >
+        <div class="w-100">
           <Image
             src={mainmenuPyroImg}
-            class="img-fluid"
-            style="height: 40rem;width: auto"
+            style="height: min(40rem, 50vw);width: auto;max-width: 100%"
             alt=""
           />
+        </div>
+        <div class="w-100">
+          <Image
+            src={mainmenuMedicImg}
+            style="height: min(40rem, 50vw);width: auto;max-width: 100%"
+            alt=""
+          />
+        </div>
+        <div class="w-100">
+          <Image
+            src={mainmenuSpyImg}
+            style="height: min(40rem, 50vw);width: auto;max-width: 100%"
+            alt=""
+          />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
           <hr class="mt-0" style="color: #000" />
           <h2 class="display-4">PYRO</h2>
           <p class="lead">
@@ -305,12 +324,6 @@ import { Image } from "astro:assets";
           </p>
         </div>
         <div class="col">
-          <Image
-            src={mainmenuMedicImg}
-            class="img-fluid"
-            style="height: 40rem;width: auto"
-            alt=""
-          />
           <hr class="mt-0" style="color: #000" />
           <h2 class="display-4">MEDIC</h2>
           <p class="lead">
@@ -319,12 +332,6 @@ import { Image } from "astro:assets";
           </p>
         </div>
         <div class="col">
-          <Image
-            src={mainmenuSpyImg}
-            class="img-fluid"
-            style="height: 40rem;width: auto"
-            alt=""
-          />
           <hr class="mt-0" style="color: #000" />
           <h2 class="display-4">SPY</h2>
           <p class="lead">
