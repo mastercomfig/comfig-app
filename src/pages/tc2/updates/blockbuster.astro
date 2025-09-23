@@ -40,7 +40,7 @@ import { Image } from "astro:assets";
     font-size: 1.7rem;
   }
   .movie-poster {
-    height: 100vh;
+    height: max(100vh, 60rem);
     margin: auto;
     border: 5px solid white;
     box-shadow: 0 0 60px 10px #000;
@@ -165,7 +165,7 @@ import { Image } from "astro:assets";
         >
           <div
             class="d-flex flex-column align-items-center justify-content-between text-center p-4"
-            style="min-height: 100vh"
+            style="min-height: max(60rem, 100vh)"
           >
             <div>
               <a href="/">
