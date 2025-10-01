@@ -131,17 +131,28 @@ function getVersion(data) {
   return version;
 }
 
+const SIX_MONTHS_MS = 6 * 30 * 24 * 60 * 60 * 1000;
+
 function getVersions(data) {
   let limit = Math.min(5, data.length);
   let versions = [];
+  const now = Date.now();
   for (let i = 0; i < limit; i++) {
     let version = data[i];
     if (version.prerelease || version.draft) {
       limit = Math.min(limit + 1, data.length);
     } else {
-      let parsedVersion = getVersion(version);
-      if (parsedVersion) {
-        versions.push(parsedVersion);
+      let shouldAdd = true;
+      const hasEnough = versions.length >= 2;
+      if (hasEnough) {
+        const date = new Date(version.updated_at);
+        shouldAdd = now - date.getTime() < SIX_MONTHS_MS;
+      }
+      if (shouldAdd) {
+        let parsedVersion = getVersion(version);
+        if (parsedVersion) {
+          versions.push(parsedVersion);
+        }
       }
     }
   }
@@ -259,7 +270,11 @@ const UPDATE_TIME = 1 * 60 * 60 * 1000; // 1 hour
 let memCache = null;
 let memCacheTime = 0;
 
-async function getApiData(version, force) {
+async function delay(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function getApiData(version, force, recur = 0) {
   // Attempt cached
   let resBody = null;
   const now = new Date().getTime();
@@ -286,7 +301,13 @@ async function getApiData(version, force) {
     }
     resBody = constructDataResponse(updated, version, v, m, p);
     if (!resBody) {
-      return getApiData(version, false);
+      if (recur) {
+        return delay(10 << recur).then(() =>
+          getApiData(version, false, recur + 1),
+        );
+      } else {
+        return getApiData(version, false, recur + 1);
+      }
     }
     await storeData(
       getVersionedKey("mastercomfig-api-response", version),
@@ -514,11 +535,7 @@ async function handleRequest(request) {
       let resBody = constructDataResponse(updated, version, v);
       return new Response(resBody, generateCommonHeaders(origin, resHeaders));
     }
-    if (
-      request.method == "POST" &&
-      url.pathname !== "/" &&
-      authenticate(url.pathname, webhookPathname)
-    ) {
+    if (url.pathname !== "/" && authenticate(url.pathname, webhookPathname)) {
       await forceUpdate(version);
     }
     const resBody = await getApiData(version);
