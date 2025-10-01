@@ -545,6 +545,8 @@ const crosshairPacks = {
   },
 };
 
+const dynamicCrosshairPacks = {};
+
 const crosshairPackGroups = {
   Valve: ["default", "sprites/crosshairs", "none"],
   Leth: [
@@ -652,6 +654,32 @@ const crosshairPackGroups = {
     "ut99_1",
   ],
 };
+
+const dynamicCrosshairPackGroups = {};
+
+let completeCrosshairPacks: null | object = null;
+
+export function getCrosshairPacks() {
+  if (!completeCrosshairPacks) {
+    completeCrosshairPacks = {
+      ...crosshairPacks,
+      ...dynamicCrosshairPacks,
+    };
+  }
+  return completeCrosshairPacks;
+}
+
+let completeCrosshairPackGroups: null | object = null;
+
+export function getCrosshairPackGroups() {
+  if (!completeCrosshairPackGroups) {
+    completeCrosshairPackGroups = {
+      ...crosshairPackGroups,
+      ...dynamicCrosshairPackGroups,
+    };
+  }
+  return completeCrosshairPackGroups;
+}
 
 const resourceCache = {};
 const language = "English";
@@ -1092,6 +1120,9 @@ const playerExplosionPreviews = fastClone(explosionPreviews);
 playerExplosionPreviews["default"] = null;
 
 function getNormalizedSlotName(item) {
+  if (item.classname === "default") {
+    return "default";
+  }
   if (customItemSlot[item.classname]) {
     return customItemSlot[item.classname];
   }

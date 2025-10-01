@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
-import { Tabs, Tab } from "react-bootstrap";
-import ItemsInner from "./ItemsInner.tsx";
+import { Tab, Tabs } from "react-bootstrap";
+
 import "@utils/game.ts";
+
+import ItemsInner from "./ItemsInner.tsx";
 
 export default function Items({ hash }) {
   const [resetKey, setResetKey] = useState(0);
@@ -12,6 +14,9 @@ export default function Items({ hash }) {
       const gameData = await gameDataResp.json();
       globalThis.items = gameData.items;
       globalThis.languageCache = gameData.languageCache;
+      globalThis.dynamicCrosshairPacks = gameData.dynamicCrosshairPacks;
+      globalThis.dynamicCrosshairPackGroups =
+        gameData.dynamicCrosshairPackGroups;
       setResetKey((resetKey) => resetKey + 1);
     })();
   }, [hash]);

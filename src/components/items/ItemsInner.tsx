@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Button, Col, Form, FormCheck, Nav, Row, Tab } from "react-bootstrap";
 import { type RgbaColor, setNonce } from "react-colorful";
 
+import { getCrosshairPackGroups, getCrosshairPacks } from "@utils/game";
 import { getNonce } from "@utils/nonce";
 
 import useItemStore from "@store/items";
@@ -19,7 +20,7 @@ if (cspNonce) {
 
 function calculateItemSlots(playerClass, items) {
   const slots = {};
-  const slotNames = [];
+  const slotNames: string[] = [];
   const usedItems = new Set();
 
   function addItemToSlot(item) {
@@ -28,10 +29,6 @@ function calculateItemSlots(playerClass, items) {
       slots[slot] = [];
     }
     slots[slot].push(item);
-    // TODO: what is this for?
-    //if (!slot) {
-    //  slotNames.push(slot);
-    //}
   }
 
   for (const item of stockItems[playerClass]) {
@@ -46,6 +43,10 @@ function calculateItemSlots(playerClass, items) {
     addItemToSlot(item);
   }
 
+  if (playerClass === "default") {
+    slotNames.push("default");
+  }
+
   for (const slot of slotToIndex) {
     if (slots[slot]) {
       slotNames.push(slot);
@@ -58,6 +59,9 @@ function calculateItemSlots(playerClass, items) {
 }
 
 const defaultColor = { r: 200, g: 200, b: 200, a: 0.78 };
+
+const crosshairPacks = getCrosshairPacks();
+const crosshairPackGroups = getCrosshairPackGroups();
 
 function calculateCrosshairs(items) {
   let crosshairs = {};
@@ -167,52 +171,12 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
     selectedCrosshairScale ?? itemStore.crosshairScales?.default ?? 32;
   const currentCrosshairScale = liveCrosshairScale ?? defaultCrosshairScale;
 
-  const [
-    clearAllItems,
-    setCrosshair,
-    delCrosshair,
-    setCrosshairColor,
-    delCrosshairColor,
-    setCrosshairScale,
-    delCrosshairScale,
-    setZoomCrosshair,
-    delZoomCrosshair,
-    setMuzzleFlash,
-    delMuzzleFlash,
-    setBrassModel,
-    delBrassModel,
-    setTracer,
-    delTracer,
-    setExplosionEffect,
-    delExplosionEffect,
-    setPlayerExplosionEffect,
-    delPlayerExplosionEffect,
-  ] = useItemStore((state) => [
-    state.clearAllItems,
-    state.setCrosshair,
-    state.delCrosshair,
-    state.setCrosshairColor,
-    state.delCrosshairColor,
-    state.setCrosshairScale,
-    state.delCrosshairScale,
-    state.setZoomCrosshair,
-    state.delZoomCrosshair,
-    state.setMuzzleFlash,
-    state.delMuzzleFlash,
-    state.setBrassModel,
-    state.delBrassModel,
-    state.setTracer,
-    state.delTracer,
-    state.setExplosionEffect,
-    state.delExplosionEffect,
-    state.setPlayerExplosionEffect,
-    state.delPlayerExplosionEffect,
-  ]);
+  const state = useItemStore((state) => state);
 
   const crosshairColorDebounce = useMemo(
     () =>
       debounce((color) => {
-        setCrosshairColor(
+        state.setCrosshairColor(
           playerClass === "All-Class" ? "default" : playerClass,
           color,
         );
@@ -281,8 +245,8 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
                         options={crosshairs}
                         defaultValue={defaultCrosshairs[item.classname]}
                         classname={item.classname}
-                        delItem={delCrosshair}
-                        setItem={setCrosshair}
+                        delItem={state.delCrosshair}
+                        setItem={state.setCrosshair}
                         isDefaultWeapon={isDefault}
                         type="crosshair"
                         previewPath="/img/app/crosshairs/preview/"
@@ -314,8 +278,8 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
                                 defaultValue={"Valve.default.default"}
                                 customDefaultDisplay={"Use weapon crosshair"}
                                 classname={item.classname}
-                                delItem={delZoomCrosshair}
-                                setItem={setZoomCrosshair}
+                                delItem={state.delZoomCrosshair}
+                                setItem={state.setZoomCrosshair}
                                 isDefaultWeapon={true}
                                 type="crosshair"
                                 previewPath="/img/app/crosshairs/preview/"
@@ -360,9 +324,12 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
                             // If we're default, we can't actually reset the value (for now).
                             // Because crosshair scale is archived, so we have no guarantee what the game value is.
                             if (e.target.value === defaultValue && !isDefault) {
-                              delCrosshairScale(targetClass);
+                              state.delCrosshairScale(targetClass);
                             } else {
-                              setCrosshairScale(targetClass, e.target.value);
+                              state.setCrosshairScale(
+                                targetClass,
+                                e.target.value,
+                              );
                             }
                           }}
                         />
@@ -397,7 +364,7 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
                               variant="danger"
                               size="sm"
                               onClick={() => {
-                                delCrosshairColor(
+                                state.delCrosshairColor(
                                   playerClass === "All-Class"
                                     ? "default"
                                     : playerClass,
@@ -437,7 +404,7 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
                                   ...currentCrosshairColor,
                                   r: newVal,
                                 };
-                                setCrosshairColor(
+                                state.setCrosshairColor(
                                   playerClass === "All-Class"
                                     ? "default"
                                     : playerClass,
@@ -469,7 +436,7 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
                                   ...currentCrosshairColor,
                                   g: newVal,
                                 };
-                                setCrosshairColor(
+                                state.setCrosshairColor(
                                   playerClass === "All-Class"
                                     ? "default"
                                     : playerClass,
@@ -501,7 +468,7 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
                                   ...currentCrosshairColor,
                                   b: newVal,
                                 };
-                                setCrosshairColor(
+                                state.setCrosshairColor(
                                   playerClass === "All-Class"
                                     ? "default"
                                     : playerClass,
@@ -533,7 +500,7 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
                                   ...currentCrosshairColor,
                                   a: newVal,
                                 };
-                                setCrosshairColor(
+                                state.setCrosshairColor(
                                   playerClass === "All-Class"
                                     ? "default"
                                     : playerClass,
@@ -565,9 +532,9 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
                           onChange={(e) => {
                             const check = e.target.checked;
                             if (!check) {
-                              setMuzzleFlash(item.classname);
+                              state.setMuzzleFlash(item.classname);
                             } else {
-                              delMuzzleFlash(item.classname);
+                              state.delMuzzleFlash(item.classname);
                             }
                           }}
                         ></FormCheck>
@@ -582,9 +549,9 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
                         onChange={(e) => {
                           const check = e.target.checked;
                           if (!check) {
-                            setBrassModel(item.classname);
+                            state.setBrassModel(item.classname);
                           } else {
-                            delBrassModel(item.classname);
+                            state.delBrassModel(item.classname);
                           }
                         }}
                       ></FormCheck>
@@ -599,9 +566,9 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
                           onChange={(e) => {
                             const check = e.target.checked;
                             if (!check) {
-                              setTracer(item.classname);
+                              state.setTracer(item.classname);
                             } else {
-                              delTracer(item.classname);
+                              state.delTracer(item.classname);
                             }
                           }}
                         ></FormCheck>
@@ -617,8 +584,8 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
                               options={explosionEffects}
                               defaultValue="default"
                               classname={item.classname}
-                              delItem={delExplosionEffect}
-                              setItem={setExplosionEffect}
+                              delItem={state.delExplosionEffect}
+                              setItem={state.setExplosionEffect}
                               isDefaultWeapon={isDefault}
                               type="explosion"
                               previewPath=""
@@ -641,8 +608,8 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
                               options={playerExplosionEffects}
                               defaultValue="default"
                               classname={item.classname}
-                              delItem={delPlayerExplosionEffect}
-                              setItem={setPlayerExplosionEffect}
+                              delItem={state.delPlayerExplosionEffect}
+                              setItem={state.setPlayerExplosionEffect}
                               isDefaultWeapon={isDefault}
                               type="explosion"
                               previewPath=""
@@ -655,7 +622,7 @@ export default function ItemsInner({ playerClass, items, setResetKey }) {
                     {isDefault && (
                       <Button
                         onClick={() => {
-                          clearAllItems();
+                          state.clearAllItems();
                           setItemStore(useItemStore.getState());
                           setResetKey((state) => state + 1);
                         }}

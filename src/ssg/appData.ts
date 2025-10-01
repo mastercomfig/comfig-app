@@ -31,11 +31,7 @@ export async function getAppData() {
 
 let hasInit = false;
 
-export async function getGameData() {
-  if (!hasInit) {
-    await gm.initGameData();
-    hasInit = true;
-  }
+async function initItemData(gameData) {
   const clientLanguageCache = {};
   for (const lang of Object.keys(gm.languageCache)) {
     const langCache = {};
@@ -61,10 +57,56 @@ export async function getGameData() {
     clientLanguageCache[lang] = langCache;
   }
 
-  const gameData = {
-    languageCache: clientLanguageCache,
-    items: gm.items,
+  gameData["languageCache"] = clientLanguageCache;
+  gameData["items"] = gm.items;
+}
+
+async function initCrosshairData(gameData) {
+  const dynamicCrosshairPacks = {};
+  const dynamicCrosshairPackGroups = {
+    Misc: [],
   };
+  const crosshairsWithGroups = new Set();
+  for (const group of Object.values(crosshairPackGroups)) {
+    for (const crosshair of group) {
+      crosshairsWithGroups.add(crosshair);
+    }
+  }
+  if (typeof self === "undefined") {
+    const fs = await import("node:fs/promises");
+    const files = await fs.readdir("./public/assets/app/crosshairs");
+    for (const file of files) {
+      if (!file.endsWith(".vtf")) {
+        continue;
+      }
+      const name = file.split(".")[0];
+      if (!(name in crosshairPacks)) {
+        dynamicCrosshairPacks[name] = {
+          _0_0: {
+            name,
+          },
+        };
+      }
+      if (!crosshairsWithGroups.has(name)) {
+        dynamicCrosshairPackGroups["Misc"].push(name);
+      }
+    }
+  }
+
+  gameData["dynamicCrosshairPacks"] = dynamicCrosshairPacks;
+  gameData["dynamicCrosshairPackGroups"] = dynamicCrosshairPackGroups;
+}
+
+export async function getGameData() {
+  if (!hasInit) {
+    await gm.initGameData();
+    hasInit = true;
+  }
+
+  const gameData = {};
+
+  await initItemData(gameData);
+  await initCrosshairData(gameData);
 
   const hash = await sha256(JSON.stringify(gameData));
 
