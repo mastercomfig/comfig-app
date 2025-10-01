@@ -131,6 +131,7 @@ function getVersion(data) {
   return version;
 }
 
+const MIN_VERSIONS = 1;
 const SIX_MONTHS_MS = 6 * 30 * 24 * 60 * 60 * 1000;
 
 function getVersions(data) {
@@ -143,7 +144,7 @@ function getVersions(data) {
       limit = Math.min(limit + 1, data.length);
     } else {
       let shouldAdd = true;
-      const hasEnough = versions.length >= 2;
+      const hasEnough = versions.length >= MIN_VERSIONS;
       if (hasEnough) {
         const date = new Date(version.updated_at);
         shouldAdd = now - date.getTime() < SIX_MONTHS_MS;
@@ -295,13 +296,19 @@ async function getApiData(version, force, recur = 0) {
     );
     let m = await MASTERCOMFIG.get("mastercomfig-modules");
     let p = await MASTERCOMFIG.get("mastercomfig-preset-modules");
+    if (force) {
+      v = m = p = null;
+    }
     let updated = NULL_UPDATED;
     if (!v || !m || !p) {
       updated = await updateData([v ? null : rv, m ? null : rm, p ? null : rp]);
     }
     resBody = constructDataResponse(updated, version, v, m, p);
     if (!resBody) {
-      if (recur) {
+      if (recur > 0) {
+        if (recur > 20) {
+          return null;
+        }
         return delay(10 << recur).then(() =>
           getApiData(version, false, recur + 1),
         );
