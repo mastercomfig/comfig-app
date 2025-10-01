@@ -1,0 +1,71 @@
+---
+import AdvRedirector from "@components/AdvRedirector.astro";
+import Body from "@components/Body.astro";
+import Footer from "@components/Footer.astro";
+import BaseHead from "@components/head/BaseHead.astro";
+import ImportHead from "@components/head/ImportHead.astro";
+import MainHead from "@components/head/MainHead.astro";
+import PreloadHead from "@components/head/PreloadHead.astro";
+import tfLogoImg from "@img/tc2/team-comtress-2.png";
+import Layout from "@layouts/Layout.astro";
+import { getCollection, render } from "astro:content";
+
+export async function getStaticPaths() {
+  const news = (await getCollection("tc2News")).filter(
+    (post) => !post.data.draft && !post.data.update,
+  );
+  return news.map((post) => ({
+    params: {
+      post: post.id,
+    },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<Layout>
+  <head>
+    <BaseHead />
+    <PreloadHead />
+    <ImportHead />
+    <MainHead
+      title=`${post.data.title} | Team Comtress 2`
+      site="Team Comtress"
+      noSite={true}
+      description={post.data.description}
+      image="https://teamcomtress.com/img/tc2/team-comtress-2.png"
+      favicon="/img/tc2/favicon.ico"
+    />
+  </head>
+  <Body>
+    <AdvRedirector />
+    <div class="text-center p-4">
+      <a href="/">
+        <img
+          class="img-logo-sm"
+          src={tfLogoImg.src}
+          alt="Team Comtress 2 logo"
+        />
+      </a>
+    </div>
+
+    <section class="container p-4 bg-dark mb-4">
+      <h1>{post.data.title}</h1>
+      <p class="text-muted">
+        {
+          post.data.date.toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            timeZone: "UTC",
+          })
+        }
+      </p>
+      <Content />
+    </section>
+    <Footer product={"Team Comtress"} />
+  </Body>
+</Layout>

@@ -1,0 +1,361 @@
+---
+import AdvRedirector from "@components/AdvRedirector.astro";
+import Body from "@components/Body.astro";
+import Footer from "@components/Footer.astro";
+import BaseHead from "@components/head/BaseHead.astro";
+import ImportHead from "@components/head/ImportHead.astro";
+import MainHead from "@components/head/MainHead.astro";
+import PreloadHead from "@components/head/PreloadHead.astro";
+import tfLogoImg from "@img/tc2/team-comtress-2.png";
+import lairImg from "@img/update/lair.webp";
+import quicklimeImg from "@img/update/quicklime.webp";
+import Layout from "@layouts/Layout.astro";
+import { getCollection } from "astro:content";
+
+const news = (await getCollection("tc2News"))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .filter((post) => !post.data.draft)
+  .slice(0, 3);
+
+const patches = (await getCollection("tc2Patches"))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .filter((post) => !post.data.draft && !post.id.endsWith("beta"))
+  .slice(0, 4);
+---
+
+<style>
+  .header-links > a {
+    color: #1ed5b6;
+  }
+  .header-links > a:hover {
+    color: #55e2b3;
+  }
+  .btn-outline-primary {
+    border: 1px solid #009688;
+    border-radius: 0.25rem;
+    --bs-btn-color: #fff;
+  }
+  .btn-xl {
+    font-size: 1.7rem;
+  }
+  .btn-social {
+    width: 100%;
+  }
+  @media screen and (min-width: 992px) {
+    .btn-social {
+      width: auto;
+    }
+  }
+  #bg-video-wrapper {
+    width: 100vw;
+    height: max(66vh, 37rem);
+    position: absolute;
+    z-index: -1;
+  }
+  #bg-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 30%;
+  }
+  .btn-discord {
+    background-color: #5865f2;
+    border-color: #5865f2;
+  }
+  .btn-discord:hover {
+    background-color: #4752c4;
+    border-color: #4752c4;
+  }
+  .btn-youtube {
+    background-color: #ff0000;
+    border-color: #ff0000;
+  }
+  .btn-youtube:hover {
+    background-color: #c20000;
+    border-color: #c20000;
+  }
+  .btn-bluesky {
+    background-color: #1b95e0;
+    border-color: #1b95e0;
+  }
+  .btn-bluesky:hover {
+    background-color: #157abf;
+    border-color: #157abf;
+  }
+  @media only screen and (min-width: 992px) {
+    .update-cards .card:hover {
+      transform: scale(1.15);
+      z-index: 1000;
+      box-shadow: 0.25rem 0.25rem 1rem rgba(0, 0, 0, 0.6);
+    }
+
+    .update-cards .card {
+      transition: transform 0.3s ease;
+      will-change: transform;
+      margin-left: 1px;
+      margin-right: 1px;
+      z-index: 20;
+    }
+
+    .update-cards .card-img-top {
+      height: 200px;
+      object-fit: cover;
+    }
+  }
+
+  @media only screen and (max-width: 991px) {
+    .update-cards {
+      display: block !important;
+    }
+
+    .update-cards .card {
+      margin-bottom: 0.75rem;
+    }
+  }
+</style>
+
+<Layout>
+  <head>
+    <BaseHead />
+    <PreloadHead />
+    <ImportHead />
+    <MainHead
+      title="Team Comtress 2"
+      site="Team Comtress"
+      noSite={true}
+      description="A mod for Team Fortress 2 by mastercoms, the creator of mastercomfig. A completely new life for the game we all love."
+      image="https://teamcomtress.com/img/tc2/team-comtress-2.png"
+      favicon="/img/tc2/favicon.ico"
+    />
+  </head>
+  <Body>
+    <AdvRedirector />
+    <div id="bg-video-wrapper">
+      <video
+        id="bg-video"
+        disablepictureinpicture
+        playsinline
+        autoplay
+        muted
+        loop
+      >
+        <source src="/videos/tc2reel.webm" type="video/webm" />
+        <source src="/videos/tc2reel.mp4" type="video/mp4" />
+      </video>
+    </div>
+    <section
+      class="jumbotron jumbotron-fluid"
+      style=`background: linear-gradient(rgba(38, 50, 56, 0.56) 10%, rgba(38, 50, 56, 0.56), #2c2c2c 96%);background-size: cover; background-position: center;background-position: center;min-height: max(70vh, 37.5rem)`
+    >
+      <div
+        class="container d-flex align-items-center justify-content-center"
+        style="padding-top:10vh"
+      >
+        <div class="align-middle text-center">
+          <img
+            class="img-logo"
+            src={tfLogoImg.src}
+            alt="Team Comtress 2 logo"
+          />
+          <h1 class="display-3" style="letter-spacing: 0.2rem;font-weight: 600">
+            "THE MOST FUN YOU CAN HAVE ONLINE"
+          </h1>
+          <h1 class="display-1" style="letter-spacing: 0.2rem;font-weight: 600">
+            GIVEN A WHOLE NEW LIFE
+          </h1>
+          <hr style="margin-bottom: 2rem" />
+          <a
+            href="https://mastercoms.itch.io/tc2"
+            class="btn btn-outline-primary btn-xl"
+            style="line-height:1.6rem;padding-top:1.3rem"
+          >
+            <strong>PLAY FOR FREE</strong><br />
+            <small style="color:#c2c2c2;font-size:1rem">DOWNLOAD ON ITCH</small>
+          </a>
+        </div>
+      </div>
+    </section>
+    <section style="background: rgb(255 255 255 / 5%)" class="pb-0 pb-sm-5">
+      <div class="container">
+        <h1>
+          Latest News <small style="font-size: 1rem"
+            ><a href="/feed#news">View all »</a></small
+          >
+        </h1>
+        <div class="row mt-1 update-cards">
+          {
+            news.map((post) => (
+              <div class="card me-3 col">
+                <div class="card-body">
+                  <h5 class="card-title" style="color: #fff;font-weight: 600">
+                    {post.data.title}
+                  </h5>
+                  <p class="card-text" style="color: #c2c2c2">
+                    {post.data.description}
+                    <br />
+                    <small class="text-muted">
+                      <a
+                        class="stretched-link"
+                        href={
+                          post.data.update
+                            ? `/updates/${post.data.update}`
+                            : `/news/${post.id}`
+                        }
+                      >
+                        Read more »
+                      </a>
+                    </small>
+                  </p>
+                </div>
+                <div class="card-footer mb-2">
+                  <small class="text-muted">
+                    {post.data.date.toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                      timeZone: "UTC",
+                    })}
+                  </small>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+    <section style="background: rgb(255 255 255 / 5%)" class="pb-2 pb-sm-5">
+      <div class="container">
+        <h1>
+          Patches <small style="font-size: 1rem"
+            ><a href="/feed#patches">View all »</a></small
+          >
+        </h1>
+        <div class="row mt-1 update-cards">
+          {
+            patches.map((post) => (
+              <div class="pe-1 col">
+                <div class="card">
+                  <div class="card-body p-4">
+                    <h5 class="card-title text-center m-0">
+                      <a class="stretched-link" href={`/patches/${post.id}`}>
+                        {post.data.date.toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                          timeZone: "UTC",
+                        })}
+                      </a>
+                    </h5>
+                  </div>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+    <section style="background: rgb(255 255 255 / 20%)">
+      <div class="container">
+        <div class="row">
+          <div
+            class="col-auto col-sm d-flex align-items-center justify-content-center"
+          >
+            <h1 class="display-1">
+              <strong class="fw-bold">SOCIAL MEDIA</strong>
+            </h1>
+          </div>
+          <div class="col-auto col-sm">
+            <strong>Follow our socials</strong> to get updates and other insights,
+            and <strong>join our Discord</strong> to get involved with our playtests
+            and give your feedback. We appreciate it!
+            <br /><br />
+            <a
+              href="https://comfig.app/discord"
+              class="btn btn-primary fw-bold me-1 btn-discord btn-social"
+              ><span class="fab fa-discord fa-fw" aria-hidden="true"></span> DISCORD</a
+            >
+            <a
+              href="https://www.youtube.com/TheMastercoms"
+              class="btn btn-primary fw-bold me-1 btn-youtube btn-social"
+              ><span class="fab fa-youtube fa-fw" aria-hidden="true"></span> YOUTUBE</a
+            >
+            <a
+              href="https://bsky.app/profile/mcoms.dev"
+              class="btn btn-primary fw-bold me-1 btn-bluesky btn-social"
+              ><span class="fab fa-bluesky fa-fw" aria-hidden="true"></span> BLUESKY</a
+            >
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="text-center container">
+      <h2
+        class="display-2"
+        style="color: #1ef5e3; font-weight: 700; letter-spacing: 0.2rem"
+      >
+        THE SAME GAME<br />YOU KNOW AND LOVE
+      </h2>
+      <p class="lead" style="font-size: 1.5rem">
+        TF2 is a classic, decades-long title beloved by millions. So despite all
+        the changes, we've made sure to make you feel right at home. Your items
+        and cosmetics will carry over, and all gameplay content from the
+        original game is here. We take the legacy of such a legendary title
+        seriously, and we hope to continue to provide an enjoyable experience
+        worthy to carry the torch.
+      </p>
+    </section>
+    <section
+      class="jumbotron jumbotron-fluid"
+      style=`background: linear-gradient(rgba(38, 50, 56, 0.4) 10%, rgba(38, 50, 56, 0.4)),url(${quicklimeImg.src});background-size: cover; background-position: center;background-position: center;min-height: 25vh`
+    >
+    </section>
+    <section class="text-center container">
+      <h2
+        class="display-2"
+        style="color: #1ef5e3; font-weight: 700; letter-spacing: 0.2rem"
+      >
+        CONSTANTLY UPDATED
+      </h2>
+      <p class="lead" style="font-size: 1.5rem">
+        We're continuing where Team Fortress 2 started, giving it countless new
+        updates to fix bugs, and make the game more fun and more consistent.
+        Dive right in and play any of the beloved nine classes, with the perfect
+        gameplay feel they deserve, unhampered by annoyances or bugs.
+      </p>
+    </section>
+    <section
+      class="jumbotron jumbotron-fluid"
+      style=`background: linear-gradient(rgba(38, 50, 56, 0.4) 10%, rgba(38, 50, 56, 0.4)),url(${lairImg.src});background-size: cover; background-position: center;background-position: center;min-height: 25vh`
+    >
+    </section>
+    <section class="text-center container" id="qol">
+      <h2
+        class="display-3"
+        style="color: #13ccad; font-weight: 700; letter-spacing: 0.2rem"
+      >
+        YOUR GAME TO DEVELOP
+      </h2>
+      <h2
+        class="display-2"
+        style="color: #1ef5e3; font-weight: 700; letter-spacing: 0.2rem"
+      >
+        WHAT WILL YOU MAKE OF IT?
+      </h2>
+      <h3 style="color: #d3d3d3; font-weight: 700; letter-spacing: 0.2rem">
+        COMMUNITY-MADE ON GITHUB
+      </h3>
+      <p class="lead" style="font-size: 1.5rem">
+        Not only do we constantly iterate upon and listen to community feedback,
+        we also have our full development process in the open on GitHub. Anyone
+        is free to pitch in and suggest a change that they feel will make the
+        game better. Join up in the effort to make our beloved game even better!
+      </p>
+      <a
+        href="https://github.com/mastercomfig/tc2"
+        class="btn btn-primary btn-lg"
+        >View the <span class="fab fa-github fa-fw"></span> GitHub</a
+      >
+    </section>
+    <Footer product={"Team Comtress"} />
+  </Body>
+</Layout>

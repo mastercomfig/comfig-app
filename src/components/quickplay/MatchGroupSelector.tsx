@@ -7,6 +7,7 @@ import ServerFinder from "./ServerFinder";
 export function MatchGroupSelector({ hash }) {
   const quickplayStore = useQuickplayStore((state) => state);
   const [index, setIndex] = useState(0);
+  const [init, setInit] = useState(false);
   const [playNowText, setPlayNowText] = useState("PLAY NOW!");
 
   const handleSelect = useCallback(
@@ -14,6 +15,7 @@ export function MatchGroupSelector({ hash }) {
       if (quickplayStore.searching) {
         return;
       }
+      setInit(true);
       setIndex(selectedIndex);
       quickplayStore.setMatchGroup(
         quickplayStore.availableMatchGroups[selectedIndex]?.code,
@@ -48,6 +50,9 @@ export function MatchGroupSelector({ hash }) {
   }, [quickplayStore.availableMatchGroups]);
 
   useEffect(() => {
+    if (!init) {
+      return;
+    }
     const urlparms = new URLSearchParams(window.location.search);
     const gm = urlparms.get("gm");
     if (gm) {
@@ -62,7 +67,7 @@ export function MatchGroupSelector({ hash }) {
           "payload_race",
         ];
       } else {
-        gamemodes = gm.split(",");
+        gamemodes = gm.split(",").filter((mode) => mode);
       }
       quickplayStore.setGamemodes(gamemodes);
     }
@@ -75,7 +80,7 @@ export function MatchGroupSelector({ hash }) {
     if (urlparms.get("autostart") === "3") {
       startSearching(2);
     }
-  }, []);
+  }, [init]);
 
   useEffect(() => {
     const listener = (e: Event) => {
@@ -102,7 +107,7 @@ export function MatchGroupSelector({ hash }) {
     return () => {
       carouselEl?.removeEventListener("slide.bs.carousel", listener);
     };
-  }, []);
+  }, [quickplayStore.availableMatchGroups]);
 
   const matchGroups = quickplayStore.availableMatchGroups;
 
@@ -125,6 +130,7 @@ export function MatchGroupSelector({ hash }) {
               className={`${index == 0 ? "active" : ""}`}
               aria-current="true"
               aria-label={`Slide ${index + 1} ${resource}`}
+              key={resource.code}
             />
           ))}
         </div>

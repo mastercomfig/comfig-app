@@ -14,7 +14,10 @@ const allowedOrigins = new Set([
   "http://localhost:4321",
   "http://127.0.0.1:4321",
 ]);
-const secureOrigin = new Set(["https://comfig.app"]);
+const secureOrigin = new Set([
+  "https://comfig.app",
+  "https://staging.mastercomfig-site.pages.dev",
+]);
 for (const origin of secureOrigin) {
   allowedOrigins.add(origin);
 }
@@ -102,7 +105,7 @@ const resAssetHeadersSuccess = {
 };
 
 const deniedOptions = {
-  status: 405,
+  status: 400,
   headers: {
     "Cross-Origin-Resource-Policy": "same-origin",
     "Content-Security-Policy": "default-src 'none'; frame-ancestors 'none'",
@@ -244,6 +247,9 @@ function constructDataResponse(updated, version, v, m, p) {
   if (updated[2]) {
     p = updated[2];
   }
+  if (!v || !m || !p) {
+    return null;
+  }
   let resBody = '{"v":' + v + "," + '"m":' + m + "," + '"p":' + p + "}";
   return resBody;
 }
@@ -279,6 +285,9 @@ async function getApiData(version, force) {
       updated = await updateData([v ? null : rv, m ? null : rm, p ? null : rp]);
     }
     resBody = constructDataResponse(updated, version, v, m, p);
+    if (!resBody) {
+      return getApiData(version, false);
+    }
     await storeData(
       getVersionedKey("mastercomfig-api-response", version),
       resBody,
@@ -300,6 +309,18 @@ addEventListener("scheduled", (event) => {
 const webhookPathname = "/" + GH_WEBHOOK_ID;
 
 const validNames = new Set([
+  "mastercomfig-base.vpk",
+  "mastercomfig-addon-null-canceling-movement.vpk",
+  "mastercomfig-addon-flat-mouse.vpk",
+  "mastercomfig-addon-no-tutorial.vpk",
+  "mastercomfig-addon-no-pyroland.vpk",
+  "mastercomfig-addon-no-footsteps.vpk",
+  "mastercomfig-addon-no-soundscapes.vpk",
+  "mastercomfig-addon-transparent-viewmodels.vpk",
+  "mastercomfig-addon-lowmem.vpk",
+  "mastercomfig-addon-override-1.vpk",
+  "mastercomfig-addon-override-2.vpk",
+  "mastercomfig-addon-override-3.vpk",
   "mastercomfig-ultra-preset.vpk",
   "mastercomfig-high-preset.vpk",
   "mastercomfig-medium-high-preset.vpk",
@@ -461,8 +482,15 @@ async function handleRequest(request) {
               status: response.status,
               ...resHeaders,
             });
+          } else {
+            validDownload = false;
           }
+        } else {
+          validDownload = false;
         }
+      }
+      if (!validDownload) {
+        return new Response(null, deniedOptions);
       }
     }
     // Get custom tag

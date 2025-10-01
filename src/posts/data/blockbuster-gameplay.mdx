@@ -1,0 +1,403 @@
+---
+---
+import BlockbusterBlock from "@components/tc2/BlockbusterBlock.astro";
+
+<BlockbusterBlock>
+## Core Gameplay
+
+### Random Crits
+
+* Fixed melee random critical hits damage range boost being 0->533 damage for 15%->60% chance instead of 0->1600 damage for 15%->60% chance.
+* Fixed random critical hits damage range boost being 0->533 damage for 2%->8% chance instead of 0->800 damage for 2%->12% chance.
+* _Developer Note:_ When random crit chance was [changed in 2009](https://www.teamfortress.com/post.php?id=2221), the intention was to make random critical hits more skill / performance based for non-melee random crits. Thus, the values for crit chance and crit chance boost were changed. However, due to crit chance being shared between melee and non-melee, melee random crit chance was affected, keeping the chance boost based on damage the same, but more than halving the damage required to gain the max boost. This runs counter to the stated intention: less skill / performance is needed for the same high crit chance. Furthermore, due to how the chance boosts were applied, non-melee only got a max 8% chance based upon 533 damage, rather than the stated 12% chance from 800 damage, reducing the peak reward from your performance. These fixes now separate melee crit chance boost from non-melee, thus allowing melee to retain its 4x boost from 1600 damage, while non-melee now has a 6x boost from 800 damage.
+
+### Bullet Spread
+
+* Changed the default for fixed weapon spread to on.
+  * _Developer Note:_ Although fixed spread was on average equal to random spread, maximum values for random spread still could proc much wider spread than fixed spread, resulting in real gameplay balance differences. This issue was further exacerbated by the incorrect random distribution of spread. Rather than attempting to reconcile the differences between casual and competitive play, we find it best to disable random bullet spread for all modes, making risk/reward at each distance consistent, similarly to disabling random damage spread.
+* Spread is now based upon a real Gaussian distribution (circular). This will improve evenness of pellet distribution. 
+
+### Distance-based Damage Ramp
+
+* Ramp-up now considers the closest possible distance the attacker and victim can be to each other, rather than max ramp-up only being applied if they were inside each other perfectly. This should make max damage from ramp-up more intuitive and consistent.
+* Fixed a bug involving distance-based damage ramp not working as intended when damage spread is disabled (the default since 2015)
+  * Damage falloff was not fully falling off to 50% damage at max distance (1024 units) when damage spread was disabled. Instead, it was falling off to 53% damage at 922 units.
+* In short, the effect of these changes is that you should see about 1 higher damage at closest possible range, and 2 to 3 damage less at furthest ranges in combat.
+
+### General Changes
+
+* Added lag compensation for teammates, to fix issues with players unexpectedly blocking bullets
+* Fixed damage to buildings rounding down instead of up like damage to players
+* Fixed firing speed being slightly inaccurate/delayed in some cases
+* Fixed various cases of weapon double taps, for example, the Wrench double swing glitch
+* Fixed Revenge Crits interacting poorly with other crit boosts, especially the Kritzkrieg
+  * Revenge Crits are no longer consumed while crit boosted from another source
+  * Fixed various issues with crits getting removed early / lingering while crit boosted from another source
+* Secondary actions, like cloak, Stickybomb Launcher detonate, building haul now behave more responsively and do not ignore inputs
+* Melee hits now pass through teammates except in MvM and Medieval Mode.
+  * Server operators can force melee hits ignoring teammates in these modes with tf_melee_enemy_priority 1
+  * Due to how melee hit detection works, there were extremely common cases of backstabs and other melee hits not connecting properly due to off screen teammates.
+  * By limiting this to only normal gamemodes, we do not feel like there will be serious cases of melee hit stacking or any other concerns, in exchange for the gameplay benefit.
+* Disabled fall damage variance by default
+
+### Pre-Round
+
+* Changed pre-round freeze logic to match Casual/Competitive matchmaking: the last 3 seconds of pre-round time unfreezes movement before starting the round, to allow players to move from their spawn position to the doors. Spawn doors are now also locked during this time.
+* Fixed pre-round movement freeze not working correctly (requiring weapon switching, not being timed correctly, etc).
+* Fixed movement taunts being usable during freeze time in some cases. 
+
+### Respawn/Resupply
+  
+* Reworked respawn behavior.
+* Class switching or loadout changes off of initial spawn do not change your spawn location.
+* You can press the Inspect key (F by default) to switch spawn points after initially spawning. In Casual, this is unlimited. In Competitive, this is limited to once per life and only within 7 seconds of spawning if you have not taken damage.
+* Reasoning: changing spawn location from class switching is awkward and looks visually like a bug to those unfamiliar. This also gives the ability to players to choose between switching their spawn location or changing class.<br/><br/>
+* Reworked automatic respawns for competitive play.
+* Automatic respawns are defined as respawns done within the spawn room, as a consequence of changing loadout or class
+* You cannot automatically respawn if you have taken damage or have moved out spawn, or if it has been 7 seconds after you have spawned.
+* Otherwise, you must touch a resupply cabinet for loadout or class changes.<br/><br/>
+* Touching a resupply cabinet while having a new class selected will spawn you as that class.
+* Disabled auto self-kill upon changing class outside of a respawn room by default.
+* Improved messaging instructing players on how to switch class / loadout when they cannot automatically respawn.<br/><br/>
+* Resupplying now removes in-combat penalties from recently taking damage, aka giving "crit heals"
+  * Note that taking damage again will immediately cancel this out, and the resupply cabinet only resupplies every 3 seconds, so this does not necessarily help in tanking damage through accelerated healing.
+
+### Competitive
+
+* Added various features from Competitive Matchmaking to community competitive games:
+  * Added chat messages for class switching
+  * Added team wipe and first blood announcements
+  * Fixed Contract messages appearing in community competitive. We love you Miss Pauling, but that job can wait until after the scrim.
+  * Disabled dominations, item notifications, and holidays in community competitive, so that [this](https://www.twitch.tv/essentialstf/clip/SavageElegantQuailCharlieBitMe) doesn't happen
+  * Various other streamlining improvements
+* Taunts are forced into first person perspective in competitive games
+* Fixed class limit being bypassable if two or more players switched to that class during a respawn wave. 
+* Added demostop server command to notify the server when the client stopped recording a demo
+* Added a Reset Class button on the Class Selection screen to allow for easy access to self-kills and class swapping without conflicting with class limits
+* Fixed stats incrementing outside of rounds in community competitive
+* Disconnecting will now force a self-kill, providing kill credit to anyone who finished the quitter off
+* Added tf_tournament_classchange_allowed and tf_tournament_classchange_ready_allowed ConVars, which allow for formats that restrict changing class during a game
+* Added mp_sixes ConVar which opts into various Sixes enhancements and defaults
+* Added tf_tournament_respawn_multiplier ConVar
+  * Context: by default, team sizes below 8 players scale down respawn times from the designed default of 10 seconds per respawn wave
+  * Set by default 0.8 for 6s matches by default, and 1.0 otherwise.
+  * This preserves team respawn timers even while players are disconnected
+  * This will also allow for more structured respawn time determinations, rather than just a simple proportion of players on a team
+* Improved flexibility of class limit ConVars for greater flexibility
+  * classlimits tag will apply to any server customizing class limits
+* Match Status HUD is now ordered by class in competitive games
+* Fixed Match Status HUD not using proper team size display in 6s games for community competitive
+
+### Explosives
+
+* Explosions now check in a 4% inner radius for applying damage, so that small differences in geometry do not block explosion damage entirely if the original center point fails.
+  * We are aware this changes the behavior of stickybomb traps. However, following this change you should be damaged by them if and only if you can see the stickies, so fairness should be maintained.
+* Fixed blast jumping sometimes failing when sliding into a slope
+
+### Throwables/Splashables (Jarate, Mad Milk, Gas Passer)
+
+* Fixed splash radius being a cube rather than a sphere, which caught players in the area of effect unexpectedly at the corners
+* Fixed throwables bouncing off of players in some situations
+* Fixed throwables colliding with teammates in unexpected cases
+* Fixed throwables going through thin walls and doors in some cases
+  * This includes the Flyin' Guillotine cleaver
+* Enabled icon indicators for Jarate and Mad Milk by default
+
+---
+
+## <img style="height: 64px" src="/img/tc2/content/Icon_scout_blue.jpg" /> Scout
+
+### Soda Popper
+
+* Now has a slight purple glow when Hype is available, to better communicate when the Scout has this ability
+* Hype activates automatically upon attempting an additional air jump
+* No longer dumps clip on reload
+
+### Force-A-Nature
+
+* The fixed bullet spread pattern is no longer biased to the left side
+* No longer dumps clip on reload
+
+### Baby Face's Blaster
+
+* Fixed not applying boost when slowed
+
+### BONK! Atomic Punch
+
+* Fixed being under the effects of Bonk causing the player to take push force from damage in cases where it shouldn't apply
+
+### Boston Basher
+
+* Fixed miss detection working incorrectly
+
+### Sandman
+
+* Fixed slow not applying movement speed penalty correctly
+* Fixed slow not applying at close ranges
+* Fixed slow not applying underwater
+* Fixed baseballs disappearing prematurely (thanks Marxvee!)
+* Fixed baseballs computing random critical hits incorrectly
+
+### Wrap Assassin
+
+* Fixed bauble shard explosion dealing between 3 to 36 splash damage. Now deals a consistent 6 damage to everyone in range.
+* Fixed baubles computing random critical hits incorrectly
+* Fixed bauble projectile trail abruptly ending on impact (thanks Marxvee!)
+* Fixed baubles exploding in your face if a teammate was in the way. Ouch!
+
+### Candy Cane
+
+* Health kits on kill now spawn as cupcakes
+
+---
+
+## <img style="height: 64px" src="/img/tc2/content/Icon_soldier_blue.jpg" /> Soldier
+
+### Grenade Taunt
+
+* Made the Soldier Grenade taunt follow the same splash damage rules as other explosions
+* Fixed the Soldier Grenade taunt damage passing through walls
+
+### Beggar's Bazooka
+
+* Now solely detonates from reserve ammo when overloaded
+
+---
+
+## <img style="height: 64px" src="/img/tc2/content/Icon_pyro_blue.jpg" /> Pyro
+
+### All Flamethrowers
+
+* Fixed issues with flamethrower DPS
+  * Reworked flame density mechanic which previously approximated accuracy into being aware of accuracy thresholds of the Flamethrower
+  * New strategy is to simply track missed flames in between flame damage checks, reducing damage based upon the missed fraction, which provides a smoother ramp between actually missing flame damage checks, and only missing some particles in between
+  * Initial flame damage ramps up full DPS slightly faster, and decays upon missing, but can quickly be regained upon maintaining accuracy
+  * The lifetime of the oldest flames no longer adversely effect DPS
+  * DPS is consistent and correct regardless of range or wall reflection
+* Changed the particles to be clearer
+  * Included from the Ultimate TF2 Visual Fix Pack
+
+### Compression Blast
+
+* Fixed many bugs involving Pyro's Compression Blast reflection
+  * Fixed various reflected projectiles applying incorrect self-damage
+  * Fixed various reflected projectiles not reversing team color
+  * Fixed reflected rockets not having the correct properties of the original Rocket Launcher, like blast radius, particles, spells, speed, etc
+  * Fixed reflected Sandman balls not dealing damage
+  * Fixed reflected Wrap Assassin ornaments not dealing damage or bleed properly
+  * Fixed reflected Rescue Ranger bolts not healing friendly buildings
+  * Fixed reflected flares not exhibiting their specific Flare Gun's properties
+  * Fixed many cases of incorrect application of Strange and Killstreak effects for reflected projectiles
+  * Fixed reflected Huntsman arrows not applying the correct knockback force
+  * Fixed enemy Snipers receiving extinguish bonus from reflected Jarate
+  * Fixed reflected Loose Cannon cannonballs not applying Double Donk
+  * Fixed and restored various kill icons for many projectiles
+  * Fixed reflecting Sentry Gun rockets resulting in the Flamethrower playing its primary fire sound
+  * Fixed reflected projectiles not having correct lifetimes
+
+### Degreaser
+
+* Fixed switch speed bonus not being used for applying a holster speed bonus.
+  * The Degreaser's holster bonus was only applied after it has been deployed for the base deploy time (0.5 seconds), rather using the deploy time with its switch bonus (0.33 seconds). This caused an awkward situation where you had to wait longer than expected to benefit from The Degreaser's holster bonus.
+
+### All Flares
+
+* Fixed not being able to flare jump during knockback immunity, like as applied by a Quick-Fix Übercharge
+
+### Dragon's Fury
+
+* Fixed the Dragon's Fury range being dependent on its radius, and instead restored the original radius but clipped off the projectile's effects to exactly its range of 3000. 
+  * _Developer Note:_ The Dragon's Fury range is not like most weapons. It has a physics based projectile which tries to stop itself before overextending its range, but due to this and the larger projectile radius, it was changed to have a smaller radius to prevent issues with the front of the fireball touching players way past its range. Now, the fireball is hard limited to only affect players it hits if they were actually within the distance range, rather than if they simply touched the fireball at any distance. Thus, we have restored the original radius, making the fireball more intuitive and less awkward to aim, while fixing unfair cases of hits.
+* Projectile now fires from the center, down the crosshair
+  * The damage bonus on an accurate shot at burning players was very awkward and hard to achieve with a misaligned projectile
+* Changed the projectile to be clearer and less performance intensive
+  * Included from the Ultimate TF2 Visual Fix Pack
+
+### Gas Passer
+
+* Fixed Gas Passer not extinguishing teammates on direct hit (thanks Marxvee!)
+  * _Developer Note:_ the Gas Passer can already extinguish teammates, this just adds a quality of life feature which the Jarate and Mad Milk have, which allows direct hitting teammates who are burning, so you can extinguish them more easily.
+
+---
+
+## <img style="height: 64px" src="/img/tc2/content/Icon_demoman_blue.jpg" /> Demoman
+
+* Fixed Pain Train and Ullapool Caber not getting minicrits
+* Fixed The Scottish Play achievement not working with the Pain Train and Ullapool Caber
+
+### All Grenade Launchers and Stickybomb Launchers
+
+* Projectiles no longer have random launch forces in competitive games
+
+### Ullapool Caber
+
+* Fixed damage inconsistencies for the Caber's explosion
+* Fixed the Caber's explosion not being boosted by a minicrit hit
+
+---
+
+## <img style="height: 64px" src="/img/tc2/content/Icon_heavy_blue.jpg" /> Heavy
+
+### Natascha
+
+* Fixed slow not applying movement speed penalty correctly
+
+### Buffalo Steak Sandvich
+
+* Move speed bonus now only applies up to 30% base speed, rather than capping move speed to that amount
+
+### Holiday Punch
+
+* Enhanced hit from behind detection on the Holiday Punch
+
+### Fists of Steel
+
+* Fixed holster speed penalty being bypassable, such as when switching through multiple weapons
+* Fixed Übercharge rate being higher than intended due to max overheal penalty
+
+---
+
+## <img style="height: 64px" src="/img/tc2/content/Icon_engineer_blue.jpg" /> Engineer
+
+### Short Circuit
+
+* Fixed the Short Circuit applying self-damage inconsistently
+
+### Wrangler
+
+* Fixed rocket fire animation not playing when using the Wrangler (thanks horiuchii!)
+
+### All Wrenches
+
+* Engineers will always prioritize friendly buildings with their melee attacks, for the purposes of repairing, upgrading, construction boosting, and refilling ammo
+  * Engineers already prioritized a friendly building being sapped
+  * Note that enemies in the way will prevent you from getting in range of your building in most cases
+
+### Jag
+
+* Fixed Jag dealing very little damage to enemy buildings
+
+### Eureka Effect
+
+* Fixed The Eureka Effect providing teleport functionality through commands without being deployed
+
+### PDA
+
+* Fixed being able to build a building while hauling another
+* Fixed building blueprints rotating once upon pickup
+* Fixed buildings resetting their health to full while upgrading in some cases
+* Fixed blueprint textures not streaming in properly
+
+### Sentry Gun
+
+* Sentry rockets now follow the splash damage rules of other explosions. Will slightly reduce minimum splash damage.
+* Fixed various cases of Sentry rockets not being counted as Sentry damage:
+  * Sentry rocket falloff/rampup was based upon Engineer's position, rather than the Sentry's.
+  * An ally Engineer repairing the Sentry did not get an assist on rocket kill.
+  * A Medic got an assist when healing an Engineer whose Sentry got a rocket kill, even though the Engineer himself was not involved in the kill.
+  * Sentry damage reduction attributes did not resist Sentry Gun rockets. For example, the Battalion's Backup did not have 50% resistance to Sentry Gun damage from rockets.
+  * The achievement Texas Two-Step would not count if your Sentry Gun had only dealt rocket damage.
+  * Sentry Gun damage and kills from rockets would not be considered for spawning Sentry Busters.
+  * MvM robots and TF bots would not be aware of a Sentry Gun attack if they had only been damaged by rockets. 
+* Fixed turn rate not being consistent
+
+### Dispenser
+
+* Fixed Dispensers not updating their dispense trigger position while being moved
+
+---
+
+## <img style="height: 64px" src="/img/tc2/content/Icon_medic_blue.jpg" /> Medic
+
+### All Medi-Guns
+
+* Fixed overheal fluctuating by 1 HP when at max overheal
+* Fixed healing feedback missing when overhealing a patient
+* Added healing sound fluctuation based upon the status of the patient
+* Fixed movement issues while healing a patient
+* Damage feedback for a patient now plays back to the Medic
+* Added Medic Übercharge amount to the Match Status HUD for all teammates to see
+
+---
+
+## <img style="height: 64px" src="/img/tc2/content/Icon_sniper_blue.jpg" /> Sniper
+
+### All Sniper Rifles
+
+* Fixed laser dot not being accurate to where an enemy Sniper is aiming
+
+### Sydney Sleeper
+
+* Fixed teammate extinguish shots not being lag compensated
+
+### Huntsman
+
+* Made the Huntsman headshot hit detection consistent rather than being based upon map angle. 
+* Fixed Huntsman collision not properly searching for the point of intersection
+
+### Darwin's Danger Shield
+
+* Darwin's Danger Shield no longer provides full Afterburn Immunity. Instead, it gives the same level of Afterburn Protection as a Pyro has, e.g, the Dragon's Fury now works against it.
+  * Afterburn does not cause flinching for the Sniper
+
+---
+
+## <img style="height: 64px" src="/img/tc2/content/Icon_spy.jpg" /> Spy
+
+### General
+
+* Fixed inaccuracies with backstab detection, making it less dependent on latency.
+* Removed cases of facestabs, on both the Spy's and victim's point of view.
+* Dynamic crosshair scale based on accuracy now shows for all revolvers rather than just the Ambassador
+  * Dynamic crosshair can now be disabled with the new ConVar tf_revolver_dynamic_crosshair
+* Fixed Sapper cosmetics not appearing as attachments. (thanks OfficerSpy!)
+* Fixed Disguise Kit team selection not working properly at high ping. (thanks nosoop!) 
+
+### Enforcer
+
+* Fixed the Enforcer "piercing" bullet vulnerability
+
+---
+
+## Mann vs. Machine
+
+* Enabled Wave Status HUD during wave by default
+* Fixed Firing Speed upgrades not working in some cases
+* Fixed Sentry Gun firing rate bonuses not stacking correctly (Crit Canteen, Wrangler, Firing Speed upgrades)
+* Fixed the Reload Speed upgrade on the Sniper Rifle not applying without auto rezoom enabled
+* Fixed ammo canteens not affecting energy weapons
+* Fixed the Sandman not having the desired stun effect in MvM modes
+* Fixed Major League Scouts not swinging their baseball when its feet were close to a wall
+* Fixed revives on players in between waves affecting revive speed penalty
+* Fixed loot glow effect not being positioned correctly on the Victory screen
+* Fixed the Player Status HUD drawing on top of the Currency Status HUD on Linux (thanks CuriousTommy!)
+* Fixed Strength powerup not affecting damage dealt to Tanks (community request)
+* Fixed the Destroy Entity Task being non-functional in func_nav_prerequisite (community request)
+
+---
+
+## General Bot Fixes
+
+* Fixed bots not using their non-primary weapons properly
+* Fixed Spy bots not using their Revolver
+* Fixed Heavy bots using the Sandvich and Second Banana incorrectly
+* Fixed bots not using explosive weapons if enemies were too close to them and it was safe to take self-damage
+* Added bot_explode command, exploding them into gibs
+* Added the tf_bot_random_items ConVar, which, when set, equips random items on bots
+* Players replacing bots in quota mode now respects bots with an active role on the team: for example Medics with Übercharge building, or Engineers with buildings, and will prefer not to kick them
+* Bots now use a competitive roster in community competitive games
+* Bots no longer taunt in competitive games
+
+---
+
+## Halloween
+
+* Fixed Pumpkin MIRV spell not following splash damage falloff rules of other explosions.
+
+---
+
+## Mannpower
+
+* Fixed third person reload animations not getting faster from powerups
+* Fixed passive reload on the Crusader's Crossbow not speeding up from powerups
+</BlockbusterBlock>

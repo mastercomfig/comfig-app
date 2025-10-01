@@ -1,0 +1,19 @@
+---
+
+---
+
+<gift-card-loader></gift-card-loader>
+
+<script>
+  import { giftCard } from "@utils/giftCardPage";
+
+  class GiftCardLoader extends HTMLElement {
+    async connectedCallback() {
+      giftCard();
+    }
+  }
+
+  if (!customElements.get("gift-card-loader")) {
+    customElements.define("gift-card-loader", GiftCardLoader);
+  }
+</script>

@@ -46,3 +46,8 @@ All commands are run from the root of the project, from a terminal:
 ## Want to learn more?
 
 Feel free to check the [Astro documentation](https://docs.astro.build/en/getting-started/).
+
+## Credits
+
+* Curtain background by simplu27 (pixabay.com)
+* [Hologram Globe](https://tf2maps.net/downloads/hologram-globe.15718/) by The Tiny Desk Engineer

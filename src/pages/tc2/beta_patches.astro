@@ -1,0 +1,64 @@
+---
+import AdvRedirector from "@components/AdvRedirector.astro";
+import Body from "@components/Body.astro";
+import Footer from "@components/Footer.astro";
+import BaseHead from "@components/head/BaseHead.astro";
+import ImportHead from "@components/head/ImportHead.astro";
+import MainHead from "@components/head/MainHead.astro";
+import PreloadHead from "@components/head/PreloadHead.astro";
+import tfLogoImg from "@img/tc2/team-comtress-2.png";
+import Layout from "@layouts/Layout.astro";
+import { getCollection } from "astro:content";
+
+const patches = (await getCollection("tc2Patches"))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .filter((post) => !post.data.draft && post.id.endsWith("beta"));
+---
+
+<Layout>
+  <head>
+    <BaseHead />
+    <PreloadHead />
+    <ImportHead />
+    <MainHead
+      title=`Beta Test Patches | Team Comtress 2`
+      site="Team Comtress"
+      noSite={true}
+      description="Latest news and updates for Team Comtress 2 Beta testing"
+      image="https://teamcomtress.com/img/tc2/team-comtress-2.png"
+      favicon="/img/tc2/favicon.ico"
+    />
+  </head>
+  <Body>
+    <AdvRedirector />
+    <div class="text-center p-4">
+      <a href="/">
+        <img
+          class="img-logo-sm"
+          src={tfLogoImg.src}
+          alt="Team Comtress 2 logo"
+        />
+      </a>
+    </div>
+
+    <section class="container p-4 bg-dark mb-4">
+      <h1 id="patches">All Beta Test Patches</h1>
+      <div class="row g-4 mt-1">
+        {
+          patches.map((post) => (
+            <div class="card m-3 col-3">
+              <div class="card-body">
+                <h5 class="card-title m-0 text-center">
+                  <a class="stretched-link" href={`/patches/${post.id}`}>
+                    {post.id.split("-").slice(0, 3).join("-")} Beta
+                  </a>
+                </h5>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+    <Footer product={"Team Comtress"} />
+  </Body>
+</Layout>

@@ -14,10 +14,7 @@ import "@styles/keyboard.scss";
 import { getAppData, getGameData } from "@ssg/appData";
 import mediumHighImg from "@img/presets/medium-high.webp";
 import lowImg from "@img/presets/low.webp";
-import mediumLowImg from "@img/presets/medium-low.webp";
-import mediumImg from "@img/presets/medium.webp";
 import ultraImg from "@img/presets/ultra.webp";
-import veryLowImg from "@img/presets/very-low.webp";
 import highImg from "@img/presets/high.webp";
 import noneImg from "@img/presets/none.webp";
 import NavSelector from "@components/NavSelector.astro";
@@ -38,10 +35,7 @@ const { hash } = await getGameData();
     <PreloadHead>
       <link rel="preload" as="image" href={mediumHighImg.src} />
       <link rel="preload" as="image" href={lowImg.src} />
-      <link rel="preload" as="image" href={mediumLowImg.src} />
-      <link rel="preload" as="image" href={mediumImg.src} />
       <link rel="preload" as="image" href={ultraImg.src} />
-      <link rel="preload" as="image" href={veryLowImg.src} />
       <link rel="preload" as="image" href={highImg.src} />
       <link rel="preload" as="image" href={noneImg.src} />
     </PreloadHead>
@@ -193,26 +187,11 @@ const { hash } = await getGameData();
               <a class="nav-link" id="high" type="button" role="tab">High</a>
             </li>
             <li class="nav-item" role="presentation">
-              <a class="nav-link" id="medium-high" type="button" role="tab"
-                >Medium High</a
-              >
-            </li>
-            <li class="nav-item" role="presentation">
               <a class="nav-link" id="medium" type="button" role="tab">Medium</a
               >
             </li>
             <li class="nav-item" role="presentation">
-              <a class="nav-link" id="medium-low" type="button" role="tab"
-                >Medium Low</a
-              >
-            </li>
-            <li class="nav-item" role="presentation">
               <a class="nav-link" id="low" type="button" role="tab">Low</a>
-            </li>
-            <li class="nav-item" role="presentation">
-              <a class="nav-link" id="very-low" type="button" role="tab"
-                >Very Low</a
-              >
             </li>
             <li class="nav-item" role="presentation">
               <a class="nav-link" id="none" type="button" role="tab">None</a>
@@ -459,10 +438,10 @@ const { hash } = await getGameData();
                 <a
                   class="card text-start addon-card h-100"
                   href="#"
-                  id="disable-pyroland"
+                  id="no-pyroland"
                 >
                   <div class="card-body">
-                    <h5 class="card-title">Disable Pyroland</h5>
+                    <h5 class="card-title">No Pyroland</h5>
                     <p class="card-text">Removes Pyroland map textures</p>
                   </div>
                 </a>
@@ -696,14 +675,50 @@ const { hash } = await getGameData();
                   <div class="collapse-wrapper">
                     <p>
                       Looking for something else (like config templates and
-                      alternative formats, like ZIP or cfg)? You can find it on
-                      GitHub <a
+                      alternative formats, like ZIP or autoexec.cfg)? You can
+                      find it on GitHub <a
                         href="https://github.com/mastercomfig/mastercomfig/releases/latest"
                         class="text-light"
                         id="assets-link"
                         style="text-decoration: underline dotted;"
                         rel="noopener">release assets</a
-                      >.
+                      >. Under the assets section, you'll find:
+
+                      <ul>
+                        <li>
+                          <strong>full autoexec</strong> &mdash; a version of mastercomfig
+                          in the older autoexec.cfg editable format, which <a
+                            href="https://docs.comfig.app/latest/faq/#why-does-mastercomfig-use-a-vpk"
+                            >lacks certain features</a
+                          > of the mod version, but it is a single file, and is editable
+                          and has comments
+                        </li>
+                        <li>
+                          <strong>mastercomfig zip package</strong> &mdash; a version
+                          of mastercomfig in the fully-featured mod format, but is
+                          editable and retains comments, albeit with worse load performance
+                          compared to the VPK, and may cause issues with the
+                          <a
+                            href="https://docs.comfig.app/latest/faq/#what-is-the-mastercomfig-way-of-doing-things"
+                            >layer approach in mastercomfig</a
+                          >
+                        </li>
+                        <li>
+                          <strong>overrides template</strong> &mdash; a ZIP you can
+                          extract to <code>cfg/overrides</code> which gives you all
+                          the files you can use to override mastercomfig at specific
+                          points, like class configs, modules, autoexec, and other
+                          hooks
+                        </li>
+                        <li>
+                          <strong>overrides autoexec template</strong> &mdash; a
+                          fully commented version of the mastercomfig autoexec.cfg,
+                          which you can use in <code
+                            >cfg/overrides/autoexec.cfg</code
+                          > to override specific settings in finer detail than just
+                          modules
+                        </li>
+                      </ul>
                     </p>
                   </div>
                 </div>
@@ -755,7 +770,7 @@ const { hash } = await getGameData();
               </div>
               -->
               </div>
-              <h5 style="padding-top: 16px"><b>Documentation</b></h5>
+              <h5 style="padding-top: 16px"><b>Docs</b></h5>
               <p>
                 <strong
                   >Want to customize and get the most out of mastercomfig?</strong
@@ -773,7 +788,7 @@ const { hash } = await getGameData();
                 data-url="customization/custom_configs"
                 rel="noopener">Configs</a
               >
-              <h5 style="padding-top: 16px"><b>Support</b></h5>
+              <h5 style="padding-top: 16px"><b>Tech Help</b></h5>
               <p>
                 <strong>Experiencing problems with mastercomfig?</strong> Head to
                 the Quick Fixes page to get help with common issues.<br />

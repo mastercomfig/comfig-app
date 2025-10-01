@@ -1,0 +1,524 @@
+---
+import AdvRedirector from "@components/AdvRedirector.astro";
+import Body from "@components/Body.astro";
+import Footer from "@components/Footer.astro";
+import BaseHead from "@components/head/BaseHead.astro";
+import ImportHead from "@components/head/ImportHead.astro";
+import MainHead from "@components/head/MainHead.astro";
+import PreloadHead from "@components/head/PreloadHead.astro";
+import curtainImg from "@img/stuff/curtain.jpg";
+import mainmenuMedicImg from "@img/tc2/blockbuster/Main_menu_medic.png";
+import mainmenuPyroImg from "@img/tc2/blockbuster/Main_menu_pyro.png";
+import mainmenuSpyImg from "@img/tc2/blockbuster/Main_menu_spy.png";
+import combattextImg from "@img/tc2/blockbuster/combattext.png";
+import engineerpdaImg from "@img/tc2/blockbuster/engineerpda.png";
+import fovImg from "@img/tc2/blockbuster/fov.png";
+import hologlobeImg from "@img/tc2/blockbuster/hologlobe_neutral.png";
+import matchhudImg from "@img/tc2/blockbuster/matchhud.png";
+import mvpImg from "@img/tc2/blockbuster/mvp.png";
+import reloadImg from "@img/tc2/blockbuster/resupply.png";
+import viewmodelImg from "@img/tc2/blockbuster/viewmodel.png";
+import tfLogoImg from "@img/tc2/team-comtress-2.png";
+import lairImg from "@img/update/lair.webp";
+import lairOutsideImg from "@img/update/lairoutside.webp";
+import quicklimeImg from "@img/update/quicklime.webp";
+import Layout from "@layouts/Layout.astro";
+import { Content as GameplayBlock } from "@posts/data/blockbuster-gameplay.mdx";
+import { Content as OtherBlock } from "@posts/data/blockbuster-other.mdx";
+import { Content as PerfBlock } from "@posts/data/blockbuster-perf.mdx";
+import { Image } from "astro:assets";
+---
+
+<style>
+  .header-links > a {
+    color: #fcf195;
+  }
+  .header-links > a:hover {
+    color: #faf4ba;
+  }
+  .btn-xl {
+    font-size: 1.7rem;
+  }
+  .tiny-credits {
+    font-size: 0.4rem;
+  }
+  .tiny-credits small {
+    font-size: 0.3rem;
+  }
+  @media only screen and (min-width: 576px) {
+    .blockbuster-title {
+      font-size: 8rem;
+    }
+    .update-title {
+      font-size: 6rem;
+    }
+    .header-links {
+      font-size: 2rem;
+    }
+    .movie-poster {
+      --movie-poster-height: max(100vh, 60rem);
+    }
+  }
+  @media only screen and (max-width: 575px) {
+    .blockbuster-title {
+      font-size: 4rem;
+    }
+    .update-title {
+      font-size: 3.75rem;
+    }
+    .tiny-credits {
+      font-size: 0.2rem;
+    }
+    .tiny-credits small {
+      font-size: 0.15rem;
+    }
+    .header-links {
+      font-size: 1.2rem;
+    }
+    .movie-poster {
+      --movie-poster-height: 45rem;
+    }
+  }
+  .movie-poster {
+    height: var(--movie-poster-height);
+    margin: auto;
+    border: 5px solid white;
+    box-shadow: 0 0 60px 10px #000;
+  }
+  @media only screen and (min-width: 976px) {
+    .movie-poster {
+      aspect-ratio: 2 / 3;
+    }
+  }
+  @media only screen and (max-width: 575px) {
+    .movie-poster {
+      aspect-ratio: initial;
+    }
+  }
+  @font-face {
+    font-family: "Monoton";
+    font-style: normal;
+    font-display: swap;
+    font-weight: 400;
+    src: url(@fontsource/monoton/files/monoton-latin-400-normal.woff2)
+      format("woff2");
+    unicode-range:
+      U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+      U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+      U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+  @font-face {
+    font-family: "Righteous";
+    font-style: normal;
+    font-display: swap;
+    font-weight: 400;
+    src: url(@fontsource/righteous/files/righteous-latin-400-normal.woff2)
+      format("woff2");
+    unicode-range:
+      U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+      U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+      U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+  h1,
+  h2,
+  h4,
+  h5,
+  h6,
+  .display-2,
+  .display-3,
+  .display-4,
+  .display-5,
+  .display-6 {
+    font-family:
+      "Righteous",
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      "Helvetica Neue",
+      Arial,
+      sans-serif;
+  }
+  .display-1 {
+    font-family:
+      "Monoton",
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      "Helvetica Neue",
+      Arial,
+      sans-serif;
+  }
+  .glow {
+    animation: glow 1s ease-in-out infinite alternate;
+  }
+  @keyframes glow {
+    from {
+      text-shadow:
+        0 0 2px #fff,
+        0 0 5px #fff,
+        0 0 7px #e60073,
+        0 0 10px #e60073,
+        0 0 12px #e60073,
+        0 0 15px #e60073,
+        0 0 17px #e60073;
+    }
+    to {
+      text-shadow:
+        0 0 5px #fff,
+        0 0 7px #ff4da6,
+        0 0 10px #ff4da6,
+        0 0 12px #ff4da6,
+        0 0 15px #ff4da6,
+        0 0 17px #ff4da6,
+        0 0 20px #ff4da6;
+    }
+  }
+</style>
+
+<Layout>
+  <head>
+    <BaseHead />
+    <PreloadHead />
+    <ImportHead />
+    <MainHead
+      title="Blockbuster Update | Team Comtress 2"
+      site="Team Comtress"
+      noSite={true}
+      description="The Team Comtress 2 Blockbuster Update. Grab your popcorn for Team Comtress 2's debut blockbuster hit! Performance improvements, gameplay fixes and quality of life updates."
+      image="https://teamcomtress.com/img/tc2/team-comtress-2.png"
+      favicon="/img/tc2/favicon.ico"
+    />
+  </head>
+  <Body>
+    <AdvRedirector />
+    <div style=`background: url(${curtainImg.src});background-size: cover`>
+      <div
+        class="w-100 h-100"
+        style="backdrop-filter: blur(40px) hue-rotate(340deg);padding-bottom:2.5rem"
+      >
+        <section
+          class="movie-poster p-0"
+          style=`background: linear-gradient(rgba(38, 50, 56, 0.7) 10%, rgba(38, 50, 56, 0.7)),url(${lairOutsideImg.src});background-size: cover; background-position: center;background-position: center`
+        >
+          <div
+            class="d-flex flex-column align-items-center justify-content-between text-center p-4"
+            style="min-height: var(--movie-poster-height)"
+          >
+            <div>
+              <a href="/">
+                <img
+                  class="img-logo-sm"
+                  src={tfLogoImg.src}
+                  alt="Team Comtress 2 logo"
+                />
+              </a>
+              <h1
+                class="display-5 mt-5"
+                style="letter-spacing: 0.2rem;font-weight: 600"
+              >
+                THIS SUMMER...
+              </h1>
+            </div>
+            <div style="margin-top: -4rem">
+              <h1
+                class="display-1"
+                style="letter-spacing: 0.2rem;font-weight: 600;color: #fcf195;text-shadow: 1px 1px 2px #e60073"
+              >
+                THE
+              </h1>
+              <h1
+                class="display-1 glow blockbuster-title"
+                style="letter-spacing: 0.2rem;font-weight: 600;color: #fcf195"
+              >
+                BLOCK<wbr />BUSTER
+              </h1>
+              <h1
+                class="display-1 update-title"
+                style="letter-spacing: 0.2rem;font-weight: 600;color: #fcf195;text-shadow: 1px 1px 2px #ff00dd"
+              >
+                UPDATE
+              </h1>
+            </div>
+            <div>
+              <p
+                class="display-6 header-links m-0 mb-2"
+                style="color: #ccc47d;font-weight: 100;letter-spacing: 0.3rem"
+              >
+                |&gt;&gt;&nbsp;<a style="font-weight: 600" href="#performance"
+                  >PERFORMANCE</a
+                >&nbsp;&lt;&lt;|<br />
+                |&gt;&gt;&nbsp;<a style="font-weight: 600" href="#gameplay"
+                  >GAMEPLAY</a
+                >&nbsp;&lt;&lt;|<br />
+                |&gt;&gt;&nbsp;<a style="font-weight: 600" href="#qol"
+                  >QUALITY&nbsp;OF&nbsp;LIFE</a
+                >&nbsp;&lt;&lt;|
+              </p>
+              <p
+                class="tiny-credits"
+                style="color: #ccc47d;font-weight: 300;letter-spacing: 0.1rem"
+              >
+                COPYRIGHT <small>LOLOLOL</small> MASTERCOMS <small
+                  >PRESENTS A</small
+                > MASTERCOMFIG <small>PRODUCTION </small>
+                <small>IN ASSOCIATION WITH</small> MASTERCOMS
+                <small>PRODUCED BY</small> MASTERCOMS <small>DIRECTED BY</small>
+                MASTERCOMS <small>THIS UPDATE IS SO COOL!</small>
+              </p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+    <section class="text-center" style="background: rgb(255 255 255 / 5%)">
+      <h1 style="font-size: 2rem">
+        Summer is here, and with it, a blockbuster hit for Team Comtress 2's
+        debut!
+      </h1>
+      <p class="lead container" style="font-size: 1.5rem">
+        <br />
+        This update is packed with performance improvements, gameplay fixes, and
+        quality of life updates that will make your experience buttery smooth and
+        more enjoyable than ever. We've been hard at work listening to your feedback
+        and addressing the issues that matter most to you. From optimizing the game's
+        performance to fixing hundreds of gameplay bugs, this update is a testament
+        to our commitment to making Team Comtress 2 the best it can be.
+        <br /><br />
+      </p>
+      <h2 style="font-size: 1.75rem">
+        So grab your popcorn, sit back, and get ready for a summer of fun.
+      </h2>
+    </section>
+    <section class="text-center container" id="performance">
+      <Image src={engineerpdaImg} style="height: 20rem;width: auto" alt="" />
+      <hr class="mt-0" style="color: #000" />
+      <h2
+        class="display-2"
+        style="color: #fcf195; font-weight: 700; letter-spacing: 0.2rem"
+      >
+        PERFORMANCE
+      </h2>
+      <p class="lead" style="font-size: 1.5rem">
+        Improving the game's performance is a long term focus for us, and this
+        is just the beginning of a much smoother experience.
+      </p>
+      <hr />
+      <div class="text-start">
+        <PerfBlock />
+      </div>
+    </section>
+    <section
+      class="jumbotron jumbotron-fluid"
+      style=`background: linear-gradient(rgba(38, 50, 56, 0.4) 10%, rgba(38, 50, 56, 0.4)),url(${quicklimeImg.src});background-size: cover; background-position: center;background-position: center;min-height: 25vh`
+    >
+    </section>
+    <section class="text-center container" id="gameplay">
+      <h2
+        class="display-2"
+        style="color: #fcf195; font-weight: 700; letter-spacing: 0.2rem"
+      >
+        GAMEPLAY
+      </h2>
+      <p class="lead" style="font-size: 1.5rem">
+        As it turns out, there were a <em>few</em> gameplay bugs in TF2. Well, hundreds
+        of them. So we've been listening to your feedback, and have made changes
+        and fixes to the game based on what we've heard.
+      </p>
+      <hr />
+      <h2 class="display-3">HIGHLIGHTS</h2>
+      <div
+        class="d-none d-sm-flex justify-content-around align-self-stretch align-items-end w-100"
+      >
+        <div class="w-100">
+          <Image
+            src={mainmenuPyroImg}
+            style="height: min(40rem, 50vw);width: auto;max-width: 100%"
+            alt=""
+          />
+        </div>
+        <div class="w-100">
+          <Image
+            src={mainmenuMedicImg}
+            style="height: min(40rem, 50vw);width: auto;max-width: 100%"
+            alt=""
+          />
+        </div>
+        <div class="w-100">
+          <Image
+            src={mainmenuSpyImg}
+            style="height: min(40rem, 50vw);width: auto;max-width: 100%"
+            alt=""
+          />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 col-sm">
+          <div class="w-100 d-block d-sm-none">
+            <Image src={mainmenuPyroImg} class="img-fluid" alt="" />
+          </div>
+          <hr class="mt-0" style="color: #000" />
+          <h2 class="display-4">PYRO</h2>
+          <p class="lead">
+            Our silly pyromaniac friend had more things wrong with them than
+            right. We've fixed all that &mdash; well, besides their craziness.
+          </p>
+        </div>
+        <div class="col-12 col-sm">
+          <div class="w-100 d-block d-sm-none">
+            <Image src={mainmenuMedicImg} class="img-fluid" alt="" />
+          </div>
+          <hr class="mt-0" style="color: #000" />
+          <h2 class="display-4">MEDIC</h2>
+          <p class="lead">
+            Fixed all sorts of annoyances and improved healing feedback to make
+            tending to your patients more satisfying.
+          </p>
+        </div>
+        <div class="col-12 col-sm">
+          <div class="w-100 d-block d-sm-none">
+            <Image src={mainmenuSpyImg} class="img-fluid" alt="" />
+          </div>
+          <hr class="mt-0" style="color: #000" />
+          <h2 class="display-4">SPY</h2>
+          <p class="lead">
+            Made backstabs much more reliable, added QoL for your pitiful
+            revolver aim, and fixed a critical Enforcer bug.
+          </p>
+        </div>
+      </div>
+      <p class="lead" style="font-size: 1.6rem">
+        Attention those of you with short attention spans: the highlights don't
+        even BEGIN to cover all the changes. Maybe that's because we started
+        with Pyro instead of Scout. And also because we've made a LOT of
+        improvements.
+      </p>
+      <hr />
+      <div class="text-start">
+        <GameplayBlock />
+      </div>
+    </section>
+    <section
+      class="jumbotron jumbotron-fluid"
+      style=`background: linear-gradient(rgba(38, 50, 56, 0.4) 10%, rgba(38, 50, 56, 0.4)),url(${lairImg.src});background-size: cover; background-position: center;background-position: center;min-height: 25vh`
+    >
+    </section>
+    <section class="text-center container" id="qol">
+      <h2
+        class="display-2"
+        style="color: #fcf195; font-weight: 700; letter-spacing: 0.2rem"
+      >
+        QUALITY OF LIFE
+      </h2>
+      <p class="lead" style="font-size: 1.5rem">
+        Turns out when a game has been around for over 15 years, it can get a
+        little dusty. So we've been busy polishing it up, and generally making
+        things better. These are small but important fixes that should improve
+        your overall experience.
+      </p>
+      <hr />
+      <div class="row text-center">
+        <div class="col">
+          <Image
+            src={hologlobeImg}
+            class="p-4 px-0 px-sm-4 rounded-5"
+            style="height: min(22rem, 100vw)"
+            alt=""
+          />
+          <h1 class="display-6">IMPROVED NETWORKING</h1>
+          <p class="lead">
+            We've added subtick and a bunch of other improvements to get you
+            feeling like you're on LAN.
+          </p>
+        </div>
+        <div class="col">
+          <Image
+            src={viewmodelImg}
+            class="p-4 px-0 px-sm-4 rounded-5"
+            style="height: min(22rem, 56.25vw);width: auto"
+            alt=""
+          />
+          <h1 class="display-6">GRAPHICAL IMPROVEMENTS</h1>
+          <p class="lead">
+            Get a fresh cinematic experience with new explosion effects, weapon
+            lighting, water shading, flames, bullet effects, and more.
+          </p>
+        </div>
+      </div>
+      <div class="row text-center">
+        <div class="col">
+          <Image
+            src={combattextImg}
+            class="p-4 px-0 px-sm-4 rounded-5"
+            style="height: min(22rem, 56.25vw);width: auto"
+            alt=""
+          />
+          <h1 class="display-6">NEW CUSTOMIZATION</h1>
+          <p class="lead">
+            Weapon config scripts, damage number improvements, and other
+            customization options will get your game just how you like it.
+          </p>
+        </div>
+        <div class="col">
+          <Image
+            src={mvpImg}
+            class="p-4 px-0 px-sm-4 rounded-5"
+            style="height: min(22rem, 56.25vw);width: auto"
+            alt=""
+          />
+          <h1 class="display-6">CASUAL MVP</h1>
+          <p class="lead">
+            It's a race to the top! Carry your team to victory, and get the
+            center stage at the end of the match.
+          </p>
+        </div>
+      </div>
+      <div class="row text-center">
+        <div class="col-12 col-sm">
+          <Image
+            src={reloadImg}
+            class="p-4 px-0 px-sm-4 rounded-5"
+            style="height: min(16rem, 56.25vw);width: auto"
+            alt=""
+          />
+          <h1 class="h2">CLIP/AMMO FIXES</h1>
+          <p class="lead">
+            We fixed all sorts of weapon firing and reload issues. And yeah, we
+            fixed that stubborn 4/19 glitch on resupply too.
+          </p>
+        </div>
+        <div class="col-12 col-sm">
+          <Image
+            src={fovImg}
+            class="p-4 px-0 px-sm-4 rounded-5"
+            style="height: min(16rem, 56.25vw);width: auto"
+            alt=""
+          />
+          <h1 class="h2">UPDATED DEFAULTS</h1>
+          <p class="lead">
+            Get a fresh new look with 90 FOV, auto healing, injured teammate
+            callouts, and net settings made for 2025 instead of dial-up.
+          </p>
+        </div>
+        <div class="col-12 col-sm">
+          <Image
+            src={matchhudImg}
+            class="rounded-5"
+            style="width: 100%;height: auto;padding: 5.5rem 0 5.5rem 0"
+            alt=""
+          />
+          <h1 class="h2">MATCH HUD UPDATES</h1>
+          <p class="lead">
+            See your Medic's Übercharge so you know when it's time to push, and
+            see your team's class lineup more easily in competitive mode.
+          </p>
+        </div>
+      </div>
+
+      <hr />
+      <div class="text-start">
+        <OtherBlock />
+      </div>
+    </section>
+    <Footer product={"Team Comtress"} />
+  </Body>
+</Layout>

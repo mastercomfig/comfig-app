@@ -1,8 +1,16 @@
 [
   {
-    "origin": ["https://comfig.app", "http://127.0.0.1:4321"],
-    "method": ["GET"],
-    "responseHeader": ["Content-Type"],
+    "origin": [
+      "https://comfig.app",
+      "https://staging.mastercomfig-site.pages.dev",
+      "http://127.0.0.1:4321"
+    ],
+    "method": [
+      "GET"
+    ],
+    "responseHeader": [
+      "Content-Type"
+    ],
     "maxAgeSeconds": 3600
   }
 ]

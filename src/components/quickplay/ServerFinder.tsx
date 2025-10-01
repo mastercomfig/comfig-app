@@ -8,6 +8,10 @@ import plrImg from "@img/gamemodes/plr.webp";
 import miscImg from "@img/gamemodes/sd.webp";
 import xMarkImg from "@img/xmark.webp";
 import * as Sentry from "@sentry/browser";
+import {
+  getDefaultMatchGroups,
+  getSpecialEventDesc,
+} from "@ssg/quickplayStaticData";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
@@ -55,6 +59,9 @@ const gamemodeToPrefix = {
   special_events: "",
   halloween: "",
   christmas: "",
+  payload: "pl",
+  capture_point: "cp",
+  payload_race: "plr",
 };
 
 const SERVER_HEADROOM = 1;
@@ -278,7 +285,45 @@ export default function ServerFinder({ hash }: { hash: string }) {
   const [schema, setSchema] = useState<any>(undefined);
   const mapToGamemode = useMemo(() => schema?.map_gamemodes ?? {}, [schema]);
   const mapToThumbnail = useMemo(() => schema?.map_thumbnails ?? {}, [schema]);
-  const extraMatchGroups = useMemo(() => schema?.matchGroups ?? {}, [schema]);
+  const extraMatchGroups = useMemo(() => schema?.gamemodes ?? {}, [schema]);
+  const mapToMatchGroup = useMemo(() => {
+    const mapToMatchGroup: Record<string, string> = {};
+    for (const [matchGroup, maps] of Object.entries(extraMatchGroups)) {
+      for (const map of maps) {
+        mapToMatchGroup[map] = matchGroup;
+      }
+    }
+    return mapToMatchGroup;
+  }, [extraMatchGroups]);
+
+  useEffect(() => {
+    const matchGroups = getDefaultMatchGroups().filter((r) => r.active);
+    const liveMatchGroups: object[] = [];
+    const newMatchGroupSettings = {};
+    for (const matchGroup of Object.keys(extraMatchGroups)) {
+      let newMatchGroupDesc: object = null;
+      if (matchGroup === "special_events") {
+        newMatchGroupDesc = getSpecialEventDesc();
+      }
+      if (!newMatchGroupDesc) {
+        console.log(`Unknown match group ${matchGroup}, skipping`);
+        continue;
+      }
+      liveMatchGroups.push(newMatchGroupDesc);
+      const code = newMatchGroupDesc["code"];
+      if (!quickplayStore.matchGroupSettings[code]) {
+        newMatchGroupSettings[code] = new Set(["pinglimit", "partysize"]);
+      }
+    }
+    quickplayStore.setAvailableMatchGroups([
+      ...liveMatchGroups,
+      ...matchGroups,
+    ]);
+    quickplayStore.setMatchGroupSettings({
+      ...newMatchGroupSettings,
+      ...quickplayStore.matchGroupSettings,
+    });
+  }, [extraMatchGroups]);
 
   const allMaps = useMemo(() => {
     return Object.keys(mapToGamemode).map((m, i) => ({ id: i, name: m }));
@@ -335,7 +380,12 @@ export default function ServerFinder({ hash }: { hash: string }) {
     server,
     tags: Set<string>,
   ) => {
-    if (expectedGamemode !== "any") {
+    if (expectedGamemode in extraMatchGroups) {
+      const mapMatchGroup = mapToMatchGroup[server.map];
+      if (mapMatchGroup !== expectedGamemode) {
+        return false;
+      }
+    } else if (expectedGamemode !== "any") {
       const mapGamemode = mapToGamemode[server.map];
       if (mapGamemode) {
         if (mapGamemode !== expectedGamemode) {
@@ -383,6 +433,16 @@ export default function ServerFinder({ hash }: { hash: string }) {
         filterServerForGamemode(gm, server, tags),
       );
     } else {
+      if (currentMatchGroup === "jump") {
+        const mapPrefix = server.map.split("_")[0];
+        if (mapPrefix === "jump" || mapPrefix === "surf") {
+          return true;
+        }
+        return false;
+      }
+      if (filterServerForGamemode(currentMatchGroup, server, tags)) {
+        return true;
+      }
       return false;
     }
   };
@@ -471,7 +531,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
     }
 
     if (newTotalPlayers > realMaxPlayers - SERVER_HEADROOM) {
-      return -0.3;
+      return -0.05;
     }
 
     if (humans === 0) {
@@ -982,8 +1042,6 @@ export default function ServerFinder({ hash }: { hash: string }) {
       return "success";
     };
   }, [quickplayStore.pinglimit]);
-
-  console.log(quickplayStore.matchGroup);
 
   // Look, I know this is bad. I'll split it into components later.
   return (

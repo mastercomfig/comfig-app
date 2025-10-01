@@ -1,0 +1,272 @@
+---
+---
+import BlockbusterBlock from "@components/tc2/BlockbusterBlock.astro";
+
+<BlockbusterBlock>
+## General
+
+* Various settings were updated to modern defaults
+* Disabled auto-kill upon class change by default
+* Injured teammates automatically call out while playing as a Medic by default
+* Crosshair is now hidden on scope zoom by default
+* Enabled remember last switched weapon by default
+* Enabled Medi-Gun auto healing by default
+* Auto reload is now force enabled, to free up the reload key for future actions
+* The default volume is now 50%, and the intro video has been updated with a lower volume. No longer blow out your ears when launching the game!
+* Increased default player count to 32
+* Added adjustable team sizes. Defaults to 12v12. Players will be directed to spectator if teams are full.
+  * Can be changed by server operator and VScript with tf_team_size, tf_team_size_blu and tf_team_size_red ConVars
+  * Increasing the max player count past the default will automatically revert to the previous behavior, but still can be customized with the above ConVars
+* Players can now join a full team, if there is a bot slot to replace on that team
+* Fixed firing being delayed after auto-reloading (thanks chrb22!)
+* Added a ConVar tf_skip_equip_action_hint to disable reminders to equip the relevant action item
+
+## Visual
+
+* Updated the default FOV to 90 
+* Removed quality LOD from water by default. See 2Fort's water in all its glory from the battlements!
+  * Can be enabled with the r_cheapwater_forceoff ConVar
+* Fixed viewpunch not updating smoothly per frame (thanks ficool2!)
+* Fixed ragdoll velocity being reset (thanks ficool2!)
+* Fixed attachments on viewmodels being inverted on flipped viewmodels (thanks Marxvee!)
+* Removed ultrawide limitation for borderless fullscreen
+* Improved smokestack rendering
+* Improved impact effect rendering
+* Improved lighting/shading on various weapons
+* Improved character model rendering
+* Fixed texture streaming causing some weapons and surfaces to appear blurry when first displaying them
+* Fixed Medi-Guns displaying the connection hose when dropped
+* Fixed breakables not rendering properly in some cases
+* Fixed grenade launcher barrels not spinning during reload
+* Fixed minigun not spinning at the correct speed
+* Fixed self-kills with energy weapons not disintegrating your body with the correct color
+* Fixed tracers not rendering in some cases
+* Fixed scorch decals not appearing from Stickybomb detonations in various cases
+* Improved visual look of lighting with HDR/bloom enabled
+* Enabled radial fog by default on all maps
+* Burning players now maintain burning when gibbed
+* Fixed Spy's cigarette burning even when wet. Unfortunately, he ran out of those discontinued waterproof cigarettes.
+* Disabled bicubic lightmaps temporarily as it causes seams and other inconsistencies
+* Added the [Ultimate TF2 Visual Fix Pack](https://github.com/agrastiOs/Ultimate-TF2-Visual-Fix-Pack). Some highlights:
+  * Fixes various visual inconsistencies
+  * Improved clarity of various explosion effects
+  * Fixed many weapons missing glows when crit boosted
+  * Enhanced minigun shells to look like actual bullets
+  * Improved muzzleflashes, eliminating lag and improving clarity
+  * Added LODs to items which were missing them
+  * Graphics fixes to wearable items
+* Added [Refined Lineup-styled Eyes](https://gamebanana.com/mods/613164) by Everik
+  * Enhances the look of character eyes
+  * Fixes water flickering when rendering eyes in threaded rendering mode
+  * Improves performance of eye rendering
+* Added [Enhanced Flames](https://gamebanana.com/mods/11785) by ZooL
+  * Improves visibility and style of players and other objects on fire
+* Added [2007 Water Splash](https://gamebanana.com/mods/604278) by Isolar
+  * Improves graphics quality of water splashes from bullets
+* Update teasers from years past now display again, as a trip down memory lane
+* Fixed some critical hit effects not playing to the shooter for headshots
+* Fixed cooldowns for pain / hurt responses
+* Fixed physics effects improperly playing in some cases
+
+## HUD
+
+* Showcase your bling with the new live character model on the main menu!
+* Fixed various issues in class selection:
+  * Class selection animations now play instantly and smoothly
+  * Facial expressions now start from neutral, rather than from open mouth, on class selection animations
+  * Character model lighting revamped to better showcase the classes in a harsh, cinematic style
+  * Various foley sounds now play for the class selection animations
+* Added Übercharge to Match HUD
+* Added improved messaging surrounding class / loadout changes outside of a respawn room
+* Improved resolution scaling on the bonus overheal health icon (thanks Niterux!)
+* Fixed match HUD being initialized incorrectly
+* Fixed Party Chat UI not being localized properly (thanks gaelcoral!)
+* Fixed Player Status HUD being displayed over Currency Status (thanks CuriousTommy!)
+* Fixed tournament spectator GUI showing for players while Match HUD was active
+* Added colored logs to the console (thanks ficool2!)
+* Fixed display of building upgrade status being incorrect in certain cases
+* Added cl_crosshair_gap ConVar to control the gap for certain crosshair textures
+* Fixed payload progress HUD being slightly delayed
+* Returning to the main menu plays a new music track
+* Fixed certain main menu elements not properly hiding during load time
+* Enabled server time limit display by default
+* Removed new player prompt regarding disabling HUD player model on old PCs, as its performance issues have been resolved
+* Made spectator panel bars transparent to improve visibility while spectating even when min-mode is off
+* Improved consistency with team sides. BLU is now always on the left in the UI, and RED is always on the right.
+* Added new options for floating health and health icon:
+  * Health icon visibility is now controlled by tf_hud_target_id_disable_health_icon
+  * Floating health is now visible on MvM bosses unless the ConVar tf_hud_target_id_disable_floating_health 2 is set
+  * Target ID avatars are now still visible when health icons are enabled
+* Target ID avatars now display for all players
+* Improved UI for when different teams are full
+* Adjusted ping icon thresholds to be more strict
+  * Great: \<24
+  * Okay: \<50
+  * Bad: \<150
+  * Very Bad: \>150
+* Fixed friends panel not listing the intended number of friends
+* Fixed some kill not showing up on the kill feed with the correct icon: Burning Arrow, Burning Arrow Headshot, Reflected Arrow Headshot, Reflected Burning Arrow, Reflected Burning Arrow Headshot
+
+## Coaching / Training
+
+* Added meters label to location callouts
+* Fixed sizing / spacing on callouts
+* Fixed fading logic
+* Added lag compensation to callouts
+* Fixed being able to call out disguised enemy Spies as a Coach
+* Fixed student death alert playing when feigning death
+* Added ability to ping various objectives
+* Can now ping through windows and grates
+* Fixed pinging props and other unrelated world entities
+
+## Matchmaking
+
+* Added Casual MVP screen
+* Re-enabled stopwatch for Casual
+* Changed Casual from a best of 3 to a best of 5
+  * This helps with game restart fatigue in matchmaking
+* Enabled map voting during play rather than at the end of a match
+* Increased draw time from 4.5 seconds to 5 seconds
+
+## Damage Feedback
+
+* Enabled hitsounds and killsounds by default
+* Damage numbers now combine over 2 seconds by default
+* Damage number combining now also can show individual numbers
+* Added option for large damage numbers
+* Improved damage number style for readability and feedback during gameplay
+* Improved damage number positioning at close up and far away
+* Changed hitsound defaults to be more responsive to gameplay
+* Damage numbers and hitsounds now play even when dead
+* Fixed bugs with damage numbers not displaying properly when dealing damage very rapidly, like on the Flamethrower
+* Added a damage/kill hitmarker
+* As a Medic, hitsounds and killsounds will be replicated from your patient, at a reduced volume
+* Added tf_dingaling_lasthit_repeat_delay to prevent playback of duplicate sounds when killing multiple players at once.
+
+## Networking
+
+* Added subtick support to weapon fire position, improving sync for firing projectiles and hitscan weapons while moving
+  * Weapons are now fired from the location you were at the frame you shot your gun, rather than fast forwarding to the next tick in the future
+* All servers default to using Steam Networking for enhanced ping and DDoS protection
+* Improved responsiveness of launching projectiles
+* Upgraded the networking rates to be up to date with modern standards and in sync with game update rates
+* Changed tickrate from 66.6666 to 64 to fix alignment issues
+  * Tickrate can be changed back to the old value with -tickrate 66
+* Updated the client interp limit to 200ms instead of 500ms
+* Changed the lag compensation window from 1 second to 500ms
+* Added subtick support to lag compensation, fixing an issue where lag compensation would not rewind exactly to the player's view
+  * Players are now lag compensated back to the frame you shot
+* Client interp updates
+  * Removed cl_interp. Now only cl_interp_ratio determines client interpolation amount to reduce confusion.
+  * This effectively makes the default interpolation amount 0.03125 (down from 0.1)
+  * Reduced default maximum cl_interp_ratio to 3. This makes the maximum interpolation amount 0.046875 (down from 0.5)
+  * Fixed cl_interp_ratio not being consistently rounded, possibly causing desync or misleading information
+* Fixed various accuracy issues with lag compensation
+* Enhanced lag compensation for pose parameters in player animation
+* Teammates are now lag compensated, to prevent them from blocking bullets, and to improve hitreg on guns which affect teammates
+* Fixed cases where prediction could be out of date from server data
+* Fixed a server networking protection system cause worse than expected packet loss on unreliable connections
+* Fixed various issues in how net_graph reported network quality and other settings
+* Client prediction is now always enabled
+* Fixed cases of prediction errors causing inaccurate hit detection
+* Fixed hitbox desync when moving at extremely fast speeds
+* Fixed some IP addresses being handled incorrectly
+* Reduced networking timeouts to 20 seconds to be more responsive and force reconnects earlier
+
+## Demos
+
+* Demo Support records competitive matches by default
+* Fixed Demo Support automatically recording Casual matches when selecting Competitive matches
+* Fixed Demo Support not being able to log every kill
+* Fixed Demo Support recording pre and post-game by default
+* Servers are informed when a client stops recording a demo, just like they were informed when a client starts recording
+
+## Spectating
+
+* Updated the SourceTV defaults for better quality and ease of use
+* Fixed spectating players in first person incorrectly displaying weapons
+* Fixed spectating Medics in first person incorrectly rendering the Medi-Gun beam
+* Fixed spectating ragdolling players being unsmooth (thanks ficool!)
+* Fixed jittering when spectating ragdolls (thanks ficool2!)
+* Spectating a player in third person will use the vision of the target rather than your own observer view
+
+## Customization
+
+* Changed custom HUD UI version to -1 to prevent compatibility issues with the base game
+* Added ConVar tf_viewmodels_offset_override to adjust the position (within limits!) of your viewmodel on screen beyond the min viewmodels presets
+* Added classchange.cfg, which runs upon every class change before the class config
+* Each weapon now executes its own config file upon switching to it in game
+* Added startup_manifest.cfg which is executed at startup before autoexec.cfg, for use in mods which would like to customize ConVars
+
+## Huge Team Improvements
+
+* Match HUD now supports huge teams (>32)
+  * Will display team respawn timer and how many of each class is alive
+* Fixed bot support in huge teams
+* Fixed the 99th player having dedicated server vote permissions
+
+## Bug Fixes
+
+* Fixed reserve ammo being depleted by an in-progress reload animation when clip was already filled from a resupply
+* Fixed game simulating during a pause (Übercharge building during pause, etc.)
+* Fixed spectators receiving head roll, permanently tilting their camera
+* Fixed doors and other entities not travelling/rotating at the intended speed consistently
+* Fixed nav_generate not kicking bots as intended
+* Fixed class configs running during gameplay upon client lag / hitches
+* Fixed some sounds being cut off during team fights
+* Reduced minimum time interval between voice commands to 0.5. Note that the interval is still limited by the length of the voice line.
+* Fixed some possible issues with speech being interrupted by a scene
+
+## Exploit Fixes
+
+* Fixed some additional exploits for hiding the Sniper Rifle scope
+* Fixed players joining locally hosted games when started through the map command
+* Fixed a gameplay information exploit related to VGUI commands
+* Fixed a gameplay information exploit related to an old LCD keyboard system
+* Fixed an exploit allowing players to change restricted ConVars during gameplay
+* Fixed some exploits which affected visibility of props and other graphics features
+* Fixed some cheat ConVars being accessible to be changed through some systems
+* Fixed some double weapon fire exploits
+* Fixed some pure server exploits
+* Fixed some sound systems not respecting sv_pure
+* Fixed being able to build teleporters in locations which would send players to their doom in a kill trigger
+* Fixed Spy voice icons being visible in alltalk while stealthed or disguised (thanks ficool2!)
+* Fixed accuracy of reported ping throughout the UI
+* Fixed some sounds unintentionally having no cooldown between plays
+* Fixed Noisemakers being able to be spammed
+* Fixed a view position exploit related to cl_smoothtime
+* Fixed some cases of backtrack and other server tick exploits
+* Fixed an exploit which allowed switching to a full/unbalanced team
+* Fixed some instant respawn exploits
+* Fixed kicks sometimes being bypassable
+* cl_disablehtmlmotd is no longer queryable by servers. (thanks megascatterbomb!)
+* Fixed an exploit with being able to spectate enemies upon death
+* Fixed cheats being able to bypass server restrictions for some settings
+* Removed ability to open insecure http:// links through the UI
+
+## Mapping / Modding
+
+* Networked and predicted gravity on entities
+* Added an ability for VScript to ignore class achievements and contracts (thanks LizardOfOz!) 
+* env_smokestack now supports up to 8 materials
+* Networked and predicted gravity on entities. (thanks ficool2!) 
+* Fixed prediction errors with modified gamerules gravity (thanks nosoop!)
+* Added -StaticPropIndirectMode parameter to vrad for selecting between different prop indirect lighting methods
+* Fix mult_reload_time_while_healed not working with more than one healer
+* Added mp_disable_respawn_times 2 ConVar option, which disables the freeze cam in addition to disabling respawn times, for truly instant respawns
+* Added sv_enablebunnyhopping, sv_autobunnyhopping and sv_bunnyhop_max_speed_factor ConVars
+* Added tf_fall_damage ConVar to disable fall damage
+* Fixed VScript values causing a memory leak (thanks ficool2!)
+* Fixed some weapon explosions not being detected properly by map logic
+
+## Stability
+
+* Fixed crashes on maps with large lightmaps
+* Fixed a crash when there are no targets to spectate in a map
+* Fixed a possible crash in some maps, for example when the ball in PASS Time was not picked up by either team and entered a trigger
+* Fixed a crash when PASS Time ball deals impact damage on initial launch
+* Fixed a crash when using addcond 88 (bumper car cage) on a map which does not support it
+* Fixed improperly set up physics constraints not having defined behavior
+* Fixed local servers crashes when players with cosmetics join the server (thanks ficool2!)
+
+</BlockbusterBlock>

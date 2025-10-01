@@ -1,3 +1,8 @@
+## July 26, 2025
+
+* Added support for dynamic match groups
+* Added featured and jump/surf match groups
+
 ## March 11, 2025
 
 * Stopped almost full servers from being filtered out completely, instead, they are penalized slightly

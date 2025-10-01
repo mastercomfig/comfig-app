@@ -1,5 +1,9 @@
 ---
+export interface Props {
+  product?: string;
+}
 
+const { product = "mastercomfig" } = Astro.props as Props;
 ---
 
 <footer class="container g-0">
@@ -11,6 +15,5 @@
   Corporation in the U.S. and/or other countries. All other trademarks are property
   of their respective owners in the US and other countries.
   <br /><br />
-  mastercomfig is not sponsored, endorsed, licensed by, or affiliated with Valve
-  Corporation.
+  {product} is not sponsored, endorsed, licensed by, or affiliated with Valve Corporation.
 </footer>

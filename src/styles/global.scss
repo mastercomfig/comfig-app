@@ -8,7 +8,7 @@
   scrollbar-color: $primary $dark;
 }
 
-@media only screen and (width >= 900px) {
+@media only screen and (width >=900px) {
   * {
     scrollbar-width: thin;
   }
@@ -100,7 +100,12 @@ section {
 
 // Header logo
 .img-logo {
-  height: 10rem;
+  max-height: 10rem;
+  max-width: 100%;
+}
+
+.img-logo-sm {
+  height: 5rem;
 }
 
 // Large image compare modal
@@ -125,14 +130,12 @@ section {
 
 // Homepage
 #action-container {
-  background: linear-gradient(
-    90deg,
-    rgba(38, 50, 56, 0.1) 10%,
-    mix(rgba(0, 150, 136, 0.9), rgba(38, 50, 56, 0.1), 50%) 30%,
-    rgba(0, 150, 136, 1) 50%,
-    mix(rgba(0, 150, 136, 0.9), rgba(38, 50, 56, 0.1), 50%) 70%,
-    rgba(38, 50, 56, 0.1) 90%
-  );
+  background: linear-gradient(90deg,
+      rgba(38, 50, 56, 0.1) 10%,
+      mix(rgba(0, 150, 136, 0.9), rgba(38, 50, 56, 0.1), 50%) 30%,
+      rgba(0, 150, 136, 1) 50%,
+      mix(rgba(0, 150, 136, 0.9), rgba(38, 50, 56, 0.1), 50%) 70%,
+      rgba(38, 50, 56, 0.1) 90%);
   margin-left: -50vw;
   margin-right: -50vw;
   padding-top: 1.5rem;
@@ -311,7 +314,9 @@ b {
 
   @if $enable-rounded {
     --bs-select-border-radius: #{$form-select-border-radius};
-  } @else {
+  }
+
+  @else {
     --bs-select-border-radius: 0;
   }
 }

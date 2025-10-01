@@ -9,7 +9,7 @@ const headers = {
   "Content-Type": "application/json",
 };
 
-const hosts = ["comfig.app"];
+const hosts = ["comfig.app", "teamcomtress.com"];
 
 function purgeOnCloudflare(pages) {
   const files = pages.flatMap((f) => hosts.map((h) => `https://${h}/${f}`));

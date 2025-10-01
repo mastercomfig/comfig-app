@@ -1,0 +1,165 @@
+---
+import Body from "@components/Body.astro";
+import Footer from "@components/Footer.astro";
+import BaseHead from "@components/head/BaseHead.astro";
+import ImportHead from "@components/head/ImportHead.astro";
+import MainHead from "@components/head/MainHead.astro";
+import PreloadHead from "@components/head/PreloadHead.astro";
+import Layout from "@layouts/Layout.astro";
+---
+
+<style>
+  .text-shteam {
+    color: rgb(25, 153, 255) !important;
+  }
+  .bg-shteam {
+    background: rgb(24, 26, 33);
+  }
+  .bg-shteam-bright {
+    background: #2d73ff;
+  }
+  .btn {
+    border-radius: 0.25rem;
+  }
+  .btn-primary {
+    background: linear-gradient(90deg, #06bfff 0%, #2d73ff 100%);
+  }
+  .btn-primary:hover {
+    background: linear-gradient(90deg, #06bfff 30%, #2d73ff 100%);
+  }
+  body {
+    background-color: #181a21;
+  }
+  .bg-center {
+    background: #1b2838;
+  }
+  .floating {
+    animation: float 3s ease-in-out infinite;
+  }
+  .floating-2 {
+    animation: float 2.4s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0% {
+      transform: translateY(0);
+    }
+
+    50% {
+      transform: translateY(-20px);
+    }
+
+    100% {
+      transform: translateY(0);
+    }
+  }
+</style>
+
+<Layout>
+  <head>
+    <BaseHead />
+    <PreloadHead />
+    <ImportHead />
+    <MainHead
+      title="April 1 Promo - Shteam Commumity"
+      noSite={true}
+      description="sign in for free shteam gift card reward"
+      image="https://comfig.app/img/giftcard/cover.png"
+      favicon="/img/giftcard/shteam.png"
+    />
+  </head>
+  <Body>
+    <section style=`background: rgb(23, 29, 37);height: 104px`>
+      <div class="container" style="height: 100%">
+        <a href="/giftcard/" class="text-light">
+          <img
+            src="/img/giftcard/shteam.png"
+            alt="logo"
+            style="height: 150%; width: auto;"
+          />
+          <span
+            style="font-weight: 500;letter-spacing: 0.3rem;font-size: 1.5rem;margin-top: 0.2rem"
+            >SHTEAM</span
+          >
+          <sup style="top: -2em;font-size: 0.5rem;font-weight: 900">LOL</sup>
+        </a>
+      </div>
+    </section>
+    <section class="bg-center mb-5">
+      <div
+        class="container bg-shteam p-5"
+        style="margin-top: 4rem;margin-bottom: 4rem"
+      >
+        <div class="row">
+          <div class="col">
+            <h1 class="display-6 text-shteam">
+              Winner stolen item with Shteam Commumity
+            </h1>
+            <p class="lead">
+              <strong
+                >❗April 1 promo: Free $50 glft caard initial prlze
+              </strong>
+              <br />
+              ✅100% secure: your item safe with us
+            </p>
+            <hr />
+            <p>
+              <span class="bg-shteam-bright px-2 py-1">🗸</span>&nbsp;&nbsp;I
+              agree
+            </p>
+            <div class="w-100">
+              <a
+                href="/giftcard/signin"
+                id="giftCardSignUp"
+                class="btn btn-primary"
+                style="padding-left: 6rem;padding-right:6rem"
+                >Sign Up cash bonus</a
+              >
+            </div>
+          </div>
+          <div class="col">
+            <div class="row align-items-end">
+              <div class="col-3">
+                <img
+                  src="/img/giftcard/items/key.png"
+                  alt="key"
+                  class="floating w-100"
+                />
+              </div>
+              <div class="col-6">
+                <img
+                  src="/img/giftcard/items/key.png"
+                  alt="key"
+                  class="floating-2 w-100"
+                />
+              </div>
+              <div class="col-3">
+                <img
+                  src="/img/giftcard/items/key.png"
+                  alt="key"
+                  class="floating w-100"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </Body>
+  <script>
+    import { redirectOnAuth } from "@utils/giftCard";
+    document.addEventListener("astro:page-load", () => {
+      const giftCardButton = document.getElementById(
+        "giftCardSignUp",
+      ) as HTMLButtonElement | null;
+      if (!giftCardButton) {
+        return;
+      }
+      redirectOnAuth();
+    });
+  </script>
+  <Footer>
+    <a href="/giftcard/terms">Terms</a>
+    <br /><br />
+  </Footer>
+</Layout>

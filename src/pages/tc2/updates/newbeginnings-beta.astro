@@ -1,0 +1,478 @@
+---
+import AdvRedirector from "@components/AdvRedirector.astro";
+import Body from "@components/Body.astro";
+import Footer from "@components/Footer.astro";
+import BaseHead from "@components/head/BaseHead.astro";
+import ImportHead from "@components/head/ImportHead.astro";
+import MainHead from "@components/head/MainHead.astro";
+import PreloadHead from "@components/head/PreloadHead.astro";
+import Layout from "@layouts/Layout.astro";
+---
+
+<style>
+  .header-links > a {
+    color: #fcf195;
+  }
+  .header-links > a:hover {
+    color: #faf4ba;
+  }
+  .btn-xl {
+    font-size: 1.7rem;
+  }
+  @font-face {
+    font-family: "Monoton";
+    font-style: normal;
+    font-display: swap;
+    font-weight: 400;
+    src: url(@fontsource/monoton/files/monoton-latin-400-normal.woff2)
+      format("woff2");
+    unicode-range:
+      U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+      U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+      U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+  @font-face {
+    font-family: "Righteous";
+    font-style: normal;
+    font-display: swap;
+    font-weight: 400;
+    src: url(@fontsource/righteous/files/righteous-latin-400-normal.woff2)
+      format("woff2");
+    unicode-range:
+      U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+      U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+      U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+  h1,
+  h2,
+  h4,
+  h5,
+  h6,
+  .display-2,
+  .display-3,
+  .display-4,
+  .display-5,
+  .display-6 {
+    font-family:
+      "Righteous",
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      "Helvetica Neue",
+      Arial,
+      sans-serif;
+  }
+  .display-1 {
+    font-family:
+      "Monoton",
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      "Helvetica Neue",
+      Arial,
+      sans-serif;
+  }
+  .glow {
+    animation: glow 1s ease-in-out infinite alternate;
+  }
+  @keyframes glow {
+    from {
+      text-shadow:
+        0 0 2px #fff,
+        0 0 5px #fff,
+        0 0 7px #e60073,
+        0 0 10px #e60073,
+        0 0 12px #e60073,
+        0 0 15px #e60073,
+        0 0 17px #e60073;
+    }
+    to {
+      text-shadow:
+        0 0 5px #fff,
+        0 0 7px #ff4da6,
+        0 0 10px #ff4da6,
+        0 0 12px #ff4da6,
+        0 0 15px #ff4da6,
+        0 0 17px #ff4da6,
+        0 0 20px #ff4da6;
+    }
+  }
+</style>
+
+<Layout>
+  <head>
+    <BaseHead />
+    <PreloadHead />
+    <ImportHead />
+    <MainHead
+      title="New Beginnings - Gameplay Update | Team Comtress 2"
+      site="Team Comtress"
+      noSite={true}
+      description="New Beginnings, a Gameplay Update for Team Comtress 2."
+      image="https://teamcomtress.com/img/tc2/team-comtress-2.png"
+      favicon="/img/tc2/favicon.ico"
+    />
+  </head>
+  <Body>
+    <AdvRedirector />
+    <section class="text-center container" id="gameplay">
+      <h2
+        class="display-2"
+        style="color: #fcf195; font-weight: 700; letter-spacing: 0.2rem"
+      >
+        GAMEPLAY
+      </h2>
+      <p class="lead container" style="font-size: 1.5rem">
+        <br />
+        These are some proposed changes we're still experimenting with, and may not
+        necessarily be added
+        <br />
+      </p>
+      <hr />
+      <div class="text-start">
+        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
+          CORE GAMEPLAY
+        </h2>
+        <ul class="lead">
+          <li>
+            Reintroduced damage ranges seen on certain no-falloff weapons when
+            random damage spread was enabled, by integrating them into
+            falloff/rampup.
+          </li>
+          <ul>
+            <li>
+              <small
+                ><em>Developer Note:</em> Falloff/rampup is an integral part of Team
+                Fortress 2, dictating ideal ranges for fights, thus balancing engagements.
+                So it's an incredibly powerful attribute when a weapon ignores falloff.
+                We decided to reintroduce damage threshold variance as seen in damage
+                spread for these weapons, and integrate them in a way which follows
+                the general distance-based engagement rules of Team Fortress 2.
+              </small>
+            </li>
+            <li>
+              For more information, see the sections for the affected weapons:
+              Grenade Launcher and Sniper Rifle
+            </li>
+          </ul>
+        </ul>
+        <hr />
+        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
+          SCOUT
+        </h2>
+        <h3 class="h5" style="font-weight: 600">Soda Popper</h3>
+        <ul class="lead">
+          <li>Instantly reloads while double jumping</li>
+          <li>
+            Hype glow now always show on the Soda Popper when Hype is available
+          </li>
+          <li>
+            Hype is activated by jumping a third time while the Soda Popper is
+            fully deployed
+          </li>
+          <li>You are marked for death while Hype is activated</li>
+          <li>Each additional air jump will expend Hype</li>
+          <li>
+            Hype can be maintained by dealing damage to enemies while hyped
+          </li>
+          <li>Hype is lost upon touching the ground</li>
+        </ul>
+        <h3 class="h5" style="font-weight: 600">
+          Crit-a-Cola (not implemented yet)
+        </h3>
+        <ul class="lead">
+          <li>
+            Drinking the Crit-a-Cola no longer immediately provides any bonuses.
+          </li>
+          <li>
+            Upon drinking, you now receive a 10 second buff, during which any
+            kills or dealing 150 damage will grant you mini-crits for the
+            remainder of the buff.
+          </li>
+          <li>
+            You are initially Marked for Death during the buff, but it is
+            cleared when you earn mini-crits.
+          </li>
+        </ul>
+        <h3 class="h5" style="font-weight: 600">Sandman</h3>
+        <ul class="lead">
+          <li>Increased the base damage from 15 to 20</li>
+          <li>Increased moonshot base damage from 23 to 30</li>
+          <li>Slow now applies to hits at point blank range</li>
+          <li>Increased the base slow duration from 0.6 seconds to 1 second</li>
+          <li>Maximum slow duration changed from 2 to 3</li>
+          <li>
+            Slow duration now scales lower at close range, and ramps up higher
+            at further away
+          </li>
+          <li>
+            Moonshot bonus is still 1 extra second, so moonshots have 4 second
+            slow duration
+          </li>
+          <li>Halved the distance required for a moonshot</li>
+          <li>
+            The Sandman instantly replenishes its ball and becomes crit boosted
+            for the next ball swing or melee attack after landing a moonshot
+          </li>
+          <li>
+            Note: the ball is only replenished if it was not granted through a
+            moonshot already, to prevent chaining moonshots.
+          </li>
+          <li>
+            In Mann vs. Machine, the Sandman regains its ability to stun both
+            players and robots.
+          </li>
+          <li>Removed random critical hits</li>
+        </ul>
+        <h3 class="h5" style="font-weight: 600">Wrap Assassin</h3>
+        <ul class="lead">
+          <li>Removed charge rate bonus</li>
+          <li>Receives charge upon dealing any bleed damage</li>
+          <li>Reduced base bauble damage from 15 to 5</li>
+          <li>Reduced base bleed duration from 5 to 2</li>
+          <li>Halved the distance required for a moonshot</li>
+          <li>Removed random critical hits</li>
+          <li>
+            Shard damage now always does 6 damage, regardless of distance or
+            direct hit. Previously, damage was inconsistent (dealing up to 14
+            damage) and sometimes did double damage.
+          </li>
+          <li>Shard damage now crits when the ornament crits</li>
+          <li>
+            Critical shard damage applies applies a 4 second bleed in an AoE
+          </li>
+        </ul>
+        <hr />
+        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
+          SOLDIER
+        </h2>
+        <h3 class="h5" style="font-weight: 600">Beggar's Bazooka</h3>
+        <ul class="lead">
+          <li>
+            Overloading now only expends reserve ammo, keeping already loaded
+            rockets.
+          </li>
+        </ul>
+        <h3 class="h5" style="font-weight: 600">Cow Mangler</h3>
+        <ul class="lead">
+          <li>-15% reload start speed</li>
+        </ul>
+        <h3 class="h5" style="font-weight: 600">Righteous Bison</h3>
+        <ul class="lead">
+          <li>Projectile moves slower through enemies</li>
+          <li>Deals damage every 0.1 seconds, rather than 0.025 seconds</li>
+        </ul>
+        <h3 class="h5" style="font-weight: 600">Equalizer</h3>
+        <ul class="lead">
+          <li>
+            Now also grants damage resistance while fully deployed, from 20% at
+            50% HP to 50% at 10% HP
+          </li>
+        </ul>
+        <hr />
+        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
+          DEMOMAN
+        </h2>
+        <h3 class="h5" style="font-weight: 600">All Grenade Launchers</h3>
+        <ul class="lead">
+          <li>
+            Grenades now have minor damage rampup/falloff, based upon their old
+            random damage spread.
+          </li>
+          <ul>
+            <li>
+              Grenades ramp up to their max damage (+3% of normal) at minimum
+              distance, to normal damage at 146 units.
+            </li>
+            <li>
+              Grenades fall off to their minimum damage (-15% of normal) at 1024
+              units, to normal damage at 682 units.
+            </li>
+          </ul>
+        </ul>
+        <h3 class="h5" style="font-weight: 600">The Ullapool Caber</h3>
+        <ul class="lead">
+          <li>
+            Detonating the Caber explodes in your face, dealing massive lethal
+            self-damage.
+          </li>
+          <li>Increased the explosion radius from 100 to 146.</li>
+          <li>
+            After the impact explosion, the Caber will fall to the ground,
+            exploding again upon impact for 100 damage.
+          </li>
+          <li>
+            The secondary explosion will be crit-boosted if the initial attack
+            was a crit.
+          </li>
+        </ul>
+        <hr />
+        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
+          HEAVY
+        </h2>
+        <h3 class="h5" style="font-weight: 600">All Miniguns</h3>
+        <ul class="lead">
+          <li>Minigun now spins-up 15% slower</li>
+          <li>Removed penalty period to accuracy and damage after spin-up</li>
+        </ul>
+        <h3 class="h5" style="font-weight: 600">Holiday Punch</h3>
+        <ul class="lead">
+          <li>Now uses a more advanced check to detect attacks from behind.</li>
+        </ul>
+        <hr />
+        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
+          ENGINEER
+        </h2>
+        <h3 class="h5" style="font-weight: 600">Short Circuit</h3>
+        <ul class="lead">
+          <li>Damage per orb increased from 15 to 20.</li>
+          <li>Zap targets per orb increased from 2 to 4.</li>
+          <li>
+            Instead of destroying projectiles, the orb now applies a stacking
+            -35% damage penalty to projectiles.
+          </li>
+          <li>
+            <small
+              ><em>Developer Note:</em> Completely destroying a player's projectile
+              felt too unfair and frustrating. Now, the Engineer retains the ability
+              to reduce the effectiveness of projectile spam, rather than completely
+              disabling it, while also encouraging cooperative play between Engineers.</small
+            >
+          </li>
+        </ul>
+        <h3 class="h5" style="font-weight: 600">Wrangler</h3>
+        <ul class="lead">
+          <li>
+            Shield is now only active when the Sentry Gun is disabled, either
+            from the Engineer dying, or him switching off the Wrangler.
+          </li>
+          <li>Increased rocket fire speed bonus from 33% to 100%.</li>
+          <li>
+            Sentry Gun firing rate is now doubled, rather than being 66% faster
+            on a Level 1, and 50% faster on Levels 2 & 3. Mini-Sentries already
+            fired 100% faster.
+          </li>
+        </ul>
+        <hr />
+        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
+          MEDIC
+        </h2>
+        <ul class="lead">
+          <li>
+            Players under the effect of a Quick-Fix Übercharge can now block
+            captures.
+          </li>
+          <li>
+            Medic now gains a minimum flat speed boost to 360 move speed when
+            healing classes not faster than him.
+          </li>
+          <li>
+            Players healed by the Medi-Gun get a 10% boost to their speed, if
+            they are slower than the Medic healing them.
+          </li>
+        </ul>
+        <h3 class="h5" style="font-weight: 600">Syringe Gun</h3>
+        <ul class="lead">
+          <li>
+            Syringe Gun grants you damage resistance while active, based upon
+            your Ubercharge level, up to 35% at maximum Ubercharge.
+          </li>
+        </ul>
+        <h3 class="h5" style="font-weight: 600">Blutsauger</h3>
+        <ul class="lead">
+          <li>
+            Needles deal more damage, based upon your Ubercharge level, up 1.7x
+            damage at maximum Ubercharge.
+          </li>
+        </ul>
+        <h3 class="h5" style="font-weight: 600">Overdose</h3>
+        <ul class="lead">
+          <li>
+            Now also grants jump height based upon your Ubercharge level, up to
+            20% at maximum Ubercharge.
+          </li>
+        </ul>
+        <hr />
+        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">
+          SNIPER
+        </h2>
+        <h3 class="h5" style="font-weight: 600">All Sniper Rifles</h3>
+        <ul class="lead">
+          <li>Removed quickscope delay for headshots.</li>
+          <li>Reduced headshot damage by 50.</li>
+          <li>
+            Critical headshots now apply head trauma: a 16 damage per second
+            incurable bleed which lasts for 4 seconds.
+          </li>
+          <li>
+            Bodyshots now have damage rampup/falloff, based upon their old
+            random damage spread.
+          </li>
+          <ul>
+            <li>
+              Bodyshots ramp up to their max damage (+15% of normal) at minimum
+              distance, to normal damage at 300 units.
+            </li>
+            <li>
+              Bodyshots fall off to their minimum damage (-15% of normal) at
+              2560 units, to normal damage at 1680 units.
+            </li>
+          </ul>
+        </ul>
+        <h3 class="h5" style="font-weight: 600">All SMGs</h3>
+        <ul class="lead">
+          <li>Can now headshot.</li>
+          <li>Headshots have falloff.</li>
+        </ul>
+        <h3 class="h5" style="font-weight: 600">Jarate</h3>
+        <ul class="lead">
+          <li>Sniper can now drink his Jarate for minicrits.</li>
+        </ul>
+        <h2 class="h4" style="font-weight: 600; letter-spacing: 0.3rem">SPY</h2>
+        <ul class="lead">
+          <li>Base cloak time reduced from 1 second to 0.7 seconds</li>
+          <li>Decloak attack delay reduced from 2 seconds to 1.4 seconds.</li>
+          <li>
+            Note that decloak time remains at 2 seconds. So you will be able to
+            attack slightly before becoming fully visible.
+          </li>
+        </ul>
+        <h3 class="h5" style="font-weight: 600">All Revolvers</h3>
+        <ul class="lead">
+          <li>
+            All Revolvers, except for the Diamondback and L’Etranger, can now
+            headshot.
+          </li>
+          <li>
+            Revolvers, excluding the Ambassador and Diamondback, deal -30% base
+            damage on headshot. So, the base Revolver deals 84 damage on a
+            headshot, but otherwise deals its full base damage of 40.
+          </li>
+          <li>Removed maximum range for headshots.</li>
+          <li>Increased falloff for headshots at longer ranges.</li>
+          <li>Revolvers can no longer score random critical hits.</li>
+        </ul>
+        <h3 class="h5" style="font-weight: 600">L’Etranger</h3>
+        <ul class="lead">
+          <li>Can fire while cloaked.</li>
+          <li>Damage penalty while cloaked: 50%.</li>
+          <li>Firing while cloaked briefly reveals you.</li>
+        </ul>
+        <h3 class="h5" style="font-weight: 600">Ambassador</h3>
+        <ul class="lead">
+          <li>Now always accurate and capable of headshots when fired.</li>
+          <li>Headshots deal full damage, unlike other revolvers.</li>
+          <li>Reduced firing speed from 0.6 seconds to 0.8 seconds.</li>
+          <li>Increased reload time from 1.1 seconds to 1.5 seconds.</li>
+          <li>Has longer falloff range on headshot.</li>
+          <li>Fires tracer rounds.</li>
+        </ul>
+        <h3 class="h5" style="font-weight: 600">Diamondback</h3>
+        <ul class="lead">
+          <li>Revenge Crits now have damage falloff.</li>
+        </ul>
+      </div>
+    </section>
+    <Footer product={"Team Comtress"} />
+  </Body>
+</Layout>
