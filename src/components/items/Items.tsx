@@ -32,7 +32,7 @@ export default function Items({ hash }) {
       <Tabs defaultActiveKey="default" transition={false}>
         <Tab eventKey="default" title="Default">
           <ItemsInner
-            key={resetKey}
+            key={`itemsinner-${resetKey}`}
             playerClass="default"
             items={{ default: globalThis.items["default"] }}
             setResetKey={setResetKey}
@@ -45,7 +45,7 @@ export default function Items({ hash }) {
             title={playerClass[0].toUpperCase() + playerClass.slice(1)}
           >
             <ItemsInner
-              key={resetKey}
+              key={`${playerClass}-itemsinner-${resetKey}`}
               playerClass={playerClass}
               items={Object.fromEntries(
                 globalThis.itemUsedBy[playerClass].map((i) => [

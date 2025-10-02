@@ -4,6 +4,7 @@ import { useState } from "react";
 import { FormSelect } from "react-bootstrap";
 import Select, { components } from "react-select";
 
+import { getCrosshairPacks } from "@utils/game";
 import { getNonce } from "@utils/nonce";
 
 const cache = createCache({
@@ -165,6 +166,7 @@ function getPreviewImage(
             src={`${previewPath}${
               previews[selected] ?? selectedName + ".webp"
             }`}
+            alt=""
           />
         </span>
       )
@@ -177,6 +179,7 @@ function getPreviewImage(
         className={previewImgClass}
         style={previewImgStyle}
         src={`${previewPath}${previews[selected] ?? selectedName + ".webp"}`}
+        alt=""
       />
     )
   );
@@ -229,7 +232,9 @@ export default function ItemsSelector({
     };
   }
 
-  let groupedSelectOptions = null;
+  const crosshairPacks = getCrosshairPacks();
+
+  let groupedSelectOptions: null | object = null;
   if (groups) {
     groupedSelectOptions = {};
     for (const group of Object.keys(groups)) {

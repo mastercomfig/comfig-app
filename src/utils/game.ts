@@ -662,8 +662,8 @@ let completeCrosshairPacks: null | object = null;
 export function getCrosshairPacks() {
   if (!completeCrosshairPacks) {
     completeCrosshairPacks = {
-      ...crosshairPacks,
-      ...dynamicCrosshairPacks,
+      ...globalThis.crosshairPacks,
+      ...globalThis.dynamicCrosshairPacks,
     };
   }
   return completeCrosshairPacks;
@@ -674,8 +674,8 @@ let completeCrosshairPackGroups: null | object = null;
 export function getCrosshairPackGroups() {
   if (!completeCrosshairPackGroups) {
     completeCrosshairPackGroups = {
-      ...crosshairPackGroups,
-      ...dynamicCrosshairPackGroups,
+      ...globalThis.crosshairPackGroups,
+      ...globalThis.dynamicCrosshairPackGroups,
     };
   }
   return completeCrosshairPackGroups;
@@ -752,7 +752,7 @@ function getLocalization(key): string {
   try {
     return globalThis.languageCache[language][key.substring(1)];
   } catch (err) {
-    console.log(err);
+    console.error(err);
     return key;
   }
 }
@@ -1250,6 +1250,8 @@ globalThis.blockedItems = blockedItems;
 globalThis.classes = classes;
 globalThis.crosshairPacks = crosshairPacks;
 globalThis.crosshairPackGroups = crosshairPackGroups;
+globalThis.dynamicCrosshairPacks = dynamicCrosshairPacks;
+globalThis.dynamicCrosshairPackGroups = dynamicCrosshairPackGroups;
 globalThis.itemUsedBy = itemUsedBy;
 globalThis.slotToIndex = slotToIndex;
 globalThis.customItemSlot = customItemSlot;

@@ -60,10 +60,7 @@ function calculateItemSlots(playerClass, items) {
 
 const defaultColor = { r: 200, g: 200, b: 200, a: 0.78 };
 
-const crosshairPacks = getCrosshairPacks();
-const crosshairPackGroups = getCrosshairPackGroups();
-
-function calculateCrosshairs(items) {
+function calculateCrosshairs(items, crosshairPacks, crosshairPackGroups) {
   let crosshairs = {};
   const crosshairPreviews = { "Valve.default.default": null };
   const itemClasses = Object.values(items);
@@ -105,15 +102,18 @@ function calculateCrosshairs(items) {
   return [crosshairs, defaultCrosshairs, crosshairPreviews];
 }
 
-export default function ItemsInner({ playerClass, items, setResetKey }) {
+export default function ItemsInner({ playerClass, items, setResetKey = null }) {
+  const crosshairPacks = getCrosshairPacks();
+  const crosshairPackGroups = getCrosshairPackGroups();
+
   const [slots, slotNames, firstKey] = useMemo(
     () => calculateItemSlots(playerClass, items),
     [playerClass, items],
   );
 
   const [crosshairs, defaultCrosshairs, crosshairPreviews] = useMemo(
-    () => calculateCrosshairs(items),
-    [items],
+    () => calculateCrosshairs(items, crosshairPacks, crosshairPackGroups),
+    [items, crosshairPacks, crosshairPackGroups],
   );
 
   const [itemStore, setItemStore] = useState({});

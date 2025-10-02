@@ -9,6 +9,7 @@ import { del, get, set } from "idb-keyval";
 import { stringify } from "vdf-parser";
 
 import fastClone from "./fastClone.ts";
+import { getCrosshairPacks } from "./game.ts";
 
 const idbKeyval = {
   get,
@@ -1378,7 +1379,7 @@ export async function app() {
       const crosshairsWithCustomMaterial = new Set();
       const crosshairTargetBase = "vgui/replay/thumbnails/";
       const crosshairTarget = `tf/custom/comfig-custom/materials/${crosshairTargetBase}`;
-      const crosshairPacks = globalThis.crosshairPacks;
+      const crosshairPacks = getCrosshairPacks();
       const crosshairColorCount = Object.keys(crosshairColors).length;
       if (crosshairColorCount > 0) {
         function addColor(target, color) {
@@ -2488,10 +2489,10 @@ export async function app() {
       cPos = elm.getBoundingClientRect(), // target pos
       pos = {};
 
-    (pos.top = cPos.top - pPos.top + elm.parentNode.scrollTop),
+    ((pos.top = cPos.top - pPos.top + elm.parentNode.scrollTop),
       (pos.right = cPos.right - pPos.right),
       (pos.bottom = cPos.bottom - pPos.bottom),
-      (pos.left = cPos.left - pPos.left);
+      (pos.left = cPos.left - pPos.left));
 
     return pos;
   }
