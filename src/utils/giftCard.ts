@@ -1,10 +1,8 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import {
-  AuthErrorCodes,
   type NextOrObserver,
   type User,
-  createUserWithEmailAndPassword,
   getAuth,
   onAuthStateChanged,
   signInWithEmailAndPassword,
@@ -45,6 +43,7 @@ export function giftSignIn(
   callback: (user: User | undefined, err: undefined) => void,
 ) {
   const email = `${username}@gifts.comfig.app`;
+  /* 
   createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       // Signed up
@@ -67,6 +66,16 @@ export function giftSignIn(
       } else {
         callback(undefined, error);
       }
+    });
+  */
+  signInWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      // Signed in
+      const user = userCredential.user;
+      callback(user, undefined);
+    })
+    .catch((error) => {
+      callback(undefined, error);
     });
 }
 
@@ -313,7 +322,6 @@ export function enterRaffle(
       if (canAfford) {
         const raffleListingRef = ref(db, `raffleListing/${userId}/${raffleId}`);
         runTransaction(raffleListingRef, (item) => {
-          console.log(item);
           if (item) {
             item++;
             return item;
@@ -349,7 +357,6 @@ export function enterRaffle(
     if (canAfford) {
       const raffleListingRef = ref(db, `raffleListing/${userId}/${raffleId}`);
       runTransaction(raffleListingRef, (item) => {
-        console.log(item);
         if (item) {
           item++;
           return item;
