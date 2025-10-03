@@ -504,6 +504,12 @@ async function handleRequest(request) {
                 ? resAssetHeadersSuccess
                 : resAssetHeaders,
             );
+            if (!response.ok) {
+              return new Response("", {
+                status: response.status,
+                ...resHeaders,
+              });
+            }
             let { readable, writable } = new TransformStream();
             response.body.pipeTo(writable);
             return new Response(readable, {
