@@ -166,7 +166,7 @@ function getPreviewImage(
             src={`${previewPath}${
               previews[selected] ?? selectedName + ".webp"
             }`}
-            alt=""
+            alt=" "
           />
         </span>
       )
@@ -179,7 +179,7 @@ function getPreviewImage(
         className={previewImgClass}
         style={previewImgStyle}
         src={`${previewPath}${previews[selected] ?? selectedName + ".webp"}`}
-        alt=""
+        alt=" "
       />
     )
   );
