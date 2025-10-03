@@ -378,7 +378,13 @@ export async function app() {
     }
   }
 
-  function requireVersion(major, minor, patch, latest?, dev?) {
+  function requireVersion(
+    major: number,
+    minor: number,
+    patch: number,
+    latest?: boolean,
+    dev?: boolean,
+  ) {
     if (import.meta.env.DEV && cachedData) {
       let debugVersion = "" + major;
       if (minor !== undefined) {
@@ -417,7 +423,7 @@ export async function app() {
       return latest === undefined ? true : latest;
     }
     const versions = [major, minor, patch];
-    const versionSplit = userVersion.split(".");
+    const versionSplit = (version ?? userVersion).split(".");
     for (let i = 0; i < versions.length; i++) {
       const requiredVersion = versions[i];
       if (!isValid(requiredVersion)) {
@@ -1878,12 +1884,27 @@ export async function app() {
   }
 
   function setUserVersion(userVer) {
+    const origin = window.origin;
+    const isProdSite = origin === "https://comfig.app";
+    const isDevSite = origin.startsWith("https://dev");
     if (userVer === "Dev build") {
       userVer = "dev";
+    }
+    if (userVer === "dev" && isProdSite) {
+      window.location.assign(
+        "https://develop.mastercomfig-site.pages.dev/app/",
+      );
     }
     const didChange = userVersion !== userVer;
     userVersion = userVer;
     if (userVer === "latest") {
+      if (
+        !import.meta.env.DEV &&
+        isDevSite &&
+        !requireVersion(9, 100, 0, false, true)
+      ) {
+        window.location.assign("");
+      }
       userVer = latestVersion;
     }
     version = userVer;
@@ -2694,7 +2715,12 @@ export async function app() {
 
     // set latest version
     if (setLatestVersion) {
-      setUserVersion("latest");
+      const origin = window.origin;
+      if (import.meta.env.DEV || origin.startsWith("https://dev")) {
+        setUserVersion("dev");
+      } else {
+        setUserVersion("latest");
+      }
       setLatestVersion = false;
     }
 
