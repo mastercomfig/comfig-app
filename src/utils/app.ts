@@ -975,7 +975,8 @@ export async function app() {
     }
     const addonsToDownload = selectedAddons.slice();
     if (staticModuleBits > 0) {
-      addonsToDownload.push(`static-${staticModuleBits}`);
+      // TODO: rename to static?
+      addonsToDownload.push(`override-${staticModuleBits}`);
     }
     // Then push all our addon downloads
     for (const selection of addonsToDownload) {
