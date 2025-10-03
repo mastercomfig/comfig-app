@@ -16,7 +16,7 @@ const allowedOrigins = new Set([
 ]);
 const secureOrigin = new Set([
   "https://comfig.app",
-  "https://staging.mastercomfig-site.pages.dev",
+  "https://develop.mastercomfig-site.pages.dev",
 ]);
 for (const origin of secureOrigin) {
   allowedOrigins.add(origin);
