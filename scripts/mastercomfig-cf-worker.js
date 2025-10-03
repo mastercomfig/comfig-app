@@ -555,7 +555,7 @@ async function handleRequest(request) {
         tag === ".")
     ) {
       tag = null;
-    } else if (tag !== "dev") {
+    } else if (tag && tag !== "dev") {
       let tagSuccess = false;
       const split = tag.split(".");
       if (split.length === 3 && !split.some((v) => isNaN(v))) {
