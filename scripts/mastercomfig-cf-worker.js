@@ -160,11 +160,30 @@ function getVersions(data) {
   return versions.length < 1 ? null : stringify(versions);
 }
 
-function getVersionedKey(key, version) {
+function getVersionedKey(key, version, tag = undefined) {
   if (!version) {
     version = 2;
   }
-  return key + "-" + version;
+  if (!tag) {
+    tag = "";
+  } else {
+    tag = tag.replaceAll(".", "-");
+    tag = "-" + tag;
+  }
+  return key + "-" + version + tag;
+}
+
+function generateDataRequestObj(data, tag = undefined) {
+  return [
+    `https://raw.githubusercontent.com/mastercomfig/mastercomfig/${tag}/data/${data}.json`,
+    reqGHRawHeaders,
+    getVersionedKey(
+      `mastercomfig-${data.replaceAll("_", "-")}`,
+      undefined,
+      tag,
+    ),
+    stringify,
+  ];
 }
 
 const rv = [
@@ -173,18 +192,8 @@ const rv = [
   getVersionedKey("mastercomfig-version"),
   getVersions,
 ];
-const rm = [
-  "https://raw.githubusercontent.com/mastercomfig/mastercomfig/release/data/modules.json",
-  reqGHRawHeaders,
-  "mastercomfig-modules",
-  stringify,
-];
-const rp = [
-  "https://raw.githubusercontent.com/mastercomfig/mastercomfig/release/data/preset_modules.json",
-  reqGHRawHeaders,
-  "mastercomfig-preset-modules",
-  stringify,
-];
+const rm = generateDataRequestObj("modules");
+const rp = generateDataRequestObj("preset_modules");
 
 async function storeData(key, value) {
   return MASTERCOMFIG.put(key, value, cacheOpt);
@@ -275,33 +284,43 @@ async function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-async function getApiData(version, force, recur = 0) {
+async function getApiData(version, force, tag = undefined, recur = 0) {
   // Attempt cached
   let resBody = null;
   const now = new Date().getTime();
   if (!force) {
-    if (memCache && memCacheTime + UPDATE_TIME <= now) {
+    if (!tag && memCache && memCacheTime + UPDATE_TIME <= now) {
       resBody = memCache;
     } else {
       resBody = await MASTERCOMFIG.get(
-        getVersionedKey("mastercomfig-api-response", version),
+        getVersionedKey("mastercomfig-api-response", version, tag),
       );
-      memCache = resBody;
-      memCacheTime = now;
+      if (!tag) {
+        memCache = resBody;
+        memCacheTime = now;
+      }
     }
   }
   if (!resBody) {
     let v = await MASTERCOMFIG.get(
       getVersionedKey("mastercomfig-version", version),
     );
-    let m = await MASTERCOMFIG.get("mastercomfig-modules");
-    let p = await MASTERCOMFIG.get("mastercomfig-preset-modules");
+    let m = await MASTERCOMFIG.get(
+      getVersionedKey("mastercomfig-modules", version, tag),
+    );
+    let p = await MASTERCOMFIG.get(
+      getVersionedKey("mastercomfig-preset-modules", version, tag),
+    );
     if (force) {
       v = m = p = null;
     }
     let updated = NULL_UPDATED;
     if (!v || !m || !p) {
-      updated = await updateData([v ? null : rv, m ? null : rm, p ? null : rp]);
+      updated = await updateData([
+        v ? null : rv,
+        m ? null : tag ? generateDataRequestObj("modules", tag) : rm,
+        p ? null : tag ? generateDataRequestObj("preset_modules", tag) : rp,
+      ]);
     }
     resBody = constructDataResponse(updated, version, v, m, p);
     if (!resBody) {
@@ -310,18 +329,20 @@ async function getApiData(version, force, recur = 0) {
           return null;
         }
         return delay(10 << recur).then(() =>
-          getApiData(version, false, recur + 1),
+          getApiData(version, false, tag, recur + 1),
         );
       } else {
-        return getApiData(version, false, recur + 1);
+        return getApiData(version, false, tag, recur + 1);
       }
     }
     await storeData(
-      getVersionedKey("mastercomfig-api-response", version),
+      getVersionedKey("mastercomfig-api-response", version, tag),
       resBody,
     );
-    memCache = resBody;
-    memCacheTime = now;
+    if (!tag) {
+      memCache = resBody;
+      memCacheTime = now;
+    }
   }
   return resBody;
 }
@@ -468,12 +489,10 @@ async function handleRequest(request) {
     const url = new URL(request.url);
     const origin = request.headers.get("Origin");
     //let version = url.searchParams.get("v") ?? 2;
-    let version = 2;
+    const version = 2;
     let tag = url.searchParams.get("t");
-    if (tag && (tag.includes("..") || tag.includes("/") || tag === ".")) {
-      tag = null;
-    }
     if (url.pathname.startsWith("/download")) {
+      tag = null;
       let downloadUrl = url.pathname.substring(downloadLength);
       let isUnversionedDownload =
         downloadUrl.startsWith("/download/dev/") ||
@@ -505,7 +524,7 @@ async function handleRequest(request) {
                 : resAssetHeaders,
             );
             if (!response.ok) {
-              return new Response("", {
+              return new Response(null, {
                 status: response.status,
                 ...resHeaders,
               });
@@ -528,24 +547,28 @@ async function handleRequest(request) {
       }
     }
     // Get custom tag
+    if (
+      tag &&
+      (tag.length > 15 ||
+        tag.includes("..") ||
+        tag.includes("/") ||
+        tag === ".")
+    ) {
+      tag = null;
+    } else if (tag !== "dev") {
+      let tagSuccess = false;
+      const split = tag.split(".");
+      if (split.length === 3 && !split.some((v) => isNaN(v))) {
+        let data = await getApiData(2);
+        let versions = JSON.parse(data).v;
+        tagSuccess = versions.includes(tag);
+      }
+      if (!tagSuccess) {
+        tag = null;
+      }
+    }
     if (tag) {
-      let v = await MASTERCOMFIG.get(
-        getVersionedKey("mastercomfig-version", version),
-      );
-      let modules = [
-        `https://raw.githubusercontent.com/mastercomfig/mastercomfig/${tag}/data/modules.json`,
-        reqGHRawHeaders,
-        null,
-        stringify,
-      ];
-      let presets = [
-        `https://raw.githubusercontent.com/mastercomfig/mastercomfig/${tag}/data/preset_modules.json`,
-        reqGHRawHeaders,
-        null,
-        stringify,
-      ];
-      let updated = await updateData([v ? null : rv, modules, presets]);
-      let resBody = constructDataResponse(updated, version, v);
+      const resBody = await getApiData(version, false, tag);
       return new Response(resBody, generateCommonHeaders(origin, resHeaders));
     }
     if (url.pathname !== "/" && authenticate(url.pathname, webhookPathname)) {
