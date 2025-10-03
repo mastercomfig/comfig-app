@@ -275,6 +275,7 @@ export function giftCard() {
         const first = document.createElement("div");
         first.classList.add("col");
         const img = document.createElement("img");
+        img.alt = "";
         img.classList.add("img-fluid");
         img.style.maxHeight = "4rem";
         img.src = newItems.has(listing.item)

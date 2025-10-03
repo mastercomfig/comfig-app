@@ -2256,6 +2256,7 @@ export async function app() {
         modulePreview = document.createElement("img");
         modulePreview.src = `/img/modules/${name}/${previewValue}.webp`;
         modulePreview.id = `module-preview-${name}`;
+        modulePreview.alt = "";
       }
       if (isCurrentlyNotPreviewing) {
         modulePreview.classList.add("invisible");

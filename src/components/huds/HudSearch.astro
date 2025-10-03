@@ -5,8 +5,8 @@ const { hash } = Astro.props;
 <hud-search data-hash={hash}></hud-search>
 
 <script>
-  import MiniSearch from "minisearch";
   import debounce from "debounce";
+  import MiniSearch from "minisearch";
 
   class HudSearch extends HTMLElement {
     async connectedCallback() {
@@ -210,6 +210,7 @@ const { hash } = Astro.props;
           resultImg.classList.add("w-100", "h-100", "object-fit-cover");
           resultImg.style.objectFit = "cover";
           resultImg.src = result.bannerUrl;
+          resultImg.alt = "";
           resultImgCol.appendChild(resultImg);
           resultRow.appendChild(resultImgCol);
           const resultBodyCol = document.createElement("div");
