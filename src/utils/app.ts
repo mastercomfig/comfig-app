@@ -1026,6 +1026,17 @@ export async function app() {
     return null;
   }
 
+  function newSetupHookFile() {
+    let contents = "";
+    if (selectedPreset !== "none") {
+      contents = `preset=${selectedPreset}\n`;
+    }
+    if (contents.length > 0) {
+      return newFile(contents, "setup_hook.cfg", appDirectory);
+    }
+    return null;
+  }
+
   const EMPTY_ACTION_VALUE = "empty";
   const CUSTOM_ACTION_VALUE = "custom";
   const UNBIND_ACTION_VALUE = "unbind";
@@ -1323,7 +1334,7 @@ export async function app() {
     await saveModules();
     // We need permissions for the directory
     await accessDirectory();
-    const downloads = [];
+    const downloads: { name: string; path: string; blob: File }[] = [];
     // Update binds
     await updateBinds();
     // Create the modules.cfg file
@@ -1806,6 +1817,15 @@ export async function app() {
         name: "autoexec.cfg",
         path: "tf/cfg/app/autoexec.cfg",
         blob: autoexecFile,
+      });
+    }
+    // Create the setup_hook.cfg file
+    const setupHookFile = newSetupHookFile();
+    if (setupHookFile) {
+      downloads.push({
+        name: "setup_hook.cfg",
+        path: "tf/cfg/app/setup_hook.cfg",
+        blob: setupHookFile,
       });
     }
     for (const fileName of Object.keys(configContentsRaw)) {
@@ -2441,7 +2461,7 @@ export async function app() {
     if (values) {
       const defaultValue = getBuiltinModuleDefault(name);
       let newValues;
-      if (defaultValue === "") {
+      if (true || defaultValue === "") {
         let emptyValue =
           typeof values[0] === "object"
             ? {
