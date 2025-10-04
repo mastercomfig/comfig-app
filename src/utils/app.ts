@@ -2199,6 +2199,7 @@ export async function app() {
     "romevision",
     "sprays",
     "fpscap",
+    "hud_server_text",
     "hud_contracts",
     "hud_panels",
     "hud_avatars",
@@ -2271,27 +2272,58 @@ export async function app() {
         }
       }
       if (videoModules.has(name)) {
-        modulePreview = document.createElement("video");
-        modulePreview.autoplay = true;
-        modulePreview.loop = true;
-        modulePreview.muted = true;
-        modulePreview.playsInline = true;
-        modulePreview.controls = false;
+        modulePreview = document.createElement("div");
+        const modulePreviewVideo = document.createElement("video");
+        modulePreviewVideo.classList.add("img-fluid");
+        modulePreviewVideo.autoplay = true;
+        modulePreviewVideo.loop = true;
+        modulePreviewVideo.muted = true;
+        modulePreviewVideo.playsInline = true;
+        modulePreviewVideo.controls = false;
         const source = document.createElement("source");
         source.id = `module-preview-${name}`;
         source.src = `/img/modules/${name}/${previewValue}.mp4`;
-        modulePreview.appendChild(source);
+        modulePreviewVideo.appendChild(source);
+        modulePreview.appendChild(modulePreviewVideo);
         const sourceError = document.createElement("div");
         sourceError.innerText = "No preview available :(";
+        sourceError.classList.add("d-none", "w-100");
+        sourceError.style.aspectRatio = "16 / 9";
+        modulePreview.appendChild(sourceError);
+        modulePreviewVideo.addEventListener("loadstart", () => {
+          console.log("loadstart");
+          sourceError.classList.add("d-none");
+          modulePreviewVideo.classList.remove("d-none");
+        });
+        modulePreviewVideo.addEventListener("error", () => {
+          sourceError.classList.remove("d-none");
+          modulePreviewVideo.classList.add("d-none");
+        });
+        source.addEventListener("error", () => {
+          sourceError.classList.remove("d-none");
+          modulePreviewVideo.classList.add("d-none");
+        });
       } else {
-        modulePreview = document.createElement("img");
-        modulePreview.src = `/img/modules/${name}/${previewValue}.webp`;
-        modulePreview.id = `module-preview-${name}`;
-        modulePreview.alt = "";
-        modulePreview.onerror = () => {
-          modulePreview.alt = "No preview available :(";
-          modulePreview.onerror = null;
-        };
+        modulePreview = document.createElement("div");
+        const modulePreviewImg = document.createElement("img");
+        modulePreviewImg.src = `/img/modules/${name}/${previewValue}.webp`;
+        modulePreviewImg.id = `module-preview-${name}`;
+        modulePreviewImg.classList.add("img-fluid");
+        modulePreviewImg.alt = "";
+        modulePreview.appendChild(modulePreviewImg);
+        const sourceError = document.createElement("div");
+        sourceError.innerText = "No preview available :(";
+        sourceError.classList.add("d-none", "w-100");
+        sourceError.style.aspectRatio = "16 / 9";
+        modulePreview.appendChild(sourceError);
+        modulePreviewImg.addEventListener("load", () => {
+          sourceError.classList.add("d-none");
+          modulePreviewImg.classList.remove("d-none");
+        });
+        modulePreviewImg.addEventListener("error", () => {
+          sourceError.classList.remove("d-none");
+          modulePreviewImg.classList.add("d-none");
+        });
       }
       if (isCurrentlyNotPreviewing) {
         modulePreview.classList.add("invisible");
