@@ -3,6 +3,7 @@
     "origin": [
       "https://comfig.app",
       "https://develop.mastercomfig-site.pages.dev",
+      "http://localhost:4321",
       "http://127.0.0.1:4321"
     ],
     "method": [
