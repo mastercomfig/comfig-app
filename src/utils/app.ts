@@ -5,8 +5,10 @@ import noneImg from "@img/presets/none.webp";
 import ultraImg from "@img/presets/ultra.webp";
 import { BlobReader, BlobWriter, ZipWriter } from "@zip.js/zip.js";
 import { ScrollSpy, Tab } from "bootstrap";
-import { del, get, set } from "idb-keyval";
+import { del, entries, get, set, setMany } from "idb-keyval";
 import { stringify } from "vdf-parser";
+
+import TSON from "@utils/tson";
 
 import fastClone from "./fastClone.ts";
 import { getCrosshairPacks } from "./game.ts";
@@ -669,6 +671,13 @@ export async function app() {
   const silentBannedDirectories = new Set([""]);
 
   function checkDirectory(directoryHandle) {
+    if (!directoryHandle.name) {
+      alert(
+        `Due to browser security policy, selected folders cannot be imported. To continue using Direct Install, please reselect your "Team Fortress 2" folder.`,
+      );
+
+      return false;
+    }
     const name = directoryHandle.name;
     let fail = bannedDirectories.has(name);
     if (fail) {
@@ -2852,6 +2861,64 @@ export async function app() {
     }
   } else {
     await setPreset("medium", true);
+  }
+
+  const settingsKey = "comfig-share:";
+
+  if (getEl("copy-settings")) {
+    const disallowedExport = new Set([
+      "cachedData",
+      "quickplay",
+      "directory",
+      "lastVersion",
+    ]);
+    getEl("copy-settings")?.addEventListener("click", async () => {
+      const obj = {};
+      const keyval = await entries();
+      for (const [key, val] of keyval) {
+        const keyName = key.toString();
+        if (disallowedExport.has(keyName)) {
+          continue;
+        }
+        obj[key.toString()] = val;
+      }
+
+      const data = TSON.stringify(obj);
+      // empty object
+      if (!data || data.length <= 2) {
+        console.log("No data to export.");
+        return;
+      }
+
+      if (!navigator.clipboard) {
+        console.error("Clipboard export unsupported.");
+        return;
+      }
+
+      await navigator.clipboard.writeText(`${settingsKey}${data}`);
+    });
+  }
+
+  if (getEl("paste-settings")) {
+    getEl("paste-settings")?.addEventListener("click", async () => {
+      if (!navigator.clipboard) {
+        console.error("Clipboard import unsupported.");
+        return;
+      }
+
+      const data = await navigator.clipboard.readText();
+
+      if (!data || !data.startsWith(settingsKey)) {
+        alert(
+          "You don't have comfig settings copied into your clipboard for an import.",
+        );
+        return;
+      }
+
+      const obj = TSON.parse(data.substring(settingsKey.length));
+      const entries = Object.entries(obj);
+      setMany(entries);
+    });
   }
 
   if (getEl("launch-options")) {
