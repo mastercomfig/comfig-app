@@ -2277,15 +2277,21 @@ export async function app() {
         modulePreview.muted = true;
         modulePreview.playsInline = true;
         modulePreview.controls = false;
-        let source = document.createElement("source");
+        const source = document.createElement("source");
         source.id = `module-preview-${name}`;
         source.src = `/img/modules/${name}/${previewValue}.mp4`;
         modulePreview.appendChild(source);
+        const sourceError = document.createElement("div");
+        sourceError.innerText = "No preview available :(";
       } else {
         modulePreview = document.createElement("img");
         modulePreview.src = `/img/modules/${name}/${previewValue}.webp`;
         modulePreview.id = `module-preview-${name}`;
         modulePreview.alt = "";
+        modulePreview.onerror = () => {
+          modulePreview.alt = "No preview available :(";
+          modulePreview.onerror = null;
+        };
       }
       if (isCurrentlyNotPreviewing) {
         modulePreview.classList.add("invisible");
