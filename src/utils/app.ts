@@ -928,8 +928,8 @@ export async function app() {
   }
 
   const staticModules = {
-    decals: new Set(["off"]),
     sound: new Set(["low"]),
+    decals: new Set(["off"]),
   };
 
   async function getVPKDownloadUrls() {
@@ -984,7 +984,6 @@ export async function app() {
     }
     const addonsToDownload = selectedAddons.slice();
     if (staticModuleBits > 0) {
-      // TODO: rename to static?
       addonsToDownload.push(`override-${staticModuleBits}`);
     }
     // Then push all our addon downloads
@@ -2872,7 +2871,7 @@ export async function app() {
       "directory",
       "lastVersion",
     ]);
-    getEl("copy-settings")?.addEventListener("click", async () => {
+    getEl("copy-settings").addEventListener("click", async () => {
       const obj = {};
       const keyval = await entries();
       for (const [key, val] of keyval) {
@@ -2900,7 +2899,7 @@ export async function app() {
   }
 
   if (getEl("paste-settings")) {
-    getEl("paste-settings")?.addEventListener("click", async () => {
+    getEl("paste-settings").addEventListener("click", async () => {
       if (!navigator.clipboard) {
         console.error("Clipboard import unsupported.");
         return;
