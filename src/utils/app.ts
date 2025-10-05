@@ -1035,7 +1035,11 @@ export async function app() {
     let contents = "";
     for (const moduleName of Object.keys(selectedModules)) {
       const moduleValue = selectedModules[moduleName];
-      if (moduleValue) {
+      const hasNonEmptySelection =
+        moduleValue === "custom"
+          ? availableModuleLevels[moduleName].has("custom")
+          : !!moduleValue;
+      if (hasNonEmptySelection) {
         contents += `${moduleName}=${moduleValue}\n`;
       } else {
         contents += `alias ${moduleName}\n`;
@@ -2143,10 +2147,13 @@ export async function app() {
     return bindingToBind(binding);
   }
 
-  function getBuiltinModuleDefault(name) {
+  function getBuiltinModuleDefault(name, preset: string | null = null) {
+    if (!preset) {
+      preset = selectedPreset;
+    }
     const modulePresets = presetModulesDef[name];
     if (modulePresets) {
-      const presetValue = modulePresets[selectedPreset];
+      const presetValue = modulePresets[preset];
       if (presetValue === "" || presetValue) {
         return presetValue;
       }
@@ -2555,16 +2562,30 @@ export async function app() {
   // Uses the factory to create the element
   function handleModuleInput(type, name, values) {
     if (values) {
-      const defaultValue = getBuiltinModuleDefault(name);
       let newValues;
-      if (true || defaultValue === "") {
-        let emptyValue =
-          typeof values[0] === "object"
-            ? {
-                value: "",
-                display: "Custom",
-              }
-            : "custom";
+      const isCustomPreset = selectedPreset === "custom";
+      // TODO: maybe check defaultCustomValue === ""? we aren't doing that right now so people have the option to disable any module
+      //const defaultCustomValue = getBuiltinModuleDefault(name, "custom");
+      // switches can't have custom unless we are the custom preset
+      const isSwitch = type === "switch";
+      if (
+        !availableModuleLevels[name].has("custom") &&
+        (!isSwitch || isCustomPreset)
+      ) {
+        const hasAdvancedSelection = typeof values[0] === "object";
+        // switches can't have 3 values, so convert them to selects.
+        if (type === "switch" && isCustomPreset) {
+          if (!hasAdvancedSelection) {
+            values = values.map((value) => ({ value }));
+          }
+          type = "select";
+        }
+        let emptyValue = hasAdvancedSelection
+          ? {
+              value: "",
+              display: "Custom",
+            }
+          : "custom";
         // Preventing side effects to module values
         newValues = [emptyValue].concat(values);
         emptyValue = newValues.shift();
