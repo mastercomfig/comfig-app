@@ -187,7 +187,7 @@ function getVersionedKey(key, version, tag = undefined) {
 
 function generateDataRequestObj(data, tag = undefined) {
   return [
-    `https://raw.githubusercontent.com/mastercomfig/mastercomfig/${tag}/data/${data}.json`,
+    `https://raw.githubusercontent.com/mastercomfig/mastercomfig/${tag ?? "release"}/data/${data}.json`,
     reqGHRawHeaders,
     getVersionedKey(
       `mastercomfig-${data.replaceAll("_", "-")}`,
