@@ -7,7 +7,6 @@ import payloadImg from "@img/gamemodes/pl.webp";
 import plrImg from "@img/gamemodes/plr.webp";
 import miscImg from "@img/gamemodes/sd.webp";
 import xMarkImg from "@img/xmark.webp";
-import * as Sentry from "@sentry/browser";
 import {
   getDefaultMatchGroups,
   getSpecialEventDesc,
@@ -627,7 +626,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
   }
 
   function markSatisfaction() {
-    Sentry.metrics.increment("custom.servers.satisfaction_found", 1, {
+    /* Sentry.metrics.increment("custom.servers.satisfaction_found", 1, {
       tags: {
         maxPlayerCap: getMaxPlayerIndex(quickplayStore.maxPlayerCap),
         matchGroup: quickplayStore.matchGroup,
@@ -660,7 +659,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
       {
         unit: "second",
       },
-    );
+    ); */
     quickplayStore.setFindCount(0);
   }
 
@@ -873,7 +872,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
           // revisiting site
           markSatisfaction();
         } else {
-          Sentry.metrics.distribution(
+          /* Sentry.metrics.distribution(
             "custom.servers.server_refind_time_sec",
             (now - quickplayStore.foundTime) / 1000,
             {
@@ -890,12 +889,12 @@ export default function ServerFinder({ hash }: { hash: string }) {
               partysize: quickplayStore.partysize,
               pingmode: quickplayStore.pingmode,
             },
-          });
+          }); */
         }
       }
     }
 
-    Sentry.metrics.increment("custom.servers.found", 1, {
+    /* Sentry.metrics.increment("custom.servers.found", 1, {
       tags: {
         maxPlayerCap: getMaxPlayerIndex(quickplayStore.maxPlayerCap),
         matchGroup: quickplayStore.matchGroup,
@@ -931,14 +930,14 @@ export default function ServerFinder({ hash }: { hash: string }) {
       tags: {
         searchmode: imFeelingLucky ? 1 : 2,
       },
-    });
+    }); */
 
     quickplayStore.setSessionCount(quickplayStore.sessionCount + 1);
 
     if (imFeelingLucky) {
       quickplayStore.setFindCount(quickplayStore.findCount + 1);
       quickplayStore.setFoundTime(now);
-      Sentry.metrics.distribution(
+      /* Sentry.metrics.distribution(
         "custom.servers.total_eligible",
         filteredServers.length,
         {
@@ -975,7 +974,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
       Sentry.metrics.distribution(
         "custom.user.server_blocks_count",
         quickplayStore.blocklist.size,
-      );
+      ); */
     }
 
     finishSearch(imFeelingLucky);
@@ -1000,7 +999,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
     if (filteredServers.length < 1) {
       quickplayStore.setFound(-1);
       finishSearch(quickplayStore.searching === 1);
-      Sentry.metrics.increment("no_servers_found", 1, {
+      /* Sentry.metrics.increment("no_servers_found", 1, {
         tags: {
           maxPlayerCap: getMaxPlayerIndex(quickplayStore.maxPlayerCap),
           matchGroup: quickplayStore.matchGroup,
@@ -1009,7 +1008,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
           rtd: quickplayStore.rtd,
           partysize: quickplayStore.partysize,
         },
-      });
+      }); */
       return;
     }
 
@@ -1930,14 +1929,14 @@ export default function ServerFinder({ hash }: { hash: string }) {
               onClick={() => {
                 quickplayStore.addBlocklist(quickplayStore.lastServer.steamid);
                 quickplayStore.setFound(0);
-                Sentry.metrics.increment("custom.servers.server_block", 1);
+                /* Sentry.metrics.increment("custom.servers.server_block", 1);
                 Sentry.metrics.distribution(
                   "custom.servers.server_block_time_sec",
                   (new Date().getTime() - quickplayStore.foundTime) / 1000,
                   {
                     unit: "second",
                   },
-                );
+                ); */
                 if (satisfactionTimer) {
                   clearTimeout(satisfactionTimer);
                 }
@@ -1958,14 +1957,14 @@ export default function ServerFinder({ hash }: { hash: string }) {
               onClick={() => {
                 quickplayStore.addFavorite(quickplayStore.lastServer.steamid);
                 quickplayStore.setFound(0);
-                Sentry.metrics.increment("custom.servers.server_fav", 1);
+                /* Sentry.metrics.increment("custom.servers.server_fav", 1);
                 Sentry.metrics.distribution(
                   "custom.servers.server_fav_time",
                   (new Date().getTime() - quickplayStore.foundTime) / 1000,
                   {
                     unit: "second",
                   },
-                );
+                ); */
                 if (satisfactionTimer) {
                   clearTimeout(satisfactionTimer);
                 }
