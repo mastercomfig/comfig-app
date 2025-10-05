@@ -2004,9 +2004,6 @@ export async function app() {
     if (selectedPreset === id) {
       return;
     }
-    if (!(id in presets)) {
-      return;
-    }
     selectedPreset = id; // save download ID
     if (!fromDB) {
       await tryDBSet("preset", id);
@@ -2316,7 +2313,6 @@ export async function app() {
         sourceError.style.aspectRatio = "16 / 9";
         modulePreview.appendChild(sourceError);
         modulePreviewVideo.addEventListener("loadstart", () => {
-          console.log("loadstart");
           sourceError.classList.add("d-none");
           modulePreviewVideo.classList.remove("d-none");
         });
@@ -2916,8 +2912,10 @@ export async function app() {
   }
 
   // If we have a stored preset, select it
-  if (await tryDBGet("preset")) {
-    await setPreset(await tryDBGet("preset"), true);
+  //const storedPreset = await tryDBGet("preset");
+  const storedPreset = await tryDBGet("preset");
+  if (storedPreset && storedPreset in presets) {
+    await setPreset(storedPreset, true);
     if (downloadStatusEl) {
       downloadStatusEl.innerHTML =
         '<a href="#downloads-section">Skip to downloads</a>';
