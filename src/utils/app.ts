@@ -1048,7 +1048,7 @@ export async function app() {
   function newAddonsHookFile() {
     let contents = "";
     for (const addon of selectedAddons) {
-      contents += `exec addons/${addon}.cfg`;
+      contents += `exec addons/${addon}.cfg\n`;
     }
     if (contents.length > 0) {
       return newFile(contents, "addons.cfg", appDirectory);
