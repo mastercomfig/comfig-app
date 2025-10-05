@@ -22,7 +22,6 @@ Sentry.init({
     Sentry.httpClientIntegration(),
     Sentry.reportingObserverIntegration(),
     Sentry.contextLinesIntegration(),
-    Sentry.sessionTimingIntegration(),
   ],
   tracesSampleRate: 0.1,
   tracePropagationTargets: [
