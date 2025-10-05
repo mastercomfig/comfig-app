@@ -2004,6 +2004,9 @@ export async function app() {
     if (selectedPreset === id) {
       return;
     }
+    if (!(id in presets)) {
+      return;
+    }
     selectedPreset = id; // save download ID
     if (!fromDB) {
       await tryDBSet("preset", id);
