@@ -1045,6 +1045,17 @@ export async function app() {
     return null;
   }
 
+  function newAddonsHookFile() {
+    let contents = "";
+    for (const addon of selectedAddons) {
+      contents += `exec addons/${addon}.cfg`;
+    }
+    if (contents.length > 0) {
+      return newFile(contents, "addons.cfg", appDirectory);
+    }
+    return null;
+  }
+
   const EMPTY_ACTION_VALUE = "empty";
   const CUSTOM_ACTION_VALUE = "custom";
   const UNBIND_ACTION_VALUE = "unbind";
@@ -1834,6 +1845,15 @@ export async function app() {
         name: "setup_hook.cfg",
         path: "tf/cfg/app/setup_hook.cfg",
         blob: setupHookFile,
+      });
+    }
+    // Create the addons.cfg file
+    const addonsFile = newAddonsHookFile();
+    if (addonsFile) {
+      downloads.push({
+        name: "addons.cfg",
+        path: "tf/cfg/app/addons.cfg",
+        blob: addonsFile,
       });
     }
     for (const fileName of Object.keys(configContentsRaw)) {
