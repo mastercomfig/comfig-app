@@ -40,6 +40,7 @@ export default function ServerList({
                     alt={server.map}
                     style={{ width: "10rem", height: "10rem" }}
                     crossOrigin=""
+                    loading="lazy"
                   />
                 </div>
               )}
