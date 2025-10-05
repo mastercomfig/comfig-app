@@ -1,3 +1,4 @@
+import transparentImg from "@img/app/transparent.webp";
 import customImg from "@img/presets/custom.webp";
 import highImg from "@img/presets/high.webp";
 import lowImg from "@img/presets/low.webp";
@@ -2328,6 +2329,7 @@ export async function app() {
         modulePreviewVideo.playsInline = true;
         modulePreviewVideo.controls = false;
         modulePreviewVideo.classList.add("lazy");
+        modulePreviewVideo.poster = transparentImg.src;
         const source = document.createElement("source");
         source.id = `module-preview-${name}`;
         source.dataset.src = `/img/modules/${name}/${previewValue}.mp4`;
