@@ -1035,7 +1035,11 @@ export async function app() {
     let contents = "";
     for (const moduleName of Object.keys(selectedModules)) {
       const moduleValue = selectedModules[moduleName];
-      if (moduleValue) {
+      const hasNonEmptySelection =
+        moduleValue === "custom"
+          ? availableModuleLevels[moduleName].has("custom")
+          : !!moduleValue;
+      if (hasNonEmptySelection) {
         contents += `${moduleName}=${moduleValue}\n`;
       } else {
         contents += `alias ${moduleName}\n`;
