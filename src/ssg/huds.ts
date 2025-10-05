@@ -584,8 +584,9 @@ export async function getPopularity() {
         },
       );
       const popularityData = await popularityQuery.json();
-      const metrics = popularityData.data.viewer.accounts[0];
-      if (import.meta.env.COMFIG_API_KEY) {
+      console.log(popularityData);
+      const metrics = popularityData.data.viewer?.accounts?.[0];
+      if (metrics && import.meta.env.COMFIG_API_KEY) {
         const allHuds = await fetchHuds(true);
         const downloadStatPromises: Promise<any>[] = [];
         const headers = {
