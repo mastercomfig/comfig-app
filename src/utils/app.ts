@@ -2327,6 +2327,7 @@ export async function app() {
         source.addEventListener("error", () => {
           sourceError.classList.remove("d-none");
           modulePreviewVideo.classList.add("d-none");
+          source.src = "";
         });
       } else {
         modulePreview = document.createElement("div");
@@ -2348,6 +2349,7 @@ export async function app() {
         modulePreviewImg.addEventListener("error", () => {
           sourceError.classList.remove("d-none");
           modulePreviewImg.classList.add("d-none");
+          modulePreviewImg.src = "";
         });
       }
       if (isCurrentlyNotPreviewing) {

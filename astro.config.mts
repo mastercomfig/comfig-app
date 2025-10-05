@@ -129,7 +129,6 @@ export default defineConfig({
     react(),
     pwa,
     sentry({
-      dsn: "https://42c25ee2fb084eb5a832ee92d97057d5@o182209.ingest.us.sentry.io/6265934",
       sourceMapsUploadOptions: {
         org: "mastercoms",
         project: "comfig-app",
