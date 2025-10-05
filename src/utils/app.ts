@@ -1,7 +1,7 @@
+import customImg from "@img/presets/custom.webp";
 import highImg from "@img/presets/high.webp";
 import lowImg from "@img/presets/low.webp";
 import mediumHighImg from "@img/presets/medium-high.webp";
-import noneImg from "@img/presets/none.webp";
 import ultraImg from "@img/presets/ultra.webp";
 import { BlobReader, BlobWriter, ZipWriter } from "@zip.js/zip.js";
 import { ScrollSpy, Tab } from "bootstrap";
@@ -167,8 +167,8 @@ export async function app() {
 
   // Map preset IDs to display names for download
   const presets = {
-    none: {
-      name: "None",
+    custom: {
+      name: "Custom",
       description: "<h4>Skip setting quality options unless set by you</h4>",
     },
     ultra: {
@@ -211,7 +211,7 @@ export async function app() {
     recommendedAddons.set(id, addons);
   }
 
-  setRecommendedAddons("none", []);
+  setRecommendedAddons("custom", []);
   setRecommendedAddons("ultra", []);
   setRecommendedAddons("high", []);
   setRecommendedAddons("medium", []);
@@ -1036,7 +1036,7 @@ export async function app() {
 
   function newSetupHookFile() {
     let contents = "";
-    if (selectedPreset !== "none") {
+    if (selectedPreset !== "custom") {
       contents = `preset=${selectedPreset}\n`;
     }
     if (contents.length > 0) {
@@ -1975,7 +1975,7 @@ export async function app() {
     medium: mediumHighImg,
     ultra: ultraImg,
     high: highImg,
-    none: noneImg,
+    custom: customImg,
   };
 
   async function setPreset(id, fromDB?) {
@@ -2512,9 +2512,9 @@ export async function app() {
           typeof values[0] === "object"
             ? {
                 value: "",
-                display: "None",
+                display: "Custom",
               }
-            : "none";
+            : "custom";
         // Preventing side effects to module values
         newValues = [emptyValue].concat(values);
         emptyValue = newValues.shift();
