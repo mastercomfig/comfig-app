@@ -2147,10 +2147,13 @@ export async function app() {
     return bindingToBind(binding);
   }
 
-  function getBuiltinModuleDefault(name) {
+  function getBuiltinModuleDefault(name, preset: string | null = null) {
+    if (!preset) {
+      preset = selectedPreset;
+    }
     const modulePresets = presetModulesDef[name];
     if (modulePresets) {
-      const presetValue = modulePresets[selectedPreset];
+      const presetValue = modulePresets[preset];
       if (presetValue === "" || presetValue) {
         return presetValue;
       }
@@ -2560,16 +2563,29 @@ export async function app() {
   function handleModuleInput(type, name, values) {
     if (values) {
       let newValues;
-      //const defaultValue = getBuiltinModuleDefault(name);
-      // used to be defaultValue === "" to check for preset selection, but we have it available for all presets now, unless the module itself provides it already.
-      if (!availableModuleLevels[name].has("custom")) {
-        let emptyValue =
-          typeof values[0] === "object"
-            ? {
-                value: "",
-                display: "Custom",
-              }
-            : "custom";
+      const isCustomPreset = selectedPreset === "custom";
+      // TODO: maybe check defaultCustomValue === ""? we aren't doing that right now so people have the option to disable any module
+      //const defaultCustomValue = getBuiltinModuleDefault(name, "custom");
+      // switches can't have custom unless we are the custom preset
+      const isSwitch = type === "switch";
+      if (
+        !availableModuleLevels[name].has("custom") &&
+        (!isSwitch || isCustomPreset)
+      ) {
+        const hasAdvancedSelection = typeof values[0] === "object";
+        // switches can't have 3 values, so convert them to selects.
+        if (type === "switch" && isCustomPreset) {
+          if (!hasAdvancedSelection) {
+            values = values.map((value) => ({ value }));
+          }
+          type = "select";
+        }
+        let emptyValue = hasAdvancedSelection
+          ? {
+              value: "",
+              display: "Custom",
+            }
+          : "custom";
         // Preventing side effects to module values
         newValues = [emptyValue].concat(values);
         emptyValue = newValues.shift();
