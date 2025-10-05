@@ -6,6 +6,7 @@ import ultraImg from "@img/presets/ultra.webp";
 import { BlobReader, BlobWriter, ZipWriter } from "@zip.js/zip.js";
 import { ScrollSpy, Tab } from "bootstrap";
 import { del, entries, get, set, setMany } from "idb-keyval";
+import LazyLoad, { type ILazyLoadInstance } from "vanilla-lazyload";
 import { stringify } from "vdf-parser";
 
 import TSON from "@utils/tson";
@@ -93,7 +94,11 @@ export async function app() {
   }
 
   function getEl(element) {
-    return document.getElementById(element);
+    const el = document.getElementById(element);
+    if (el) {
+      return el;
+    }
+    return undefined;
   }
 
   const memDB = {};
@@ -905,9 +910,9 @@ export async function app() {
     return fetch(url, fetchOptions).then(checkFetch).catch(onError);
   }
 
-  async function writeRemoteFile(url, directory) {
+  async function writeRemoteFile(url, directory, fetchOptions = {}) {
     try {
-      const response = fetchRetry(url, 125, 6);
+      const response = fetchRetry(url, 125, 6, fetchOptions);
       const name = url.split("/").pop();
       if (directory) {
         const writable = await getWritable(name, directory, true);
@@ -962,8 +967,17 @@ export async function app() {
     } else {
       console.log("Using ZIP download.");
     }
+    const remoteDownloadHeaders = {
+      headers: {
+        Authorization: "EsohjoaThatooloaj1GuN0Pooc4Dah9eedee6zoa",
+      },
+    };
     // Write preset file
-    const presetResult = await writeRemoteFile(presetUrl, customDirectory);
+    const presetResult = await writeRemoteFile(
+      presetUrl,
+      customDirectory,
+      remoteDownloadHeaders,
+    );
     if (presetResult) {
       presetResult.path = `tf/custom/${presetResult.name}`;
       // Then push our preset download
@@ -989,7 +1003,11 @@ export async function app() {
     // Then push all our addon downloads
     for (const selection of addonsToDownload) {
       const addonUrl = getAddonUrl(selection);
-      const addonResult = await writeRemoteFile(addonUrl, customDirectory);
+      const addonResult = await writeRemoteFile(
+        addonUrl,
+        customDirectory,
+        remoteDownloadHeaders,
+      );
       if (addonResult) {
         addonResult.path = `tf/custom/${addonResult.name}`;
         downloads.push(addonResult);
@@ -2302,9 +2320,10 @@ export async function app() {
         modulePreviewVideo.muted = true;
         modulePreviewVideo.playsInline = true;
         modulePreviewVideo.controls = false;
+        modulePreviewVideo.classList.add("lazy");
         const source = document.createElement("source");
         source.id = `module-preview-${name}`;
-        source.src = `/img/modules/${name}/${previewValue}.mp4`;
+        source.dataset.src = `/img/modules/${name}/${previewValue}.mp4`;
         modulePreviewVideo.appendChild(source);
         modulePreview.appendChild(modulePreviewVideo);
         const sourceError = document.createElement("div");
@@ -2317,10 +2336,16 @@ export async function app() {
           modulePreviewVideo.classList.remove("d-none");
         });
         modulePreviewVideo.addEventListener("error", () => {
+          if (!source.src) {
+            return;
+          }
           sourceError.classList.remove("d-none");
           modulePreviewVideo.classList.add("d-none");
         });
         source.addEventListener("error", () => {
+          if (!source.src) {
+            return;
+          }
           sourceError.classList.remove("d-none");
           modulePreviewVideo.classList.add("d-none");
           source.src = "";
@@ -2332,6 +2357,8 @@ export async function app() {
         modulePreviewImg.id = `module-preview-${name}`;
         modulePreviewImg.classList.add("img-fluid");
         modulePreviewImg.alt = "";
+        modulePreviewImg.crossOrigin = "";
+        modulePreviewImg.loading = "lazy";
         modulePreview.appendChild(modulePreviewImg);
         const sourceError = document.createElement("div");
         sourceError.innerText = "No preview available :(";
@@ -2663,15 +2690,25 @@ export async function app() {
     }
   }
 
-  let scrollSpy = null;
+  let modulesLazyLoad: ILazyLoadInstance | null = null;
+  let scrollSpy: ScrollSpy | null = null;
 
   function initScrollSpy(customizationsCol) {
     if (!customizationsCol) {
       return;
     }
 
+    const modulesNav = getEl("modules-nav");
+    if (!modulesNav) {
+      return;
+    }
+
+    modulesLazyLoad = new LazyLoad({
+      container: customizationsCol,
+    });
+
     scrollSpy = new ScrollSpy(customizationsCol, {
-      target: getEl("modules-nav"),
+      target: modulesNav,
       rootMargin: "-5% 0px -95%",
       threshold: [0],
     });
@@ -2751,6 +2788,11 @@ export async function app() {
     if (scrollSpy) {
       scrollSpy.dispose();
       scrollSpy = null;
+    }
+
+    if (modulesLazyLoad) {
+      modulesLazyLoad.destroy();
+      modulesLazyLoad = null;
     }
 
     // Init scrollspy if visible
@@ -2889,7 +2931,11 @@ export async function app() {
     if (!url) {
       url = `/api/${globalThis.appVersion}.${globalThis.appHash}.cached.json`;
     }
-    return fetch(url).then((resp) => resp.json());
+    return fetch(url, {
+      headers: {
+        Authorization: "EsohjoaThatooloaj1GuN0Pooc4Dah9eedee6zoa",
+      },
+    }).then((resp) => resp.json());
   }
 
   function sendApiRequest(url?) {

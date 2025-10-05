@@ -359,8 +359,8 @@ async function getApiData(version, force, tag = undefined, recur = 0) {
   return resBody;
 }
 
-async function forceUpdate(version) {
-  await getApiData(version, true);
+async function forceUpdate(version, tag = undefined) {
+  await getApiData(version, true, tag);
 }
 
 addEventListener("scheduled", (event) => {
@@ -493,17 +493,25 @@ function authenticate(auth, key) {
   return true;
 }
 
+function deny() {
+  return new Response(null, deniedOptions);
+}
+
 async function handleRequest(request) {
   if (request.method === "OPTIONS") {
     return handleOptions(request);
   }
   if (request.method === "GET" || request.method == "POST") {
+    // basic app integrity check to prevent unrelated clients from accessing
+    const auth =
+      request.headers.get("Authorization") ===
+      "EsohjoaThatooloaj1GuN0Pooc4Dah9eedee6zoa";
     const url = new URL(request.url);
     const origin = request.headers.get("Origin");
     //let version = url.searchParams.get("v") ?? 2;
     const version = 2;
     let tag = url.searchParams.get("t");
-    if (url.pathname.startsWith("/download")) {
+    if (auth && url.pathname.startsWith("/download")) {
       tag = null;
       let downloadUrl = url.pathname.substring(downloadLength);
       let isUnversionedDownload =
@@ -555,36 +563,50 @@ async function handleRequest(request) {
         return new Response(null, deniedOptions);
       }
     }
-    // Get custom tag
-    if (
-      tag &&
-      (tag.length > 15 ||
-        tag.includes("..") ||
-        tag.includes("/") ||
-        tag === ".")
-    ) {
-      tag = null;
-    } else if (tag && tag !== "dev") {
-      let tagSuccess = false;
-      const split = tag.split(".");
-      if (split.length === 3 && !split.some((v) => isNaN(v))) {
-        let data = await getApiData(2);
-        let versions = JSON.parse(data).v;
-        tagSuccess = versions.includes(tag);
-      }
-      if (!tagSuccess) {
-        tag = null;
-      }
+    let bValid = url.pathname === "/";
+    let bAuthenticated = false;
+    if (!bValid && authenticate(url.pathname, webhookPathname)) {
+      bValid = true;
+      bAuthenticated = true;
     }
-    if (tag) {
-      const resBody = await getApiData(version, false, tag);
+    bValid = bAuthenticated ? true : auth;
+    if (bValid) {
+      // Get custom tag
+      if (tag) {
+        if (
+          tag.length > 15 ||
+          tag.includes("..") ||
+          tag.includes("/") ||
+          tag === "."
+        ) {
+          tag = undefined;
+        } else if (tag !== "dev") {
+          let tagSuccess = false;
+          const split = tag.split(".");
+          if (split.length === 3 && !split.some((v) => isNaN(v))) {
+            let data = await getApiData(2);
+            let versions = JSON.parse(data).v;
+            tagSuccess = versions.includes(tag);
+          }
+          if (!tagSuccess) {
+            tag = undefined;
+          }
+        }
+      }
+      if (bAuthenticated) {
+        await forceUpdate(version);
+        await forceUpdate(version, "dev");
+        if (tag && tag !== "dev") {
+          await forceUpdate(version, tag);
+        }
+      }
+      if (tag) {
+        const resBody = await getApiData(version, false, tag);
+        return new Response(resBody, generateCommonHeaders(origin, resHeaders));
+      }
+      const resBody = await getApiData(version);
       return new Response(resBody, generateCommonHeaders(origin, resHeaders));
     }
-    if (url.pathname !== "/" && authenticate(url.pathname, webhookPathname)) {
-      await forceUpdate(version);
-    }
-    const resBody = await getApiData(version);
-    return new Response(resBody, generateCommonHeaders(origin, resHeaders));
   }
-  return new Response(null, deniedOptions);
+  deny();
 }

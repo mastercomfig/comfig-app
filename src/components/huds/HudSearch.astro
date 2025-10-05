@@ -211,6 +211,8 @@ const { hash } = Astro.props;
           resultImg.style.objectFit = "cover";
           resultImg.src = result.bannerUrl;
           resultImg.alt = "";
+          resultImg.crossOrigin = "";
+          resultImg.loading = "lazy";
           resultImgCol.appendChild(resultImg);
           resultRow.appendChild(resultImgCol);
           const resultBodyCol = document.createElement("div");

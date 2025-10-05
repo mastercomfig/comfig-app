@@ -281,6 +281,8 @@ export function giftCard() {
         img.src = newItems.has(listing.item)
           ? `/img/giftcard/items/${listing.item}.v2.png`
           : `/img/giftcard/items/${listing.item}.png`;
+        img.crossOrigin = "";
+        img.loading = "lazy";
         first.appendChild(img);
         row.appendChild(first);
         const second = document.createElement("div");

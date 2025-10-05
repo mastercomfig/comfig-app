@@ -18,6 +18,11 @@ export async function getAppData() {
   if (!appData) {
     appData = await fetchCache(
       import.meta.env.COMFIG_API_URL ?? "https://api.comfig.app/",
+      {
+        headers: {
+          Authorization: "EsohjoaThatooloaj1GuN0Pooc4Dah9eedee6zoa",
+        },
+      },
     );
   }
 

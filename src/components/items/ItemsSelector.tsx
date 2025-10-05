@@ -166,6 +166,8 @@ function getPreviewImage(
             src={`${previewPath}${
               previews[selected] ?? selectedName + ".webp"
             }`}
+            loading="lazy"
+            crossOrigin=""
             alt=" "
           />
         </span>
@@ -179,6 +181,7 @@ function getPreviewImage(
         className={previewImgClass}
         style={previewImgStyle}
         src={`${previewPath}${previews[selected] ?? selectedName + ".webp"}`}
+        loading="lazy"
         alt=" "
       />
     )
