@@ -70,6 +70,10 @@ const reqGHReleaseHeaders = {
     Accept: "application/octet-stream",
     ...reqHeaders.headers,
   },
+  cf: {
+    cacheEverything: true,
+    cacheTtlByStatus: { "200-299": 3600, 404: 1, "500-599": 0 },
+  },
 };
 
 const resCommonHeaders = {
@@ -92,6 +96,14 @@ const resAssetHeaders = {
   headers: {
     ...resCommonHeaders.headers,
     "Content-Type": "application/octet-stream",
+  },
+};
+
+const resAssetHeadersMutableSuccess = {
+  headers: {
+    ...resCommonHeaders.headers,
+    "Content-Type": "application/octet-stream",
+    "Cache-Control": "max-age=3600",
   },
 };
 
@@ -175,7 +187,7 @@ function getVersionedKey(key, version, tag = undefined) {
 
 function generateDataRequestObj(data, tag = undefined) {
   return [
-    `https://raw.githubusercontent.com/mastercomfig/mastercomfig/${tag}/data/${data}.json`,
+    `https://raw.githubusercontent.com/mastercomfig/mastercomfig/${tag ?? "release"}/data/${data}.json`,
     reqGHRawHeaders,
     getVersionedKey(
       `mastercomfig-${data.replaceAll("_", "-")}`,
@@ -512,23 +524,20 @@ async function handleRequest(request) {
         if (!url.pathname.includes("..")) {
           let name = downloadUrl.split("/").pop();
           if (validNames.has(name)) {
-            let response = await fetch(
+            const fetchUrl =
               "https://github.com/mastercomfig/mastercomfig/releases" +
-                downloadUrl,
-              reqGHReleaseHeaders,
-            );
-            const resHeaders = generateCommonHeaders(
-              origin,
-              response.ok && !isUnversionedDownload
-                ? resAssetHeadersSuccess
-                : resAssetHeaders,
-            );
+              downloadUrl;
+            let response = await fetch(fetchUrl, reqGHReleaseHeaders);
             if (!response.ok) {
               return new Response(null, {
                 status: response.status,
-                ...resHeaders,
+                ...resAssetHeaders,
               });
             }
+            const assetHeaders = !isUnversionedDownload
+              ? resAssetHeadersSuccess
+              : resAssetHeadersMutableSuccess;
+            const resHeaders = generateCommonHeaders(origin, assetHeaders);
             let { readable, writable } = new TransformStream();
             response.body.pipeTo(writable);
             return new Response(readable, {
