@@ -1914,12 +1914,13 @@ export async function app() {
 
   function setUserVersion(userVer) {
     const origin = window.origin;
+    const doDevSwitch = false;
     const isProdSite = origin === "https://comfig.app";
     const isDevSite = origin.startsWith("https://dev");
     if (userVer === "Dev build") {
       userVer = "dev";
     }
-    if (userVer === "dev" && isProdSite) {
+    if (userVer === "dev" && isProdSite && doDevSwitch) {
       window.location.assign(
         "https://develop.mastercomfig-site.pages.dev/app/",
       );
@@ -1928,11 +1929,12 @@ export async function app() {
     userVersion = userVer;
     if (userVer === "latest") {
       if (
+        doDevSwitch &&
         !import.meta.env.DEV &&
         isDevSite &&
         !requireVersion(9, 100, 0, false, true)
       ) {
-        window.location.assign("");
+        window.location.assign("https://comfig.app");
       }
       userVer = latestVersion;
     }
