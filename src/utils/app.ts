@@ -2555,9 +2555,10 @@ export async function app() {
   // Uses the factory to create the element
   function handleModuleInput(type, name, values) {
     if (values) {
-      const defaultValue = getBuiltinModuleDefault(name);
       let newValues;
-      if (true || defaultValue === "") {
+      //const defaultValue = getBuiltinModuleDefault(name);
+      // used to be defaultValue === "" to check for preset selection, but we have it available for all presets now, unless the module itself provides it already.
+      if (!availableModuleLevels[name].has("custom")) {
         let emptyValue =
           typeof values[0] === "object"
             ? {
