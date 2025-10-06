@@ -71,24 +71,15 @@ export async function app() {
   );
 
   // convenience format method for string
-  String.prototype.format = function (...args) {
-    return this.replace(/{(\d+)}/g, function (match, number) {
+  function formatString(str: string, ...args) {
+    return str.replace(/{(\d+)}/g, function (match, number) {
       return typeof args[number] !== "undefined" ? args[number] : match;
     });
-  };
+  }
 
   function isValid(value) {
     return value !== undefined || value !== null;
   }
-
-  // find RegEx
-  Array.prototype.query = function (match) {
-    const reg = new RegExp(match);
-
-    return this.filter(function (item) {
-      return typeof item == "string" && item.match(reg);
-    });
-  };
 
   function capitalize(str) {
     return str.charAt(0).toUpperCase() + str.substr(1);
@@ -470,11 +461,11 @@ export async function app() {
   }
 
   function getAddonUrl(id: string) {
-    return getDownloadUrl(addonUrl.format(version, id));
+    return getDownloadUrl(formatString(addonUrl, version, id));
   }
 
   function getPresetUrl() {
-    return getDownloadUrl(presetUrl.format(version));
+    return getDownloadUrl(formatString(presetUrl, version));
   }
   // End download URL helpers
 
@@ -815,7 +806,13 @@ export async function app() {
       overridesDirectory = await cfgDirectory.getDirectoryHandle("overrides", {
         create: true,
       });
-      appDirectory = await cfgDirectory.getDirectoryHandle("app", {
+      const cfgCustomDirectory = await comfigCustomDirectory.getDirectoryHandle(
+        "cfg",
+        {
+          create: true,
+        },
+      );
+      appDirectory = await cfgCustomDirectory.getDirectoryHandle("app", {
         create: true,
       });
       return true;
@@ -955,7 +952,7 @@ export async function app() {
       await safeUnlink(presetFile, customDirectory);
       await safeUnlink(presetFile + ".sound.cache", customDirectory);
       for (const addon of addons) {
-        const addonFile = addonFileUrl.format(null, addon);
+        const addonFile = formatString(addonFileUrl, null, addon);
         await safeUnlink(addonFile, customDirectory);
         await safeUnlink(addonFile + ".sound.cache", customDirectory);
       }
@@ -1857,7 +1854,7 @@ export async function app() {
     if (autoexecFile) {
       downloads.push({
         name: "autoexec.cfg",
-        path: "tf/cfg/app/autoexec.cfg",
+        path: "tf/custom/comfig-custom/cfg/app/autoexec.cfg",
         blob: autoexecFile,
       });
     }
@@ -1866,7 +1863,7 @@ export async function app() {
     if (setupHookFile) {
       downloads.push({
         name: "setup_hook.cfg",
-        path: "tf/cfg/app/setup_hook.cfg",
+        path: "tf/custom/comfig-custom/cfg/app/setup_hook.cfg",
         blob: setupHookFile,
       });
     }
@@ -1875,7 +1872,7 @@ export async function app() {
     if (addonsFile) {
       downloads.push({
         name: "addons.cfg",
-        path: "tf/cfg/app/addons.cfg",
+        path: "tf/custom/comfig-custom/cfg/app/addons.cfg",
         blob: addonsFile,
       });
     }
@@ -1888,7 +1885,7 @@ export async function app() {
         }
         downloads.push({
           name: fileName,
-          path: `tf/cfg/app/${fileName}`,
+          path: `tf/custom/comfig-custom/cfg/app/${fileName}`,
           blob: file,
         });
       }
@@ -1983,9 +1980,10 @@ export async function app() {
     }
     version = userVer;
     getEl("version").innerText = userVer;
-    const url = releaseUrl?.[userVersion] ?? releaseUrl.default.format(userVer);
+    const url =
+      releaseUrl?.[userVersion] ?? formatString(releaseUrl.default, userVer);
     getEl("changelog-link").href = url;
-    const assetUrl = assetsUrl.format(userVer);
+    const assetUrl = formatString(assetsUrl, userVer);
     getEl("assets-link").href = assetUrl;
 
     if (didChange) {
@@ -2880,10 +2878,10 @@ export async function app() {
       setLatestVersion = false;
     }
 
-    releaseUrl.dev =
-      "https://github.com/mastercomfig/mastercomfig/compare/{0}...develop".format(
-        latestVersion,
-      );
+    releaseUrl.dev = formatString(
+      "https://github.com/mastercomfig/mastercomfig/compare/{0}...develop",
+      latestVersion,
+    );
 
     const versionDropdown = getEl("versionDropdownMenu");
 
