@@ -124,12 +124,48 @@ import MiniHitsPlayer from "./MiniHitsPlayer.astro";
         return;
       }
       searchResults.innerHTML = "";
+      const largeSearch = results.length > 28;
+      let observer: IntersectionObserver | null = null;
+      if (largeSearch) {
+        observer = new IntersectionObserver((entries) => {
+          entries.forEach(
+            (entry) => {
+              const htmlTarget = entry.target as HTMLElement;
+              if (entry.isIntersecting) {
+                if (htmlTarget.dataset.visible !== "1") {
+                  const ev = new CustomEvent("playerVisible", {
+                    detail: { visible: true },
+                  });
+                  htmlTarget.dataset.visible = "1";
+                  entry.target.dispatchEvent(ev);
+                }
+              } else {
+                if (htmlTarget.dataset.visible !== "0") {
+                  const ev = new CustomEvent("playerVisible", {
+                    detail: { visible: false },
+                  });
+                  htmlTarget.dataset.visible = "0";
+                  entry.target.dispatchEvent(ev);
+                }
+              }
+            },
+            {
+              root: searchResults,
+              threshold: 0.1,
+            },
+          );
+        });
+      }
       for (const result of results) {
         const hitsPlayer = document.createElement("mini-hits-player");
         hitsPlayer.dataset.id = result.id;
         hitsPlayer.dataset.type = result.type;
         hitsPlayer.dataset.hash = result.hash;
+        hitsPlayer.dataset.loadImmediately = largeSearch ? "0" : "1";
         searchResults.appendChild(hitsPlayer);
+        if (observer) {
+          observer.observe(hitsPlayer);
+        }
       }
     }
 

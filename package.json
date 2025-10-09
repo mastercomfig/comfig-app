@@ -30,7 +30,7 @@
     "@fontsource-variable/roboto-flex": "^5.2.6",
     "@fontsource/monoton": "^5.2.6",
     "@fontsource/righteous": "^5.2.6",
-    "@fortawesome/fontawesome-free": "^7.0.0",
+    "@fortawesome/fontawesome-free": "^7.1.0",
     "@headlessui/react": "^2.2.6",
     "@heroicons/react": "^2.2.0",
     "@kindspells/astro-shield": "^1.7.1",
