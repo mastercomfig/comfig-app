@@ -4,7 +4,7 @@
 
 <script>
   import { addGlobalStylesToShadowRoot } from "@utils/globalStyles";
-import { createPlayer } from "@utils/hits";
+  import { createPlayer, unloadPlayer } from "@utils/hits";
 
   class MiniHitsPlayer extends HTMLElement {
     constructor() {
@@ -64,7 +64,21 @@ import { createPlayer } from "@utils/hits";
 
       shadow.appendChild(resultDiv);
 
-      createPlayer(playContainer, true, shadow);
+      if (this.dataset.loadImmediately === "1") {
+        createPlayer(playContainer, true, shadow);
+      } else {
+        const handleOnVisible = ((ev) => {
+          if (ev.detail.visible) {
+            createPlayer(playContainer, true, shadow);
+            this.removeEventListener("playerVisible", handleOnVisible);
+          }
+        }).bind(this);
+        this.addEventListener("playerVisible", handleOnVisible);
+      }
+    }
+
+    async disconnectedCallback() {
+      unloadPlayer(this.dataset.hash, true);
     }
   }
 
