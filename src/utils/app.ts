@@ -2373,19 +2373,19 @@ export async function app() {
         sourceError.style.aspectRatio = "16 / 9";
         modulePreview.appendChild(sourceError);
         modulePreviewImg.addEventListener("load", () => {
-          if (!modulePreviewImg.src) {
+          if (modulePreviewImg.src === transparentImg.src) {
             return;
           }
           sourceError.classList.add("d-none");
           modulePreviewImg.classList.remove("d-none");
         });
         modulePreviewImg.addEventListener("error", () => {
-          if (!modulePreviewImg.src) {
+          if (modulePreviewImg.src === transparentImg.src) {
             return;
           }
           sourceError.classList.remove("d-none");
           modulePreviewImg.classList.add("d-none");
-          modulePreviewImg.src = "";
+          modulePreviewImg.src = transparentImg.src;
         });
       }
       if (isCurrentlyNotPreviewing) {
