@@ -275,11 +275,12 @@ export async function createPlayer(
     const styleBlock = originalStyleBlock?.cloneNode() as HTMLStyleElement;
     if (styleBlock) {
       styleBlock.innerHTML = originalStyleBlock.innerHTML;
-    } else { 
+    } else {
       console.error(
         "Style block missing!",
         shadowDom ? "shadowDom" : "null",
         originalStyleBlock ? "originalStyleBlock" : "null",
+        player.firstElementChild ? "firstElementChild" : "null",
       );
     }
     styleBlock?.setAttribute("nonce", getNonce());
