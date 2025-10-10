@@ -273,7 +273,15 @@ export async function createPlayer(
       "style",
     ) as HTMLStyleElement;
     const styleBlock = originalStyleBlock?.cloneNode() as HTMLStyleElement;
-    styleBlock.innerHTML = originalStyleBlock.innerHTML;
+    if (styleBlock) {
+      styleBlock.innerHTML = originalStyleBlock.innerHTML;
+    } else { 
+      console.error(
+        "Style block missing!",
+        shadowDom ? "shadowDom" : "null",
+        originalStyleBlock ? "originalStyleBlock" : "null",
+      );
+    }
     styleBlock?.setAttribute("nonce", getNonce());
     shadowDom?.insertBefore(styleBlock, shadowDom.firstChild);
     const playerLookup = mini ? playerLookupMini : playerLookupFull;
