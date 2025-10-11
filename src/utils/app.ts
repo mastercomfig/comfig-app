@@ -2373,14 +2373,14 @@ export async function app() {
         sourceError.style.aspectRatio = "16 / 9";
         modulePreview.appendChild(sourceError);
         modulePreviewImg.addEventListener("load", () => {
-          if (modulePreviewImg.src === transparentImg.src) {
+          if (modulePreviewImg.src.endsWith(transparentImg.src)) {
             return;
           }
           sourceError.classList.add("d-none");
           modulePreviewImg.classList.remove("d-none");
         });
         modulePreviewImg.addEventListener("error", () => {
-          if (modulePreviewImg.src === transparentImg.src) {
+          if (modulePreviewImg.src.endsWith(transparentImg.src)) {
             return;
           }
           sourceError.classList.remove("d-none");
