@@ -4,6 +4,7 @@ const { pageName } = Astro.props;
 
 <script>
   import { Dropdown } from "bootstrap";
+  const test = Dropdown.DATA_KEY;
 </script>
 
 <ul class="navbar-nav navbar-selector">
@@ -45,6 +46,16 @@ const { pageName } = Astro.props;
           class=`dropdown-item ${pageName === "quickplay" ? "active" : ""}`
           href="/quickplay"
           ><span class="far fa-compass fa-fw"></span> quickplay</a
+        >
+      </li>
+      <li>
+        <a class=`dropdown-item` href="https://teamcomtress.com"
+          ><img
+            src="/img/tc2/favicon.ico"
+            alt=""
+            class="d-inline"
+            style="width: 20px; height: 18px;vertical-align: sub;background: #b2dfdb;padding: 1px 2px"
+          /> team comtress 2</a
         >
       </li>
     </ul>
