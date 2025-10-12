@@ -1,0 +1,19 @@
+---
+
+---
+
+<animate-on-scroll></animate-on-scroll>
+
+<script>
+  import AOS from "aos";
+
+  class AnimateOnScroll extends HTMLElement {
+    connectedCallback() {
+      AOS.init();
+    }
+  }
+
+  if (!customElements.get("animate-on-scroll")) {
+    customElements.define("animate-on-scroll", AnimateOnScroll);
+  }
+</script>

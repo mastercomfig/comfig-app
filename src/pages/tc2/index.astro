@@ -6,10 +6,12 @@ import BaseHead from "@components/head/BaseHead.astro";
 import ImportHead from "@components/head/ImportHead.astro";
 import MainHead from "@components/head/MainHead.astro";
 import PreloadHead from "@components/head/PreloadHead.astro";
+import AnimateOnScroll from "@components/loaders/AnimateOnScroll.astro";
 import tfLogoImg from "@img/tc2/team-comtress-2.png";
 import lairImg from "@img/update/lair.webp";
 import quicklimeImg from "@img/update/quicklime.webp";
 import Layout from "@layouts/Layout.astro";
+import "aos/dist/aos.css";
 import { getCollection } from "astro:content";
 
 const news = (await getCollection("tc2News"))
@@ -130,6 +132,7 @@ const patches = (await getCollection("tc2Patches"))
   </head>
   <Body>
     <AdvRedirector />
+    <AnimateOnScroll />
     <div id="bg-video-wrapper">
       <video
         id="bg-video"
@@ -292,6 +295,8 @@ const patches = (await getCollection("tc2Patches"))
       <h2
         class="display-2"
         style="color: #1ef5e3; font-weight: 700; letter-spacing: 0.2rem"
+        data-aos="fade-up"
+        data-aos-duration="750"
       >
         THE SAME GAME<br />YOU KNOW AND LOVE
       </h2>
@@ -313,6 +318,8 @@ const patches = (await getCollection("tc2Patches"))
       <h2
         class="display-2"
         style="color: #1ef5e3; font-weight: 700; letter-spacing: 0.2rem"
+        data-aos="fade-up"
+        data-aos-duration="750"
       >
         CONSTANTLY UPDATED
       </h2>
@@ -328,19 +335,21 @@ const patches = (await getCollection("tc2Patches"))
       style=`background: linear-gradient(rgba(38, 50, 56, 0.4) 10%, rgba(38, 50, 56, 0.4)),url(${lairImg.src});background-size: cover; background-position: center;background-position: center;min-height: 25vh`
     >
     </section>
-    <section class="text-center container" id="qol">
-      <h2
-        class="display-3"
-        style="color: #13ccad; font-weight: 700; letter-spacing: 0.2rem"
-      >
-        YOUR GAME TO DEVELOP
-      </h2>
-      <h2
-        class="display-2"
-        style="color: #1ef5e3; font-weight: 700; letter-spacing: 0.2rem"
-      >
-        WHAT WILL YOU MAKE OF IT?
-      </h2>
+    <section class="text-center container" id="community">
+      <div data-aos="fade-up" data-aos-duration="750">
+        <h2
+          class="display-3"
+          style="color: #13ccad; font-weight: 700; letter-spacing: 0.2rem"
+        >
+          YOUR GAME TO DEVELOP
+        </h2>
+        <h2
+          class="display-2"
+          style="color: #1ef5e3; font-weight: 700; letter-spacing: 0.2rem"
+        >
+          WHAT WILL YOU MAKE OF IT?
+        </h2>
+      </div>
       <h3 style="color: #d3d3d3; font-weight: 700; letter-spacing: 0.2rem">
         COMMUNITY-MADE ON GITHUB
       </h3>
