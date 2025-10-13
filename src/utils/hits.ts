@@ -218,6 +218,7 @@ function readWav(arr) {
 
 const playerLookupFull = {};
 const playerLookupMini = {};
+const waveLookupFull: Record<string, WaveSurfer> = {};
 const waveLookupMini: Record<string, WaveSurfer> = {};
 
 export async function createPlayer(
@@ -244,9 +245,8 @@ export async function createPlayer(
       cursorWidth: 0,
       hideScrollbar: true,
     });
-    if (mini) {
-      waveLookupMini[hash] = wave;
-    }
+    const waveLookup = mini ? waveLookupMini : waveLookupFull;
+    waveLookup[hash] = wave;
     wave.on("ready", () => {
       player.classList.remove("loading-bg");
     });
@@ -332,8 +332,8 @@ export function unloadPlayer(hash: string, mini: boolean = false) {
     delete waveLookupMini[hash];
     delete playerLookupMini[hash];
   } else {
-    // Full player unload not implemented yet
-    console.warn("Full player unload not implemented yet");
+    waveLookupFull[hash]?.destroy();
+    delete waveLookupFull[hash];
     delete playerLookupFull[hash];
   }
 }
