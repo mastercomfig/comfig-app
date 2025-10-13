@@ -315,8 +315,10 @@ export async function app() {
     element.classList.remove("disabled", "text-light");
   }
 
+  const forcedDirectInstall = parms.get("directinstall") === "1";
+
   function isDirectInstallAllowed() {
-    return !!window.showDirectoryPicker;
+    return forcedDirectInstall && !!window.showDirectoryPicker;
   }
 
   let isDirectInstallUserEnabled = false;
