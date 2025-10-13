@@ -218,6 +218,7 @@ function readWav(arr) {
 
 const playerLookupFull = {};
 const playerLookupMini = {};
+const waveLookupFull: Record<string, WaveSurfer> = {};
 const waveLookupMini: Record<string, WaveSurfer> = {};
 
 export async function createPlayer(
@@ -226,6 +227,9 @@ export async function createPlayer(
   shadowRoot: ShadowRoot | undefined = undefined,
 ) {
   const hash = player.dataset.hash;
+  if (!hash) {
+    return;
+  }
   try {
     const root = shadowRoot ?? document;
     const playLink = root.getElementById(
@@ -241,15 +245,22 @@ export async function createPlayer(
       cursorWidth: 0,
       hideScrollbar: true,
     });
-    if (mini) {
-      waveLookupMini[hash] = wave;
-    }
+    const waveLookup = mini ? waveLookupMini : waveLookupFull;
+    waveLookup[hash] = wave;
     wave.on("ready", () => {
       player.classList.remove("loading-bg");
     });
     console.log(`Fetching https://hits.comfig.app/${hash}.wav`);
     const response = await fetch(`https://hits.comfig.app/${hash}.wav`);
+    if (!player.firstElementChild) {
+      unloadPlayer(hash, mini);
+      return;
+    }
     const buffer = await response.arrayBuffer();
+    if (!player.firstElementChild) {
+      unloadPlayer(hash, mini);
+      return;
+    }
     const wav = readWav(buffer);
     const samples = decodeMsAdpcm(wav);
     // TODO: manually encode wav file again
@@ -281,6 +292,8 @@ export async function createPlayer(
         shadowDom ? "shadowDom" : "null",
         originalStyleBlock ? "originalStyleBlock" : "null",
         player.firstElementChild ? "firstElementChild" : "null",
+        shadowRoot ? "shadowRoot" : "null",
+        mini ? "mini" : "full",
       );
     }
     styleBlock?.setAttribute("nonce", getNonce());
@@ -319,8 +332,8 @@ export function unloadPlayer(hash: string, mini: boolean = false) {
     delete waveLookupMini[hash];
     delete playerLookupMini[hash];
   } else {
-    // Full player unload not implemented yet
-    console.warn("Full player unload not implemented yet");
+    waveLookupFull[hash]?.destroy();
+    delete waveLookupFull[hash];
     delete playerLookupFull[hash];
   }
 }

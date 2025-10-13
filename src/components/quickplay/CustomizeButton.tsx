@@ -135,6 +135,9 @@ export default function CustomizeButton() {
         gamemodeString = `${quickplayStore.gamemodes.size} ${quickplayStore.gamemodes.size === 1 ? "game mode" : "game modes"}`;
       }
     }
+    if (!availableSettings[quickplayStore.matchGroup]) {
+      console.log(quickplayStore.matchGroup, availableSettings);
+    }
     const strings = [
       availableSettings[quickplayStore.matchGroup].has("gamemodes")
         ? gamemodeString

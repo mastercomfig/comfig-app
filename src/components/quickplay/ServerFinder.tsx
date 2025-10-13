@@ -1042,6 +1042,10 @@ export default function ServerFinder({ hash }: { hash: string }) {
     };
   }, [quickplayStore.pinglimit]);
 
+  if (!availableSettings[quickplayStore.matchGroup]) {
+    console.log(quickplayStore.matchGroup, availableSettings);
+  }
+
   // Look, I know this is bad. I'll split it into components later.
   return (
     <>

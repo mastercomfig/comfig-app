@@ -315,8 +315,10 @@ export async function app() {
     element.classList.remove("disabled", "text-light");
   }
 
+  const forcedDirectInstall = parms.get("directinstall") === "1";
+
   function isDirectInstallAllowed() {
-    return !!window.showDirectoryPicker;
+    return forcedDirectInstall && !!window.showDirectoryPicker;
   }
 
   let isDirectInstallUserEnabled = false;
@@ -3758,20 +3760,19 @@ export async function app() {
   }
 
   let deferredPrompt;
+  const addBtn = getEl("install-link");
 
-  window.addEventListener("beforeinstallprompt", (e) => {
-    // Prevent Chrome 67 and earlier from automatically showing the prompt
-    e.preventDefault();
-    // Update UI to notify the user they can add to home screen
-    const addBtn = getEl("install-link");
-    if (!addBtn) {
-      return;
-    }
-    // Stash the event so it can be triggered later.
-    deferredPrompt = e;
-    addBtn.classList.remove("d-none");
+  if (addBtn) {
+    window.addEventListener("beforeinstallprompt", (e) => {
+      // Prevent Chrome 67 and earlier from automatically showing the prompt
+      e.preventDefault();
+      // Stash the event so it can be triggered later.
+      deferredPrompt = e;
+      // Update UI to notify the user they can add to home screen
+      addBtn.classList.remove("d-none");
+    });
 
-    addBtn.addEventListener("click", (e) => {
+    addBtn.addEventListener("click", () => {
       if (!deferredPrompt) {
         return;
       }
@@ -3789,7 +3790,7 @@ export async function app() {
         deferredPrompt = null;
       });
     });
-  });
+  }
 
   let ghProvider;
   let ghToken;

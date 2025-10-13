@@ -48,9 +48,18 @@ const { hash } = await getGameData();
           notify_esr: true,
           noclose: true,
           no_permanent_hide: true,
+          ignorecookie: true,
+          reminder: 0,
+          reminderClosed: 0,
+          onshow: () => {
+            globalThis.isBrowserOutdated = true;
+          },
           text: {
             msgmore:
               "Update your browser for more security, speed and the best experience on this site. You may encounter problems using this site with an outdated browser.",
+            bignore: "",
+            remind: "",
+            bnever: "",
           },
         });
       </script>
