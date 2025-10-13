@@ -226,6 +226,9 @@ export async function createPlayer(
   shadowRoot: ShadowRoot | undefined = undefined,
 ) {
   const hash = player.dataset.hash;
+  if (!hash) {
+    return;
+  }
   try {
     const root = shadowRoot ?? document;
     const playLink = root.getElementById(
@@ -249,7 +252,15 @@ export async function createPlayer(
     });
     console.log(`Fetching https://hits.comfig.app/${hash}.wav`);
     const response = await fetch(`https://hits.comfig.app/${hash}.wav`);
+    if (!player.firstElementChild) {
+      unloadPlayer(hash, mini);
+      return;
+    }
     const buffer = await response.arrayBuffer();
+    if (!player.firstElementChild) {
+      unloadPlayer(hash, mini);
+      return;
+    }
     const wav = readWav(buffer);
     const samples = decodeMsAdpcm(wav);
     // TODO: manually encode wav file again
@@ -281,6 +292,8 @@ export async function createPlayer(
         shadowDom ? "shadowDom" : "null",
         originalStyleBlock ? "originalStyleBlock" : "null",
         player.firstElementChild ? "firstElementChild" : "null",
+        shadowRoot ? "shadowRoot" : "null",
+        mini ? "mini" : "full",
       );
     }
     styleBlock?.setAttribute("nonce", getNonce());
