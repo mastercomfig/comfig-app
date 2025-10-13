@@ -382,22 +382,6 @@ const validNames = new Set([
   "mastercomfig-addon-override-1.vpk",
   "mastercomfig-addon-override-2.vpk",
   "mastercomfig-addon-override-3.vpk",
-  "mastercomfig-ultra-preset.vpk",
-  "mastercomfig-high-preset.vpk",
-  "mastercomfig-medium-high-preset.vpk",
-  "mastercomfig-medium-preset.vpk",
-  "mastercomfig-medium-low-preset.vpk",
-  "mastercomfig-low-preset.vpk",
-  "mastercomfig-very-low-preset.vpk",
-  "mastercomfig-none-preset.vpk",
-  "mastercomfig-null-canceling-movement-addon.vpk",
-  "mastercomfig-flat-mouse-addon.vpk",
-  "mastercomfig-no-tutorial-addon.vpk",
-  "mastercomfig-disable-pyroland-addon.vpk",
-  "mastercomfig-no-footsteps-addon.vpk",
-  "mastercomfig-no-soundscapes-addon.vpk",
-  "mastercomfig-transparent-viewmodels-addon.vpk",
-  "mastercomfig-lowmem-addon.vpk",
 ]);
 
 const downloadLength = "/download".length;
