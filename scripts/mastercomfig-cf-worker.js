@@ -592,5 +592,5 @@ async function handleRequest(request) {
       return new Response(resBody, generateCommonHeaders(origin, resHeaders));
     }
   }
-  deny();
+  return deny();
 }
