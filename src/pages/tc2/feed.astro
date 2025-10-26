@@ -101,7 +101,7 @@ const patches = (await getCollection("tc2Patches"))
                         month: "long",
                         day: "numeric",
                         timeZone: "UTC",
-                      })}
+                      })}{post.data.num ? ` #${post.data.num}` : ""}
                     </a>
                   </h5>
                 </div>
