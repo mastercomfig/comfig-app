@@ -11,7 +11,7 @@ import Layout from "@layouts/Layout.astro";
 import { getCollection } from "astro:content";
 
 const patches = (await getCollection("tc2Patches"))
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf() || (b.data.num ?? 1) - (a.data.num ?? 1))
   .filter((post) => !post.data.draft && post.id.endsWith("beta"));
 ---
 
