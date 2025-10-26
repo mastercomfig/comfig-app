@@ -50,7 +50,7 @@ const patches = (await getCollection("tc2Patches"))
               <div class="card-body">
                 <h5 class="card-title m-0 text-center">
                   <a class="stretched-link" href={`/patches/${post.id}`}>
-                    {post.id.split("-").slice(0, 3).join("-")} Beta
+                    {post.id.split("-").slice(0, 3).join("-")}{post.data.num ? ` #${post.data.num}` : ""} Beta
                   </a>
                 </h5>
               </div>

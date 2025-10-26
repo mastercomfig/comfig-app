@@ -19,6 +19,7 @@ const tc2Patches = defineCollection({
   schema: z.object({
     date: z.date(),
     draft: z.boolean().optional(),
+    num: z.number().optional(),
   }),
 });
 

@@ -41,7 +41,13 @@ if (postParts.length === 3) {
     " " +
     postParts
       .slice(3)
-      .map((str) => str.charAt(0).toUpperCase() + str.slice(1))
+      .map((str) => {
+        if (/^\d+$/.test(str)) {
+          return `#${str}`;
+        } else {
+          return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+      })
       .join(" ");
 }
 
