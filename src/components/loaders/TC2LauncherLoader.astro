@@ -7,21 +7,23 @@
 <script>
   class TC2LauncherLoader extends HTMLElement {
     async connectedCallback() {
-      const urlparms = new URLSearchParams(window.location.search);
-      const isLauncher = urlparms.get("launcher") === "1";
+      window.addEventListener(
+        "load",
+        () => {
+          const urlparms = new URLSearchParams(window.location.search);
+          const isLauncher = urlparms.get("launcher") === "1";
 
-      const hideForLauncher = document.querySelectorAll(
-        '.hide-launcher',
+          const hideForLauncher = document.querySelectorAll(".hide-launcher");
+          hideForLauncher.forEach((el) => {
+            el.style.display = isLauncher ? "none" : "";
+          });
+          const showForLauncher = document.querySelectorAll(".show-launcher");
+          showForLauncher.forEach((el) => {
+            el.style.display = isLauncher ? "" : "none";
+          });
+        },
+        { once: true },
       );
-      hideForLauncher.forEach((el) => {
-        el.style.display = isLauncher ? "none" : "";
-      });
-      const showForLauncher = document.querySelectorAll(
-        '.show-launcher',
-      );
-      showForLauncher.forEach((el) => {
-        el.style.display = isLauncher ? "" : "none";
-      });
     }
   }
 
