@@ -6,7 +6,6 @@ import BaseHead from "@components/head/BaseHead.astro";
 import ImportHead from "@components/head/ImportHead.astro";
 import MainHead from "@components/head/MainHead.astro";
 import PreloadHead from "@components/head/PreloadHead.astro";
-import TC2LauncherLoader from "@components/loaders/TC2LauncherLoader.astro";
 import tfLogoImg from "@img/tc2/team-comtress-2.png";
 import Layout from "@layouts/Layout.astro";
 import { getCollection, render } from "astro:content";
@@ -71,7 +70,6 @@ const { Content } = await render(post);
   </head>
   <Body>
     <AdvRedirector />
-    <TC2LauncherLoader />
     <div class="text-center p-4 hide-launcher">
       <a href="/">
         <img

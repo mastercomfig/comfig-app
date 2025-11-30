@@ -81,7 +81,7 @@ const allPosts = news.concat(patches).sort((a, b) => {
                             href={
                               post.data.update
                                 ? `/updates/${post.data.update}?launcher=1`
-                                : `/news/${post.id}?launcher=1`
+                                : `/newsLauncher/${post.id}?launcher=1`
                             }
                           >
                             Read more »
@@ -144,7 +144,7 @@ const allPosts = news.concat(patches).sort((a, b) => {
                         <small class="text-muted">
                           <a
                             class="stretched-link"
-                            href={`/patches/${post.id}?launcher=1`}
+                            href={`/patchesLauncher/${post.id}?launcher=1`}
                           >
                             Read more »
                           </a>
