@@ -1,0 +1,43 @@
+---
+
+---
+
+<tcdownload-loader></tcdownload-loader>
+
+<script>
+  import { UAParser } from "ua-parser-js";
+  import { DeviceType } from 'ua-parser-js/enums';
+
+  class TC2DownloadLoader extends HTMLElement {
+    async connectedCallback() {
+      await new Promise(resolve => setTimeout(resolve, 0)).then(() => {
+        if (document.readyState === "loading") {
+          window.addEventListener("DOMContentLoaded", this.refreshDownloadButton.bind(this));
+        } else {
+          this.refreshDownloadButton();
+        }
+      });
+    }
+
+    refreshDownloadButton() {
+      const parser = new UAParser();
+      const os = parser.getOS().name;
+      let downloadLink;
+      if (!parser.getDevice().is(DeviceType.DESKTOP)) {
+        downloadLink = "https://github.com/mastercomfig/tc2-launcher/releases/latest";
+      } else if (os === "Windows") {
+        downloadLink = "https://github.com/mastercomfig/tc2-launcher/releases/latest/download/TC2Launcher.exe";
+      } else {
+        downloadLink = "https://mastercoms.itch.io/tc2";
+      }
+      const downloadBtn = document.getElementById("tc2-download-btn");
+      if (downloadBtn) {
+        downloadBtn.href = downloadLink;
+      }
+    }
+  }
+
+  if (!customElements.get("tcdownload-loader")) {
+    customElements.define("tcdownload-loader", TC2DownloadLoader);
+  }
+</script>

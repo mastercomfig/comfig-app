@@ -7,6 +7,7 @@ import ImportHead from "@components/head/ImportHead.astro";
 import MainHead from "@components/head/MainHead.astro";
 import PreloadHead from "@components/head/PreloadHead.astro";
 import AnimateOnScroll from "@components/loaders/AnimateOnScroll.astro";
+import TC2DownloadLoader from "@components/loaders/TC2DownloadLoader.astro";
 import tfLogoImg from "@img/tc2/team-comtress-2.png";
 import lairImg from "@img/update/lair.webp";
 import quicklimeImg from "@img/update/quicklime.webp";
@@ -133,6 +134,7 @@ const patches = (await getCollection("tc2Patches"))
   <Body>
     <AdvRedirector />
     <AnimateOnScroll />
+    <TC2DownloadLoader />
     <div id="bg-video-wrapper">
       <video
         id="bg-video"
@@ -168,12 +170,13 @@ const patches = (await getCollection("tc2Patches"))
           </h1>
           <hr style="margin-bottom: 2rem" />
           <a
-            href="https://mastercoms.itch.io/tc2"
+            id="tc2-download-btn"
+            href="https://github.com/mastercomfig/tc2-launcher/releases/latest"
             class="btn btn-outline-primary btn-xl"
             style="line-height:1.6rem;padding-top:1.3rem"
           >
             <strong>PLAY FOR FREE</strong><br />
-            <small style="color:#c2c2c2;font-size:1rem">DOWNLOAD ON ITCH</small>
+            <small style="color:#c2c2c2;font-size:1rem">DOWNLOAD (60MB)</small>
           </a>
         </div>
       </div>
