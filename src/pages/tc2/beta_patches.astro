@@ -11,7 +11,11 @@ import Layout from "@layouts/Layout.astro";
 import { getCollection } from "astro:content";
 
 const patches = (await getCollection("tc2Patches"))
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf() || (b.data.num ?? 1) - (a.data.num ?? 1))
+  .sort(
+    (a, b) =>
+      b.data.date.valueOf() - a.data.date.valueOf() ||
+      (b.data.num ?? 1) - (a.data.num ?? 1),
+  )
   .filter((post) => !post.data.draft && post.id.endsWith("beta"));
 ---
 
@@ -43,16 +47,24 @@ const patches = (await getCollection("tc2Patches"))
 
     <section class="container p-4 bg-dark mb-4">
       <h1 id="patches">All Beta Test Patches</h1>
-      <div class="row g-4 mt-1">
+      <div class="row g-2 mt-1">
         {
           patches.map((post) => (
-            <div class="card m-3 col-3">
-              <div class="card-body">
-                <h5 class="card-title m-0 text-center">
-                  <a class="stretched-link" href={`/patches/${post.id}`}>
-                    {post.id.split("-").slice(0, 3).join("-")}{post.data.num ? ` #${post.data.num}` : ""} Beta
-                  </a>
-                </h5>
+            <div class="col-3 pe-1">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title m-0 text-center">
+                    <a class="stretched-link" href={`/patches/${post.id}`}>
+                      {post.data.date.toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                        timeZone: "UTC",
+                      })}
+                      {post.data.num ? ` #${post.data.num}` : ""} Beta
+                    </a>
+                  </h5>
+                </div>
               </div>
             </div>
           ))
