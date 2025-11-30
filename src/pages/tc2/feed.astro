@@ -15,7 +15,11 @@ const news = (await getCollection("tc2News"))
   .filter((post) => !post.data.draft);
 
 const patches = (await getCollection("tc2Patches"))
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf() || (b.data.num ?? 1) - (a.data.num ?? 1))
+  .sort(
+    (a, b) =>
+      b.data.date.valueOf() - a.data.date.valueOf() ||
+      (b.data.num ?? 1) - (a.data.num ?? 1),
+  )
   .filter((post) => !post.data.draft && !post.id.endsWith("beta"));
 ---
 
@@ -101,7 +105,8 @@ const patches = (await getCollection("tc2Patches"))
                         month: "long",
                         day: "numeric",
                         timeZone: "UTC",
-                      })}{post.data.num ? ` #${post.data.num}` : ""}
+                      })}
+                      {post.data.num ? ` #${post.data.num}` : ""}
                     </a>
                   </h5>
                 </div>
