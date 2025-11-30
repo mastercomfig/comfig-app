@@ -1,0 +1,173 @@
+---
+import AdvRedirector from "@components/AdvRedirector.astro";
+import Body from "@components/Body.astro";
+import Footer from "@components/Footer.astro";
+import BaseHead from "@components/head/BaseHead.astro";
+import ImportHead from "@components/head/ImportHead.astro";
+import MainHead from "@components/head/MainHead.astro";
+import PreloadHead from "@components/head/PreloadHead.astro";
+import Layout from "@layouts/Layout.astro";
+import { getCollection } from "astro:content";
+
+const news = (await getCollection("tc2News"))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .filter((post) => !post.data.draft && !post.data.update);
+
+const firstNews = news[0];
+
+const patches = (await getCollection("tc2Patches")).filter(
+  (post) => !post.data.draft,
+);
+
+const allPosts = news.concat(patches).sort((a, b) => {
+  if (a.id === firstNews.id) return -1;
+  if (b.id === firstNews.id) return 1;
+  const dateDiff = b.data.date.valueOf() - a.data.date.valueOf();
+  if (dateDiff !== 0) return dateDiff;
+
+  const aIsPatch = a.collection === "tc2Patches";
+  const bIsPatch = b.collection === "tc2Patches";
+
+  if (aIsPatch && bIsPatch) {
+    return (b.data.num ?? 1) - (a.data.num ?? 1);
+  } else if (aIsPatch) {
+    return -1;
+  } else if (bIsPatch) {
+    return 1;
+  } else {
+    return 0;
+  }
+});
+---
+
+<Layout>
+  <head>
+    <BaseHead />
+    <PreloadHead />
+    <ImportHead />
+    <MainHead
+      title=`News Feed | Team Comtress 2`
+      site="Team Comtress"
+      noSite={true}
+      description="Latest news and updates for Team Comtress 2"
+      image="https://teamcomtress.com/img/tc2/team-comtress-2.png"
+      favicon="/img/tc2/favicon.ico"
+    />
+  </head>
+  <Body>
+    <AdvRedirector />
+
+    <section class="bg-dark px-4 py-0">
+      <div class="row gy-4 gx-0 ms-0">
+        {
+          allPosts.map((post) => {
+            if (post.collection === "tc2News") {
+              return (
+                <div class="col-12">
+                  <div class="card">
+                    <div class="card-body">
+                      <h5
+                        class="card-title"
+                        style="color: #fff;font-weight: 600"
+                      >
+                        {post.data.title}
+                      </h5>
+                      <p class="card-text" style="color: #c2c2c2">
+                        {post.data.description}
+                        <br />
+                        <small class="text-muted">
+                          <a
+                            class="stretched-link"
+                            href={
+                              post.data.update
+                                ? `/updates/${post.data.update}?launcher=1`
+                                : `/news/${post.id}?launcher=1`
+                            }
+                          >
+                            Read more »
+                          </a>
+                        </small>
+                      </p>
+                    </div>
+                    <div class="card-footer mb-2">
+                      <small class="text-muted">
+                        {post.data.date.toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                          timeZone: "UTC",
+                        })}
+                      </small>
+                    </div>
+                  </div>
+                </div>
+              );
+            } else if (post.collection === "tc2Patches") {
+              const postParts = post.id.split("-");
+              const postDate = post.data.date.toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+                timeZone: "UTC",
+              });
+              let postTitle;
+              if (postParts.length === 3) {
+                postTitle = postDate;
+              } else {
+                postTitle =
+                  postDate +
+                  " " +
+                  postParts
+                    .slice(3)
+                    .map((str) => {
+                      if (/^\d+$/.test(str)) {
+                        return `#${str}`;
+                      } else {
+                        return str.charAt(0).toUpperCase() + str.slice(1);
+                      }
+                    })
+                    .join(" ");
+              }
+              return (
+                <div class="col-12">
+                  <div class="card">
+                    <div class="card-body">
+                      <h5
+                        class="card-title"
+                        style="color: #fff;font-weight: 600"
+                      >
+                        Team Comtress 2 Update - {postTitle}
+                      </h5>
+                      <p class="card-text" style="color: #c2c2c2">
+                        Small Update / Patch Notes
+                        <br />
+                        <small class="text-muted">
+                          <a
+                            class="stretched-link"
+                            href={`/patches/${post.id}?launcher=1`}
+                          >
+                            Read more »
+                          </a>
+                        </small>
+                      </p>
+                    </div>
+                    <div class="card-footer mb-2">
+                      <small class="text-muted">
+                        {post.data.date.toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                          timeZone: "UTC",
+                        })}
+                      </small>
+                    </div>
+                  </div>
+                </div>
+              );
+            }
+          })
+        }
+      </div>
+    </section>
+  </Body>
+</Layout>
