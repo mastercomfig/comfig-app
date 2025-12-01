@@ -21,9 +21,10 @@
 
     refreshDownloadButton() {
       const parser = new UAParser();
+      const device = parser.getDevice();
       const os = parser.getOS().name;
       let downloadLink;
-      if (!parser.getDevice().is(DeviceType.DESKTOP)) {
+      if (device.type && !device.is(DeviceType.DESKTOP)) {
         downloadLink = "https://github.com/mastercomfig/tc2-launcher/releases/latest";
       } else if (os === "Windows") {
         downloadLink = "https://github.com/mastercomfig/tc2-launcher/releases/latest/download/TC2Launcher.exe";
