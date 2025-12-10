@@ -5,7 +5,7 @@ import { defineCollection, z } from "astro:content";
 
 // 3. Define your collection(s)
 const tc2News = defineCollection({
-  loader: glob({ pattern: "**/*.md", base: "./src/posts/tc2" }),
+  loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/posts/tc2" }),
   schema: z.object({
     title: z.string(),
     description: z.string(),
@@ -15,7 +15,7 @@ const tc2News = defineCollection({
   }),
 });
 const tc2Patches = defineCollection({
-  loader: glob({ pattern: "**/*.md", base: "./src/posts/tc2Patches" }),
+  loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/posts/tc2Patches" }),
   schema: z.object({
     date: z.date(),
     draft: z.boolean().optional(),
