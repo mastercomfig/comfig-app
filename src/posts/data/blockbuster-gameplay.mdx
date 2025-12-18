@@ -80,7 +80,7 @@ import BlockbusterBlock from "@components/tc2/BlockbusterBlock.astro";
 * Added mp_sixes ConVar which opts into various Sixes enhancements and defaults
 * Added tf_tournament_respawn_multiplier ConVar
   * Context: by default, team sizes below 8 players scale down respawn times from the designed default of 10 seconds per respawn wave
-  * Set by default 0.8 for 6s matches by default, and 1.0 otherwise.
+  * Set by default to 0.8x for 6s matches by default, and 1x otherwise.
   * This preserves team respawn timers even while players are disconnected
   * This will also allow for more structured respawn time determinations, rather than just a simple proportion of players on a team
 * Improved flexibility of class limit ConVars for greater flexibility
@@ -157,10 +157,6 @@ import BlockbusterBlock from "@components/tc2/BlockbusterBlock.astro";
 
 * Made the Soldier Grenade taunt follow the same splash damage rules as other explosions
 * Fixed the Soldier Grenade taunt damage passing through walls
-
-### Beggar's Bazooka
-
-* Now solely detonates from reserve ammo when overloaded
 
 ---
 
