@@ -10,7 +10,7 @@ import AnimateOnScroll from "@components/loaders/AnimateOnScroll.astro";
 import TC2DownloadLoader from "@components/loaders/TC2DownloadLoader.astro";
 import tfLogoImg from "@img/tc2/team-comtress-2.png";
 import lairImg from "@img/update/lair.webp";
-import quicklimeImg from "@img/update/quicklime.webp";
+import tfmapImg from "@img/update/tfmap.webp";
 import Layout from "@layouts/Layout.astro";
 import "aos/dist/aos.css";
 import { getCollection } from "astro:content";
@@ -326,7 +326,7 @@ const patches = (await getCollection("tc2Patches"))
     </section>
     <section
       class="jumbotron jumbotron-fluid"
-      style=`background: linear-gradient(rgba(38, 50, 56, 0.4) 10%, rgba(38, 50, 56, 0.4)),url(${quicklimeImg.src});background-size: cover; background-position: center;background-position: center;min-height: 25vh`
+      style=`background: linear-gradient(rgba(38, 50, 56, 0.4) 10%, rgba(38, 50, 56, 0.4)),url(${tfmapImg.src});background-size: cover; background-position: center;background-position: center;min-height: 25vh`
     >
     </section>
     <section class="text-center container">
