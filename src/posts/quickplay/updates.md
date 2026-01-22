@@ -1,3 +1,24 @@
+## January 22, 2026
+
+* Rather than complete quickplay exclusion for slight rules violations (improper tags, changes to bots, etc), scoring will be slightly reduced for these servers. This will increase the number of highly populated servers available in quickplay, especially for some popular server networks. We still accept reports for these servers and will adjust their score depending on the severity of the report.
+* Added a few more popular community maps, and introduced plr_matterhorn from the Smissmas pool to the vanilla pool
+* Fixed some incorrect latency values
+* Fixed some servers not being listed due to connectivity issues
+
+## November 14, 2025
+
+* Added a few more popular community maps and reskins
+
+## November 8, 2025
+
+* Added dozens of new vanilla map variants and popular community maps to help expand server population and consistent visibility
+* Updated various community map versions to their latest available versions
+* Fixed various broken map thumbnails
+
+## August 19, 2025
+
+* Reduced penalty for almost full servers, to allow players to join into these servers as the risk for slot conflicts is low usually, and it is a worthwhile risk to take, as requeuing is fast enough.
+
 ## July 26, 2025
 
 * Added support for dynamic match groups
