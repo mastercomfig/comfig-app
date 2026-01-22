@@ -21,7 +21,11 @@ const news = (await getCollection("tc2News"))
   .slice(0, 3);
 
 const patches = (await getCollection("tc2Patches"))
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf() || (b.data.num ?? 1) - (a.data.num ?? 1))
+  .sort(
+    (a, b) =>
+      b.data.date.valueOf() - a.data.date.valueOf() ||
+      (b.data.num ?? 1) - (a.data.num ?? 1),
+  )
   .filter((post) => !post.data.draft && !post.id.endsWith("beta"))
   .slice(0, 4);
 ---
@@ -84,6 +88,20 @@ const patches = (await getCollection("tc2Patches"))
   .btn-bluesky:hover {
     background-color: #157abf;
     border-color: #157abf;
+  }
+  .early-access {
+    margin-top: -3rem;
+    margin-bottom: 2rem;
+    z-index: 1000;
+    font-size: 1rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1rem;
+  }
+  .early-access > span {
+    background-color: #bf2f15;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
   }
   @media only screen and (min-width: 992px) {
     .update-cards .card:hover {
@@ -162,6 +180,7 @@ const patches = (await getCollection("tc2Patches"))
             src={tfLogoImg.src}
             alt="Team Comtress 2 logo"
           />
+          <div class="early-access"><span>EARLY ACCESS</span></div>
           <h1 class="display-3" style="letter-spacing: 0.2rem;font-weight: 600">
             "THE MOST FUN YOU CAN HAVE ONLINE"
           </h1>
@@ -178,9 +197,11 @@ const patches = (await getCollection("tc2Patches"))
             <strong>PLAY FOR FREE</strong><br />
             <small style="color:#c2c2c2;font-size:1rem">DOWNLOAD (60MB)</small>
           </a>
-          <br/><br />
+          <br /><br />
           <div class="bg-teal rounded-1 d-inline-block px-5 py-4 d-none">
-            <h2 class="display-4">Playtest status: <strong class="fw-bold">ACTIVE</strong></h2>
+            <h2 class="display-4">
+              Playtest status: <strong class="fw-bold">ACTIVE</strong>
+            </h2>
             <h3 class="display-6">Go and play now!</h3>
           </div>
         </div>
@@ -254,7 +275,8 @@ const patches = (await getCollection("tc2Patches"))
                           month: "long",
                           day: "numeric",
                           timeZone: "UTC",
-                        })}{post.data.num ? ` #${post.data.num}` : ""}
+                        })}
+                        {post.data.num ? ` #${post.data.num}` : ""}
                       </a>
                     </h5>
                   </div>
