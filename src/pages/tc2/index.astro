@@ -20,7 +20,11 @@ const news = (await getCollection("tc2News"))
   .slice(0, 3);
 
 const patches = (await getCollection("tc2Patches"))
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf() || (b.data.num ?? 1) - (a.data.num ?? 1))
+  .sort(
+    (a, b) =>
+      b.data.date.valueOf() - a.data.date.valueOf() ||
+      (b.data.num ?? 1) - (a.data.num ?? 1),
+  )
   .filter((post) => !post.data.draft && !post.id.endsWith("beta"))
   .slice(0, 4);
 ---
@@ -246,7 +250,8 @@ const patches = (await getCollection("tc2Patches"))
                           month: "long",
                           day: "numeric",
                           timeZone: "UTC",
-                        })}{post.data.num ? ` #${post.data.num}` : ""}
+                        })}
+                        {post.data.num ? ` #${post.data.num}` : ""}
                       </a>
                     </h5>
                   </div>
@@ -288,7 +293,7 @@ const patches = (await getCollection("tc2Patches"))
               ><span class="fab fa-bluesky fa-fw" aria-hidden="true"></span> BLUESKY</a
             >
             <a
-              href="https://docs.comfig.app/latest/support_me/"
+              href="https://comfig.app/support_me"
               class="btn btn-primary fw-bold me-1 mb-1 btn-social"
             >
               <span class="fas fa-hand-holding-heart fa-fw" aria-hidden="true"
