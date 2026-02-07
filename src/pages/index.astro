@@ -12,9 +12,9 @@ import "highlight.js/styles/atom-one-dark.css";
 import badlandsImg from "@img/cp_badlands01.webp";
 import sunshineImg from "@img/cp_sunshine04.webp";
 import badwaterImg from "@img/pl_badwater01.webp";
-import veryLowImg from "@img/presets/very-low.webp";
+import destituteImg from "@img/presets/destitute.webp";
 import ultraImg from "@img/presets/ultra.webp";
-import veryLowHqImg from "@img/presets/very-low-hq.webp";
+import destituteHqImg from "@img/presets/destitute-hq.webp";
 import ultraHqImg from "@img/presets/ultra-hq.webp";
 import networkImg from "@img/network.webp";
 import HomePageLoader from "@components/loaders/HomePageLoader.astro";
@@ -279,7 +279,7 @@ import HomePageLoader from "@components/loaders/HomePageLoader.astro";
           <div class="col-md align-middle">
             <ImageSlider
               client:load
-              srcOne={veryLowImg.src}
+              srcOne={destituteImg.src}
               altOne="koth_sawmill low"
               srcTwo={ultraImg.src}
               altTwo="koth_sawmill ultra"
@@ -426,7 +426,7 @@ tf_item_inspect_model_spin_rate 30 // Rate at which items spin in the inspect vi
           <div class="modal-body">
             <ImageSlider
               client:load
-              srcOne={veryLowHqImg.src}
+              srcOne={destituteHqImg.src}
               altOne="koth_sawmill low"
               srcTwo={ultraHqImg.src}
               altTwo="koth_sawmill ultra"

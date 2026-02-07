@@ -11,7 +11,7 @@ import { getCollection } from "astro:content";
 
 const news = (await getCollection("tc2News"))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-  .filter((post) => !post.data.draft && !post.data.update);
+  .filter((post) => !post.data.draft && !post.data.update && !post.id.endsWith("beta"));
 
 const firstNews = news[0];
 
@@ -57,7 +57,7 @@ const allPosts = news.concat(patches).sort((a, b) => {
   <Body>
     <AdvRedirector />
 
-    <section class="bg-dark px-4 py-0">
+    <section class="container px-4 py-0">
       <div class="row gy-4 gx-0 ms-0">
         {
           allPosts.map((post) => {
@@ -81,7 +81,7 @@ const allPosts = news.concat(patches).sort((a, b) => {
                             href={
                               post.data.update
                                 ? `/updates/${post.data.update}?launcher=1`
-                                : `/news/${post.id}?launcher=1`
+                                : `/newsLauncher/${post.id}?launcher=1`
                             }
                           >
                             Read more »
@@ -144,7 +144,7 @@ const allPosts = news.concat(patches).sort((a, b) => {
                         <small class="text-muted">
                           <a
                             class="stretched-link"
-                            href={`/patches/${post.id}?launcher=1`}
+                            href={`/patchesLauncher/${post.id}?launcher=1`}
                           >
                             Read more »
                           </a>

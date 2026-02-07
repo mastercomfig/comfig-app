@@ -5,23 +5,33 @@
 <tclauncher-loader></tclauncher-loader>
 
 <script>
+  function refreshLauncherElements() {
+    const urlparms = new URLSearchParams(window.location.search);
+    const isLauncher = urlparms.get("launcher") === "1";
+
+    const hideForLauncher = document.querySelectorAll(".hide-launcher");
+    hideForLauncher.forEach((el) => {
+      el.style.display = isLauncher ? "none" : "";
+    });
+    const showForLauncher = document.querySelectorAll(".show-launcher");
+    showForLauncher.forEach((el) => {
+      el.style.display = isLauncher ? "" : "none";
+    });
+  }
+
   class TC2LauncherLoader extends HTMLElement {
     async connectedCallback() {
-      const urlparms = new URLSearchParams(window.location.search);
-      const isLauncher = urlparms.get("launcher") === "1";
+      await new Promise(resolve => setTimeout(resolve, 0)).then(() => {
+        if (document.readyState === "loading") {
+          window.addEventListener("DOMContentLoaded", refreshLauncherElements);
+        } else {
+          refreshLauncherElements();
+        }
+      });
+    }
 
-      const hideForLauncher = document.querySelectorAll(
-        '.hide-launcher',
-      );
-      hideForLauncher.forEach((el) => {
-        el.style.display = isLauncher ? "none" : "";
-      });
-      const showForLauncher = document.querySelectorAll(
-        '.show-launcher',
-      );
-      showForLauncher.forEach((el) => {
-        el.style.display = isLauncher ? "" : "none";
-      });
+    disconnectedCallback() {
+      window.removeEventListener("DOMContentLoaded", refreshLauncherElements);
     }
   }
 

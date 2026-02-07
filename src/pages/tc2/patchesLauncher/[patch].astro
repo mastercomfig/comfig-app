@@ -6,23 +6,50 @@ import BaseHead from "@components/head/BaseHead.astro";
 import ImportHead from "@components/head/ImportHead.astro";
 import MainHead from "@components/head/MainHead.astro";
 import PreloadHead from "@components/head/PreloadHead.astro";
-import tfLogoImg from "@img/tc2/team-comtress-2.png";
 import Layout from "@layouts/Layout.astro";
 import { getCollection, render } from "astro:content";
 
 export async function getStaticPaths() {
-  const news = (await getCollection("tc2News")).filter(
-    (post) => !post.data.draft && !post.data.update,
+  const patches = (await getCollection("tc2Patches")).filter(
+    (post) => !post.data.draft,
   );
-  return news.map((post) => ({
+  return patches.map((post) => ({
     params: {
-      post: post.id,
+      patch: post.id,
     },
     props: { post },
   }));
 }
-
 const { post } = Astro.props;
+
+const postParts = post.id.split("-");
+
+const postDate = post.data.date.toLocaleDateString("en-US", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+  timeZone: "UTC",
+});
+
+let postTitle;
+if (postParts.length === 3) {
+  postTitle = postDate;
+} else {
+  postTitle =
+    postDate +
+    " " +
+    postParts
+      .slice(3)
+      .map((str) => {
+        if (/^\d+$/.test(str)) {
+          return `#${str}`;
+        } else {
+          return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+      })
+      .join(" ");
+}
+
 const { Content } = await render(post);
 ---
 
@@ -32,43 +59,23 @@ const { Content } = await render(post);
     <PreloadHead />
     <ImportHead />
     <MainHead
-      title=`${post.data.title} | Team Comtress 2`
+      title=`${postTitle} Update | Team Comtress 2`
       site="Team Comtress"
       noSite={true}
-      description={post.data.description}
+      description=`Team Comtress 2 Update - ${postTitle}`
       image="https://teamcomtress.com/img/tc2/team-comtress-2.png"
       favicon="/img/tc2/favicon.ico"
     />
   </head>
   <Body>
     <AdvRedirector />
-    <div class="text-center p-4 hide-launcher">
-      <a href="/">
-        <img
-          class="img-logo-sm"
-          src={tfLogoImg.src}
-          alt="Team Comtress 2 logo"
-        />
-      </a>
-    </div>
 
     <section class="container p-4 bg-dark mb-4">
-      <a class="show-launcher" style="display:none" href="/launcher_feed">
+      <a href="/launcher_feed">
         <span class="fas fa-angles-left fa-fw"></span> Back
       </a>
-      <h1>{post.data.title}</h1>
-      <p class="text-muted">
-        {
-          post.data.date.toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-            timeZone: "UTC",
-          })
-        }
-      </p>
+      <h1>Team Comtress 2 Update - {postTitle}</h1>
       <Content />
     </section>
-    <Footer product={"Team Comtress"} />
   </Body>
 </Layout>

@@ -6,7 +6,6 @@ import BaseHead from "@components/head/BaseHead.astro";
 import ImportHead from "@components/head/ImportHead.astro";
 import MainHead from "@components/head/MainHead.astro";
 import PreloadHead from "@components/head/PreloadHead.astro";
-import tfLogoImg from "@img/tc2/team-comtress-2.png";
 import Layout from "@layouts/Layout.astro";
 import { getCollection, render } from "astro:content";
 
@@ -42,18 +41,9 @@ const { Content } = await render(post);
   </head>
   <Body>
     <AdvRedirector />
-    <div class="text-center p-4 hide-launcher">
-      <a href="/">
-        <img
-          class="img-logo-sm"
-          src={tfLogoImg.src}
-          alt="Team Comtress 2 logo"
-        />
-      </a>
-    </div>
 
     <section class="container p-4 bg-dark mb-4">
-      <a class="show-launcher" style="display:none" href="/launcher_feed">
+      <a href="/launcher_feed">
         <span class="fas fa-angles-left fa-fw"></span> Back
       </a>
       <h1>{post.data.title}</h1>
@@ -69,6 +59,5 @@ const { Content } = await render(post);
       </p>
       <Content />
     </section>
-    <Footer product={"Team Comtress"} />
   </Body>
 </Layout>
