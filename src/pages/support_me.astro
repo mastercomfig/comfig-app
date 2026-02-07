@@ -1,0 +1,299 @@
+---
+import Body from "@components/Body.astro";
+import Footer from "@components/Footer.astro";
+import BaseHead from "@components/head/BaseHead.astro";
+import ImportHead from "@components/head/ImportHead.astro";
+import MainHead from "@components/head/MainHead.astro";
+import PreloadHead from "@components/head/PreloadHead.astro";
+import Layout from "@layouts/Layout.astro";
+---
+
+<Layout>
+  <head>
+    <BaseHead />
+    <PreloadHead />
+    <ImportHead>
+      <style>
+        section {
+          padding-top: 0.7rem;
+          padding-bottom: 0.7rem;
+        }
+      </style>
+      <script>
+        import { Collapse } from "bootstrap";
+      </script>
+    </ImportHead>
+    <MainHead
+      title="Support Me"
+      description="Help me work on and improve mastercomfig!"
+    />
+  </head>
+  <Body>
+    <div class="container">
+      <section>
+        <a href="/">
+          <small
+            ><span class="fas fa-arrow-left fa-fw"></span> Back to home</small
+          >
+        </a>
+        <br />
+        <div class="py-2">
+          <img
+            style="height:32px;width:32x;vertical-align:bottom"
+            src="/img/mastercomfig_logo_transparent_i.svg"
+            alt="logo"
+          />
+          <span style="font-size: 1.5rem" class="text-secondary"
+            >mastercomfig</span
+          >
+        </div>
+        <h1 class="display-4">Support Me</h1>
+        <hr />
+        <p class="lead">
+          Running mastercomfig takes a lot of time, effort and money. If you
+          appreciate any of my work, please consider supporting me!
+        </p>
+        <h3>Monthly Costs</h3>
+        <p>
+          I have provided the following information for full transparency of the
+          monthly costs of running mastercomfig. I rely on support from the
+          community to be able to afford to keep the website and services
+          online.
+        </p>
+        <p>
+          Total cost per month: <strong>$118.60</strong>. This amounts to <strong
+            >$1,423.20 per year</strong
+          >.
+        </p>
+        <p>
+          <a
+            id="collapseCostButton"
+            class="collapse-button"
+            data-bs-toggle="collapse"
+            href="#collapseCost"
+            role="button"
+            aria-expanded="false"
+            aria-controls="collapseCost"
+          >
+            <span class="fas fa-chevron-down fa-fw"></span> View cost breakdown
+          </a>
+        </p>
+        <div class="collapse" id="collapseCost">
+          <div class="collapse-wrapper">
+            <ul>
+              <li>
+                <strong>CloudFlare: $25/month</strong> - Provides hosting for web
+                services, security and DDoS protection
+              </li>
+              <li>
+                <strong>Google Cloud Storage: $1/month</strong> - Provides cloud
+                storage for web assets, like hitsounds
+              </li>
+              <li>
+                <strong>Sentry: $41/month</strong> - Provides error tracking, crash
+                reporting, performance monitoring, and other logs to help us improve
+                the web services and Team Comtress 2
+              </li>
+              <li>
+                <strong>Dedicated servers: $38.40/month</strong> - Provides hosting
+                for Team Comtress 2 game servers
+              </li>
+              <li>
+                <strong>VPS: $14.20/month</strong> - Provides hosting for mastercomfig
+                web services like quickplay and Discord bots used for community features
+                and service notifications / syncing
+              </li>
+              <li>
+                <strong>Domain: $3/month</strong> - Provides domain names (comfig.app,
+                mastercomfig.com) for mastercomfig website
+              </li>
+              <li>
+                <strong>Ko-Fi Gold: $6/month</strong> - Used to accept payments from
+                the community
+              </li>
+            </ul>
+          </div>
+        </div>
+        <p>
+          We also have some other costs which are considered optional. If there
+          is not enough support to keep the project funds healthy, we cancel
+          these services to stabilize costs. These optional costs total <strong
+            >$75.50 per month</strong
+          >, or <strong>$906 per year</strong>.
+        </p>
+        <p>
+          <a
+            id="collapseCostOptionalButton"
+            class="collapse-button"
+            data-bs-toggle="collapse"
+            href="#collapseCostOptional"
+            role="button"
+            aria-expanded="false"
+            aria-controls="collapseCostOptional"
+          >
+            <span class="fas fa-chevron-down fa-fw"></span> View optional costs
+          </a>
+        </p>
+        <div class="collapse" id="collapseCostOptional">
+          <div class="collapse-wrapper">
+            <ul>
+              <li>
+                <strong>Discord Server Boosts: $31/month</strong> - Used for the
+                comfig Discord server, to provide users with a higher upload limit
+                for sharing during help requests, and for the Discord vanity link
+                to help with discoverability
+              </li>
+              <li>
+                <strong>Double Counter Pro: $8.50/month</strong> - Used to enhance
+                security against bots and scams for the comfig Discord server
+              </li>
+              <li>
+                <strong>Dyno Premium: $6/month</strong> - Used for moderation features
+                in the comfig Discord server, and help with tech support
+              </li>
+              <li>
+                <strong>Google Cloud Compute: $30/month</strong> - Used to host 100
+                player and other TF2 server events for the community and for testing
+                new performance features. Previously, these experiments led to the
+                development of features to help power all 100 player servers, including
+                shounic's trenches, enabling servers to provide a much better gameplay
+                experience.
+              </li>
+            </ul>
+          </div>
+        </div>
+        <small
+          >Note: These costs have been averaged to represent monthly costs, some
+          of which are paid at different intervals.</small
+        >
+      </section>
+      <section>
+        <h3>Monetary Support</h3>
+        <p>
+          You can support me with direct financial contributions through the
+          following services:
+        </p>
+        <ul>
+          <li><a href="https://ko-fi.com/mastercoms">Ko-fi</a></li>
+          <li><a href="https://www.patreon.com/mastercoms">Patreon</a></li>
+          <li><a href="https://liberapay.com/mastercoms">Liberapay</a></li>
+          <li>
+            <a href="https://github.com/sponsors/mastercoms">GitHub Sponsors</a>
+          </li>
+          <li>
+            <a
+              href="https://discord.com/servers/mastercomfig-389089828249010188"
+              >Discord Supporter</a
+            >
+          </li>
+        </ul>
+      </section>
+      <section>
+        <h3>Epic Games Creator</h3>
+        <p>
+          If you cannot directly support me, I have a
+          <a
+            href="https://www.epicgames.com/fortnite/en-US/news/support-a-creator-faq"
+            >Support-A-Creator</a
+          > code: <code>mastercoms</code>, which you can set in
+          <a
+            href="https://www.epicgames.com/fortnite/en-US/news/support-a-creator-faq"
+            >Fortnite</a
+          >, <a href="https://www.rocketleague.com/support-a-creator/"
+            >Rocket League</a
+          >, and other games on the
+          <a href="https://store.epicgames.com/">Epic Games Store</a>, as well
+          as purchasing games and DLC on the store itself. In connection with
+          Epic Games’ Support-A-Creator Program, I receive a commission from
+          these purchases.
+        </p>
+      </section>
+      <section>
+        <h3>Fortnite Maps</h3>
+        <p>
+          You can also play on my Fortnite maps, which give me money based on
+          engagement:
+        </p>
+        <p>
+          <a href="https://www.fortnite.com/@mastercoms/7761-6157-7902"
+            ><img
+              class="img-fluid"
+              style="max-width: 500px"
+              src="https://docs.comfig.app/dev/assets/images/staredown.webp"
+              alt="staredown preview"
+            /></a
+          >
+          <br />
+          <strong>
+            <a href="https://www.fortnite.com/@mastercoms/7761-6157-7902"
+              >Staredown - 8v8 TDM</a
+            ></strong
+          > Island code: <code>7761-6157-7902</code>
+          <br /><br />
+          <a href="https://www.fortnite.com/@mastercoms/4173-4839-7557"
+            ><img
+              class="img-fluid"
+              style="max-width: 500px"
+              src="/img/support_me/combatlab.webp"
+              alt="orange combat sandbox preview"
+            /></a
+          >
+          <br />
+          <strong>
+            <a href="https://www.fortnite.com/@mastercoms/4173-4839-7557"
+              >Orange Combat Sandbox - 16v16 arena</a
+            ></strong
+          > Island code: <code>4173-4839-7557</code>
+          <br /><br />
+          <a href="https://www.fortnite.com/@mastercoms/4173-4839-7557"
+            ><img
+              class="img-fluid"
+              style="max-width: 500px"
+              src="/img/support_me/dpsmode.webp"
+              alt="1v1 Tracking Aim Trainer preview"
+            /></a
+          >
+          <br />
+          <strong>
+            <a href="https://www.fortnite.com/@mastercoms/4173-4839-7557"
+              >1v1 Tracking Aim Trainer</a
+            ></strong
+          > Island code: <code>4173-4839-7557</code>
+        </p>
+      </section>
+      <section>
+        <h3>Gifts</h3>
+        <p>
+          You can gift me using Steam Wallet Funds! <a
+            href="https://steamcommunity.com/id/mastercoms/"
+            >Add me as a friend on Steam</a
+          > (leave a comment about gifting!) Then, you can gift me a <a
+            href="https://store.steampowered.com/digitalgiftcards/selectgiftcard"
+            >Steam Digital Card</a
+          > or gift me a <a
+            href="https://store.steampowered.com/wishlist/profiles/76561198046110893/#sort=price"
+            >wishlisted game</a
+          >.
+        </p>
+
+        <p>
+          Or you can gift me Amazon items through
+          <a href="https://throne.com/mastercoms">Throne</a>.
+        </p>
+      </section>
+      <section>
+        <h3>Thank You!</h3>
+        <p>
+          You have my endless gratitude if you support me with money or gift
+          items, and this support encourages me so much!
+        </p>
+        <p>
+          If you cannot support me through the above methods, that's fine too!
+          Your thank yous are always cherished and mean so much to me!
+        </p>
+      </section>
+    </div>
+    <hr />
+    <Footer />
+  </Body>
+</Layout>

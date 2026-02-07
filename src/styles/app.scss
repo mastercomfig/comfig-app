@@ -24,11 +24,11 @@
   margin-right: 0.5rem;
 }
 
-#launch-options > * {
+#launch-options>* {
   float: left;
 }
 
-#launch-options > .fas {
+#launch-options>.fas {
   margin-top: 5px;
   margin-right: 5px;
 }
@@ -103,14 +103,14 @@
   margin-top: 1rem;
 }
 
-.addons-list-community > .row {
+.addons-list-community>.row {
   display: flex;
   flex-wrap: nowrap;
   overflow-x: auto;
   min-height: 30vh;
 }
 
-.addons-list-community > .row > .col-4 {
+.addons-list-community>.row>.col-4 {
   flex: 0 0 auto;
 }
 
@@ -140,15 +140,6 @@ a.addon-card:hover {
 // Other downloads
 #blockMisc {
   margin-bottom: 2rem;
-}
-
-#collapseMiscButton {
-  color: #a0a0a0;
-}
-
-// Collapse
-.collapse-wrapper {
-  padding-bottom: 1px;
 }
 
 // Binds
@@ -194,7 +185,8 @@ a.addon-card:hover {
 }
 
 .colorMask {
-  mask-size: 100%; /* edges might get cut off if you use 100% */
+  mask-size: 100%;
+  /* edges might get cut off if you use 100% */
   mask-repeat: no-repeat;
   mask-position: center;
   image-rendering: crisp-edges;
@@ -202,7 +194,7 @@ a.addon-card:hover {
   image-rendering: pixelated;
 }
 
-.colorMask > img {
+.colorMask>img {
   mix-blend-mode: multiply;
 }
 
