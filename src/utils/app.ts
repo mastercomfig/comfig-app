@@ -15,6 +15,19 @@ import TSON from "@utils/tson";
 import fastClone from "./fastClone.ts";
 import { getCrosshairPacks } from "./game.ts";
 
+// Import custom crosshair utilities
+let getCustomCrosshairForDownload: ((name: string) => Promise<{ vtf: Blob; vmt: Blob } | null>) | null = null;
+
+// Dynamically import the custom crosshair module to avoid circular dependencies
+(async () => {
+  try {
+    const module = await import("../components/items/CustomCrosshairUpload");
+    getCustomCrosshairForDownload = module.getCustomCrosshairForDownload;
+  } catch (err) {
+    console.error("Failed to load custom crosshair module:", err);
+  }
+})();
+
 const idbKeyval = {
   get,
   set,
@@ -1805,15 +1818,66 @@ export async function app() {
         },
       };
       for (const crosshairFile of Array.from(crosshairsToDownload)) {
+        // Check if this is a custom crosshair
+        const isCustom = crosshairFile.startsWith("custom_");
+        
+        let crosshairResult;
+        let crosshairMaterialContents;
+        
+        if (isCustom && getCustomCrosshairForDownload) {
+          // Handle custom crosshair
+          try {
+            const customData = await getCustomCrosshairForDownload(crosshairFile);
+            if (customData) {
+              // Custom crosshair VMT is already generated
+              const vmtFile = newFile(
+                await customData.vmt.text(),
+                `${crosshairFile}.vmt`,
+                materialsDirectory,
+              );
+              if (vmtFile) {
+                downloads.push({
+                  name: `${crosshairFile}.vmt`,
+                  path: `${crosshairTarget}${crosshairFile}.vmt`,
+                  blob: vmtFile,
+                });
+              }
+              
+              // Add VTF file
+              const vtfFile = newFile(
+                await customData.vtf.arrayBuffer(),
+                `${crosshairFile}.vtf`,
+                materialsDirectory,
+              );
+              if (vtfFile) {
+                downloads.push({
+                  name: `${crosshairFile}.vtf`,
+                  path: `${crosshairTarget}${crosshairFile}.vtf`,
+                  blob: vtfFile,
+                });
+              }
+              continue;
+            }
+          } catch (err) {
+            console.error(`Failed to get custom crosshair ${crosshairFile}:`, err);
+            if (!hasAlerted) {
+              hasAlerted = true;
+              alert(`Failed to download custom crosshair ${crosshairFile}. Please try again later.`);
+            }
+            continue;
+          }
+        }
+        
+        // Handle regular crosshair
         const src = `${crosshairSrcBase}${crosshairFile}.vtf`;
-        const crosshairResult = await writeRemoteFile(src, materialsDirectory);
+        crosshairResult = await writeRemoteFile(src, materialsDirectory);
         if (crosshairResult) {
           // now generate the vmt
           const crosshairMaterial = fastClone(crosshairMaterialTemplate);
           // crosshair file name
           crosshairMaterial.UnlitGeneric["$basetexture"] += crosshairFile;
           // get the VDF formatted contents
-          const crosshairMaterialContents = stringify(crosshairMaterial, {
+          crosshairMaterialContents = stringify(crosshairMaterial, {
             pretty: true,
           });
           // write to the vmt file
