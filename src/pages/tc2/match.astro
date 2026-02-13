@@ -1,0 +1,285 @@
+---
+import AdvRedirector from "@components/AdvRedirector.astro";
+import Body from "@components/Body.astro";
+import Footer from "@components/Footer.astro";
+import BaseHead from "@components/head/BaseHead.astro";
+import ImportHead from "@components/head/ImportHead.astro";
+import MainHead from "@components/head/MainHead.astro";
+import PreloadHead from "@components/head/PreloadHead.astro";
+import tfLogoImg from "@img/tc2/team-comtress-2.png";
+import Layout from "@layouts/Layout.astro";
+---
+
+<Layout>
+  <head>
+    <BaseHead />
+    <PreloadHead />
+    <ImportHead />
+    <MainHead
+      title={`Match History | Team Comtress 2`}
+      site="Team Comtress"
+      noSite={true}
+      description={`Match details`}
+      image="https://teamcomtress.com/img/tc2/team-comtress-2.png"
+      favicon="/img/tc2/favicon.ico"
+    />
+  </head>
+  <Body>
+    <AdvRedirector />
+    <div class="text-center p-4 hide-launcher">
+      <a href="/">
+        <img
+          class="img-logo-sm"
+          src={tfLogoImg.src}
+          alt="Team Comtress 2 logo"
+        />
+      </a>
+    </div>
+
+    <section class="container p-4 bg-dark mb-4">
+      <div id="loading-spinner" class="text-center text-light">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="mt-2">Loading match data...</p>
+      </div>
+
+      <div id="match-content" style="display: none;">
+        <div class="row mb-4 text-center">
+          <div class="col-12">
+            <h1 class="display-4 text-light">Match Stats</h1>
+            <h4 class="text-muted">ID: <span id="match-id"></span></h4>
+            <h4 class="text-light">
+              Duration: <span id="match-duration"></span>
+            </h4>
+            <h4 class="text-light">
+              <span class="text-danger">Red: <span id="red-score"></span></span>
+              - <span class="text-primary"
+                >Blue: <span id="blue-score"></span></span
+              >
+            </h4>
+            <h3 id="winner-display"></h3>
+          </div>
+        </div>
+
+        <div class="row">
+          <!-- BLUE TEAM -->
+          <div class="col-12 mb-4">
+            <h3 class="p-2 mb-0 bg-primary text-white">BLU Team</h3>
+            <div class="table-responsive">
+              <table class="table table-dark table-striped table-hover mb-0">
+                <thead>
+                  <tr>
+                    <th>Player</th>
+                    <th>Classes</th>
+                    <th class="text-center">Score</th>
+                    <th class="text-center">K</th>
+                    <th class="text-center">D</th>
+                    <th class="text-center">Sup</th>
+                    <th class="text-end">Damage</th>
+                    <th class="text-end">Healing</th>
+                  </tr>
+                </thead>
+                <tbody id="blue-team-tbody"> </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- RED TEAM -->
+          <div class="col-12">
+            <h3 class="p-2 mb-0 bg-danger text-white">RED Team</h3>
+            <div class="table-responsive">
+              <table class="table table-dark table-striped table-hover mb-0">
+                <thead>
+                  <tr>
+                    <th>Player</th>
+                    <th>Classes</th>
+                    <th class="text-center">Score</th>
+                    <th class="text-center">K</th>
+                    <th class="text-center">D</th>
+                    <th class="text-center">Sup</th>
+                    <th class="text-end">Damage</th>
+                    <th class="text-end">Healing</th>
+                  </tr>
+                </thead>
+                <tbody id="red-team-tbody"> </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        id="error-message"
+        class="text-center text-danger"
+        style="display: none;"
+      >
+        <h3>Failed to load match data.</h3>
+      </div>
+    </section>
+    <Footer product={"Team Comtress"} />
+
+    <script>
+      // Types
+      const CLASS_MAP = {
+        2: "Scout",
+        4: "Sniper",
+        8: "Soldier",
+        16: "Demoman",
+        32: "Medic",
+        64: "Heavy",
+        128: "Pyro",
+        256: "Spy",
+        512: "Engineer",
+      };
+
+      const TEAM_RED = 2;
+      const TEAM_BLUE = 3;
+
+      // Helpers
+      function formatDuration(seconds) {
+        const m = Math.floor(seconds / 60);
+        const s = seconds % 60;
+        return `${m}:${s.toString().padStart(2, "0")}`;
+      }
+
+      function getClasses(bitmask) {
+        const classes = [];
+        for (const [bit, name] of Object.entries(CLASS_MAP)) {
+          if ((bitmask & parseInt(bit)) !== 0) {
+            classes.push(name);
+          }
+        }
+        return classes.join(", ");
+      }
+
+      function createPlayerRow(p) {
+        const row = document.createElement("tr");
+
+        // Player Link
+        const nameCell = document.createElement("td");
+        const link = document.createElement("a");
+        // Fix SteamID conversion if needed, assuming user logic was correct with the BigInt add
+        // 76561197960265728n is the offset from Steam3 ID to Steam64 ID
+        const steam64 = (BigInt(p.steamId) + 76561197960265728n).toString();
+        link.href = `https://steamcommunity.com/profiles/${steam64}`;
+        link.target = "_blank";
+        link.className = "text-light text-decoration-none";
+        link.innerHTML = `<i class="fab fa-steam"></i> ${p.steamId}`;
+        nameCell.appendChild(link);
+        row.appendChild(nameCell);
+
+        // Classes
+        const classCell = document.createElement("td");
+        classCell.textContent = getClasses(p.classesPlayed);
+        row.appendChild(classCell);
+
+        // Score
+        const scoreCell = document.createElement("td");
+        scoreCell.className = "text-center fw-bold";
+        scoreCell.textContent = p.score;
+        row.appendChild(scoreCell);
+
+        // Kills
+        const killsCell = document.createElement("td");
+        killsCell.className = "text-center text-success";
+        killsCell.textContent = p.kills;
+        row.appendChild(killsCell);
+
+        // Deaths
+        const deathsCell = document.createElement("td");
+        deathsCell.className = "text-center text-danger";
+        deathsCell.textContent = p.deaths;
+        row.appendChild(deathsCell);
+
+        // Support
+        const supCell = document.createElement("td");
+        supCell.className = "text-center text-muted";
+        supCell.textContent = p.support;
+        row.appendChild(supCell);
+
+        // Damage
+        const dmgCell = document.createElement("td");
+        dmgCell.className = "text-end";
+        dmgCell.textContent = p.damage;
+        row.appendChild(dmgCell);
+
+        // Healing
+        const healCell = document.createElement("td");
+        healCell.className = "text-end";
+        healCell.textContent = p.healing;
+        row.appendChild(healCell);
+
+        return row;
+      }
+
+      async function init() {
+        const params = new URLSearchParams(window.location.search);
+        const matchId = params.get("matchId");
+
+        if (!matchId) {
+          // If no match ID, maybe show local test data or just return
+          // For now, let's just error or hide spinner?
+          // Or maybe we use the test data provided in the previous step if no ID?
+          // The user directive was "Refactor ... to use browser javascript".
+          // I'll assume if no ID, nothing to show.
+          document.getElementById("loading-spinner").style.display = "none";
+          return;
+        }
+
+        try {
+          // Fetch data
+          const res = await fetch(
+            `https://api.teamcomtress.com/match/${matchId}`,
+          );
+          if (!res.ok) throw new Error("Failed to fetch match data");
+          const matchResponse = await res.json();
+          const matchData = JSON.parse(matchResponse.result.match_data);
+          matchData.matchId = matchId; // Ensure ID is in data if missing
+
+          // Process data
+          const redPlayers = Object.values(matchData.players)
+            .filter((p) => p.team === TEAM_RED)
+            .sort((a, b) => b.score - a.score);
+          const bluePlayers = Object.values(matchData.players)
+            .filter((p) => p.team === TEAM_BLUE)
+            .sort((a, b) => b.score - a.score);
+
+          const winner = matchData.winningTeam === TEAM_BLUE ? "Blue" : "Red";
+          const winnerClass =
+            matchData.winningTeam === TEAM_BLUE
+              ? "text-primary"
+              : "text-danger";
+
+          // Update DOM
+          document.getElementById("match-id").textContent = matchData.matchId;
+          document.getElementById("match-duration").textContent =
+            formatDuration(matchData.duration);
+          document.getElementById("red-score").textContent = matchData.redScore;
+          document.getElementById("blue-score").textContent =
+            matchData.blueScore;
+
+          const winnerDisplay = document.getElementById("winner-display");
+          winnerDisplay.textContent = `Winner: ${winner}`;
+          winnerDisplay.className = winnerClass;
+
+          const blueTbody = document.getElementById("blue-team-tbody");
+          bluePlayers.forEach((p) => blueTbody.appendChild(createPlayerRow(p)));
+
+          const redTbody = document.getElementById("red-team-tbody");
+          redPlayers.forEach((p) => redTbody.appendChild(createPlayerRow(p)));
+
+          // Show Content
+          document.getElementById("loading-spinner").style.display = "none";
+          document.getElementById("match-content").style.display = "block";
+        } catch (err) {
+          console.error(err);
+          document.getElementById("loading-spinner").style.display = "none";
+          document.getElementById("error-message").style.display = "block";
+        }
+      }
+
+      // Run on load
+      init();
+    </script>
+  </Body>
+</Layout>
