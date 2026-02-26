@@ -6,6 +6,21 @@
   Cross-Origin-Resource-Policy: same-origin
   Cross-Origin-Opener-Policy: same-origin
 
+/launcher_feed
+  Cross-Origin-Resource-Policy: cross-origin
+  Cross-Origin-Opener-Policy: cross-origin
+  Access-Control-Allow-Origin: *
+
+/newsLauncher/*
+  Cross-Origin-Resource-Policy: cross-origin
+  Cross-Origin-Opener-Policy: cross-origin
+  Access-Control-Allow-Origin: *
+
+/updates/*
+  Cross-Origin-Resource-Policy: cross-origin
+  Cross-Origin-Opener-Policy: cross-origin
+  Access-Control-Allow-Origin: *
+
 /sw.js
   ! Cache-Control
 
