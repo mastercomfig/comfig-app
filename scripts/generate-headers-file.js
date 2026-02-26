@@ -14,7 +14,12 @@ const headersFilePath = resolve(rootDir, "public", "_headers");
 let headersFile = fs.readFileSync(headersFilePath, {
   encoding: "utf-8",
 });
-const scriptSrcHashes = `'${sriHashes.inlineScriptHashes.join("' '")}'`;
+let scriptSrcHashes;
+if (sriHashes.inlineScriptHashes.length > 0) {
+  scriptSrcHashes = `'${sriHashes.inlineScriptHashes.join("' '")}'`;
+} else {
+  scriptSrcHashes = "";
+}
 headersFile = headersFile.replace("{{SCRIPT_SRC_HASHES}}", scriptSrcHashes);
 // Not ideal, but protects against non-targeted attacks. We don't really have options for non-dynamic content.
 const srcNonce = `'nonce-${nonce}'`;
