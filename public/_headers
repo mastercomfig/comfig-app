@@ -22,6 +22,14 @@
   Cross-Origin-Opener-Policy: cross-origin
   Access-Control-Allow-Origin: *
 
+/patchesLauncher/*
+  ! Cross-Origin-Resource-Policy
+  ! Cross-Origin-Opener-Policy
+  ! Access-Control-Allow-Origin
+  Cross-Origin-Resource-Policy: cross-origin
+  Cross-Origin-Opener-Policy: cross-origin
+  Access-Control-Allow-Origin: *
+
 /updates/*
   ! Cross-Origin-Resource-Policy
   ! Cross-Origin-Opener-Policy
