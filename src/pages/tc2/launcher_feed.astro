@@ -11,7 +11,10 @@ import { getCollection } from "astro:content";
 
 const news = (await getCollection("tc2News"))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-  .filter((post) => !post.data.draft && !post.data.update && !post.id.endsWith("beta"));
+  .filter(
+    (post) =>
+      !post.data.draft && !post.data.update && !post.id.endsWith("beta"),
+  );
 
 const firstNews = news[0];
 
@@ -64,7 +67,26 @@ const allPosts = news.concat(patches).sort((a, b) => {
             if (post.collection === "tc2News") {
               return (
                 <div class="col-12">
-                  <div class="card">
+                  {post.id == firstNews.id && (
+                    <div
+                      class="ps-2 py-1 fw-bold"
+                      style={{
+                        background: "#009688",
+                        border: "1px solid #009688",
+                        borderBottom: "none",
+                      }}
+                    >
+                      LATEST BLOG POST
+                    </div>
+                  )}
+                  <div
+                    class="card"
+                    style={{
+                      border:
+                        post.id == firstNews.id ? "1px solid #009688" : "",
+                      borderTop: post.id == firstNews.id ? "none" : "",
+                    }}
+                  >
                     <div class="card-body">
                       <h5
                         class="card-title"
