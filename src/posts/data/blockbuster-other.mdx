@@ -8,11 +8,9 @@ import BlockbusterBlock from "@components/tc2/BlockbusterBlock.astro";
 * Various settings were updated to modern defaults
 * Disabled auto-kill upon class change by default
 * Injured teammates automatically call out while playing as a Medic by default
-* Crosshair is now hidden on scope zoom by default
+* Fixed Sniper Rifle crosshair not being centered on the screen
 * Enabled remember last switched weapon by default
-* Enabled Medi-Gun auto healing by default
-* Auto reload is now force enabled, to free up the reload key for future actions
-* The default volume is now 50%, and the intro video has been updated with a lower volume. No longer blow out your ears when launching the game!
+* The default volume is now 15%, and the intro video has been updated with a lower volume. No longer blow out your ears when launching the game!
 * Increased default player count to 32
 * Added adjustable team sizes. Defaults to 12v12. Players will be directed to spectator if teams are full.
   * Can be changed by server operator and VScript with tf_team_size, tf_team_size_blu and tf_team_size_red ConVars
@@ -87,7 +85,6 @@ import BlockbusterBlock from "@components/tc2/BlockbusterBlock.astro";
 * Fixed display of building upgrade status being incorrect in certain cases
 * Added cl_crosshair_gap ConVar to control the gap for certain crosshair textures
 * Fixed payload progress HUD being slightly delayed
-* Returning to the main menu plays a new music track
 * Fixed certain main menu elements not properly hiding during load time
 * Enabled server time limit display by default
 * Removed new player prompt regarding disabling HUD player model on old PCs, as its performance issues have been resolved
@@ -240,7 +237,6 @@ import BlockbusterBlock from "@components/tc2/BlockbusterBlock.astro";
 * Fixed some instant respawn exploits
 * Fixed kicks sometimes being bypassable
 * cl_disablehtmlmotd is no longer queryable by servers. (thanks megascatterbomb!)
-* Fixed an exploit with being able to spectate enemies upon death
 * Fixed cheats being able to bypass server restrictions for some settings
 * Removed ability to open insecure http:// links through the UI
 
