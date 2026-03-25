@@ -38,9 +38,18 @@ importers:
       '@eslint/js':
         specifier: ^9.32.0
         version: 9.32.0
+      '@fontsource-variable/inter':
+        specifier: ^5.2.8
+        version: 5.2.8
+      '@fontsource-variable/oswald':
+        specifier: ^5.2.8
+        version: 5.2.8
       '@fontsource-variable/roboto-flex':
         specifier: ^5.2.6
         version: 5.2.6
+      '@fontsource-variable/teko':
+        specifier: ^5.2.7
+        version: 5.2.7
       '@fontsource/monoton':
         specifier: ^5.2.6
         version: 5.2.6
@@ -1458,8 +1467,17 @@ packages:
   '@floating-ui/utils@0.2.10':
     resolution: {integrity: sha512-aGTxbpbg8/b5JfU1HXSrbH3wXZuLPJcNEcZQFMxLs3oSzgtVu6nFPkbbGGUvBcUjKV2YyB9Wxxabo+HEH9tcRQ==}
 
+  '@fontsource-variable/inter@5.2.8':
+    resolution: {integrity: sha512-kOfP2D+ykbcX/P3IFnokOhVRNoTozo5/JxhAIVYLpea/UBmCQ/YWPBfWIDuBImXX/15KH+eKh4xpEUyS2sQQGQ==}
+
+  '@fontsource-variable/oswald@5.2.8':
+    resolution: {integrity: sha512-sIXwfKbyHOATgBWOlpR73VMQ8pA8XCToiyy6sL02ZfYEZPpW18TLtpxPBpYXId7xKbWCousOTzlJsa/9rTd8WQ==}
+
   '@fontsource-variable/roboto-flex@5.2.6':
     resolution: {integrity: sha512-8jUDGkb6gRUexJkdUz1GThB9fshF7ENe/vVmtf+nz2MxQZZsrrYT92tST3xM+xf/BnoqL6yRkGdv9zNITiyYCw==}
+
+  '@fontsource-variable/teko@5.2.7':
+    resolution: {integrity: sha512-+KYLt3b+za59WyQIEORJE1PjoLyeAodErNe1OZlxXZiGcLWnaArHMn0cwa1lsRY9Md2jfBGzdjOKZKBk39l2BA==}
 
   '@fontsource/monoton@5.2.6':
     resolution: {integrity: sha512-Tsw1P00EXvDMAfnB0BGuSXNB6MRIsGaV+TJv7keu0KfWlJPArSQLK2BeL9XfmRu4iCM/KkFuDDaSuuXGFP2i+Q==}
@@ -7893,7 +7911,13 @@ snapshots:
 
   '@floating-ui/utils@0.2.10': {}
 
+  '@fontsource-variable/inter@5.2.8': {}
+
+  '@fontsource-variable/oswald@5.2.8': {}
+
   '@fontsource-variable/roboto-flex@5.2.6': {}
+
+  '@fontsource-variable/teko@5.2.7': {}
 
   '@fontsource/monoton@5.2.6': {}
 
