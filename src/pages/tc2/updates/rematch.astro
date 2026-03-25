@@ -1,0 +1,1403 @@
+---
+import Body from "@components/Body.astro";
+import Footer from "@components/Footer.astro";
+import BaseHead from "@components/head/BaseHead.astro";
+import ImportHead from "@components/head/ImportHead.astro";
+import MainHead from "@components/head/MainHead.astro";
+import PreloadHead from "@components/head/PreloadHead.astro";
+
+import tfLogoImg from "@img/tc2/team-comtress-2.png";
+import mainmenuImg from "@img/tc2/rematch/tc2mainmenu.png";
+import playmenuImg from "@img/tc2/rematch/playmenu.png";
+import classIntelImg from "@img/tc2/rematch/classintel.png";
+import settingsImg from "@img/tc2/rematch/tc2settings.png";
+import Layout from "@layouts/Layout.astro";
+---
+
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Oswald:wght@500;700&family=Teko:wght@500;700&display=swap");
+
+  body.rematch-page {
+    background-color: #0c0b0f;
+    color: #e2e4e9;
+    font-family: "Inter", sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* Typography */
+  .font-display {
+    font-family: "Teko", sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  .font-header {
+    font-family: "Oswald", sans-serif;
+    text-transform: uppercase;
+  }
+  .font-body {
+    font-family: "Inter", sans-serif;
+  }
+
+  /* Palette */
+  .color-red {
+    color: #fe2e2e !important;
+  }
+  .color-orange {
+    color: #ff8800 !important;
+  }
+  .color-blue {
+    color: #2ea2ff !important;
+  }
+  .color-muted {
+    color: #a1a6b0 !important;
+  }
+  .color-white {
+    color: #ffffff !important;
+  }
+
+  /* Hero */
+  .rematch-hero {
+    min-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background:
+      radial-gradient(circle at center, #1f1412a3 0%, #0c0b0fd9 70%),
+      url("/img/tc2/rematch/rematchbg.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    padding: 2rem;
+    border-bottom: 4px solid #ff8800;
+  }
+  .rematch-hero-title {
+    font-size: clamp(5rem, 15vw, 12rem);
+    line-height: 0.85;
+    color: #fff;
+    text-shadow: 0 10px 30px rgb(95, 95, 95);
+    margin-bottom: 1.5rem;
+    letter-spacing: -2px;
+  }
+  .rematch-hero-subtitle {
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    font-weight: 500;
+    color: #a1a6b0;
+    letter-spacing: 2px;
+  }
+
+  /* Structural Flow */
+  .asym-section {
+    padding: 8rem 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 5;
+  }
+
+  .feature-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4rem;
+  }
+  .feature-row.reverse {
+    flex-direction: row-reverse;
+  }
+  .feature-text {
+    flex: 1 1 500px;
+  }
+  .feature-visual {
+    flex: 1 1 500px;
+  }
+
+  .big-header {
+    font-size: clamp(3.5rem, 6vw, 6.5rem);
+    line-height: 1;
+    margin-bottom: 1rem;
+    color: #fff; /* Default, overridden by .color-* */
+  }
+  .sub-header {
+    font-size: 2.2rem;
+    margin-bottom: 1rem;
+    letter-spacing: 1px;
+    color: #fff; /* Default, overridden by .color-* */
+  }
+  .body-text {
+    font-size: 1.25rem;
+    color: #b0b4bc;
+    line-height: 1.7;
+    margin-bottom: 2rem;
+  }
+
+  /* Skewed Flow Breaks */
+  .skew-bg-red {
+    background: linear-gradient(135deg, #18181c 0%, #0d0d11 100%);
+    border-top: 5px solid #fe2e2e;
+    border-bottom: 5px solid #fe2e2e;
+    transform: skewY(-3deg);
+    margin: 8rem 0;
+    z-index: 10;
+  }
+  .skew-bg-red > .unskew {
+    transform: skewY(3deg);
+    padding: 8rem 2rem;
+  }
+
+  .skew-bg-metal {
+    background: #111115;
+    border-top: 5px solid #555;
+    border-bottom: 5px solid #555;
+    transform: skewY(2deg);
+    margin: 8rem 0;
+    z-index: 10;
+  }
+  .skew-bg-metal > .unskew {
+    transform: skewY(-2deg);
+    padding: 8rem 2rem;
+  }
+
+  /* Callouts */
+  .massive-callout {
+    background: url(https://teamcomtress.com/img/tc2/team-comtress-2.png) center
+      center no-repeat;
+    background-blend-mode: multiply;
+    background-color: #0c0b0f;
+    background-size: cover;
+    padding: 12rem 2rem;
+    text-align: center;
+    border-top: 5px solid #fe2e2e;
+    border-bottom: 5px solid #fe2e2e;
+    position: relative;
+    margin: 8rem 0;
+  }
+  .massive-callout::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 0;
+  }
+  .massive-callout > div {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* CSS Image Placeholders */
+  .asset-placeholder {
+    background-color: #1a1a20;
+    border: 3px dashed #444;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    font-weight: bold;
+    font-size: 1.3rem;
+    letter-spacing: 2px;
+    box-shadow:
+      inset 0 0 50px rgba(0, 0, 0, 0.8),
+      0 20px 50px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    transition:
+      transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+      border-color 0.3s ease,
+      color 0.3s ease;
+    text-align: center;
+    padding: 2rem;
+  }
+  .asset-placeholder.interactive-target:hover {
+    border-color: #fff !important;
+    color: #fff !important;
+    transform: perspective(1000px) rotateY(2deg) scale(1.02);
+  }
+
+  .ratio-16x9 {
+    aspect-ratio: 16/9;
+  }
+  .ratio-21x9 {
+    aspect-ratio: 21/9;
+  }
+  .ratio-1x1 {
+    aspect-ratio: 1/1;
+  }
+  .ratio-4x3 {
+    aspect-ratio: 4/3;
+  }
+
+  /* Component Grid Layouts */
+  .grid-layout-small {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2.5rem;
+  }
+  .grid-layout-vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+  }
+  .grid-card-small {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 1.5rem;
+    border-left: 4px solid #444;
+    transition:
+      border-left-color 0.2s,
+      background 0.2s,
+      transform 0.2s;
+    cursor: default;
+  }
+  .grid-card-small:hover {
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateY(-3px);
+  }
+  .grid-card-small.hover-swap-trigger {
+    cursor: pointer;
+  }
+  .grid-card-small h4 {
+    font-family: "Oswald", sans-serif;
+    font-size: 1.4rem;
+    color: #e2e4e9;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .grid-card-small p {
+    font-family: "Inter", sans-serif;
+    font-size: 1.05rem;
+    color: #a1a6b0;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  @keyframes pulseOpacity {
+    0% {
+      opacity: 0.5;
+      transform: scale(0.98);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  .pulse-anim {
+    animation: pulseOpacity 0.3s ease-out forwards;
+  }
+
+  /* JS Carousel Styles */
+  .hydro-carousel-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .hydro-carousel-visual {
+    position: relative;
+    min-height: 300px;
+  }
+  .hydro-asset {
+    transition:
+      opacity 0.5s ease,
+      transform 0.5s ease;
+  }
+  .hydro-asset.hidden {
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    pointer-events: none;
+    transform: scale(0.99);
+  }
+  .hydro-carousel-nav {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .hydro-nav-btn {
+    flex: 1;
+    min-width: 250px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid #333;
+    padding: 1.5rem;
+    text-align: left;
+    cursor: pointer;
+    transition: 0.3s ease;
+    border-radius: 8px;
+  }
+  .hydro-nav-btn.active,
+  .hydro-nav-btn:hover {
+    border-color: #ff8800;
+    border-bottom-color: #ff8800;
+    background: rgba(255, 136, 0, 0.05);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+  }
+  .hydro-nav-btn h4 {
+    color: #fff;
+    font-family: "Oswald", sans-serif;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 1.2rem;
+  }
+  .hydro-nav-btn p {
+    color: #888;
+    font-family: "Inter", sans-serif;
+    margin: 0;
+    font-size: 1rem;
+  }
+
+  /* Uniform Class Layout */
+  .uniform-class-list {
+    display: flex;
+    flex-direction: column;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  .class-revision-row {
+    display: flex;
+    align-items: flex-start;
+    padding: 3.5rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    background: transparent;
+  }
+  .class-revision-row:last-child {
+    border-bottom: none;
+  }
+  .class-icon-block {
+    flex: 0 0 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 4rem;
+  }
+  .class-details-block {
+    flex: 1;
+  }
+  .class-icon-block h3 {
+    font-family: "Oswald", sans-serif;
+    font-size: 1.8rem;
+    color: #fff;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    opacity: 0.9;
+  }
+
+  /* Class Detail Bullets */
+  .merc-bullets ul {
+    list-style-type: none;
+    padding-left: 0;
+    margin: 0;
+  }
+  .merc-bullets li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 1.2rem;
+    line-height: 1.6;
+    color: #a1a6b0;
+    font-size: 1.15rem;
+  }
+  .merc-bullets li:last-child {
+    margin-bottom: 0;
+  }
+  .merc-bullets li::before {
+    content: "■";
+    position: absolute;
+    left: 0;
+    top: 5px;
+    color: #666;
+    font-size: 0.9rem;
+  }
+  .merc-bullets li strong {
+    color: #fff;
+    font-family: "Oswald", sans-serif;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-right: 0.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .class-revision-row {
+      flex-direction: column;
+      text-align: left;
+      align-items: center;
+      padding: 2rem 0;
+    }
+    .class-icon-block {
+      flex: none;
+      padding-right: 0;
+      margin-bottom: 1.5rem;
+    }
+  }
+
+  /* Reveal Animations */
+  .reveal-up {
+    opacity: 0;
+    transform: translateY(40px);
+    transition:
+      opacity 0.8s cubic-bezier(0.165, 0.84, 0.44, 1),
+      transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+  }
+  .reveal-up.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Patch Notes Container */
+  .patch-notes-wrapper {
+    background: #0c0b0f;
+    padding: 6rem 2rem;
+    border-top: 1px solid #333;
+  }
+  .patch-notes-inner {
+    max-width: 1000px;
+    margin: 0 auto;
+    background: #111115;
+    padding: 4rem;
+    border-radius: 8px;
+    border: 1px solid #222;
+  }
+  .mdx-content h2 {
+    color: #fff;
+    font-size: 2.2rem;
+    text-transform: uppercase;
+    border-bottom: 1px solid #333;
+    padding-bottom: 0.5rem;
+    margin-top: 3rem;
+    font-family: "Oswald", sans-serif;
+  }
+  .mdx-content h3 {
+    color: #fff;
+    font-size: 1.4rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-family: "Inter", sans-serif;
+  }
+  .mdx-content ul {
+    list-style-type: none;
+    padding-left: 1rem;
+  }
+  .mdx-content ul li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 0.8rem;
+    line-height: 1.6;
+    color: #a1a6b0;
+  }
+  .mdx-content ul li::before {
+    content: "■";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: #666;
+    font-size: 0.8rem;
+  }
+</style>
+
+<Layout>
+  <head>
+    <BaseHead />
+    <PreloadHead />
+    <ImportHead />
+    <MainHead
+      title="The Rematch Update | Team Comtress 2"
+      site="Team Comtress"
+      noSite={true}
+      description="It's time for a rematch."
+      image="https://teamcomtress.com/img/tc2/team-comtress-2.png"
+      favicon="/img/tc2/favicon.ico"
+    />
+  </head>
+
+  <Body class="rematch-page">
+    <header
+      class="rematch-hero text-center"
+      style=`border-bottom: 1px solid #333`
+    >
+      <a href="/">
+        <img
+          src={tfLogoImg.src}
+          alt="TC2 Logo"
+          style="height: 110px; opacity: 0.9;"
+          class="mb-4"
+        />
+      </a>
+      <h1 class="rematch-hero-title font-display">
+        It's time for a <strong>rematch</strong>.
+      </h1>
+      <h2 class="rematch-hero-subtitle font-header color-orange mt-3">
+        The definitive matchmaking experience. Built from the ground up.
+      </h2>
+    </header>
+
+    <section
+      class="asym-section reveal-up"
+      style="padding-top: 10rem;max-width: none;"
+    >
+      <div class="feature-row">
+        <div class="feature-text" style="max-width: 700px">
+          <h2 class="font-display color-orange big-header">A Warm Welcome</h2>
+          <p class="body-text">
+            The improvements start before you even join a match. We've
+            overhauled the main menu using entirely new technology, giving it a
+            sleek design and more modern tools to help you enjoy the game.
+          </p>
+
+          <div class="grid-layout-small">
+            <div
+              class="grid-card-small hover-swap-trigger"
+              data-target="img-target-menus"
+              data-img={playmenuImg.src}
+              data-accent="#ff8800"
+            >
+              <h4 class="color-white">Improved Play Menu</h4>
+              <p>
+                We've completely streamlined the matchmaking interface,
+                utilizing dynamic hover effects and kinetic data streams to make
+                queuing up faster and more engaging than ever.
+              </p>
+            </div>
+            <div
+              class="grid-card-small hover-swap-trigger"
+              data-target="img-target-menus"
+              data-img={classIntelImg.src}
+              data-accent="#ff8800"
+            >
+              <h4 class="color-white">Class Intel Folders</h4>
+              <p>
+                Explore the intricate lore and mechanical depth of every
+                mercenary through highly detailed, interactive classified intel
+                folders accessible directly from the main menu.
+              </p>
+            </div>
+            <div
+              class="grid-card-small hover-swap-trigger"
+              data-target="img-target-menus"
+              data-img={settingsImg.src}
+              data-accent="#ff8800"
+            >
+              <h4 class="color-white">Overhauled Settings</h4>
+              <p>
+                Crucial gameplay options are no longer hidden behind obscure
+                advanced menus or console cvars, giving you immediate access to
+                search through and tailor your experience.
+              </p>
+            </div>
+          </div>
+        </div>
+        <br />
+        <div class="feature-visual">
+          <div
+            class="asset-placeholder interactive-target"
+            id="img-target-menus"
+            style="width: 100%;max-height: 800px"
+          >
+            <img
+              class="img-fluid"
+              style="max-height: 740px"
+              src={mainmenuImg.src}
+              alt="Main Menu"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="skew-bg-red">
+      <div class="unskew asym-section">
+        <div class="text-center mb-5 pb-5 reveal-up">
+          <h2
+            class="font-display color-red"
+            style="font-size: 6rem; line-height: 1;"
+          >
+            CASUAL MATCHMAKING 2.0
+          </h2>
+          <p class="body-text mx-auto" style="max-width: 800px; color: #ccc;">
+            TF2 fans, we hear you. Matchmaking feels broken, and the fixes added
+            over the years don't add up to a satisfying experience. So we've
+            gone through all of its systems and rebuilt them from the ground up
+            to ensure that Casual is fun, fair, and actually respects your time.
+          </p>
+        </div>
+
+        <div class="feature-row mb-5 pb-5 reveal-up">
+          <div class="feature-text text-start">
+            <h3 class="font-header color-red sub-header">The Series System</h3>
+            <p class="body-text">
+              The biggest complaint we've heard from players about Casual is
+              that the match structure is too short. Just when you start
+              enjoying a game with your team, the match ends and you're back in
+              the chaos of the queue. <strong>No more.</strong> We've now transformed
+              that match experience into combined "mini-matches" called Series. Series
+              are played continuously on the same map for a minimum of 35 minutes.
+              The team with the most series points at the end of the match wins.
+            </p>
+          </div>
+          <div class="feature-visual">
+            <div class="asset-placeholder ratio-21x9">
+              [ SERIES POINTS UI PLACEHOLDER ]
+            </div>
+          </div>
+        </div>
+
+        <div class="feature-row reverse mb-5 pb-5 reveal-up">
+          <div class="feature-text text-start">
+            <h3 class="font-header color-red sub-header">Hybrid Stopwatch</h3>
+            <p class="body-text">
+              <strong>Stopwatch is back, reworked for Casual!</strong>
+              Rather than ending the round abruptly like before, each team gets a
+              chance to attack and defend to the very end. While defending, if a
+              team succesfully stops the attackers, they receive 1 Series Point.
+              Another Series Point is awarded to the team with the best offense,
+              as measured through Stopwatch.
+            </p>
+          </div>
+          <div class="feature-visual">
+            <div class="asset-placeholder ratio-16x9">
+              [ STOPWATCH UI PLACEHOLDER ]
+            </div>
+          </div>
+        </div>
+
+        <div class="feature-row reveal-up">
+          <div class="feature-text text-start">
+            <h3 class="font-header color-red sub-header">Dynamic Balance</h3>
+            <p class="body-text">
+              We've completely overhauled the way we balance teams in Casual.
+              Auto-balance kicks in much faster to address missing teammates,
+              while also considering more factors in selecting who to balance
+              and when, reducing frustrating auto-balance moments. The new Team
+              Shuffle system acts in between each Series, selectively adjusting
+              a few players if a skill imbalance is detected, with as little
+              disruption as possible, making sure teams are always on a level
+              playing field, no matter who joins the match.
+            </p>
+          </div>
+          <div class="feature-visual">
+            <div class="asset-placeholder ratio-21x9">
+              [ AUTO-BALANCE PLACEHOLDER ]
+            </div>
+          </div>
+        </div>
+
+        <div class="text-center mt-5 reveal-up">
+          <h3 class="font-header color-red sub-header">Social Features</h3>
+          <p class="body-text">
+            We've made Casual more casual and fun with new social features in
+            the classic spirit of Team Fortress.
+
+            <ul class="text-start" style="display: inline-block">
+              <li>
+                <strong>All-Talk Between Rounds:</strong> Voice chat across teams
+                is now enabled between rounds, allowing for more social interaction
+                after you beat the other team.
+              </li>
+              <li>
+                <strong>Streamlined Pre-Game:</strong> The pre-game countdown has
+                been streamlined to be more reactive to wait times and joining players,
+                and countdowns between rounds have been reduced across the board.
+              </li>
+              <li>
+                <strong>Team Switching:</strong> Players can now switch teams during
+                gameplay. Play with or against your friends!
+              </li>
+              <li>
+                <strong>Spectator Slots:</strong> We've added 8 extra slots for spectators
+                to view the 12v12 action, and players can switch to spectator as
+                they please.
+              </li>
+              <li>
+                <strong>Casual Bots:</strong> We've revamped bots to fit into the
+                casual atmosphere, with improved behavior and item usage, to keep
+                games going as players join and leave.
+              </li>
+            </ul>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <section class="asym-section reveal-up">
+      <div class="feature-row">
+        <div class="feature-text text-start">
+          <h2 class="font-display color-blue big-header">
+            COMPETITIVE OVERHAUL
+          </h2>
+          <p class="body-text">
+            In attempting to make competitive for everyone, it ended up being
+            right for no one. Instead of trying to rough it out, we've decided
+            it's best to make it easier for the already established competitive
+            community to get into. We've also added some cool new goodies along
+            the way.
+          </p>
+
+          <div class="grid-layout-small">
+            <div
+              class="grid-card-small hover-swap-trigger"
+              data-target="img-target-comp"
+              data-img="[ CLASS LIMITS AND WEAPON BANS PLACEHOLDER ]"
+              data-accent="#2ea2ff"
+            >
+              <h4 class="color-white">Class Limits & Weapon Bans</h4>
+              <p>
+                Game balance purity isn't worth it if no one plays. 6s class
+                limits are now enforced (2 of every class, except 1 for Medic
+                and Demo). We've also added global weapon bans to make things
+                feel more at home for competitive players.
+              </p>
+            </div>
+            <div
+              class="grid-card-small hover-swap-trigger"
+              data-target="img-target-comp"
+              data-img="[ READY UP PLACEHOLDER ]"
+              data-accent="#2ea2ff"
+            >
+              <h4 class="color-white">Improved Ready Up</h4>
+              <p>
+                We've reworked the Ready Up system to be easier to use and
+                prevent stalled out games. Bots will now also fill in remaining
+                slots instead of just replacing players that abandon during a
+                match, removing the need to wait around for a full game.
+              </p>
+            </div>
+            <div
+              class="grid-card-small hover-swap-trigger"
+              data-target="img-target-comp"
+              data-img="[ UNRESTRICTED GRAPHICS CONFIG PLACEHOLDER ]"
+              data-accent="#2ea2ff"
+            >
+              <h4 class="color-white">Unrestricted Configs</h4>
+              <p>
+                Competitive matches were often hindered by frequent crashes or
+                poor performance due to the strict config requirements. It's
+                more important to us that players are able to play and enjoy the
+                game, rather than an idealistic version of it, so we've removed
+                these restrictions.
+              </p>
+            </div>
+            <div
+              class="grid-card-small hover-swap-trigger"
+              data-target="img-target-comp"
+              data-img="[ ROLLOUT PHASE PLACEHOLDER ]"
+              data-accent="#2ea2ff"
+            >
+              <h4 class="color-white">Reworked Rollouts</h4>
+              <p>
+                Rollouts are a critical component of competitive play, and
+                previously, the match setup phase broke player expectations.
+                We've reworked this phase to be more consistent with the
+                tradeoffs high-skilled players expect from a competitive match.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="feature-visual">
+          <div
+            class="asset-placeholder ratio-1x1 interactive-target"
+            id="img-target-comp"
+          >
+            [ COMPETITIVE RANK BADGE PLACEHOLDER ]
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="skew-bg-metal">
+      <div class="unskew asym-section">
+        <div class="text-center mb-5 pb-5 reveal-up">
+          <h2 class="font-display color-white" style="font-size: 5.5rem;">
+            CORE GAMEPLAY FIXES
+          </h2>
+        </div>
+
+        <div class="feature-row reverse reveal-up" style="margin-bottom: 5rem;">
+          <div class="feature-text text-start">
+            <h3 class="font-header color-white sub-header">
+              Substepped Movement Physics
+            </h3>
+            <p class="body-text">
+              Movement is smoother and more responsive, dynamically simulated at
+              a higher resolution than ever before. We've streamlined crouch-tap
+              jumps (aka "c-taps"), fixed jump arcs, and made bhopping more
+              consistent.
+            </p>
+          </div>
+          <div class="feature-visual">
+            <div class="asset-placeholder ratio-21x9">
+              [ MOVEMENT PLACEHOLDER ]
+            </div>
+          </div>
+        </div>
+
+        <div class="feature-row reveal-up" style="margin-bottom: 5rem;">
+          <div class="feature-text text-start">
+            <h3 class="font-header color-white sub-header">
+              Consistent Loose Footing
+            </h3>
+            <p class="body-text">
+              We've removed the legacy stun-locking airblast status effect
+              applied by the Scorch Shot and Loose Cannon. They now uniformly
+              utilize the dynamic "loose footing" mechanic introduced in Jungle
+              Inferno, granting victims the ability to actively counter-strafe
+              and maintain control during knockbacks.
+            </p>
+          </div>
+          <div class="feature-visual">
+            <div class="asset-placeholder ratio-21x9">
+              [ KNOCKBACK PLACEHOLDER ]
+            </div>
+          </div>
+        </div>
+
+        <div class="feature-row reverse reveal-up" style="margin-bottom: 2rem;">
+          <div class="feature-text text-start">
+            <h3 class="font-header color-white sub-header">
+              Random Crits Vote
+            </h3>
+            <p class="body-text">
+              Team #Crits or #NoCrits? You decide! Servers by default come with
+              a new option to toggle random crits on or off.
+            </p>
+          </div>
+          <div class="feature-visual">
+            <div class="asset-placeholder ratio-21x9">
+              [ CRIT VOTE PLACEHOLDER ]
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section class="asym-section reveal-up">
+      <div class="text-center mb-5 pb-5">
+        <h2 class="font-display color-white" style="font-size: 5rem;">
+          CLASS REVISIONS
+        </h2>
+      </div>
+
+      <div class="uniform-class-list reveal-up">
+        <div class="class-revision-row">
+          <div class="class-icon-block">
+            <img
+              style="height: 90px"
+              src="/img/tc2/content/Icon_scout_blue.jpg"
+              alt=""
+            />
+            <h3>Scout</h3>
+          </div>
+          <div class="class-details-block merc-bullets">
+            <ul>
+              <li>Can now jump while crouched on the ground.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="class-revision-row">
+          <div class="class-icon-block">
+            <img
+              style="height: 90px"
+              src="/img/tc2/content/Icon_pyro_blue.jpg"
+              alt=""
+            />
+            <h3>Pyro</h3>
+          </div>
+          <div class="class-details-block merc-bullets">
+            <ul>
+              <li>
+                <strong>Heat System:</strong> Split off heat system into two parts
+                which measure warmup time and density separately. This allows the
+                heat system to be accurate for both accuracy and warmup, rather than
+                compromising on either.
+              </li>
+              <li>Fixed initial flame particle dealing full damage</li>
+              <li>
+                Retuned flame particle damage falloff to more accurately
+                approximate ideal distance
+              </li>
+              <li>
+                Fixed the Phlogistinator MMPH! taunt ending early in some cases.
+              </li>
+              <li>
+                Fixed the Thermal Thruster status effect not being removed as
+                intended in some cases.
+              </li>
+              <li>
+                Fixed the Backscratcher not reducing healing received from the
+                Crusader’s Crossbow (GitHub fix from JoriKos)
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="class-revision-row">
+          <div class="class-icon-block">
+            <img
+              style="height: 90px"
+              src="/img/tc2/content/Icon_demoman_blue.jpg"
+              alt=""
+            />
+            <h3>Demoman</h3>
+          </div>
+          <div class="class-details-block merc-bullets">
+            <ul>
+              <li>
+                <strong>Stickybomb Outlines:</strong> All active Stickybombs are
+                now outlined on all Stickybomb Launcher types.
+              </li>
+              <li>
+                Fixed incorrect crit level coloring on the Shield Charge meter.
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="class-revision-row">
+          <div class="class-icon-block">
+            <img
+              style="height: 90px"
+              src="/img/tc2/content/Icon_heavy_blue.jpg"
+              alt=""
+            />
+            <h3>Heavy</h3>
+          </div>
+          <div class="class-details-block merc-bullets">
+            <ul>
+              <li>
+                <strong>Minigun Spread:</strong> Tweaked the Minigun spread pattern
+                to be more consistent, making its effectiveness less dependent on
+                rolling a good seed value during sustained fire.
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="class-revision-row">
+          <div class="class-icon-block">
+            <img
+              style="height: 90px"
+              src="/img/tc2/content/Icon_engineer_blue.jpg"
+              alt=""
+            />
+            <h3>Engineer</h3>
+          </div>
+          <div class="class-details-block merc-bullets">
+            <ul>
+              <li>
+                <strong>Building Placement:</strong> Removed building placement checks
+                that were causing confusing denied areas.
+              </li>
+              <li>
+                Fixed the Pomson 6000 colliding with teammates during its
+                initial lifetime.
+              </li>
+              <li>
+                The Wrangler laser now renders the shooting angle more
+                accurately.
+              </li>
+              <li>
+                Fixed Dispenser healing getting interrupted in some cases
+                (GitHub fix from bakugo)
+              </li>
+              <li>
+                Fixed various building visuals, sounds, and effects not working
+                properly.
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="class-revision-row">
+          <div class="class-icon-block">
+            <img
+              style="height: 90px"
+              src="/img/tc2/content/Icon_medic_blue.jpg"
+              alt=""
+            />
+            <h3>Medic</h3>
+          </div>
+          <div class="class-details-block merc-bullets">
+            <ul>
+              <li>
+                <strong>Health Outlines:</strong> Added health status outlines for
+                your patient and teammates in need
+              </li>
+              <li>
+                Fixed “radar” exploit for finding non-injured teammates and
+                disguised enemy Spies
+              </li>
+              <li>
+                Fixed being able to cancel or preserve ÜberCharge by picking up
+                a dropped Medi-Gun.
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="class-revision-row">
+          <div class="class-icon-block">
+            <img
+              style="height: 90px"
+              src="/img/tc2/content/Icon_sniper_blue.jpg"
+              alt=""
+            />
+            <h3>Sniper</h3>
+          </div>
+          <div class="class-details-block merc-bullets">
+            <ul>
+              <li>
+                <strong>Hold to Zoom:</strong> Added a "hold to zoom" option for
+                the Sniper Rifle.
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="class-revision-row">
+          <div class="class-icon-block">
+            <img
+              style="height: 90px"
+              src="/img/tc2/content/Icon_spy.jpg"
+              alt=""
+            />
+            <h3>Spy</h3>
+          </div>
+          <div class="class-details-block merc-bullets">
+            <ul>
+              <li>
+                <strong>Disguise Outlines:</strong> Fixed cases of disguised enemy
+                Spies causing pop-in for team outlines.
+              </li>
+              <li>Fixed various cases of glitched items on your disguise.</li>
+              <li>
+                Fixed some cases of position desync causing backstabs to fail
+                and enemies to notice your presence when bumping into them
+              </li>
+              <li>
+                Fixed Diamondback Revenge crits being earnable while using other
+                revolvers
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="massive-callout reveal-up">
+      <div class="container text-center">
+        <h3
+          class="font-header color-red mb-3"
+          style="font-size: 2rem; letter-spacing: 5px;"
+        >
+          TERRITORIAL CONTROL 2.0
+        </h3>
+        <h2
+          class="font-display color-white"
+          style="font-size: clamp(4rem, 10vw, 8rem); line-height: 0.9;"
+        >
+          THE 50v50 HYDRO WAR
+        </h2>
+        <p
+          class="font-body mx-auto mb-5"
+          style="max-width: 900px; font-size: 1.5rem; color: #e2e4e9; line-height: 1.6;"
+        >
+          Territorial Control 2 (TC2) is a new large-scale mode that reimagines
+          Territorial Control as a 50v50 gamemode. tc_hydro, a beloved cult
+          classic and one of the six launch maps for TF2 &mdash; all but
+          forgotten &mdash; has gotten a mode that truly takes advantage of its
+          broad playspace. The sectioned off areas every round, and the
+          confusing inconsistent map layouts that come with it are gone, and in
+          place of it is something that takes true advantage of the beautiful
+          sprawling architecture and size of the map. All 100 players will feel
+          right at home in this mode that truly revitalizes the multiplayer PvP
+          experience like the mode originally intended. Enjoy the new gamemode
+          along with the engine optimizations that make it possible.
+        </p>
+
+        <div class="hydro-carousel-wrapper">
+          <div class="hydro-carousel-visual">
+            <div
+              class="asset-placeholder ratio-21x9 hydro-asset active"
+              id="hydro-img-1"
+              style="min-height: 480px; background: rgba(0,0,0,0.8);"
+            >
+              [ 100-PLAYER CHAOS PLACEHOLDER ]
+            </div>
+            <div
+              class="asset-placeholder ratio-21x9 hydro-asset hidden"
+              id="hydro-img-2"
+              style="min-height: 480px; background: rgba(0,0,0,0.8);"
+            >
+              [ REDEPLOYMENT MINI MAP PLACEHOLDER ]
+            </div>
+            <div
+              class="asset-placeholder ratio-21x9 hydro-asset hidden"
+              id="hydro-img-3"
+              style="min-height: 480px; background: rgba(0,0,0,0.8);"
+            >
+              [ NODES PLACEHOLDER ]
+            </div>
+          </div>
+
+          <div class="hydro-carousel-nav">
+            <div class="hydro-nav-btn active" data-slide="1">
+              <h4>100 Player War</h4>
+              <p>
+                Join massive battles on multiple fronts in an expansive map.
+              </p>
+            </div>
+            <div class="hydro-nav-btn" data-slide="2">
+              <h4>Redeployment Mini Map</h4>
+              <p>
+                Hot drop directly at captured nodes and teleporters to join the
+                fight.
+              </p>
+            </div>
+            <div class="hydro-nav-btn" data-slide="3">
+              <h4>Node Capture</h4>
+              <p>
+                Capture nodes to advance your team's territory in real-time.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="asym-section reveal-up">
+      <div class="text-center mb-5 pb-5">
+        <h2 class="font-display color-orange" style="font-size: 5rem;">
+          BROADCASTING & ENGINE
+        </h2>
+        <p class="body-text mx-auto" style="max-width: 800px;">
+          We've heavily upgraded the core rendering pipeline for modern
+          hardware, and polished up various core systems.
+        </p>
+      </div>
+
+      <div
+        class="feature-row mb-5 pb-5 reveal-up"
+        style="align-items: stretch;"
+      >
+        <div class="feature-visual" style="flex: 1.5;">
+          <div
+            class="asset-placeholder ratio-4x3 interactive-target"
+            id="img-target-broadcasting"
+            style="height: 100%; min-height: 480px;"
+          >
+            [ SPECTATOR UI PLACEHOLDER ]
+          </div>
+        </div>
+        <div class="feature-text text-start" style="flex: 1;">
+          <div class="grid-layout-vertical">
+            <div
+              class="grid-card-small hover-swap-trigger"
+              data-target="img-target-broadcasting"
+              data-img="[ 2nd SPECTATOR UI PLACEHOLDER ]"
+              data-accent="#ff8800"
+            >
+              <h4 class="color-white">Polished Spectator Experience</h4>
+              <p>
+                Many improvements have been made to the spectator experience,
+                including improved accuracy, adjustments to the spectator HUD,
+                and more.
+              </p>
+            </div>
+            <div
+              class="grid-card-small hover-swap-trigger"
+              data-target="img-target-broadcasting"
+              data-img="[ 3D OBSERVER PEN UI PLACEHOLDER ]"
+              data-accent="#ff8800"
+            >
+              <h4 class="color-white">3D Observer Pen</h4>
+              <p>
+                Tournament casters can now instantly draw lines and markers
+                directly in 3D world space to highlight key points.
+              </p>
+            </div>
+            <div
+              class="grid-card-small hover-swap-trigger"
+              data-target="img-target-broadcasting"
+              data-img="[ GAME STATE INTEGRATION PLACEHOLDER ]"
+              data-accent="#ff8800"
+            >
+              <h4 class="color-white">Game State Integration</h4>
+              <p>
+                Live, fully extensible match data is actively broadcast from the
+                engine for native third-party overlays.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="feature-row reverse reveal-up" style="align-items: stretch;">
+        <div class="feature-visual" style="flex: 1.5;">
+          <div
+            class="asset-placeholder ratio-4x3 interactive-target"
+            id="img-target-engine"
+            style="height: 100%; min-height: 480px;"
+          >
+            [ ENGINE PLACEHOLDER ]
+          </div>
+        </div>
+        <div class="feature-text text-start" style="flex: 1;">
+          <div class="grid-layout-vertical">
+            <div
+              class="grid-card-small hover-swap-trigger"
+              data-target="img-target-engine"
+              data-img="[ PERFORMANCE PLACEHOLDER ]"
+              data-accent="#ff8800"
+            >
+              <h4 class="color-white">Performance Improvements</h4>
+              <p>
+                We're constantly making sure that the game keeps running better
+                with optimizations every update.
+              </p>
+            </div>
+            <div
+              class="grid-card-small hover-swap-trigger"
+              data-target="img-target-engine"
+              data-img="[ MAP LOAD PLACEHOLDER ]"
+              data-accent="#ff8800"
+            >
+              <h4 class="color-white">Map Load Improvements</h4>
+              <p>
+                Reduced downtime and waiting with drastically improved map load
+                times, especially for low-end systems.
+              </p>
+            </div>
+            <div
+              class="grid-card-small hover-swap-trigger"
+              data-target="img-target-engine"
+              data-img="[ VISUAL POLISH PLACEHOLDER ]"
+              data-accent="#ff8800"
+            >
+              <h4 class="color-white">Visual Polish</h4>
+              <p>
+                We've fixed up a lot of visual issues in the HUD and in game,
+                resulting in a more polished and enjoyable experience.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="patch-notes-wrapper" id="changelog">
+      <div class="container text-center mb-5">
+        <h2 class="font-display" style="font-size: 4rem; color: #fff;">
+          THE REMATCH UPDATE NOTES
+        </h2>
+      </div>
+      <div class="patch-notes-inner mdx-content font-body">
+        <p>To be announced...</p>
+      </div>
+    </section>
+
+    <Footer product={"Team Comtress"}><br /><br /></Footer>
+  </Body>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const hoverCards = document.querySelectorAll(".hover-swap-trigger");
+      hoverCards.forEach((card) => {
+        card.addEventListener("mouseenter", () => {
+          const targetId = card.getAttribute("data-target");
+          const targetEl = document.getElementById(targetId);
+          const newSrc = card.getAttribute("data-img");
+
+          if (newSrc && targetEl) {
+            if (!targetEl.hasAttribute("data-default")) {
+              targetEl.setAttribute(
+                "data-default",
+                targetEl.firstElementChild?.src ?? targetEl.innerText,
+              );
+            }
+            if (targetEl.firstElementChild?.src) {
+              targetEl.firstElementChild.src = newSrc;
+            } else {
+              targetEl.innerText = newSrc;
+            }
+
+            // Extract accent color and apply to target and self
+            const accent = card.getAttribute("data-accent") || "#ff8800";
+            targetEl.style.borderColor = accent;
+            targetEl.style.color = "#fff";
+            card.style.borderLeftColor = accent;
+
+            // Trigger CSS reflow animation
+            targetEl.classList.remove("pulse-anim");
+            void targetEl.offsetWidth;
+            targetEl.classList.add("pulse-anim");
+          }
+        });
+
+        card.addEventListener("mouseleave", () => {
+          const targetId = card.getAttribute("data-target");
+          const targetEl = document.getElementById(targetId);
+          card.style.borderLeftColor = ""; // remove hover accent
+          if (targetEl && targetEl.hasAttribute("data-default")) {
+            if (targetEl.firstElementChild?.src) {
+              targetEl.firstElementChild.src =
+                targetEl.getAttribute("data-default");
+            } else {
+              targetEl.innerText = targetEl.getAttribute("data-default");
+            }
+            targetEl.style.borderColor = "";
+            targetEl.style.color = "";
+          }
+        });
+      });
+
+      // 2. Hydro Carousel Logic
+      const hydroBtns = document.querySelectorAll(".hydro-nav-btn");
+      const hydroImgs = document.querySelectorAll(".hydro-asset");
+
+      hydroBtns.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const targetSlide = btn.getAttribute("data-slide");
+
+          // Update buttons
+          hydroBtns.forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+
+          // Swap images
+          hydroImgs.forEach((img) => {
+            if (img.id === `hydro-img-${targetSlide}`) {
+              img.classList.remove("hidden");
+              img.classList.add("active", "pulse-anim");
+            } else {
+              img.classList.remove("active", "pulse-anim");
+              img.classList.add("hidden");
+            }
+          });
+        });
+      });
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-visible");
+              observer.unobserve(entry.target); // Reveal exactly once
+            }
+          });
+        },
+        { rootMargin: "0px", threshold: 0.1 },
+      );
+
+      document
+        .querySelectorAll(".reveal-up")
+        .forEach((el) => observer.observe(el));
+    });
+  </script>
+</Layout>
