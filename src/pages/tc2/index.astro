@@ -31,6 +31,9 @@ const patches = (await getCollection("tc2Patches"))
 ---
 
 <style>
+  body {
+    background: #2c2c2c;
+  }
   .header-links > a {
     color: #1ed5b6;
   }
@@ -55,15 +58,43 @@ const patches = (await getCollection("tc2Patches"))
   }
   #bg-video-wrapper {
     width: 100vw;
-    height: max(66vh, 37rem);
+    height: max(70vh, calc(33.5rem + 10vh));
     position: absolute;
     z-index: -1;
+  }
+  @media screen and (max-width: 1399px) {
+    #bg-video-wrapper {
+      height: max(70vh, calc(38.3rem + 10vh));
+    }
+  }
+  @media screen and (max-width: 991px) {
+    #bg-video-wrapper {
+      height: max(70vh, calc(42.85rem + 10vh));
+    }
+  }
+  @media screen and (max-width: 767px) {
+    #bg-video-wrapper {
+      height: max(70vh, calc(36.79rem + 10vh));
+    }
   }
   #bg-video {
     width: 100%;
     height: 100%;
     object-fit: cover;
     object-position: 50% 30%;
+  }
+  #bg-video-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      rgba(38, 50, 56, 0.56) 10%,
+      rgba(38, 50, 56, 0.56),
+      #2c2c2c 96%
+    );
   }
   .btn-discord {
     background-color: #5865f2;
@@ -153,61 +184,71 @@ const patches = (await getCollection("tc2Patches"))
     <AdvRedirector />
     <AnimateOnScroll />
     <TC2DownloadLoader />
-    <div id="bg-video-wrapper">
-      <video
-        id="bg-video"
-        disablepictureinpicture
-        playsinline
-        autoplay
-        muted
-        loop
+    <div>
+      <div id="bg-video-wrapper">
+        <video
+          id="bg-video"
+          disablepictureinpicture
+          playsinline
+          autoplay
+          muted
+          loop
+        >
+          <source src="/videos/tc2reel.webm" type="video/webm" />
+          <source src="/videos/tc2reel.mp4" type="video/mp4" />
+        </video>
+        <div id="bg-video-overlay"></div>
+      </div>
+      <section
+        class="jumbotron jumbotron-fluid"
+        style="min-height: max(70vh, 37.5rem)"
       >
-        <source src="/videos/tc2reel.webm" type="video/webm" />
-        <source src="/videos/tc2reel.mp4" type="video/mp4" />
-      </video>
-    </div>
-    <section
-      class="jumbotron jumbotron-fluid"
-      style=`background: linear-gradient(rgba(38, 50, 56, 0.56) 10%, rgba(38, 50, 56, 0.56), #2c2c2c 96%);background-size: cover; background-position: center;background-position: center;min-height: max(70vh, 37.5rem)`
-    >
-      <div
-        class="container d-flex align-items-center justify-content-center"
-        style="padding-top:10vh"
-      >
-        <div class="align-middle text-center">
-          <img
-            class="img-logo"
-            src={tfLogoImg.src}
-            alt="Team Comtress 2 logo"
-          />
-          <div class="early-access"><span>EARLY ACCESS</span></div>
-          <h1 class="display-3" style="letter-spacing: 0.2rem;font-weight: 600">
-            "THE MOST FUN YOU CAN HAVE ONLINE"
-          </h1>
-          <h1 class="display-1" style="letter-spacing: 0.2rem;font-weight: 600">
-            GIVEN A WHOLE NEW LIFE
-          </h1>
-          <hr style="margin-bottom: 2rem" />
-          <a
-            id="tc2-download-btn"
-            href="https://github.com/mastercomfig/tc2-launcher/releases/latest"
-            class="btn btn-outline-primary btn-xl"
-            style="line-height:1.6rem;padding-top:1.3rem"
-          >
-            <strong>PLAY FOR FREE</strong><br />
-            <small style="color:#c2c2c2;font-size:1rem">DOWNLOAD (60MB)</small>
-          </a>
-          <br /><br />
-          <div class="bg-teal rounded-1 d-inline-block px-5 py-4 d-none">
-            <h2 class="display-4">
-              Playtest status: <strong class="fw-bold">ACTIVE</strong>
-            </h2>
-            <h3 class="display-6">Go and play now!</h3>
+        <div
+          class="container d-flex align-items-center justify-content-center"
+          style="padding-top:10vh"
+        >
+          <div class="align-middle text-center">
+            <img
+              class="img-logo"
+              src={tfLogoImg.src}
+              alt="Team Comtress 2 logo"
+            />
+            <div class="early-access"><span>EARLY ACCESS</span></div>
+            <h1
+              class="display-3"
+              style="letter-spacing: 0.2rem;font-weight: 600"
+            >
+              "THE MOST FUN YOU CAN HAVE ONLINE"
+            </h1>
+            <h1
+              class="display-1"
+              style="letter-spacing: 0.2rem;font-weight: 600"
+            >
+              GIVEN A WHOLE NEW LIFE
+            </h1>
+            <hr style="margin-bottom: 2rem" />
+            <a
+              id="tc2-download-btn"
+              href="https://github.com/mastercomfig/tc2-launcher/releases/latest"
+              class="btn btn-outline-primary btn-xl"
+              style="line-height:1.6rem;padding-top:1.3rem"
+            >
+              <strong>PLAY FOR FREE</strong><br />
+              <small style="color:#c2c2c2;font-size:1rem">DOWNLOAD (60MB)</small
+              >
+            </a>
+            <br /><br />
+            <div class="bg-teal rounded-1 d-inline-block px-5 py-4 d-none">
+              <h2 class="display-4">
+                Playtest status: <strong class="fw-bold">ACTIVE</strong>
+              </h2>
+              <h3 class="display-6">Go and play now!</h3>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
-    <section style="background: rgb(255 255 255 / 5%)" class="pb-0 pb-sm-5">
+      </section>
+    </div>
+    <section style="background: #2c2c2c" class="pb-0 pb-sm-5">
       <div class="container">
         <h1>
           Latest News <small style="font-size: 1rem"
@@ -255,7 +296,7 @@ const patches = (await getCollection("tc2Patches"))
         </div>
       </div>
     </section>
-    <section style="background: rgb(255 255 255 / 5%)" class="pb-2 pb-sm-5">
+    <section style="background: #2c2c2c" class="pb-2 pb-sm-5">
       <div class="container">
         <h1>
           Patches <small style="font-size: 1rem"
@@ -328,80 +369,91 @@ const patches = (await getCollection("tc2Patches"))
         </div>
       </div>
     </section>
-    <section class="text-center container">
-      <h2
-        class="display-2"
-        style="color: #1ef5e3; font-weight: 700; letter-spacing: 0.2rem"
-        data-aos="fade-up"
-        data-aos-duration="750"
-      >
-        THE SAME GAME<br />YOU KNOW AND LOVE
-      </h2>
-      <p class="lead" style="font-size: 1.5rem">
-        TF2 is a classic, decades-long title beloved by millions. So despite all
-        the changes, we've made sure to make you feel right at home. Your items
-        and cosmetics will carry over, and all gameplay content from the
-        original game is here. We take the legacy of such a legendary title
-        seriously, and we hope to continue to provide an enjoyable experience
-        worthy to carry the torch.
-      </p>
-    </section>
-    <section
-      class="jumbotron jumbotron-fluid"
-      style=`background: linear-gradient(rgba(38, 50, 56, 0.4) 10%, rgba(38, 50, 56, 0.4)),url(${tfmapImg.src});background-size: cover; background-position: center;background-position: center;min-height: 25vh`
-    >
-    </section>
-    <section class="text-center container">
-      <h2
-        class="display-2"
-        style="color: #1ef5e3; font-weight: 700; letter-spacing: 0.2rem"
-        data-aos="fade-up"
-        data-aos-duration="750"
-      >
-        CONSTANTLY UPDATED
-      </h2>
-      <p class="lead" style="font-size: 1.5rem">
-        We're continuing where Team Fortress 2 started, giving it countless new
-        updates to fix bugs, and make the game more fun and more consistent.
-        Dive right in and play any of the beloved nine classes, with the perfect
-        gameplay feel they deserve, unhampered by annoyances or bugs.
-      </p>
-    </section>
-    <section
-      class="jumbotron jumbotron-fluid"
-      style=`background: linear-gradient(rgba(38, 50, 56, 0.4) 10%, rgba(38, 50, 56, 0.4)),url(${lairImg.src});background-size: cover; background-position: center;background-position: center;min-height: 25vh`
-    >
-    </section>
-    <section class="text-center container" id="community">
-      <div data-aos="fade-up" data-aos-duration="750">
-        <h2
-          class="display-3"
-          style="color: #13ccad; font-weight: 700; letter-spacing: 0.2rem"
-        >
-          YOUR GAME TO DEVELOP
-        </h2>
+    <div style="background: #212121">
+      <section class="text-center container" id="same-game">
         <h2
           class="display-2"
           style="color: #1ef5e3; font-weight: 700; letter-spacing: 0.2rem"
+          data-aos="fade-up"
+          data-aos-duration="750"
         >
-          WHAT WILL YOU MAKE OF IT?
+          THE SAME GAME<br />YOU KNOW AND LOVE
         </h2>
-      </div>
-      <h3 style="color: #d3d3d3; font-weight: 700; letter-spacing: 0.2rem">
-        COMMUNITY-MADE ON GITHUB
-      </h3>
-      <p class="lead" style="font-size: 1.5rem">
-        Not only do we constantly iterate upon and listen to community feedback,
-        we also have our full development process in the open on GitHub. Anyone
-        is free to pitch in and suggest a change that they feel will make the
-        game better. Join up in the effort to make our beloved game even better!
-      </p>
-      <a
-        href="https://github.com/mastercomfig/tc2"
-        class="btn btn-primary btn-lg"
-        >View the <span class="fab fa-github fa-fw"></span> GitHub</a
-      >
+        <p class="lead" style="font-size: 1.5rem">
+          TF2 is a classic, decades-long title beloved by millions. So despite
+          all the changes, we've made sure to make you feel right at home. Your
+          items and cosmetics will carry over, and all gameplay content from the
+          original game is here. We take the legacy of such a legendary title
+          seriously, and we hope to continue to provide an enjoyable experience
+          worthy to carry the torch.
+        </p>
+      </section>
+    </div>
+    <section
+      class="jumbotron jumbotron-fluid"
+      style=`background: linear-gradient(rgba(38, 50, 56, 0.4) 10%, rgba(38, 50, 56, 0.4)),url(${tfmapImg.src});background-size: cover; background-position: center;min-height: 25vh`
+    >
     </section>
-    <Footer product={"Team Comtress"} />
+    <div style="background: #212121">
+      <section class="text-center container" id="updated">
+        <h2
+          class="display-2"
+          style="color: #1ef5e3; font-weight: 700; letter-spacing: 0.2rem"
+          data-aos="fade-up"
+          data-aos-duration="750"
+        >
+          CONSTANTLY UPDATED
+        </h2>
+        <p class="lead" style="font-size: 1.5rem">
+          We're continuing where Team Fortress 2 started, giving it countless
+          new updates to fix bugs, and make the game more fun and more
+          consistent. Dive right in and play any of the beloved nine classes,
+          with the perfect gameplay feel they deserve, unhampered by annoyances
+          or bugs.
+        </p>
+      </section>
+    </div>
+    <section
+      class="jumbotron jumbotron-fluid"
+      style=`background: linear-gradient(rgba(38, 50, 56, 0.4) 10%, rgba(38, 50, 56, 0.4)),url(${lairImg.src});background-size: cover; background-position: center;min-height: 25vh`
+    >
+    </section>
+    <div style="background: #212121">
+      <section class="text-center container" id="community">
+        <div data-aos="fade-up" data-aos-duration="750">
+          <h2
+            class="display-3"
+            style="color: #13ccad; font-weight: 700; letter-spacing: 0.2rem"
+          >
+            YOUR GAME TO DEVELOP
+          </h2>
+          <h2
+            class="display-2"
+            style="color: #1ef5e3; font-weight: 700; letter-spacing: 0.2rem"
+          >
+            WHAT WILL YOU MAKE OF IT?
+          </h2>
+        </div>
+        <h3 style="color: #d3d3d3; font-weight: 700; letter-spacing: 0.2rem">
+          COMMUNITY-MADE ON GITHUB
+        </h3>
+        <p class="lead" style="font-size: 1.5rem">
+          Not only do we constantly iterate upon and listen to community
+          feedback, we also have our full development process in the open on
+          GitHub. Anyone is free to pitch in and suggest a change that they feel
+          will make the game better. Join up in the effort to make our beloved
+          game even better!
+        </p>
+        <a
+          href="https://github.com/mastercomfig/tc2"
+          class="btn btn-primary btn-lg"
+          >View the <span class="fab fa-github fa-fw"></span> GitHub</a
+        >
+      </section>
+      <div class="container g-0">
+        <hr class="m-0 py-3" />
+      </div>
+    </div>
+    <Footer product={"Team Comtress"} background="#212121" />
   </Body>
 </Layout>
