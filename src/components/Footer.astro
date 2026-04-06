@@ -1,19 +1,22 @@
 ---
 export interface Props {
   product?: string;
+  background?: string;
 }
 
-const { product = "mastercomfig" } = Astro.props as Props;
+const { product = "mastercomfig", background = "none" } = Astro.props as Props;
 ---
 
-<footer class="container g-0">
-  <slot />
-  Copyright &copy; 2016-{new Date().getFullYear()} mastercoms
-  <br /><br />
-  Valve, the Valve logo, Steam, the Steam logo, Team Fortress, the Team Fortress
-  logo, Source, the Source logo are trademarks and/or registered trademarks of Valve
-  Corporation in the U.S. and/or other countries. All other trademarks are property
-  of their respective owners in the US and other countries.
-  <br /><br />
-  {product} is not sponsored, endorsed, licensed by, or affiliated with Valve Corporation.
-</footer>
+<div style={background === "none" ? "" : `background: ${background}`}>
+  <footer class="container g-0">
+    <slot />
+    Copyright &copy; 2016-{new Date().getFullYear()} mastercoms
+    <br /><br />
+    Valve, the Valve logo, Steam, the Steam logo, Team Fortress, the Team Fortress
+    logo, Source, the Source logo are trademarks and/or registered trademarks of
+    Valve Corporation in the U.S. and/or other countries. All other trademarks are
+    property of their respective owners in the US and other countries.
+    <br /><br />
+    {product} is not sponsored, endorsed, licensed by, or affiliated with Valve Corporation.
+  </footer>
+</div>
