@@ -10,6 +10,7 @@ export interface Props {
   url?: string;
   image?: string;
   favicon?: string;
+  largeImage?: boolean;
 }
 
 const {
@@ -19,6 +20,7 @@ const {
   description = "mastercomfig is a modern Team Fortress 2 performance and customization config.",
   image = "https://comfig.app/img/mastercomfig_banner.png",
   favicon = "",
+  largeImage = false,
 } = Astro.props as Props;
 
 const canonical = Astro.url.href;
@@ -51,7 +53,10 @@ const canonical = Astro.url.href;
 <meta name="twitter:description" content={description} />
 <meta name="description" content={description} />
 <meta property="og:type" content="website" />
-<meta name="twitter:card" content="summary" />
+<meta
+  name="twitter:card"
+  content={largeImage ? "summary_large_image" : "summary"}
+/>
 <meta property="og:url" content={canonical} />
 <meta name="twitter:url" content={canonical} />
 <link rel="canonical" href={canonical} crossorigin="" />
