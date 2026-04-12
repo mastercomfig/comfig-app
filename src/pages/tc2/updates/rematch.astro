@@ -11,7 +11,26 @@ import mainmenuImg from "@img/tc2/rematch/tc2mainmenu.png";
 import playmenuImg from "@img/tc2/rematch/playmenu.png";
 import classIntelImg from "@img/tc2/rematch/classintel.png";
 import settingsImg from "@img/tc2/rematch/tc2settings.png";
+import seriesImg from "@img/tc2/rematch/tc2series.png";
+import stopwatchImg from "@img/tc2/rematch/tc2stopwatch.png";
+import shuffleImg from "@img/tc2/rematch/tc2shuffle.png";
+import compImg from "@img/tc2/rematch/tc2comp.png";
+import configsImg from "@img/tc2/rematch/tc2configs.png";
+import classlimitImg from "@img/tc2/rematch/tc2classlimit.png";
+import rolloutImg from "@img/tc2/rematch/tc2rollout.png";
+import readyupImg from "@img/tc2/rematch/tc2readyup.png";
+import movementsubsteppingImg from "@img/tc2/rematch/tc2movementsubstepping.jpg";
+import knockbackImg from "@img/tc2/rematch/tc2knockback.png";
+import critsvoteImg from "@img/tc2/rematch/tc2critsvote.png";
+import tc2FightImg from "@img/tc2/rematch/tc2fight.png";
+import tc2RedeployImg from "@img/tc2/rematch/tc2redeploy.png";
+import tc2NodesImg from "@img/tc2/rematch/tc2nodes.png";
+import spec1Img from "@img/tc2/rematch/tc2spec1.png";
+import spec2Img from "@img/tc2/rematch/tc2spec2.png";
+import gsiImg from "@img/tc2/rematch/tc2gsi.png";
+import linesImg from "@img/tc2/rematch/tc2lines.png";
 import Layout from "@layouts/Layout.astro";
+import { Content as NotesBlock } from "@posts/data/rematch.mdx";
 
 import "@fontsource-variable/inter/wght.css";
 import "@fontsource-variable/oswald/wght.css";
@@ -515,7 +534,7 @@ import "@fontsource-variable/teko/wght.css";
       site="Team Comtress"
       noSite={true}
       description="It's time for a rematch."
-      image="https://teamcomtress.com/img/tc2/team-comtress-2.png"
+      image="https://teamcomtress.com/img/tc2/rematch/tc2rematch.png"
       favicon="/img/tc2/favicon.ico"
     />
   </head>
@@ -646,7 +665,7 @@ import "@fontsource-variable/teko/wght.css";
           </div>
           <div class="feature-visual">
             <div class="asset-placeholder ratio-21x9">
-              [ SERIES POINTS UI PLACEHOLDER ]
+              <img class="img-fluid" src={seriesImg.src} alt="Series UI" />
             </div>
           </div>
         </div>
@@ -665,7 +684,11 @@ import "@fontsource-variable/teko/wght.css";
           </div>
           <div class="feature-visual">
             <div class="asset-placeholder ratio-16x9">
-              [ STOPWATCH UI PLACEHOLDER ]
+              <img
+                class="img-fluid"
+                src={stopwatchImg.src}
+                alt="Stopwatch UI"
+              />
             </div>
           </div>
         </div>
@@ -686,7 +709,7 @@ import "@fontsource-variable/teko/wght.css";
           </div>
           <div class="feature-visual">
             <div class="asset-placeholder ratio-21x9">
-              [ AUTO-BALANCE PLACEHOLDER ]
+              <img class="img-fluid" src={shuffleImg.src} alt="Shuffle UI" />
             </div>
           </div>
         </div>
@@ -746,7 +769,7 @@ import "@fontsource-variable/teko/wght.css";
             <div
               class="grid-card-small hover-swap-trigger"
               data-target="img-target-comp"
-              data-img="[ CLASS LIMITS AND WEAPON BANS PLACEHOLDER ]"
+              data-img={classlimitImg.src}
               data-accent="#2ea2ff"
             >
               <h4 class="color-white">Class Limits & Weapon Bans</h4>
@@ -760,7 +783,7 @@ import "@fontsource-variable/teko/wght.css";
             <div
               class="grid-card-small hover-swap-trigger"
               data-target="img-target-comp"
-              data-img="[ READY UP PLACEHOLDER ]"
+              data-img={readyupImg.src}
               data-accent="#2ea2ff"
             >
               <h4 class="color-white">Improved Ready Up</h4>
@@ -774,7 +797,7 @@ import "@fontsource-variable/teko/wght.css";
             <div
               class="grid-card-small hover-swap-trigger"
               data-target="img-target-comp"
-              data-img="[ UNRESTRICTED GRAPHICS CONFIG PLACEHOLDER ]"
+              data-img={configsImg.src}
               data-accent="#2ea2ff"
             >
               <h4 class="color-white">Unrestricted Configs</h4>
@@ -789,7 +812,7 @@ import "@fontsource-variable/teko/wght.css";
             <div
               class="grid-card-small hover-swap-trigger"
               data-target="img-target-comp"
-              data-img="[ ROLLOUT PHASE PLACEHOLDER ]"
+              data-img={rolloutImg.src}
               data-accent="#2ea2ff"
             >
               <h4 class="color-white">Reworked Rollouts</h4>
@@ -807,7 +830,7 @@ import "@fontsource-variable/teko/wght.css";
             class="asset-placeholder ratio-1x1 interactive-target"
             id="img-target-comp"
           >
-            [ COMPETITIVE RANK BADGE PLACEHOLDER ]
+            <img class="img-fluid" src={compImg.src} alt="Competitive" />
           </div>
         </div>
       </div>
@@ -835,7 +858,11 @@ import "@fontsource-variable/teko/wght.css";
           </div>
           <div class="feature-visual">
             <div class="asset-placeholder ratio-21x9">
-              [ MOVEMENT PLACEHOLDER ]
+              <img
+                class="img-fluid"
+                src={movementsubsteppingImg.src}
+                alt="Movement substepping"
+              />
             </div>
           </div>
         </div>
@@ -855,7 +882,7 @@ import "@fontsource-variable/teko/wght.css";
           </div>
           <div class="feature-visual">
             <div class="asset-placeholder ratio-21x9">
-              [ KNOCKBACK PLACEHOLDER ]
+              <img class="img-fluid" src={knockbackImg.src} alt="Knockback" />
             </div>
           </div>
         </div>
@@ -872,7 +899,7 @@ import "@fontsource-variable/teko/wght.css";
           </div>
           <div class="feature-visual">
             <div class="asset-placeholder ratio-21x9">
-              [ CRIT VOTE PLACEHOLDER ]
+              <img class="img-fluid" src={critsvoteImg.src} alt="Crits vote" />
             </div>
           </div>
         </div>
@@ -933,6 +960,10 @@ import "@fontsource-variable/teko/wght.css";
                 intended in some cases.
               </li>
               <li>
+                Fixed being unable to airblast enemies when looking straight
+                down
+              </li>
+              <li>
                 Fixed the Backscratcher not reducing healing received from the
                 Crusader’s Crossbow (GitHub fix from JoriKos)
               </li>
@@ -958,6 +989,10 @@ import "@fontsource-variable/teko/wght.css";
               <li>
                 Fixed incorrect crit level coloring on the Shield Charge meter.
               </li>
+              <li>
+                Scottish Resistance detonation radius is now consistent at all
+                ranges
+              </li>
             </ul>
           </div>
         </div>
@@ -977,6 +1012,10 @@ import "@fontsource-variable/teko/wght.css";
                 <strong>Minigun Spread:</strong> Tweaked the Minigun spread pattern
                 to be more consistent, making its effectiveness less dependent on
                 rolling a good seed value during sustained fire.
+              </li>
+              <li>
+                The Holiday Punch now uses the same "crit from behind" logic as
+                backstabs
               </li>
             </ul>
           </div>
@@ -1132,21 +1171,33 @@ import "@fontsource-variable/teko/wght.css";
               id="hydro-img-1"
               style="min-height: 480px; background: rgba(0,0,0,0.8);"
             >
-              [ 100-PLAYER CHAOS PLACEHOLDER ]
+              <img
+                class="img-fluid h-100"
+                src={tc2FightImg.src}
+                alt="Large teamfight"
+              />
             </div>
             <div
               class="asset-placeholder ratio-21x9 hydro-asset hidden"
               id="hydro-img-2"
               style="min-height: 480px; background: rgba(0,0,0,0.8);"
             >
-              [ REDEPLOYMENT MINI MAP PLACEHOLDER ]
+              <img
+                class="img-fluid h-100"
+                src={tc2RedeployImg.src}
+                alt="Redeploy mini map"
+              />
             </div>
             <div
               class="asset-placeholder ratio-21x9 hydro-asset hidden"
               id="hydro-img-3"
               style="min-height: 480px; background: rgba(0,0,0,0.8);"
             >
-              [ NODES PLACEHOLDER ]
+              <img
+                class="img-fluid h-100"
+                src={tc2NodesImg.src}
+                alt="Capture point node order"
+              />
             </div>
           </div>
 
@@ -1196,7 +1247,7 @@ import "@fontsource-variable/teko/wght.css";
             id="img-target-broadcasting"
             style="height: 100%; min-height: 480px;"
           >
-            [ SPECTATOR UI PLACEHOLDER ]
+            <img class="img-fluid" src={spec1Img.src} alt="Spectator UI" />
           </div>
         </div>
         <div class="feature-text text-start" style="flex: 1;">
@@ -1204,7 +1255,7 @@ import "@fontsource-variable/teko/wght.css";
             <div
               class="grid-card-small hover-swap-trigger"
               data-target="img-target-broadcasting"
-              data-img="[ 2nd SPECTATOR UI PLACEHOLDER ]"
+              data-img={spec2Img.src}
               data-accent="#ff8800"
             >
               <h4 class="color-white">Polished Spectator Experience</h4>
@@ -1217,7 +1268,7 @@ import "@fontsource-variable/teko/wght.css";
             <div
               class="grid-card-small hover-swap-trigger"
               data-target="img-target-broadcasting"
-              data-img="[ 3D OBSERVER PEN UI PLACEHOLDER ]"
+              data-img={linesImg.src}
               data-accent="#ff8800"
             >
               <h4 class="color-white">3D Observer Pen</h4>
@@ -1229,7 +1280,7 @@ import "@fontsource-variable/teko/wght.css";
             <div
               class="grid-card-small hover-swap-trigger"
               data-target="img-target-broadcasting"
-              data-img="[ GAME STATE INTEGRATION PLACEHOLDER ]"
+              data-img={gsiImg.src}
               data-accent="#ff8800"
             >
               <h4 class="color-white">Game State Integration</h4>
@@ -1243,47 +1294,23 @@ import "@fontsource-variable/teko/wght.css";
       </div>
 
       <div class="feature-row reverse reveal-up" style="align-items: stretch;">
-        <div class="feature-visual" style="flex: 1.5;">
-          <div
-            class="asset-placeholder ratio-4x3 interactive-target"
-            id="img-target-engine"
-            style="height: 100%; min-height: 480px;"
-          >
-            [ ENGINE PLACEHOLDER ]
-          </div>
-        </div>
         <div class="feature-text text-start" style="flex: 1;">
           <div class="grid-layout-vertical">
-            <div
-              class="grid-card-small hover-swap-trigger"
-              data-target="img-target-engine"
-              data-img="[ PERFORMANCE PLACEHOLDER ]"
-              data-accent="#ff8800"
-            >
+            <div class="grid-card-small" data-accent="#ff8800">
               <h4 class="color-white">Performance Improvements</h4>
               <p>
                 We're constantly making sure that the game keeps running better
                 with optimizations every update.
               </p>
             </div>
-            <div
-              class="grid-card-small hover-swap-trigger"
-              data-target="img-target-engine"
-              data-img="[ MAP LOAD PLACEHOLDER ]"
-              data-accent="#ff8800"
-            >
+            <div class="grid-card-small" data-accent="#ff8800">
               <h4 class="color-white">Map Load Improvements</h4>
               <p>
                 Reduced downtime and waiting with drastically improved map load
                 times, especially for low-end systems.
               </p>
             </div>
-            <div
-              class="grid-card-small hover-swap-trigger"
-              data-target="img-target-engine"
-              data-img="[ VISUAL POLISH PLACEHOLDER ]"
-              data-accent="#ff8800"
-            >
+            <div class="grid-card-small" data-accent="#ff8800">
               <h4 class="color-white">Visual Polish</h4>
               <p>
                 We've fixed up a lot of visual issues in the HUD and in game,
@@ -1302,7 +1329,7 @@ import "@fontsource-variable/teko/wght.css";
         </h2>
       </div>
       <div class="patch-notes-inner mdx-content font-body">
-        <p>To be announced...</p>
+        <NotesBlock />
       </div>
     </section>
 
@@ -1312,8 +1339,13 @@ import "@fontsource-variable/teko/wght.css";
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const hoverCards = document.querySelectorAll(".hover-swap-trigger");
+      let swapImageTimeout: NodeJS.Timeout | null = null;
       hoverCards.forEach((card) => {
         card.addEventListener("mouseenter", () => {
+          if (swapImageTimeout) {
+            clearTimeout(swapImageTimeout);
+            swapImageTimeout = null;
+          }
           const targetId = card.getAttribute("data-target");
           const targetEl = document.getElementById(targetId);
           const newSrc = card.getAttribute("data-img");
@@ -1344,7 +1376,7 @@ import "@fontsource-variable/teko/wght.css";
           }
         });
 
-        card.addEventListener("mouseleave", () => {
+        function swapImage() {
           const targetId = card.getAttribute("data-target");
           const targetEl = document.getElementById(targetId);
           card.style.borderLeftColor = ""; // remove hover accent
@@ -1355,6 +1387,21 @@ import "@fontsource-variable/teko/wght.css";
             } else {
               targetEl.innerText = targetEl.getAttribute("data-default");
             }
+            targetEl.style.borderColor = "";
+            targetEl.style.color = "";
+          }
+        }
+
+        card.addEventListener("mouseleave", () => {
+          if (swapImageTimeout) {
+            clearTimeout(swapImageTimeout);
+            swapImageTimeout = null;
+          }
+          swapImageTimeout = setTimeout(swapImage, 500);
+          const targetId = card.getAttribute("data-target");
+          const targetEl = document.getElementById(targetId);
+          card.style.borderLeftColor = ""; // remove hover accent
+          if (targetEl && targetEl.hasAttribute("data-default")) {
             targetEl.style.borderColor = "";
             targetEl.style.color = "";
           }
