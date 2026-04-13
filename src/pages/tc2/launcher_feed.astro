@@ -13,7 +13,7 @@ const news = (await getCollection("tc2News"))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .filter(
     (post) =>
-      !post.data.draft && !post.data.update && !post.id.endsWith("beta"),
+      !post.data.draft && !post.id.endsWith("beta"),
   );
 
 const firstNews = news[0];
