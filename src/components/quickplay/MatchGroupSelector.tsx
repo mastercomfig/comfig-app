@@ -44,6 +44,7 @@ export function MatchGroupSelector({ hash }) {
       (k) => k.code === quickplayStore.matchGroup,
     );
     if (newIndex === index) {
+      setInit(true);
       return;
     }
     handleSelect(newIndex);
