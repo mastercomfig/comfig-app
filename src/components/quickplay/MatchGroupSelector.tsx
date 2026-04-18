@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import useQuickplayStore from "@store/quickplay";
 
 import ServerFinder from "./ServerFinder";
+import { baseGamemodeSet } from "@ssg/quickplayStaticData";
 
 export function MatchGroupSelector({ hash }) {
   const quickplayStore = useQuickplayStore((state) => state);
@@ -38,6 +39,13 @@ export function MatchGroupSelector({ hash }) {
     [quickplayStore.searching],
   );
 
+  useEffect(() => {
+    if (!quickplayStore.carousel) {
+      return;
+    }
+    quickplayStore.carousel.to(index);
+  }, [index, quickplayStore.carousel])
+
   // Handle available match groups shifting
   useEffect(() => {
     const newIndex = quickplayStore.availableMatchGroups.findIndex(
@@ -68,9 +76,20 @@ export function MatchGroupSelector({ hash }) {
           "payload_race",
         ];
       } else {
-        gamemodes = gm.split(",").filter((mode) => mode);
+        const userGmList = gm.split(",").filter((mode) => mode);
+        gamemodes = userGmList.filter((mode) => baseGamemodeSet.has(mode));
+        if (gamemodes.length === 0) {
+          const activeMatchGroupSet = new Set(quickplayStore.availableMatchGroups.filter((mg) => mg.active).map((mg) => mg.code));
+          const selectedMatchGroups = userGmList.filter((mode) => activeMatchGroupSet.has(mode));
+          if (selectedMatchGroups.length > 0) {
+            handleSelect(quickplayStore.availableMatchGroups.findIndex((mg) => mg.code === selectedMatchGroups[0]));
+            gamemodes = [];
+          }
+        }
       }
-      quickplayStore.setGamemodes(gamemodes);
+      if (gamemodes && gamemodes.length > 0) {
+        quickplayStore.setGamemodes(gamemodes);
+      }
     }
     if (urlparms.get("autostart") === "1") {
       startSearching(1);

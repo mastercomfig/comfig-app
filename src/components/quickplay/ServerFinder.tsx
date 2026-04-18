@@ -1,13 +1,6 @@
-import adImg from "@img/gamemodes/ad.webp";
-import arenaImg from "@img/gamemodes/arena.webp";
-import cpImg from "@img/gamemodes/cp.webp";
-import ctfImg from "@img/gamemodes/ctf.webp";
-import kothImg from "@img/gamemodes/koth.webp";
-import payloadImg from "@img/gamemodes/pl.webp";
-import plrImg from "@img/gamemodes/plr.webp";
-import miscImg from "@img/gamemodes/sd.webp";
 import xMarkImg from "@img/xmark.webp";
 import {
+  baseGamemodes,
   getDefaultMatchGroups,
   getSpecialEventDesc,
 } from "@ssg/quickplayStaticData";
@@ -65,65 +58,6 @@ const gamemodeToPrefix = {
 
 const SERVER_HEADROOM = 1;
 const FULL_PLAYERS = 24;
-
-const gamemodes = {
-  payload: {
-    name: "Payload",
-    code: "payload",
-    description: "BLU pushes the cart down the track. RED need to stop them.",
-    skill: 0,
-    img: payloadImg,
-  },
-  koth: {
-    name: "King of the Hill",
-    code: "koth",
-    description: "One team must control a single point until time runs out.",
-    skill: 0,
-    img: kothImg,
-  },
-  attack_defense: {
-    name: "Attack / Defense",
-    code: "attack_defense",
-    description: "BLU wins by capturing all points. RED wins by stopping them.",
-    skill: 1,
-    img: adImg,
-  },
-  ctf: {
-    name: "Capture the Flag",
-    code: "ctf",
-    description: "And by flag we mean a glowing briefcase.",
-    skill: 1,
-    img: ctfImg,
-  },
-  capture_point: {
-    name: "Capture Points",
-    code: "capture_point",
-    description: "Capture all points to win.",
-    skill: 1,
-    img: cpImg,
-  },
-  payload_race: {
-    name: "Payload Race",
-    code: "payload_race",
-    description: "Two teams. Two bombs. Two tracks. Hilarity ensues.",
-    skill: 1,
-    img: plrImg,
-  },
-  alternative: {
-    name: "Misc",
-    code: "alternative",
-    description: "Game modes that don't fit into one of the other categories.",
-    skill: 2,
-    img: miscImg,
-  },
-  arena: {
-    name: "Arena",
-    code: "arena",
-    description: "Quick rounds. No respawns. It's like Counter-Strike!",
-    skill: 2,
-    img: arenaImg,
-  },
-};
 
 const MISC_GAMEMODES = ["arena", "pass", "pd", "rd", "sd", "tc", "vsh", "zi"];
 
@@ -1679,7 +1613,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
           <div>
             <h4 style={{ fontWeight: 500 }}>Game Modes</h4>
             <div className="row g-4">
-              {Object.values(gamemodes).map((gm) => {
+              {Object.values(baseGamemodes).map((gm) => {
                 return (
                   <div
                     key={gm.code}
