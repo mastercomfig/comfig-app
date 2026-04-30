@@ -19,9 +19,22 @@ const state = (set) => ({
     set(() => ({ matchGroupSettings })),
   customizing: 0,
   toggleCustomizing: () =>
-    set((state) => ({ customizing: !state.customizing })),
+    set((state) => {
+      if (state.searching || state.found !== 0) {
+        return state;
+      }
+      const customizing = !state.customizing;
+      return {
+        customizing,
+        showServers: customizing ? false : state.showServers,
+      };
+    }),
   found: 0,
-  setFound: (found) => set(() => ({ found })),
+  setFound: (found) =>
+    set((state) => ({
+      found,
+      customizing: found !== 0 ? 0 : state.customizing,
+    })),
   lastServer: null,
   setLastServer: (lastServer) => set(() => ({ lastServer })),
   foundTime: 0,
@@ -31,9 +44,17 @@ const state = (set) => ({
   sessionCount: 0,
   setSessionCount: (sessionCount) => set(() => ({ sessionCount })),
   searching: 0,
-  setSearching: (searching) => set(() => ({ searching })),
+  setSearching: (searching) =>
+    set((state) => ({
+      searching,
+      customizing: searching !== 0 ? 0 : state.customizing,
+    })),
   showServers: false,
-  setShowServers: (showServers) => set(() => ({ showServers })),
+  setShowServers: (showServers) =>
+    set((state) => ({
+      showServers,
+      customizing: showServers ? 0 : state.customizing,
+    })),
   recentServers: {},
   setRecentServer: (k, v) =>
     set((state) => ({ recentServers: { ...state.recentServers, [k]: v } })),

@@ -1790,28 +1790,49 @@ export default function ServerFinder({ hash }: { hash: string }) {
         }}
       >
         <div className="bg-dark py-4 px-5 h-100 w-100">
-          <h4
-            className="mb-0 mt-1"
-            style={{ fontWeight: 500, letterSpacing: "0.1rem" }}
-          >
-            YOU'RE ON YOUR WAY TO…
-          </h4>
-          <h3
-            className="mb-1 mt-2"
-            style={{ fontWeight: 800, letterSpacing: "0.1rem" }}
-          >
-            {quickplayStore.lastServer?.name}{" "}
-            <PingDisplay
-              ping={quickplayStore.lastServer?.ping}
-              calcPingColor={calcPingColor}
-            />
-          </h3>
-          <h4
-            className="mb-0 mt-1"
-            style={{ fontWeight: 500, letterSpacing: "0.1rem" }}
-          >
-            <strong>Map</strong>: {quickplayStore.lastServer?.map}{" "}
-          </h4>
+          <div className="d-flex justify-content-between mb-2">
+            <div className="pe-3">
+              <h4
+                className="mb-0 mt-1"
+                style={{ fontWeight: 500, letterSpacing: "0.1rem" }}
+              >
+                YOU'RE ON YOUR WAY TO…
+              </h4>
+              <h3
+                className="mb-1 mt-2"
+                style={{ fontWeight: 800, letterSpacing: "0.1rem" }}
+              >
+                {quickplayStore.lastServer?.name}{" "}
+                <PingDisplay
+                  ping={quickplayStore.lastServer?.ping}
+                  calcPingColor={calcPingColor}
+                />
+              </h3>
+              <h4
+                className="mb-0 mt-1"
+                style={{ fontWeight: 500, letterSpacing: "0.1rem" }}
+              >
+                <strong>Map</strong>: {quickplayStore.lastServer?.map}{" "}
+              </h4>
+            </div>
+            {quickplayStore.lastServer?.map &&
+              mapToThumbnail[quickplayStore.lastServer.map] && (
+                <div className="d-flex align-items-center flex-shrink-0">
+                  <img
+                    src={mapToThumbnail[quickplayStore.lastServer.map]}
+                    alt={quickplayStore.lastServer.map}
+                    style={{
+                      width: "160px",
+                      height: "90px",
+                      objectFit: "cover",
+                      borderRadius: "0.25rem",
+                      boxShadow:
+                        "0 0.125rem 0.25rem rgba(0, 0, 0, 0.5)",
+                    }}
+                  />
+              </div>
+            )}
+          </div>
           <h4
             className="mb-0 mt-1"
             style={{ fontWeight: 500, letterSpacing: "0.1rem" }}
