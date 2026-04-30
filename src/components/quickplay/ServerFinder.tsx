@@ -1816,8 +1816,23 @@ export default function ServerFinder({ hash }: { hash: string }) {
               calcPingColor={calcPingColor}
             />
           </h3>
-          <div className="d-flex justify-content-center mb-2">
-            <div className="pe-3">
+          <div className="d-flex justify-content-center align-items-center mb-2">
+            {quickplayStore.lastServer?.map &&
+              mapToThumbnail[quickplayStore.lastServer.map] && (
+                <img
+                  src={mapToThumbnail[quickplayStore.lastServer.map]}
+                  alt={quickplayStore.lastServer.map}
+                  style={{
+                    width: "160px",
+                    height: "90px",
+                    objectFit: "cover",
+                    borderRadius: "0.1rem",
+                    boxShadow:
+                      "0 0.125rem 0.25rem rgba(0, 0, 0, 0.5)",
+                  }}
+                />
+              )}
+            <div className="ps-3">
               <h4
                 className="mb-0 mt-1"
                 style={{ fontWeight: 500, letterSpacing: "0.1rem" }}
@@ -1825,23 +1840,6 @@ export default function ServerFinder({ hash }: { hash: string }) {
                 <strong>Map</strong>: {quickplayStore.lastServer?.map}{" "}
               </h4>
             </div>
-            {quickplayStore.lastServer?.map &&
-              mapToThumbnail[quickplayStore.lastServer.map] && (
-                <div className="d-flex align-items-center flex-shrink-0">
-                  <img
-                    src={mapToThumbnail[quickplayStore.lastServer.map]}
-                    alt={quickplayStore.lastServer.map}
-                    style={{
-                      width: "160px",
-                      height: "90px",
-                      objectFit: "cover",
-                      borderRadius: "0.25rem",
-                      boxShadow:
-                        "0 0.125rem 0.25rem rgba(0, 0, 0, 0.5)",
-                    }}
-                  />
-                </div>
-              )}
           </div>
           <h4
             className="mb-0 mt-1"
