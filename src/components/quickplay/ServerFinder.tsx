@@ -1898,6 +1898,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
               onClick={() => {
                 quickplayStore.addBlocklist(quickplayStore.lastServer.steamid);
                 quickplayStore.setFound(0);
+                quickplayStore.setPlayNowText("PLAY NOW!");
                 /* Sentry.metrics.increment("custom.servers.server_block", 1);
                 Sentry.metrics.distribution(
                   "custom.servers.server_block_time_sec",
@@ -1917,6 +1918,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
               className="btn btn-dark"
               onClick={() => {
                 quickplayStore.setFound(0);
+                quickplayStore.setPlayNowText("PLAY NOW!");
               }}
             >
               <span className="far fa-circle-xmark"></span> Don't care
@@ -1926,6 +1928,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
               onClick={() => {
                 quickplayStore.addFavorite(quickplayStore.lastServer.steamid);
                 quickplayStore.setFound(0);
+                quickplayStore.setPlayNowText("PLAY NOW!");
                 /* Sentry.metrics.increment("custom.servers.server_fav", 1);
                 Sentry.metrics.distribution(
                   "custom.servers.server_fav_time",

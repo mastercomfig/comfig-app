@@ -158,6 +158,8 @@ const state = (set) => ({
   setClassRes: (classres) => set(() => ({ classres })),
   pure: -1,
   setPure: (pure) => set(() => ({ pure })),
+  playNowText: "PLAY NOW!",
+  setPlayNowText: (text) => set(() => ({ playNowText: text })),
 });
 
 const useStore = create(
