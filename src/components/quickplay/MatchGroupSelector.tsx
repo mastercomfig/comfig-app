@@ -274,6 +274,10 @@ export function MatchGroupSelector({ hash }) {
             }}
             disabled={!!quickplayStore.searching}
             onClick={() => {
+              if (quickplayStore.showServers) {
+                quickplayStore.setShowServers(false);
+                document.dispatchEvent(new CustomEvent("cancel-search"));
+              }
               startSearching(2);
             }}
           >

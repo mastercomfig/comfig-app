@@ -179,6 +179,7 @@ export default function CustomizeButton() {
         disabled={!!quickplayStore.searching || quickplayStore.found !== 0}
         onClick={() => {
           quickplayStore.toggleCustomizing();
+          document.dispatchEvent(new CustomEvent("cancel-search"));
         }}
       >
         <span className="fas fa-gear"></span>

@@ -48,6 +48,7 @@ const state = (set) => ({
     set((state) => ({
       searching,
       customizing: searching !== 0 ? 0 : state.customizing,
+      showServers: searching !== 0 ? false : state.showServers,
     })),
   showServers: false,
   setShowServers: (showServers) =>
