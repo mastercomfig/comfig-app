@@ -9,7 +9,6 @@ export function MatchGroupSelector({ hash }) {
   const quickplayStore = useQuickplayStore((state) => state);
   const [index, setIndex] = useState(0);
   const [init, setInit] = useState(false);
-  const [playNowText, setPlayNowText] = useState("PLAY NOW!");
 
   const handleSelect = useCallback(
     (selectedIndex: number, fromCarousel: boolean = false) => {
@@ -35,6 +34,9 @@ export function MatchGroupSelector({ hash }) {
       }
       quickplayStore.setSearching(variant);
       quickplayStore.setFound(0);
+      if (variant === 2) {
+        quickplayStore.setPlayNowText("PLAY NOW!");
+      }
     },
     [quickplayStore.searching],
   );
@@ -108,7 +110,7 @@ export function MatchGroupSelector({ hash }) {
       const text = customEvent.detail.imFeelingLucky
         ? "TRY AGAIN"
         : "PLAY NOW!";
-      setPlayNowText(text);
+      quickplayStore.setPlayNowText(text);
     };
     document.addEventListener("finished-searching", listener);
     return () => {
@@ -261,7 +263,7 @@ export function MatchGroupSelector({ hash }) {
               startSearching(1);
             }}
           >
-            {quickplayStore.showServers ? "PLAY NOW!" : playNowText}
+            {quickplayStore.showServers ? "PLAY NOW!" : quickplayStore.playNowText}
           </button>
         </div>
         <div className="col-auto">
