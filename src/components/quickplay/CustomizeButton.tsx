@@ -176,6 +176,7 @@ export default function CustomizeButton() {
     <div>
       <button
         className="btn btn-lg btn-dark me-3"
+        disabled={!!quickplayStore.searching || quickplayStore.found !== 0}
         onClick={() => {
           quickplayStore.toggleCustomizing();
         }}
