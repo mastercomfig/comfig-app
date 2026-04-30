@@ -762,6 +762,16 @@ export default function ServerFinder({ hash }: { hash: string }) {
     document.dispatchEvent(event);
   }
 
+  useEffect(() => {
+    const onCancelSearch = () => {
+      finishSearch(false);
+    };
+    document.addEventListener("cancel-search", onCancelSearch);
+    return () => {
+      document.removeEventListener("cancel-search", onCancelSearch);
+    };
+  }, []);
+
   function copyConnect(imFeelingLucky) {
     if (!navigator.clipboard) {
       console.error("Clipboard unsupported for connect string.");
