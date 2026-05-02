@@ -197,6 +197,8 @@ export const classicMaps = new Set([
   "plr_nightfall_final",
   "sd_doomsday",
   "tc_hydro",
+  "pd_watergate",
+  "cp_degrootkeep",
 ]);
 
 const holidayToImg = {
