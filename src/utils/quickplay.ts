@@ -16,3 +16,16 @@ export function getMaxPlayerIndex(setting) {
   }
   return status;
 }
+
+export interface GameServer {
+  addr: string;
+  steamid: string;
+  name: string;
+  players: number;
+  max_players: number;
+  bots: number;
+  map: string;
+  gametype: string[];
+  score: number;
+  ping: number;
+}

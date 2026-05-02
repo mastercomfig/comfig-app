@@ -9,7 +9,7 @@ import { OverlayTrigger, Tooltip } from "react-bootstrap";
 
 import fastClone from "@utils/fastClone";
 import { filterString } from "@utils/filter";
-import { MAX_PLAYER_OPTIONS, getMaxPlayerIndex } from "@utils/quickplay";
+import { MAX_PLAYER_OPTIONS, getMaxPlayerIndex, type GameServer } from "@utils/quickplay";
 
 import useQuickplayStore from "@store/quickplay";
 
@@ -38,6 +38,7 @@ const TAG_PREFS = [
   "crits",
   "respawntimes",
   "beta",
+  "dmgspread",
   "rtd",
   "classres",
   "nocap",
@@ -91,9 +92,11 @@ const DISALLOWED_GAMETYPES_IN_ANY = [
   "medieval",
 ];
 
+const DISALLOWED_GAMETYPES_IN_SEARCHING = new Set(["dmgspread"]);
+
 const MAP_BAN_INDICES = [0, 1, 2, 3, 4, 5];
 
-function lerp(inA, inB, outA, outB, x) {
+function lerp(inA: number, inB: number, outA: number, outB: number, x: number): number {
   return outA + ((outB - outA) * (x - inA)) / (inB - inA);
 }
 
@@ -135,8 +138,8 @@ export default function ServerFinder({ hash }: { hash: string }) {
     if (v === -1) {
       return true;
     }
-    const mustHave: Array<string> = [];
-    const mustNotHave: Array<string> = [];
+    const mustHave: string[] = [];
+    const mustNotHave: string[] = [];
     function must(tag: string) {
       mustHave.push(tag);
     }
@@ -162,6 +165,12 @@ export default function ServerFinder({ hash }: { hash: string }) {
         mustNot("beta");
       } else if (v === 1) {
         must("beta");
+      }
+    } else if (pref === "dmgspread") {
+      if (v === 0) {
+        mustNot("dmgspread");
+      } else if (v === 1) {
+        must("dmgspread");
       }
     } else if (pref === "rtd") {
       if (v === 0) {
@@ -234,7 +243,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
     const liveMatchGroups: object[] = [];
     const newMatchGroupSettings = {};
     for (const matchGroup of Object.keys(extraMatchGroups)) {
-      let newMatchGroupDesc: object = null;
+      let newMatchGroupDesc: object | null = null;
       if (matchGroup === "special_events") {
         newMatchGroupDesc = getSpecialEventDesc();
       }
@@ -261,19 +270,6 @@ export default function ServerFinder({ hash }: { hash: string }) {
   const allMaps = useMemo(() => {
     return Object.keys(mapToGamemode).map((m, i) => ({ id: i, name: m }));
   }, [schema]);
-
-  // TODO: special queues
-  /*
-  useEffect(() => {
-    const queues = [];
-    for (const queue of Object.keys(extraQueues)) {
-      if (queue === "special_events") {
-      }
-      queues.push();
-    }
-    queues.push("pvp");
-  }, [extraQueues]);
-  */
 
   const [mapBanIndex, setMapBanIndex] = useState(-1);
   const showServers = quickplayStore.showServers;
@@ -516,11 +512,11 @@ export default function ServerFinder({ hash }: { hash: string }) {
   };
 
   const [progress, setProgress] = useState(0);
-  const cachedServersRef = useRef<Array<any>>([]);
+  const cachedServersRef = useRef<GameServer[]>([]);
   const pingRef = useRef(-1);
   const untilRef = useRef(0);
-  const [servers, setServers] = useState<Array<any>>([]);
-  const [filteredServers, setFilteredServers] = useState<Array<any>>([]);
+  const [servers, setServers] = useState<GameServer[]>([]);
+  const [filteredServers, setFilteredServers] = useState<GameServer[]>([]);
   const [matchGroupPop, setMatchGroupPop] = useState<Record<string, number>>(
     {},
   );
@@ -659,6 +655,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
     quickplayStore.respawntimes,
     quickplayStore.crits,
     quickplayStore.beta,
+    quickplayStore.dmgspread,
     quickplayStore.rtd,
     quickplayStore.blocklist,
     quickplayStore.mapbanlist,
@@ -695,7 +692,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
     }
     setProgress(20);
     const copiedServers = fastClone(servers);
-    const scoredServers = [];
+    const scoredServers: GameServer[] = [];
     for (const server of copiedServers) {
       server.score = scoreServerForTotal(server);
       server.name = filterString(server.name);
@@ -710,12 +707,16 @@ export default function ServerFinder({ hash }: { hash: string }) {
       scoredServers.push(server);
       setProgress(20 + (30 * scoredServers.length) / servers.length);
     }
-    const finalServers = [];
+    const finalServers: GameServer[] = [];
     let filtered = 0;
     for (const server of scoredServers) {
       const pct = (finalServers.length + filtered) / servers.length;
       setProgress(50 + 50 * pct);
       if (quickplayStore.searching === 1 && !filterGoodServers(server.score)) {
+        filtered += 1;
+        continue;
+      }
+      if (quickplayStore.searching === 1 && server.gametype.some((t) => DISALLOWED_GAMETYPES_IN_SEARCHING.has(t))) {
         filtered += 1;
         continue;
       }
@@ -1438,6 +1439,53 @@ export default function ServerFinder({ hash }: { hash: string }) {
                   onClick={() => quickplayStore.setBeta(-1)}
                 />
                 <label className="form-check-label" htmlFor="beta-maps-any">
+                  Don't care
+                </label>
+              </div>
+            </div>
+          )}
+          {availableSettings[quickplayStore.matchGroup].has("dmgspread") && (
+            <div className="col-auto">
+              <h4 style={{ fontWeight: 500 }}>Damage Spread</h4>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  readOnly
+                  name="dmgspread"
+                  id="dmgspread-0"
+                  checked={quickplayStore.dmgspread === 0}
+                  onClick={() => quickplayStore.setDmgspread(0)}
+                />
+                <label className="form-check-label" htmlFor="dmgspread-0">
+                  Disabled
+                </label>
+              </div>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  readOnly
+                  name="dmgspread"
+                  id="dmgspread-1"
+                  checked={quickplayStore.dmgspread === 1}
+                  onClick={() => quickplayStore.setDmgspread(1)}
+                />
+                <label className="form-check-label" htmlFor="dmgspread-1">
+                  Enabled
+                </label>
+              </div>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  readOnly
+                  name="dmgspread"
+                  id="dmgspread-any"
+                  checked={quickplayStore.dmgspread === -1}
+                  onClick={() => quickplayStore.setDmgspread(-1)}
+                />
+                <label className="form-check-label" htmlFor="dmgspread-any">
                   Don't care
                 </label>
               </div>

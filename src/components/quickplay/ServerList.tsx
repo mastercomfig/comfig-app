@@ -70,6 +70,15 @@ export default function ServerList({
                     {server.max_players}
                   </span>
                 </h4>
+                {server.gametype && server.gametype.length > 0 && (
+                  <div className="mt-2">
+                    {server.gametype.map((tag: string) => (
+                      <span key={tag} className="badge bg-secondary me-1">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
             <hr className="m-0" />
