@@ -44,7 +44,7 @@ const optionsRes = {
 
 const reqHeaders = {
   headers: {
-    "User-Agent": "mastercomfig-worker",
+    "User-Agent": "comfig-worker",
   },
 };
 
