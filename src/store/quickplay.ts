@@ -9,12 +9,14 @@ import fastClone from "@utils/fastClone";
 import idbStorage from "@utils/idbstorage";
 
 const state = (set) => ({
+  classicMode: false,
+  setClassicMode: (classicMode) => set(() => ({ classicMode })),
   carousel: null,
   setCarousel: (carousel) => set(() => ({ carousel })),
-  availableMatchGroups: getDefaultMatchGroups().filter((r) => r.active),
+  availableMatchGroups: getDefaultMatchGroups(false).filter((r) => r.active),
   setAvailableMatchGroups: (availableMatchGroups) =>
     set(() => ({ availableMatchGroups })),
-  matchGroupSettings: getDefaultMatchGroupSettings(),
+  matchGroupSettings: getDefaultMatchGroupSettings(false),
   setMatchGroupSettings: (matchGroupSettings) =>
     set(() => ({ matchGroupSettings })),
   customizing: 0,
@@ -108,11 +110,13 @@ const state = (set) => ({
   crits: -1,
   setCrits: (crits) => set(() => ({ crits })),
   beta: -1,
-  setBeta: (beta) => set(() => ({ beta })),
+  betaprefset: false,
+  setBeta: (beta) => set(() => ({ beta, betaprefset: true })),
   rtd: 0,
   setRtd: (rtd) => set(() => ({ rtd })),
   dmgspread: -1,
-  setDmgspread: (dmgspread) => set(() => ({ dmgspread })),
+  dmgspreadprefset: false,
+  setDmgspread: (dmgspread) => set(() => ({ dmgspread, dmgspreadprefset: true })),
   blocklist: new Set([]),
   addBlocklist: (steamid) =>
     set((state) => {
@@ -189,7 +193,9 @@ const useStore = create(
           persistedState.mapbanlist = mapbans.slice(0, 5);
         }
         if (version < 7) {
+          persistedState.betaprefset = false;
           persistedState.dmgspread = -1;
+          persistedState.dmgspreadprefset = false;
         }
         return persistedState;
       },
@@ -199,7 +205,9 @@ const useStore = create(
         "respawntimes",
         "crits",
         "beta",
+        "betaprefset",
         "dmgspread",
+        "dmgspreadprefset",
         "rtd",
         "blocklist",
         "mapbanlist",

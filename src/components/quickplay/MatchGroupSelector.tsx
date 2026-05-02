@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import useQuickplayStore from "@store/quickplay";
 
 import ServerFinder from "./ServerFinder";
-import { baseGamemodeSet } from "@ssg/quickplayStaticData";
+import { baseGamemodeSet, coreGameModeCodes, getDefaultMatchGroups, getDefaultMatchGroupSettings } from "@ssg/quickplayStaticData";
 
 export function MatchGroupSelector({ hash }) {
   const quickplayStore = useQuickplayStore((state) => state);
@@ -50,6 +50,11 @@ export function MatchGroupSelector({ hash }) {
 
   // Handle available match groups shifting
   useEffect(() => {
+    if (quickplayStore.classicMode) {
+      setInit(true);
+      handleSelect(0);
+      return;
+    }
     const newIndex = quickplayStore.availableMatchGroups.findIndex(
       (k) => k.code === quickplayStore.matchGroup,
     );
@@ -58,25 +63,25 @@ export function MatchGroupSelector({ hash }) {
       return;
     }
     handleSelect(newIndex);
-  }, [quickplayStore.availableMatchGroups]);
+  }, [quickplayStore.availableMatchGroups, quickplayStore.classicMode]);
 
   useEffect(() => {
     if (!init) {
       return;
     }
     const urlparms = new URLSearchParams(window.location.search);
+    const isClassic = window.location.pathname.endsWith("/classic") || urlparms.has("classic");
+    if (isClassic) {
+      quickplayStore.setClassicMode(true);
+      quickplayStore.setMatchGroup("payload");
+      quickplayStore.setAvailableMatchGroups(getDefaultMatchGroups(true).filter((r) => r.active));
+      quickplayStore.setMatchGroupSettings(getDefaultMatchGroupSettings(true));
+    }
     const gm = urlparms.get("gm");
     if (gm) {
       let gamemodes: string[] = [];
       if (gm === "any") {
-        gamemodes = [
-          "payload",
-          "koth",
-          "attack_defense",
-          "ctf",
-          "capture_point",
-          "payload_race",
-        ];
+        gamemodes = coreGameModeCodes;
       } else {
         const userGmList = gm.split(",").filter((mode) => mode);
         gamemodes = userGmList.filter((mode) => baseGamemodeSet.has(mode));
@@ -135,6 +140,14 @@ export function MatchGroupSelector({ hash }) {
 
   return (
     <div className="align-middle text-center">
+      {quickplayStore.classicMode && (
+        <h1 className="display-1 my-2" style={{
+          letterSpacing: "0.2rem",
+          fontWeight: 600,
+        }}>
+          START PLAYING
+        </h1>
+      )}
       <div
         id="quickplayMatchGroups"
         className="carousel slide carousel-fade quickplay-section quickplay-carousel p-4"
@@ -249,14 +262,15 @@ export function MatchGroupSelector({ hash }) {
           </>
         )}
       </div>
-      <div className="row g-0">
+      <div className={`row ${quickplayStore.classicMode ? "g-1 mt-3" : "g-0"}`}>
         <div className="col">
           <button
-            className="btn btn-success w-100"
+            className={`btn ${quickplayStore.classicMode ? "btn-secondary" : "btn-success"} w-100`}
             style={{
               fontSize: "2.5rem",
               fontWeight: 800,
-              boxShadow: "0 -5px 5px 2px inset #0d5e1b",
+              borderRadius: quickplayStore.classicMode ? "1rem" : "",
+              boxShadow: quickplayStore.classicMode ? "" : "0 -5px 5px 2px inset #0d5e1b",
             }}
             disabled={!!quickplayStore.searching || quickplayStore.showServers}
             onClick={() => {
@@ -266,13 +280,14 @@ export function MatchGroupSelector({ hash }) {
             {quickplayStore.showServers ? "PLAY NOW!" : quickplayStore.playNowText}
           </button>
         </div>
-        <div className="col-auto">
+        <div className={quickplayStore.classicMode ? "col" : "col-auto"}>
           <button
-            className="btn btn-info w-100"
+            className={`btn ${quickplayStore.classicMode ? "btn-secondary" : "btn-info"} w-100`}
             style={{
               fontSize: "2.5rem",
-              fontWeight: 600,
-              boxShadow: "0 -5px 5px 2px inset #5e0d4c",
+              fontWeight: quickplayStore.classicMode ? 800 : 600,
+              borderRadius: quickplayStore.classicMode ? "1rem" : "",
+              boxShadow: quickplayStore.classicMode ? "" : "0 -5px 5px 2px inset #5e0d4c",
             }}
             disabled={!!quickplayStore.searching}
             onClick={() => {
@@ -283,7 +298,7 @@ export function MatchGroupSelector({ hash }) {
               startSearching(2);
             }}
           >
-            <span className="fas fa-list fa-fw m-1"></span>
+            {quickplayStore.classicMode ? "SHOW SERVERS" : (<span className="fas fa-list fa-fw m-1"></span>)}
           </button>
         </div>
       </div>
