@@ -111,6 +111,8 @@ const state = (set) => ({
   setBeta: (beta) => set(() => ({ beta })),
   rtd: 0,
   setRtd: (rtd) => set(() => ({ rtd })),
+  dmgspread: -1,
+  setDmgspread: (dmgspread) => set(() => ({ dmgspread })),
   blocklist: new Set([]),
   addBlocklist: (steamid) =>
     set((state) => {
@@ -167,7 +169,7 @@ const useStore = create(
     state,
     idbStorage(
       "quickplay",
-      6,
+      7,
       (inPersistedState, version) => {
         const persistedState = fastClone(inPersistedState);
         if (version < 2) {
@@ -186,6 +188,9 @@ const useStore = create(
           const mapbans = Array.from(persistedState["mapbans"]);
           persistedState.mapbanlist = mapbans.slice(0, 5);
         }
+        if (version < 7) {
+          persistedState.dmgspread = -1;
+        }
         return persistedState;
       },
       [
@@ -194,6 +199,7 @@ const useStore = create(
         "respawntimes",
         "crits",
         "beta",
+        "dmgspread",
         "rtd",
         "blocklist",
         "mapbanlist",

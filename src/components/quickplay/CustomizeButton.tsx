@@ -13,6 +13,7 @@ const RESPAWN_STATUS = [
 const CRIT_STATUS = ["", "No"];
 const BETA_STATUS = ["No beta maps", "Only beta maps"];
 const RTD_STATUS = ["", "Only RTD"];
+const DMGSPREAD_STATUS = ["No", ""];
 const CLASSRES_STATUS = [
   "No class restrictions",
   "Class limits OK",
@@ -111,6 +112,12 @@ export default function CustomizeButton() {
       BETA_STATUS,
       true,
     );
+    const dmgspreadStatus = genPrefString(
+      "damage spread",
+      quickplayStore.dmgspread,
+      DMGSPREAD_STATUS,
+      true,
+    );
     let gamemodeString = "";
     const gamemodesCount = quickplayStore.gamemodes.size;
     const gamemodes = Array.from(quickplayStore.gamemodes);
@@ -167,6 +174,7 @@ export default function CustomizeButton() {
     quickplayStore.respawntimes,
     quickplayStore.crits,
     quickplayStore.beta,
+    quickplayStore.dmgspread,
     quickplayStore.rtd,
     quickplayStore.classres,
     quickplayStore.nocap,
