@@ -2,6 +2,19 @@ import { useState } from "react";
 
 import PingDisplay from "./PingDisplay";
 
+const TAG_DISPLAY_REMAP: Record<string, string | null> = {
+  ctf: null,
+  cp: null,
+  koth: null,
+  payload: null,
+  passtime: null,
+  sd: null,
+  rd: null,
+  tc: null,
+  misc: null,
+  increased_maxplayers: null,
+};
+
 export default function ServerList({
   servers,
   mapToThumbnail,
@@ -70,15 +83,25 @@ export default function ServerList({
                     {server.max_players}
                   </span>
                 </h4>
-                {server.gametype && server.gametype.length > 0 && (
-                  <div className="mt-2">
-                    {server.gametype.map((tag: string) => (
-                      <span key={tag} className="badge bg-secondary me-1">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                )}
+                {(() => {
+                  if (server.gametype.length < 1) return null;
+
+                  const displayTags = server.gametype
+                    .map((tag: string) => TAG_DISPLAY_REMAP[tag] !== undefined ? TAG_DISPLAY_REMAP[tag] : tag)
+                    .filter((tag: string | null) => tag !== null);
+
+                  if (displayTags.length === 0) return null;
+
+                  return (
+                    <div className="mt-2">
+                      {displayTags.map((tag: string) => (
+                        <span key={tag} className="badge bg-secondary me-1">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  );
+                })()}
               </div>
             </div>
             <hr className="m-0" />
