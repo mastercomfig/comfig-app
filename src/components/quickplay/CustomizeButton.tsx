@@ -65,8 +65,11 @@ function genPrefString(
   return `${statusSummary} ${pref}`;
 }
 
-function genMaxPlayerString(setting) {
-  const status = getMaxPlayerIndex(setting);
+function genMaxPlayerString(setting, classicMode) {
+  let status = getMaxPlayerIndex(setting);
+  if (classicMode && (status === 2 || status === 3)) {
+    status = 1;
+  }
   return genPrefString("players", status, MAX_PLAYERS_STATUS);
 }
 
@@ -76,7 +79,7 @@ export default function CustomizeButton() {
   const availableSettings = quickplayStore.matchGroupSettings;
 
   const prefString = useMemo(() => {
-    const maxPlayerStatus = genMaxPlayerString(quickplayStore.maxPlayerCap);
+    const maxPlayerStatus = genMaxPlayerString(quickplayStore.maxPlayerCap, quickplayStore.classicMode);
     const critStatus = genPrefString(
       "random crits",
       quickplayStore.crits,
@@ -106,17 +109,18 @@ export default function CustomizeButton() {
       OBJECTIVES_STATUS,
       true,
     );
+    const betaDefault = quickplayStore.classicMode ? 0 : -1;
     const betaStatus = genPrefString(
       "map status",
-      quickplayStore.beta,
+      quickplayStore.betaprefset ? quickplayStore.beta : betaDefault,
       BETA_STATUS,
       true,
     );
+    const dmgspreadDefault = quickplayStore.classicMode ? 0 : -1;
     const dmgspreadStatus = genPrefString(
       "damage spread",
-      quickplayStore.dmgspread,
+      quickplayStore.dmgspreadprefset ? quickplayStore.dmgspread : dmgspreadDefault,
       DMGSPREAD_STATUS,
-      true,
     );
     let gamemodeString = "";
     const gamemodesCount = quickplayStore.gamemodes.size;
@@ -143,7 +147,7 @@ export default function CustomizeButton() {
       }
     }
     if (!availableSettings[quickplayStore.matchGroup]) {
-      console.log(quickplayStore.matchGroup, availableSettings);
+      console.log("[CustomizeButton] Did not find settings for matchgroup", quickplayStore.matchGroup, availableSettings);
     }
     const strings = [
       availableSettings[quickplayStore.matchGroup].has("gamemodes")
@@ -165,6 +169,12 @@ export default function CustomizeButton() {
       availableSettings[quickplayStore.matchGroup].has("nocap")
         ? objectiveStatus
         : "",
+      availableSettings[quickplayStore.matchGroup].has("beta")
+        ? betaStatus
+        : "",
+      availableSettings[quickplayStore.matchGroup].has("dmgspread")
+        ? dmgspreadStatus
+        : "",
     ].filter((s) => s);
     return strings.join("; ");
   }, [
@@ -178,6 +188,7 @@ export default function CustomizeButton() {
     quickplayStore.rtd,
     quickplayStore.classres,
     quickplayStore.nocap,
+    quickplayStore.classicMode,
   ]);
 
   return (

@@ -1,6 +1,7 @@
 import xMarkImg from "@img/xmark.webp";
 import {
   baseGamemodes,
+  classicMaps,
   getDefaultMatchGroups,
   getSpecialEventDesc,
 } from "@ssg/quickplayStaticData";
@@ -104,8 +105,11 @@ export default function ServerFinder({ hash }: { hash: string }) {
   const quickplayStore = useQuickplayStore((state) => state);
 
   const mapbans = useMemo(() => {
+    if (quickplayStore.classicMode) {
+      return new Set();
+    }
     return new Set(quickplayStore.mapbanlist.slice(0, 5));
-  }, [quickplayStore.mapbanlist]);
+  }, [quickplayStore.mapbanlist, quickplayStore.classicMode]);
 
   const gamemodeList = useMemo(() => {
     return Array.from(quickplayStore.gamemodes);
@@ -133,7 +137,10 @@ export default function ServerFinder({ hash }: { hash: string }) {
   };
 
   const checkTagPref = (pref, tags: Set<string>) => {
-    const v = quickplayStore[pref];
+    let v = quickplayStore[pref];
+    if (quickplayStore.classicMode && ["nocap", "classres", "rtd"].includes(pref)) {
+      v = 0;
+    }
     // -1 is don't care
     if (v === -1) {
       return true;
@@ -239,7 +246,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
   }, [extraMatchGroups]);
 
   useEffect(() => {
-    const matchGroups = getDefaultMatchGroups().filter((r) => r.active);
+    const matchGroups = getDefaultMatchGroups(quickplayStore.classicMode).filter((r) => r.active);
     const liveMatchGroups: object[] = [];
     const newMatchGroupSettings = {};
     for (const matchGroup of Object.keys(extraMatchGroups)) {
@@ -378,7 +385,11 @@ export default function ServerFinder({ hash }: { hash: string }) {
 
   const filterServer = (server) => {
     // Now let's start the server secondary filters.
-    const [minCap, maxCap] = quickplayStore.maxPlayerCap;
+    let [minCap, maxCap] = quickplayStore.maxPlayerCap;
+    if (quickplayStore.classicMode && (minCap === 18 || minCap === 64)) {
+      minCap = 24;
+      maxCap = 32;
+    }
     // Make sure we have enough player cap.
     if (server.max_players < minCap) {
       return false;
@@ -398,6 +409,9 @@ export default function ServerFinder({ hash }: { hash: string }) {
     if (quickplayStore.blocklist.has(server.steamid)) {
       return false;
     }
+    if (quickplayStore.classicMode && !classicMaps.has(server.map)) {
+      return false;
+    }
     if (mapbans.has(server.map)) {
       return false;
     }
@@ -408,7 +422,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
   const scoreServerForUser = (server) => {
     let userScore = 0.0;
     const ping = server.ping;
-    const PING_LOW = quickplayStore.pinglimit;
+    const PING_LOW = quickplayStore.classicMode ? 50 : quickplayStore.pinglimit;
     let pingScore = 0;
     if (ping <= PING_MIN) {
       pingScore += 1.0;
@@ -434,7 +448,8 @@ export default function ServerFinder({ hash }: { hash: string }) {
     userScore += pingScore;
 
     // Favor low ping servers with players
-    if (quickplayStore.pingmode === 1) {
+    const pingmode = quickplayStore.classicMode ? 0 : quickplayStore.pingmode;
+    if (pingmode === 1) {
       if (server.players > 0) {
         userScore += pingScore;
       }
@@ -490,7 +505,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
   };
 
   const scoreServer = (server) => {
-    const partySize = quickplayStore.partysize;
+    const partySize = quickplayStore.classicMode ? 1 : quickplayStore.partysize;
     if (partySize <= 1) {
       return 0.0;
     }
@@ -685,6 +700,9 @@ export default function ServerFinder({ hash }: { hash: string }) {
       return;
     }
     if (servers.length < 1) {
+      setAllFiltered(true);
+      setFilteredServers([]);
+      setProgress(100);
       return;
     }
     if (!schema) {
@@ -988,7 +1006,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
   }, [quickplayStore.pinglimit]);
 
   if (!availableSettings[quickplayStore.matchGroup]) {
-    console.log(quickplayStore.matchGroup, availableSettings);
+    console.log("[ServerFinder] Did not find settings for matchgroup", quickplayStore.matchGroup, availableSettings);
   }
 
   // Look, I know this is bad. I'll split it into components later.
@@ -997,7 +1015,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
       <div
         className={`position-absolute text-start z-2 top-0 end-0 text-info py-2 px-3`}
       >
-        {matchGroupPop[quickplayStore.matchGroup] !== undefined && (
+        {matchGroupPop[quickplayStore.matchGroup] !== undefined && !quickplayStore.classicMode && (
           <p className="lead fw-bold">
             {matchGroupPop[quickplayStore.matchGroup]}{" "}
             {matchGroupPop[quickplayStore.matchGroup] === 1
@@ -1016,7 +1034,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
         </h3>
         <div className="row mt-4 gy-2">
           {availableSettings[quickplayStore.matchGroup].has("maxplayers") && (
-            <div className="col-auto">
+            <div className={quickplayStore.classicMode ? "col-6" : "col-auto"}>
               <h4 style={{ fontWeight: 500 }}>Server capacity</h4>
               <div className="form-check">
                 <input
@@ -1050,7 +1068,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
                   24-32 players
                 </label>
               </div>
-              <div className="form-check">
+              {!quickplayStore.classicMode && <div className="form-check">
                 <input
                   className="form-check-input"
                   type="radio"
@@ -1065,8 +1083,8 @@ export default function ServerFinder({ hash }: { hash: string }) {
                 <label className="form-check-label" htmlFor="server-capacity-2">
                   18-32 players
                 </label>
-              </div>
-              <div className="form-check">
+              </div>}
+              {!quickplayStore.classicMode && <div className="form-check">
                 <input
                   className="form-check-input"
                   type="radio"
@@ -1081,7 +1099,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
                 <label className="form-check-label" htmlFor="server-capacity-3">
                   64-100 players
                 </label>
-              </div>
+              </div>}
               <div className="form-check">
                 <input
                   className="form-check-input"
@@ -1104,7 +1122,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
             </div>
           )}
           {availableSettings[quickplayStore.matchGroup].has("crits") && (
-            <div className="col-auto">
+            <div className={quickplayStore.classicMode ? "col-6" : "col-auto"}>
               <h4 style={{ fontWeight: 500 }}>Random crits</h4>
               <div className="form-check">
                 <input
@@ -1151,7 +1169,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
             </div>
           )}
           {availableSettings[quickplayStore.matchGroup].has("respawntimes") && (
-            <div className="col-auto">
+            <div className={quickplayStore.classicMode ? "col-6" : "col-auto"}>
               <h4 style={{ fontWeight: 500 }}>Respawn times</h4>
               <div className="form-check">
                 <input
@@ -1397,55 +1415,8 @@ export default function ServerFinder({ hash }: { hash: string }) {
               </div>
             </div>
           )}
-          {availableSettings[quickplayStore.matchGroup].has("beta") && (
-            <div className="col-auto">
-              <h4 style={{ fontWeight: 500 }}>Beta maps</h4>
-              <div className="form-check">
-                <input
-                  className="form-check-input"
-                  type="radio"
-                  readOnly
-                  name="beta-maps"
-                  id="beta-maps-0"
-                  checked={quickplayStore.beta === 0}
-                  onClick={() => quickplayStore.setBeta(0)}
-                />
-                <label className="form-check-label" htmlFor="beta-maps-0">
-                  Play released maps
-                </label>
-              </div>
-              <div className="form-check">
-                <input
-                  className="form-check-input"
-                  type="radio"
-                  readOnly
-                  name="beta-maps"
-                  id="beta-maps-1"
-                  checked={quickplayStore.beta === 1}
-                  onClick={() => quickplayStore.setBeta(1)}
-                />
-                <label className="form-check-label" htmlFor="beta-maps-1">
-                  Play beta maps
-                </label>
-              </div>
-              <div className="form-check">
-                <input
-                  className="form-check-input"
-                  type="radio"
-                  readOnly
-                  name="beta-maps"
-                  id="beta-maps-any"
-                  checked={quickplayStore.beta === -1}
-                  onClick={() => quickplayStore.setBeta(-1)}
-                />
-                <label className="form-check-label" htmlFor="beta-maps-any">
-                  Don't care
-                </label>
-              </div>
-            </div>
-          )}
           {availableSettings[quickplayStore.matchGroup].has("dmgspread") && (
-            <div className="col-auto">
+            <div className={quickplayStore.classicMode ? "col-6" : "col-auto"}>
               <h4 style={{ fontWeight: 500 }}>Damage Spread</h4>
               <div className="form-check">
                 <input
@@ -1491,6 +1462,53 @@ export default function ServerFinder({ hash }: { hash: string }) {
               </div>
             </div>
           )}
+          {availableSettings[quickplayStore.matchGroup].has("beta") && (
+            <div className={quickplayStore.classicMode ? "col-6" : "col-auto"}>
+              <h4 style={{ fontWeight: 500 }}>Beta maps</h4>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  readOnly
+                  name="beta-maps"
+                  id="beta-maps-0"
+                  checked={quickplayStore.beta === 0}
+                  onClick={() => quickplayStore.setBeta(0)}
+                />
+                <label className="form-check-label" htmlFor="beta-maps-0">
+                  Play released maps
+                </label>
+              </div>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  readOnly
+                  name="beta-maps"
+                  id="beta-maps-1"
+                  checked={quickplayStore.beta === 1}
+                  onClick={() => quickplayStore.setBeta(1)}
+                />
+                <label className="form-check-label" htmlFor="beta-maps-1">
+                  Play beta maps
+                </label>
+              </div>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  readOnly
+                  name="beta-maps"
+                  id="beta-maps-any"
+                  checked={quickplayStore.beta === -1}
+                  onClick={() => quickplayStore.setBeta(-1)}
+                />
+                <label className="form-check-label" htmlFor="beta-maps-any">
+                  Don't care
+                </label>
+              </div>
+            </div>
+          )}
         </div>
         <br />
         <div className="row">
@@ -1500,7 +1518,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
                 Ping Preference{" "}
                 <HelpTooltip
                   id="ping-help"
-                  title="The maximum ping before starting to derank servers for too high ping. This is more effective in some lower populated regions when Strict regional matchmaking is selected."
+                  title="The maximum ping before starting to derank servers for too high ping. This is more effective in some lower populated regions when Strict regional filter is selected."
                 />
               </h4>
               <input
@@ -1528,9 +1546,9 @@ export default function ServerFinder({ hash }: { hash: string }) {
                   id="ping-mode-check"
                 />
                 <label className="form-check-label" htmlFor="ping-mode-check">
-                  Strict regional matchmaking{" "}
+                  Strict regional filter{" "}
                   <HelpTooltip
-                    id="regional-matchmaking-help"
+                    id="regional-filter-help"
                     title="Strongly prefer servers close to you than far away servers with players."
                   />
                 </label>
@@ -1898,7 +1916,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
                 <>
                   This server has no players. Please{" "}
                   <strong>wait around a few minutes</strong> for others to join
-                  through quickplay matchmaking before requeuing to{" "}
+                  through quickplay before requeuing to{" "}
                   <strong>help us populate more servers</strong>!
                 </>
               )}
@@ -1916,7 +1934,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
               <h5 className="mb-0 mt-1">
                 This server has a low number of players. Please{" "}
                 <strong>wait around a few minutes</strong> for others to join
-                through quickplay matchmaking before requeuing to{" "}
+                through quickplay before requeuing to{" "}
                 <strong>help us populate more servers</strong>!
               </h5>
             )}

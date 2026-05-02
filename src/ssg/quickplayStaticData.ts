@@ -14,7 +14,7 @@ import smissmasImg from "@img/gamemodes/smissmas.webp";
 import summerImg from "@img/gamemodes/summer.webp";
 import workshopImg from "@img/gamemodes/workshop.webp";
 
-export const baseGamemodes = {
+export const coreGamemodes = {
   payload: {
     name: "Payload",
     code: "payload",
@@ -57,6 +57,12 @@ export const baseGamemodes = {
     skill: 1,
     img: plrImg,
   },
+}
+
+export const coreGameModeCodes = Object.keys(coreGamemodes);
+
+export const casualGameModes = {
+  ...coreGamemodes,
   alternative: {
     name: "Misc",
     code: "alternative",
@@ -64,6 +70,10 @@ export const baseGamemodes = {
     skill: 2,
     img: miscImg,
   },
+}
+
+export const baseGamemodes = {
+  ...casualGameModes,
   arena: {
     name: "Arena",
     code: "arena",
@@ -74,6 +84,120 @@ export const baseGamemodes = {
 };
 
 export const baseGamemodeSet = new Set(Object.keys(baseGamemodes));
+
+export const classicGameModes = {
+  payload: {
+    name: "Payload",
+    code: "payload",
+    description: "BLU pushes the cart down the track. RED need to stop them.",
+    detail: "Blue team wins by escorting the payload cart to the enemy base. Stand near the payload to make it move.\n\nRed team wins by preventing the payload cart from reaching the heart of their base.\n\nEnemies can block the payload by getting close to it.",
+    skill: 0,
+    img: payloadImg,
+  },
+  koth: {
+    name: "King of the Hill",
+    code: "koth",
+    description: "One team must control a single point until time runs out.",
+    detail: "Capture the Control Point and defend it until your team's timer runs out.\n\nThe Control Point cannot be captured while locked.\n\nIf the enemy team captures the Control Point, your team's timer will pause until you recapture the point.",
+    skill: 0,
+    img: kothImg,
+  },
+  attack_defense: {
+    name: "Attack / Defense",
+    code: "attack_defense",
+    description: "BLU wins by capturing all points. RED wins by stopping them.",
+    detail: "Blue team wins by capturing the Control Points on each stage before the time runs out.\n\nRed team wins by preventing all the points from being captured.",
+    skill: 0,
+    img: adImg,
+  },
+  payload_race: {
+    name: "Payload Race",
+    code: "payload_race",
+    description: "Two teams. Two bombs. Two tracks. Hilarity ensues.",
+    detail: "Escort your payload cart to the finish line before the opposing team can deliver theirs.\n\nStand near the cart to make it move.",
+    skill: 1,
+    img: plrImg,
+  },
+  capture_point: {
+    name: "Capture Points",
+    code: "capture_point",
+    description: "Capture all points to win.",
+    detail: "To win, each team must own all Control Points.\n\nSome Control Points will be locked until others are captured.",
+    skill: 1,
+    img: cpImg,
+  },
+  ctf: {
+    name: "Capture the Flag",
+    code: "ctf",
+    description: "And by flag we mean a glowing briefcase.",
+    detail: "To win a point, steal the enemy's intelligence briefcase and return it to your base.\n\nYou should also prevent the opposing team from taking your intelligence briefcase to their base.",
+    skill: 1,
+    img: ctfImg,
+  },
+  alternative: {
+    name: "Misc",
+    code: "alternative",
+    description: "Game modes that don't fit into one of the other categories.",
+    detail: "Select this option to play game modes like Territorial Control, Special Delivery, Medieval, and Player Destruction.",
+    skill: 1,
+    img: miscImg,
+  },
+  random: {
+    name: "Random",
+    code: "random",
+    description: "We'll match you into the best game we can find.",
+    detail: "We'll match you into the best game we can find, regardless of the game type.",
+    skill: 1,
+    img: randomImg,
+  }
+}
+
+export const classicMaps = new Set([
+  "cp_dustbowl",
+  "cp_egypt_final",
+  "cp_gorge",
+  "cp_gravelpit",
+  "cp_junction_final",
+  "cp_mountainlab",
+  "cp_steel",
+  "cp_5gorge",
+  "cp_badlands",
+  "cp_coldfront",
+  "cp_fastlane",
+  "cp_freight_final1",
+  "cp_granary",
+  "cp_well",
+  "cp_yukon_final",
+  "cp_foundry",
+  "cp_gullywash_final1",
+  "cp_process_final",
+  "cp_standin_final",
+  "cp_snakewater_final1",
+  "ctf_2fort",
+  "ctf_doublecross",
+  "ctf_sawmill",
+  "ctf_turbine",
+  "ctf_well",
+  "koth_badlands",
+  "koth_harvest_final",
+  "koth_lakeside_final",
+  "koth_nucleus",
+  "koth_sawmill",
+  "koth_viaduct",
+  "koth_king",
+  "pl_badwater",
+  "pl_frontier_final",
+  "pl_goldrush",
+  "pl_hoodoo_final",
+  "pl_thundermountain",
+  "pl_upward",
+  "pl_barnblitz",
+  "plr_hightower",
+  "plr_pipeline",
+  "plr_nightfall_final",
+  "sd_doomsday",
+  "tc_hydro",
+]);
 
 const holidayToImg = {
   summer: summerImg,
@@ -121,40 +245,77 @@ export function getSpecialEventDesc() {
   };
 }
 
-export function getDefaultMatchGroupSettings() {
-  const availableSettings = {
-    pvp: new Set([
+export function getDefaultMatchGroupSettings(classicMode: boolean = false) {
+  let minSettings: string[];
+  if (classicMode) {
+    minSettings = [];
+  } else {
+    minSettings = ["pinglimit", "partysize"]
+  }
+
+  let baseSettings: string[];
+  if (classicMode) {
+    baseSettings = ["maxplayers", "crits", "respawntimes", "dmgspread", "beta"];
+  } else {
+    baseSettings = [
       "maxplayers",
       "crits",
       "respawntimes",
       "rtd",
       "classres",
-      "nocap",
-      "pinglimit",
-      "partysize",
-      "mapbans",
-      "gamemodes",
-    ]),
-    special_events: new Set([
-      "maxplayers",
-      "crits",
-      "respawntimes",
-      "rtd",
-      "classres",
-      "nocap",
-      "pinglimit",
-      "partysize",
-    ]),
-    ws: new Set(["pinglimit", "partysize"]),
-    pmvm: new Set(["pinglimit", "partysize"]),
-    mge: new Set(["pinglimit", "partysize"]),
-    jump: new Set(["pinglimit", "partysize"]),
-    surf: new Set(["pinglimit", "partysize"]),
-  };
+      "nocap"
+    ];
+  }
+
+  const pvpSettings = new Set([
+    ...baseSettings,
+    ...minSettings,
+    "mapbans",
+    "gamemodes",
+  ]);
+
+  const minSettingsSet = new Set(minSettings);
+
+  let availableSettings;
+
+  if (classicMode) {
+    const classicSettings = new Set([...minSettings, ...baseSettings]);
+    availableSettings = {
+      special_events: classicSettings,
+      random: classicSettings,
+    };
+    for (const key of Object.keys(baseGamemodes)) {
+      availableSettings[key] = classicSettings;
+    }
+  } else {
+    availableSettings = {
+      pvp: pvpSettings,
+      special_events: new Set([
+        ...baseSettings,
+        ...minSettings,
+      ]),
+      ws: minSettingsSet,
+      pmvm: minSettingsSet,
+      mge: minSettingsSet,
+      jump: minSettingsSet,
+      surf: minSettingsSet,
+    }
+  }
+
   return availableSettings;
 }
 
-export function getDefaultMatchGroups() {
+export function getDefaultMatchGroups(classicMode: boolean = false) {
+  if (classicMode) {
+    return [
+      ...Object.values(classicGameModes).map((gm: any) => ({
+        ...gm,
+        img: gm.img.src,
+        active: true,
+      }))
+    ];
+  }
+
   const matchGroups = [
     {
       name: "Casual",
