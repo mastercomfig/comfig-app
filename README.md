@@ -1,6 +1,6 @@
-# mastercomfig web app
+# comfig web app
 
-The [web app](https://comfig.app/) for mastercomfig.
+The [web app](https://comfig.app/) for comfig.
 
 ## Color Scheme
 

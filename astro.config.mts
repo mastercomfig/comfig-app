@@ -26,8 +26,8 @@ const pwa = AstroPWA({
   },
   includeAssets: ["**/*.{png,xml,ico,svg,webp,mp4,vtf,vmt}"],
   manifest: {
-    name: "mastercomfig",
-    short_name: "mastercomfig",
+    name: "comfig",
+    short_name: "comfig",
     categories: ["games", "utilities", "personalization"],
     lang: "en-US",
     dir: "ltr",
@@ -64,7 +64,7 @@ const pwa = AstroPWA({
     display_override: ["standalone", "minimal-ui", "browser"],
     scope: "/",
     theme_color: "#009688",
-    description: "Manage your mastercomfig installation",
+    description: "Manage your comfig installation",
   },
   experimental: {
     directoryAndTrailingSlashHandler: true,

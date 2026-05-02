@@ -12,7 +12,7 @@ export function homePage() {
     if (!entries[0].isIntersecting) {
       return;
     }
-    updateBarWidth("mastercomfig-bar", 100);
+    updateBarWidth("comfig-bar", 100);
     updateBarWidth("comanglia-bar", 91);
     updateBarWidth("m0re-bar", 90);
     updateBarWidth("chris-bar", 84);
@@ -22,7 +22,7 @@ export function homePage() {
 
   // If bars are visible, do an anim
   const barsObserver = new IntersectionObserver(updateBars, { threshold: 1.0 });
-  barsObserver.observe(document.getElementById("mastercomfig-bar"));
+  barsObserver.observe(document.getElementById("comfig-bar"));
 
   // Init customization example highlighting
   hljs.registerLanguage("cpp", cpp);
