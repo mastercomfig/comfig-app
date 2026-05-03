@@ -1,6 +1,7 @@
 import xMarkImg from "@img/xmark.webp";
 import {
   baseGamemodes,
+  classicGameModeSearchAll,
   classicMaps,
   getDefaultMatchGroups,
   getSpecialEventDesc,
@@ -325,7 +326,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
       if (mapMatchGroup !== expectedGamemode) {
         return false;
       }
-    } else if (expectedGamemode !== "any") {
+    } else if (expectedGamemode !== "any" && expectedGamemode !== "random" && expectedGamemode !== "pvp") {
       const mapGamemode = mapToGamemode[server.map];
       if (mapGamemode) {
         if (mapGamemode !== expectedGamemode) {
@@ -368,7 +369,11 @@ export default function ServerFinder({ hash }: { hash: string }) {
 
   const filterServerForGamemodes = (server: GameServer, tags: Set<string>) => {
     const currentMatchGroup = quickplayStore.matchGroup;
-    if (currentMatchGroup === "pvp") {
+    if (quickplayStore.classicMode && currentMatchGroup === "random") {
+      return classicGameModeSearchAll.some((gm) =>
+        filterServerForGamemode(gm, server, tags),
+      );
+    } else if (currentMatchGroup === "pvp") {
       return gamemodeList.some((gm) =>
         filterServerForGamemode(gm, server, tags),
       );
