@@ -1443,7 +1443,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
           )}
           {availableSettings[quickplayStore.matchGroup].has("dmgspread") && (
             <div className={quickplayStore.classicMode ? "col-6" : "col-auto"}>
-              <h4 style={{ fontWeight: 500 }}>Damage Spread</h4>
+              <h4 style={{ fontWeight: 500 }}>Damage spread</h4>
               <div className="form-check">
                 <input
                   className="form-check-input"
