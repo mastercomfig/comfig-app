@@ -741,6 +741,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
       server.name = filterString(server.name);
       // If we're in the server list, we can choose to connect to a server with only one slot left
       if (
+        !quickplayStore.classicMode &&
         quickplayStore.searching === 2 &&
         server.score < -50 &&
         server.players < server.max_players
@@ -759,7 +760,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
         filtered += 1;
         continue;
       }
-      if (quickplayStore.searching === 1 && server.gametype.some((t) => DISALLOWED_GAMETYPES_IN_SEARCHING.has(t))) {
+      if (!quickplayStore.classicMode && quickplayStore.searching === 1 && server.gametype.some((t) => DISALLOWED_GAMETYPES_IN_SEARCHING.has(t))) {
         filtered += 1;
         continue;
       }
