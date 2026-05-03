@@ -27,5 +27,7 @@ export interface GameServer {
   map: string;
   gametype: string[];
   score: number;
+  adj: number;
+  classic: boolean;
   ping: number;
 }

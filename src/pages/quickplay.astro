@@ -7,6 +7,7 @@ import MainHead from "@components/head/MainHead.astro";
 import PreloadHead from "@components/head/PreloadHead.astro";
 import NavSelector from "@components/NavSelector.astro";
 import CustomizeButton from "@components/quickplay/CustomizeButton.tsx";
+import ClassicModeNote from "@components/quickplay/ClassicModeNote.tsx";
 import { MatchGroupSelector } from "@components/quickplay/MatchGroupSelector";
 import Layout from "@layouts/Layout.astro";
 import { getQuickplayData } from "@ssg/quickplayData";
@@ -26,6 +27,10 @@ const { hash } = await getQuickplayData();
         import useQuickplayStore from "@store/quickplay";
 
         document.addEventListener("astro:page-load", () => {
+          const store = useQuickplayStore.getState();
+          store.setShowServers(false);
+          store.setSearching(0);
+
           const carouselEl = document.getElementById("quickplayMatchGroups");
           if (!carouselEl) {
             return;
@@ -83,6 +88,7 @@ const { hash } = await getQuickplayData();
         <CustomizeButton client:load />
       </div>
     </section>
+    <ClassicModeNote client:only="react" />
     <section class="container bg-secondary-subtle mt-5 mb-4 px-5 pt-5 pb-2">
       <h1 class="display-3 text-center fw-bold">Questions and Answers</h1>
       <p class="lead">
@@ -135,7 +141,29 @@ const { hash } = await getQuickplayData();
         reputation bonus.
       </p>
 
-      <h2 class="display-6 fw-bold">
+      <h2 class="display-6 fw-bold">What is Classic Quickplay mode?</h2>
+      <p class="lead">
+        Classic Quickplay is a mode that recreates the old Quickplay feature as
+        accurately as possible, removing all improvements comfig quickplay has
+        made. You can access it by going to
+        <strong style="font-weight: 700" class="text-primary"
+          ><a href="https://quickplay.tf/classic" data-astro-reload
+            >quickplay.tf/classic</a
+          ></strong
+        > instead of <strong style="font-weight: 700" class="text-primary"
+          ><a href="https://quickplay.tf" data-astro-reload>quickplay.tf</a
+          ></strong
+        >. This includes using the old algorithms for players and ping, and
+        removing the seeding algorithm added in comfig quickplay. Ping
+        customization, party size setting, multi-gamemode search map bans, and
+        enhanced server filters are also not available. Additionally, only the
+        base set of quickplay maps are used for search criteria, and various
+        quickplay rules are strictly enforced, rather than using the new
+        penalty-based milestone system of comfig quickplay.
+      </p>
+
+      <h2 class="display-6
+            fw-bold">
         Why did I get matched into an empty server?
       </h2>
       <p class="lead">

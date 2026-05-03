@@ -22,6 +22,7 @@ import ServerList from "./ServerList";
 
 const REJOIN_COOLDOWN = 300 * 1000;
 const REJOIN_PENALTY = 1.225;
+const REJOIN_PENALTY_CLASSIC = 1.0;
 
 const PING_LOW_SCORE = 0.9;
 const PING_MIN = 24.0;
@@ -121,10 +122,11 @@ export default function ServerFinder({ hash }: { hash: string }) {
     if (lastTime) {
       const elapsed = new Date().getTime() - lastTime;
       if (elapsed <= REJOIN_COOLDOWN) {
-        const age = elapsed;
-        const ageScore = age / REJOIN_COOLDOWN;
-        penalty = (1.0 - ageScore) * REJOIN_PENALTY;
-        penalty *= penalty;
+        const ageScore = elapsed / REJOIN_COOLDOWN;
+        penalty = (1.0 - ageScore) * (quickplayStore.classicMode ? REJOIN_PENALTY_CLASSIC : REJOIN_PENALTY);
+        if (!quickplayStore.classicMode) {
+          penalty *= penalty;
+        }
       } else {
         quickplayStore.removeRecentServer(address);
       }
@@ -136,9 +138,11 @@ export default function ServerFinder({ hash }: { hash: string }) {
     quickplayStore.setRecentServer(address, new Date().getTime());
   };
 
+  const classicBlockedPrefs = new Set(["nocap", "classres", "rtd"]);
+
   const checkTagPref = (pref, tags: Set<string>) => {
     let v = quickplayStore[pref];
-    if (quickplayStore.classicMode && ["nocap", "classres", "rtd"].includes(pref)) {
+    if (quickplayStore.classicMode && classicBlockedPrefs.has(pref)) {
       v = 0;
     }
     // -1 is don't care
@@ -312,8 +316,8 @@ export default function ServerFinder({ hash }: { hash: string }) {
   }, []);
 
   const filterServerForGamemode = (
-    expectedGamemode,
-    server,
+    expectedGamemode: string,
+    server: GameServer,
     tags: Set<string>,
   ) => {
     if (expectedGamemode in extraMatchGroups) {
@@ -362,7 +366,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
     return true;
   };
 
-  const filterServerForGamemodes = (server, tags: Set<string>) => {
+  const filterServerForGamemodes = (server: GameServer, tags: Set<string>) => {
     const currentMatchGroup = quickplayStore.matchGroup;
     if (currentMatchGroup === "pvp") {
       return gamemodeList.some((gm) =>
@@ -383,7 +387,10 @@ export default function ServerFinder({ hash }: { hash: string }) {
     }
   };
 
-  const filterServer = (server) => {
+  const filterServer = (server: GameServer) => {
+    if (quickplayStore.classicMode && !server.classic) {
+      return false;
+    }
     // Now let's start the server secondary filters.
     let [minCap, maxCap] = quickplayStore.maxPlayerCap;
     if (quickplayStore.classicMode && (minCap === 18 || minCap === 64)) {
@@ -419,15 +426,15 @@ export default function ServerFinder({ hash }: { hash: string }) {
     return true;
   };
 
-  const scoreServerForUser = (server) => {
+  const scoreServerForUser = (server: GameServer) => {
     let userScore = 0.0;
     const ping = server.ping;
     const PING_LOW = quickplayStore.classicMode ? 50 : quickplayStore.pinglimit;
     let pingScore = 0;
-    if (ping <= PING_MIN) {
+    if (ping <= PING_MIN && !quickplayStore.classicMode) {
       pingScore += 1.0;
     } else if (ping < PING_LOW) {
-      pingScore += lerp(PING_MIN, PING_LOW, 1.0, PING_LOW_SCORE, ping);
+      pingScore += lerp(quickplayStore.classicMode ? 0 : PING_MIN, PING_LOW, 1.0, PING_LOW_SCORE, ping);
     } else if (ping < PING_MED) {
       pingScore += lerp(
         PING_LOW,
@@ -460,69 +467,82 @@ export default function ServerFinder({ hash }: { hash: string }) {
     return userScore;
   };
 
-  const toNearestEven = (num) => {
+  const toNearestEven = (num: number) => {
     return 2 * Math.round(num / 2.0);
   };
 
-  const scoreServerByPlayers = (humans, maxPlayers, partySize) => {
+  const scoreServerByPlayers = (humans: number, maxPlayers: number, partySize: number, classicMode: boolean) => {
     const newHumans = humans + partySize;
     const newTotalPlayers = newHumans;
 
     const realMaxPlayers = maxPlayers;
+
+    if (classicMode) {
+      if (maxPlayers < 18) {
+        return -100;
+      }
+      if (maxPlayers > 33) {
+        maxPlayers = 33;
+      }
+    }
 
     if (newTotalPlayers > realMaxPlayers) {
       return -100;
     }
 
     if (newTotalPlayers > realMaxPlayers - SERVER_HEADROOM) {
-      return -0.05;
+      return classicMode ? -100 : -0.05;
     }
 
-    if (humans === 0) {
+    if (!classicMode && humans === 0) {
       return -0.3;
     }
 
-    if (maxPlayers > FULL_PLAYERS) {
+    if (!classicMode && maxPlayers > FULL_PLAYERS) {
       maxPlayers = FULL_PLAYERS;
     }
 
-    const countLow = toNearestEven(maxPlayers / 3);
-    const countIdeal = toNearestEven(maxPlayers * 0.72);
+    const countLow = classicMode ? Math.floor(realMaxPlayers / 3) : toNearestEven(maxPlayers / 3);
+    const countIdeal = classicMode ? Math.floor(realMaxPlayers * 0.8333333) : toNearestEven(maxPlayers * 0.72);
 
-    const scoreLow = 0.1;
-    const scoreIdeal = 1.6;
+    const scoreLow = classicMode ? 0.2 : 0.1;
+    const scoreIdeal = classicMode ? 1.5 : 1.6;
     const scoreFuller = 0.2;
 
     if (newHumans <= countLow) {
       return lerp(0, countLow, 0.0, scoreLow, newHumans);
     } else if (newHumans <= countIdeal) {
       return lerp(countLow, countIdeal, scoreLow, scoreIdeal, newHumans);
-    } else if (newHumans <= maxPlayers) {
+    } else if (!classicMode && newHumans <= maxPlayers) {
       return lerp(countIdeal, maxPlayers, scoreIdeal, scoreFuller, newHumans);
     } else {
-      return lerp(maxPlayers, realMaxPlayers, scoreFuller, scoreLow, newHumans);
+      return lerp(classicMode ? countIdeal : maxPlayers, realMaxPlayers, classicMode ? scoreIdeal : scoreFuller, scoreLow, newHumans);
     }
   };
 
-  const scoreServer = (server) => {
+  const scoreServer = (server: GameServer) => {
     const partySize = quickplayStore.classicMode ? 1 : quickplayStore.partysize;
-    if (partySize <= 1) {
+    if (partySize <= 1 && !quickplayStore.classicMode) {
       return 0.0;
     }
     const humans = server.players;
     const maxPlayers = server.max_players;
-    const defaultScore = scoreServerByPlayers(humans, maxPlayers, 1);
-    const newScore = scoreServerByPlayers(humans, maxPlayers, partySize);
+    const defaultScore = scoreServerByPlayers(humans, maxPlayers, 1, false);
+    const newScore = scoreServerByPlayers(humans, maxPlayers, partySize, quickplayStore.classicMode);
     return newScore - defaultScore;
   };
 
-  const scoreServerForTotal = (server) => {
+  const scoreServerForTotal = (server: GameServer) => {
     const userScore = scoreServerForUser(server);
     const totalScore = server.score + userScore;
-    return totalScore + scoreServer(server);
+    let finalScore = totalScore + scoreServer(server);
+    if (quickplayStore.classicMode) {
+      finalScore -= server.adj
+    }
+    return finalScore;
   };
 
-  const filterGoodServers = (score) => {
+  const filterGoodServers = (score: number) => {
     return score > 1.0;
   };
 
@@ -749,9 +769,10 @@ export default function ServerFinder({ hash }: { hash: string }) {
           const pct = (curServers.length + filtered) / servers.length;
           if (pct === 1) {
             setAllFiltered(true);
-            setFilteredServers(curServers.sort((a, b) => b.score - a.score));
+            const sortedServers = curServers.sort((a, b) => b.score - a.score);
+            setFilteredServers(quickplayStore.classicMode ? sortedServers.slice(0, 20) : sortedServers);
           } else {
-            setFilteredServers(curServers);
+            setFilteredServers(quickplayStore.classicMode ? curServers.slice(0, 20) : curServers);
           }
         },
         5 + 300 * pct,
@@ -1777,6 +1798,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
           connectToServer={connectToServer}
           calcPingColor={calcPingColor}
           finishSearch={finishSearch}
+          classicMode={quickplayStore.classicMode}
         />
       </div>
 

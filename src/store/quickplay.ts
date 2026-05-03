@@ -1,4 +1,5 @@
 import {
+  coreGameModeCodes,
   getDefaultMatchGroupSettings,
   getDefaultMatchGroups,
 } from "@ssg/quickplayStaticData";
@@ -73,14 +74,7 @@ const state = (set) => ({
   setMaxPlayerCap: (cap) => set(() => ({ maxPlayerCap: cap })),
   matchGroup: "pvp",
   setMatchGroup: (matchGroup) => set(() => ({ matchGroup })),
-  gamemodes: new Set([
-    "payload",
-    "koth",
-    "attack_defense",
-    "ctf",
-    "capture_point",
-    "payload_race",
-  ]),
+  gamemodes: new Set(coreGameModeCodes),
   addGamemode: (gamemode) =>
     set((state) => {
       const gamemodes = new Set(state.gamemodes);
