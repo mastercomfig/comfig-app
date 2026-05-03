@@ -19,78 +19,7 @@ export const coreGamemodes = {
     name: "Payload",
     code: "payload",
     description: "BLU pushes the cart down the track. RED need to stop them.",
-    skill: 0,
-    img: payloadImg,
-  },
-  koth: {
-    name: "King of the Hill",
-    code: "koth",
-    description: "One team must control a single point until time runs out.",
-    skill: 0,
-    img: kothImg,
-  },
-  attack_defense: {
-    name: "Attack / Defense",
-    code: "attack_defense",
-    description: "BLU wins by capturing all points. RED wins by stopping them.",
-    skill: 1,
-    img: adImg,
-  },
-  ctf: {
-    name: "Capture the Flag",
-    code: "ctf",
-    description: "And by flag we mean a glowing briefcase.",
-    skill: 1,
-    img: ctfImg,
-  },
-  capture_point: {
-    name: "Capture Points",
-    code: "capture_point",
-    description: "Capture all points to win.",
-    skill: 1,
-    img: cpImg,
-  },
-  payload_race: {
-    name: "Payload Race",
-    code: "payload_race",
-    description: "Two teams. Two bombs. Two tracks. Hilarity ensues.",
-    skill: 1,
-    img: plrImg,
-  },
-}
-
-export const coreGameModeCodes = Object.keys(coreGamemodes);
-
-export const casualGameModes = {
-  ...coreGamemodes,
-  alternative: {
-    name: "Misc",
-    code: "alternative",
-    description: "Game modes that don't fit into one of the other categories.",
-    skill: 2,
-    img: miscImg,
-  },
-}
-
-export const baseGamemodes = {
-  ...casualGameModes,
-  arena: {
-    name: "Arena",
-    code: "arena",
-    description: "Quick rounds. No respawns. It's like Counter-Strike!",
-    skill: 2,
-    img: arenaImg,
-  },
-};
-
-export const baseGamemodeSet = new Set(Object.keys(baseGamemodes));
-
-export const classicGameModes = {
-  payload: {
-    name: "Payload",
-    code: "payload",
-    description: "BLU pushes the cart down the track. RED need to stop them.",
-    detail: "Blue team wins by escorting the payload cart to the enemy base. Stand near the payload to make it move.\n\nRed team wins by preventing the payload cart from reaching the heart of their base.\n\nEnemies can block the payload by getting close to it.",
+    detail: "BLU team wins by escorting the payload cart to the enemy base. Stand near the payload to make it move.\n\nRED team wins by preventing the payload cart from reaching the heart of their base.\n\nEnemies can block the payload by getting close to it.",
     skill: 0,
     img: payloadImg,
   },
@@ -106,7 +35,86 @@ export const classicGameModes = {
     name: "Attack / Defense",
     code: "attack_defense",
     description: "BLU wins by capturing all points. RED wins by stopping them.",
-    detail: "Blue team wins by capturing the Control Points on each stage before the time runs out.\n\nRed team wins by preventing all the points from being captured.",
+    detail: "BLU team wins by capturing the Control Points on each stage before the time runs out.\n\nRED team wins by preventing all the points from being captured.",
+    skill: 1,
+    img: adImg,
+  },
+  ctf: {
+    name: "Capture the Flag",
+    code: "ctf",
+    description: "And by flag we mean a glowing briefcase.",
+    detail: "To win a point, steal the enemy's intelligence briefcase and return it to your base.\n\nYou should also prevent the opposing team from taking your intelligence briefcase to their base.",
+    skill: 1,
+    img: ctfImg,
+  },
+  capture_point: {
+    name: "Capture Points",
+    code: "capture_point",
+    description: "Capture all points to win.",
+    detail: "To win, each team must own all Control Points.\n\nSome Control Points will be locked until others are captured.",
+    skill: 1,
+    img: cpImg,
+  },
+  payload_race: {
+    name: "Payload Race",
+    code: "payload_race",
+    description: "Two teams. Two bombs. Two tracks. Hilarity ensues.",
+    detail: "Escort your payload cart to the finish line before the opposing team can deliver theirs.\n\nStand near the cart to make it move.",
+    skill: 1,
+    img: plrImg,
+  },
+}
+
+export const coreGameModeCodes = Object.keys(coreGamemodes);
+
+export const casualGameModes = {
+  ...coreGamemodes,
+  alternative: {
+    name: "Misc",
+    code: "alternative",
+    description: "Game modes that don't fit into one of the other categories.",
+    detail: "Select this option to play game modes like Territorial Control, Special Delivery, Medieval, and Player Destruction.",
+    skill: 2,
+    img: miscImg,
+  },
+}
+
+export const baseGamemodes = {
+  ...casualGameModes,
+  arena: {
+    name: "Arena",
+    code: "arena",
+    description: "Quick rounds. No respawns. It's like Counter-Strike!",
+    detail: "Arena is a fast-paced game mode with no respawns. Be the last team standing to win!\n\nAfter a set amount of time, a control point will become available to capture to win the round without hunting down the entire enemy team.",
+    skill: 2,
+    img: arenaImg,
+  },
+};
+
+export const baseGamemodeSet = new Set(Object.keys(baseGamemodes));
+
+export const classicGameModes = {
+  payload: {
+    name: "Payload",
+    code: "payload",
+    description: "BLU pushes the cart down the track. RED need to stop them.",
+    detail: "BLU team wins by escorting the payload cart to the enemy base. Stand near the payload to make it move.\n\nRED team wins by preventing the payload cart from reaching the heart of their base.\n\nEnemies can block the payload by getting close to it.",
+    skill: 0,
+    img: payloadImg,
+  },
+  koth: {
+    name: "King of the Hill",
+    code: "koth",
+    description: "One team must control a single point until time runs out.",
+    detail: "Capture the Control Point and defend it until your team's timer runs out.\n\nThe Control Point cannot be captured while locked.\n\nIf the enemy team captures the Control Point, your team's timer will pause until you recapture the point.",
+    skill: 0,
+    img: kothImg,
+  },
+  attack_defense: {
+    name: "Attack / Defense",
+    code: "attack_defense",
+    description: "BLU wins by capturing all points. RED wins by stopping them.",
+    detail: "BLU team wins by capturing the Control Points on each stage before the time runs out.\n\nRED team wins by preventing all the points from being captured.",
     skill: 0,
     img: adImg,
   },

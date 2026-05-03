@@ -2,6 +2,8 @@ import { useCallback, useEffect, useState } from "react";
 
 import useQuickplayStore from "@store/quickplay";
 
+import { OverlayTrigger, Popover } from "react-bootstrap";
+
 import ServerFinder from "./ServerFinder";
 import { baseGamemodeSet, classicGameModeSet, coreGameModeCodes, getDefaultMatchGroups, getDefaultMatchGroupSettings } from "@ssg/quickplayStaticData";
 
@@ -197,6 +199,12 @@ export function MatchGroupSelector({ hash }) {
                 key={resource.code}
               >
                 <div
+                  className="position-absolute top-0 start-0 p-3 fs-5 fw-bold text-dark"
+                  style={{ zIndex: 1, textShadow: "0 0 1px #000" }}
+                >
+                  {index + 1} / {matchGroups.length}
+                </div>
+                <div
                   className="flex-grow-1"
                   style={{
                     backgroundImage: `url('${resource.img}')`,
@@ -216,6 +224,24 @@ export function MatchGroupSelector({ hash }) {
                     }}
                   >
                     {resource.name}
+                    {resource.detail && (
+                      <OverlayTrigger
+                        trigger="click"
+                        placement="bottom"
+                        rootClose
+                        overlay={
+                          <Popover id={`popover-${resource.code}`} className="bs-theme-dark text-start">
+                            <Popover.Body style={{ whiteSpace: "pre-wrap" }}>
+                              {resource.detail}
+                            </Popover.Body>
+                          </Popover>
+                        }
+                      >
+                        <button className="btn btn-link text-dark ms-2 p-0 mb-3">
+                          <span className="fas fa-circle-info fs-3"></span>
+                        </button>
+                      </OverlayTrigger>
+                    )}
                   </h2>
                 </div>
                 <div
