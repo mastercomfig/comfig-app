@@ -153,6 +153,7 @@ export const classicGameModes = {
 }
 
 export const classicGameModeSet = new Set(Object.keys(classicGameModes));
+export const classicGameModeSearchAll = Object.keys(classicGameModes).filter(code => code !== "random");
 
 export const classicMaps = new Set([
   "cp_dustbowl",
