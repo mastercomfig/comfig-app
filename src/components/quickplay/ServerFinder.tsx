@@ -7,7 +7,7 @@ import {
   getSpecialEventDesc,
 } from "@ssg/quickplayStaticData";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import { OverlayTrigger, Popover, Tooltip } from "react-bootstrap";
 
 import fastClone from "@utils/fastClone";
 import { filterString } from "@utils/filter";
@@ -1757,8 +1757,30 @@ export default function ServerFinder({ hash }: { hash: string }) {
                           backgroundRepeat: "no-repeat",
                         }}
                       ></div>
-                      <div className="p-2">
-                        <h4 className="fw-bold">{gm.name}</h4>
+                      <div className="p-2 d-flex justify-content-center align-items-center">
+                        <h4 className="fw-bold mb-0">{gm.name}</h4>
+                        {gm.detail && (
+                          <OverlayTrigger
+                            trigger={["hover", "focus"]}
+                            placement="bottom"
+                            rootClose
+                            overlay={
+                              <Popover id={`popover-normal-${gm.code}`} className="bs-theme-dark text-start" onClick={(e) => e.stopPropagation()}>
+                                <Popover.Body style={{ whiteSpace: "pre-wrap" }}>
+                                  {gm.detail}
+                                </Popover.Body>
+                              </Popover>
+                            }
+                          >
+                            <button
+                              className="btn btn-link text-dark ms-2 p-0 align-baseline position-relative"
+                              style={{ zIndex: 1 }}
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <span className="fas fa-circle-info fs-5"></span>
+                            </button>
+                          </OverlayTrigger>
+                        )}
                       </div>
                     </div>
                   </div>
