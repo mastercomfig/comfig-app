@@ -1,3 +1,12 @@
+# May 2, 2026
+
+* Added tag list in Show Servers list
+* Added support for servers with damage spread enabled
+* Added "classic" quickplay mode which excludes all comfig improvements made to quickplay: https://quickplay.tf/classic. You can learn more in the Questions and Answers section.
+* Added map thumbnail to connecting server info
+* Fixed some URL parameters not working properly
+* Fixed a few minor UI bugs
+
 ## January 22, 2026
 
 * Rather than complete quickplay exclusion for slight rules violations (improper tags, changes to bots, etc), scoring will be slightly reduced for these servers. This will increase the number of highly populated servers available in quickplay, especially for some popular server networks. We still accept reports for these servers and will adjust their score depending on the severity of the report.

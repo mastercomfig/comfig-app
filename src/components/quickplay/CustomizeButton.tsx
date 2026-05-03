@@ -3,6 +3,7 @@ import { useMemo } from "react";
 import { getMaxPlayerIndex } from "@utils/quickplay";
 
 import useQuickplayStore from "@store/quickplay";
+import { coreGameModeCodes } from "@ssg/quickplayStaticData";
 
 const MAX_PLAYERS_STATUS = ["24", "24-32", "18-32", "64-100", "At least 18"];
 const RESPAWN_STATUS = [
@@ -33,15 +34,6 @@ const GAMEMODE_STATUS_LOOKUP = {
   arena: "Arena",
 };
 
-const CORE_GAMEMODES = [
-  "payload",
-  "koth",
-  "attack_defense",
-  "ctf",
-  "capture_point",
-  "payload_race",
-];
-
 function genPrefString(
   pref: string,
   status: number,
@@ -65,7 +57,7 @@ function genPrefString(
   return `${statusSummary} ${pref}`;
 }
 
-function genMaxPlayerString(setting, classicMode) {
+function genMaxPlayerString(setting, classicMode: boolean) {
   let status = getMaxPlayerIndex(setting);
   if (classicMode && (status === 2 || status === 3)) {
     status = 1;
@@ -134,12 +126,12 @@ export default function CustomizeButton() {
     } else {
       if (
         gamemodesCount === 6 &&
-        CORE_GAMEMODES.every((gm) => quickplayStore.gamemodes.has(gm))
+        coreGameModeCodes.every((gm) => quickplayStore.gamemodes.has(gm))
       ) {
         gamemodeString = "Core game modes";
       } else if (
         gamemodesCount === 2 &&
-        CORE_GAMEMODES.every((gm) => !quickplayStore.gamemodes.has(gm))
+        coreGameModeCodes.every((gm) => !quickplayStore.gamemodes.has(gm))
       ) {
         gamemodeString = "Alt game modes";
       } else {

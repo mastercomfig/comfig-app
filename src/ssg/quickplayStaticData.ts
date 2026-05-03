@@ -152,6 +152,8 @@ export const classicGameModes = {
   }
 }
 
+export const classicGameModeSet = new Set(Object.keys(classicGameModes));
+
 export const classicMaps = new Set([
   "cp_dustbowl",
   "cp_egypt_final",
@@ -160,6 +162,7 @@ export const classicMaps = new Set([
   "cp_junction_final",
   "cp_mountainlab",
   "cp_steel",
+  "cp_snowplow",
   "cp_5gorge",
   "cp_badlands",
   "cp_coldfront",
@@ -173,11 +176,17 @@ export const classicMaps = new Set([
   "cp_process_final",
   "cp_standin_final",
   "cp_snakewater_final1",
+  "cp_powerhouse",
+  "cp_vanguard",
+  "cp_sunshine",
+  "cp_metalworks",
   "ctf_2fort",
   "ctf_doublecross",
   "ctf_sawmill",
   "ctf_turbine",
   "ctf_well",
+  "ctf_2fort_invasion",
+  "ctf_landfall",
   "koth_badlands",
   "koth_harvest_final",
   "koth_lakeside_final",
@@ -185,6 +194,9 @@ export const classicMaps = new Set([
   "koth_sawmill",
   "koth_viaduct",
   "koth_king",
+  "koth_suijin",
+  "koth_probed",
+  "koth_highpass",
   "pl_badwater",
   "pl_frontier_final",
   "pl_goldrush",
@@ -192,6 +204,9 @@ export const classicMaps = new Set([
   "pl_thundermountain",
   "pl_upward",
   "pl_barnblitz",
+  "pl_borneo",
+  "pl_snowycoast",
+  "pl_swiftwater_final1",
   "plr_hightower",
   "plr_pipeline",
   "plr_nightfall_final",
@@ -199,6 +214,14 @@ export const classicMaps = new Set([
   "tc_hydro",
   "pd_watergate",
   "cp_degrootkeep",
+  "rd_asteroid",
+  "pl_cactuscanyon",
+  "ctf_gorge",
+  "ctf_thundermountain",
+  "ctf_hellfire",
+  "pass_brickyard",
+  "pass_timbertown",
+  "pass_district",
 ]);
 
 const holidayToImg = {

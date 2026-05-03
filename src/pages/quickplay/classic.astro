@@ -1,3 +1,7 @@
 ---
-return Astro.redirect("/quickplay?classic=1");
+import Redirector from "@layouts/Redirector.astro";
+
+const site = import.meta.env.PROD ? Astro.site : Astro.url.origin;
 ---
+
+<Redirector target={`${site}/quickplay?classic=1`} />

@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import useQuickplayStore from "@store/quickplay";
 
 import ServerFinder from "./ServerFinder";
-import { baseGamemodeSet, coreGameModeCodes, getDefaultMatchGroups, getDefaultMatchGroupSettings } from "@ssg/quickplayStaticData";
+import { baseGamemodeSet, classicGameModeSet, coreGameModeCodes, getDefaultMatchGroups, getDefaultMatchGroupSettings } from "@ssg/quickplayStaticData";
 
 export function MatchGroupSelector({ hash }) {
   const quickplayStore = useQuickplayStore((state) => state);
@@ -50,14 +50,26 @@ export function MatchGroupSelector({ hash }) {
 
   // Handle available match groups shifting
   useEffect(() => {
-    if (quickplayStore.classicMode) {
+    const urlparms = new URLSearchParams(window.location.search);
+    if (
+      quickplayStore.classicMode &&
+      quickplayStore.availableMatchGroups[0]?.code === "special_events" &&
+      quickplayStore.matchGroup === "payload" &&
+      !urlparms.has("gm")
+    ) {
       setInit(true);
       handleSelect(0);
       return;
     }
+
     const newIndex = quickplayStore.availableMatchGroups.findIndex(
       (k) => k.code === quickplayStore.matchGroup,
     );
+    if (newIndex === -1) {
+      setInit(true);
+      handleSelect(0);
+      return;
+    }
     if (newIndex === index) {
       setInit(true);
       return;
@@ -79,23 +91,31 @@ export function MatchGroupSelector({ hash }) {
     }
     const gm = urlparms.get("gm");
     if (gm) {
-      let gamemodes: string[] = [];
-      if (gm === "any") {
-        gamemodes = coreGameModeCodes;
-      } else {
+      if (isClassic) {
         const userGmList = gm.split(",").filter((mode) => mode);
-        gamemodes = userGmList.filter((mode) => baseGamemodeSet.has(mode));
-        if (gamemodes.length === 0) {
-          const activeMatchGroupSet = new Set(quickplayStore.availableMatchGroups.filter((mg) => mg.active).map((mg) => mg.code));
-          const selectedMatchGroups = userGmList.filter((mode) => activeMatchGroupSet.has(mode));
-          if (selectedMatchGroups.length > 0) {
-            handleSelect(quickplayStore.availableMatchGroups.findIndex((mg) => mg.code === selectedMatchGroups[0]));
-            gamemodes = [];
+        let gamemodes = userGmList.filter((mode) => classicGameModeSet.has(mode));
+        if (gamemodes && gamemodes.length > 0) {
+          quickplayStore.setMatchGroup(gamemodes[0]);
+        }
+      } else {
+        let gamemodes: string[] = [];
+        if (gm === "any") {
+          gamemodes = coreGameModeCodes;
+        } else {
+          const userGmList = gm.split(",").filter((mode) => mode);
+          gamemodes = userGmList.filter((mode) => baseGamemodeSet.has(mode));
+          if (gamemodes.length === 0) {
+            const activeMatchGroupSet = new Set(quickplayStore.availableMatchGroups.filter((mg) => mg.active).map((mg) => mg.code));
+            const selectedMatchGroups = userGmList.filter((mode) => activeMatchGroupSet.has(mode));
+            if (selectedMatchGroups.length > 0) {
+              handleSelect(quickplayStore.availableMatchGroups.findIndex((mg) => mg.code === selectedMatchGroups[0]));
+              gamemodes = [];
+            }
           }
         }
-      }
-      if (gamemodes && gamemodes.length > 0) {
-        quickplayStore.setGamemodes(gamemodes);
+        if (gamemodes && gamemodes.length > 0) {
+          quickplayStore.setGamemodes(gamemodes);
+        }
       }
     }
     if (urlparms.get("autostart") === "1") {

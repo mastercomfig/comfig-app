@@ -22,6 +22,7 @@ export default function ServerList({
   connectToServer,
   calcPingColor,
   finishSearch,
+  classicMode,
 }) {
   const [selectedServer, setSelectedServer] = useState<any>(undefined);
 
@@ -84,7 +85,7 @@ export default function ServerList({
                   </span>
                 </h4>
                 {(() => {
-                  if (server.gametype.length < 1) return null;
+                  if (server.gametype.length < 1 || classicMode) return null;
 
                   const displayTags = server.gametype
                     .map((tag: string) => TAG_DISPLAY_REMAP[tag] !== undefined ? TAG_DISPLAY_REMAP[tag] : tag)
