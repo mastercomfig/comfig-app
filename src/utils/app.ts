@@ -502,8 +502,8 @@ export async function app() {
           (downloadFailures.length > 3
             ? `Failed to download ${downloadFailures.length} files`
             : `Failed to download ${downloadFailures
-                .map(({ url }) => url.name)
-                .join(", ")}`) + ". Please try again later.",
+              .map(({ url }) => url.name)
+              .join(", ")}`) + ". Please try again later.",
         );
       }
     } else {
@@ -555,8 +555,8 @@ export async function app() {
           (downloadFailures.length > 3
             ? `Failed to download ${downloadFailures.length} files`
             : `Failed to download ${downloadFailures
-                .map(({ url, err }) => url.name)
-                .join(", ")}`) + ". Please try again later.",
+              .map(({ url, err }) => url.name)
+              .join(", ")}`) + ". Please try again later.",
         );
       }
     }
@@ -828,7 +828,7 @@ export async function app() {
   let filesInUse = false;
 
   const unlinkErrHandler = {
-    "could not be found": () => {},
+    "could not be found": () => { },
     "state had changed since it was read from disk": () => {
       filesInUse = true;
     },
@@ -2322,7 +2322,8 @@ export async function app() {
       if (videoModules.has(name)) {
         modulePreview = document.createElement("div");
         const modulePreviewVideo = document.createElement("video");
-        modulePreviewVideo.classList.add("img-fluid");
+        modulePreviewVideo.classList.add("img-fluid", "w-100");
+        modulePreviewVideo.style.aspectRatio = "16 / 9";
         modulePreviewVideo.autoplay = true;
         modulePreviewVideo.loop = true;
         modulePreviewVideo.muted = true;
@@ -2364,7 +2365,8 @@ export async function app() {
         const modulePreviewImg = document.createElement("img");
         modulePreviewImg.src = `/img/modules/${name}/${previewValue}.webp`;
         modulePreviewImg.id = `module-preview-${name}`;
-        modulePreviewImg.classList.add("img-fluid");
+        modulePreviewImg.classList.add("img-fluid", "w-100");
+        modulePreviewImg.style.aspectRatio = "16 / 9";
         modulePreviewImg.alt = "";
         modulePreviewImg.crossOrigin = "";
         modulePreviewImg.loading = "lazy";
@@ -2485,7 +2487,7 @@ export async function app() {
   }
 
   // TODO: we can just use select for now, but for usability, this should be implemented in the future
-  function handleModuleInputButtonGroup(name, values) {}
+  function handleModuleInputButtonGroup(name, values) { }
 
   // Creates a range slider
   function handleModuleInputSlider(name, values) {
@@ -2590,9 +2592,9 @@ export async function app() {
         }
         let emptyValue = hasAdvancedSelection
           ? {
-              value: "",
-              display: "Custom",
-            }
+            value: "",
+            display: "Custom",
+          }
           : "custom";
         // Preventing side effects to module values
         newValues = [emptyValue].concat(values);
