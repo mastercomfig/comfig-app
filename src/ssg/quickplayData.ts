@@ -10,7 +10,8 @@ import { fetchCache } from "./fetchCache";
 let quickplayData: any = null;
 
 async function optimizeThumbnailWithRetry(map: string, src: string, maxAttempts: number = 2): Promise<string> {
-  const publicDir = path.resolve("public/generated/maps");
+  const baseDir = import.meta.env.PROD ? "dist" : "public";
+  const publicDir = path.resolve(baseDir, "generated/maps");
   await fs.mkdir(publicDir, { recursive: true });
 
   const destFilename = `${map}.webp`;
