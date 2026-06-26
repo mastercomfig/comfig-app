@@ -5,7 +5,13 @@ import useQuickplayStore from "@store/quickplay";
 import { OverlayTrigger, Popover } from "react-bootstrap";
 
 import ServerFinder from "./ServerFinder";
-import { baseGamemodeSet, classicGameModeSet, coreGameModeCodes, getDefaultMatchGroups, getDefaultMatchGroupSettings } from "@ssg/quickplayStaticData";
+import {
+  baseGamemodeSet,
+  classicGameModeSet,
+  coreGameModeCodes,
+  getDefaultMatchGroups,
+  getDefaultMatchGroupSettings,
+} from "@ssg/quickplayStaticData";
 
 export function MatchGroupSelector({ hash }) {
   const quickplayStore = useQuickplayStore((state) => state);
@@ -48,7 +54,7 @@ export function MatchGroupSelector({ hash }) {
       return;
     }
     quickplayStore.carousel.to(index);
-  }, [index, quickplayStore.carousel])
+  }, [index, quickplayStore.carousel]);
 
   // Handle available match groups shifting
   useEffect(() => {
@@ -84,18 +90,23 @@ export function MatchGroupSelector({ hash }) {
       return;
     }
     const urlparms = new URLSearchParams(window.location.search);
-    const isClassic = window.location.pathname.endsWith("/classic") || urlparms.has("classic");
+    const isClassic =
+      window.location.pathname.endsWith("/classic") || urlparms.has("classic");
     if (isClassic) {
       quickplayStore.setClassicMode(true);
       quickplayStore.setMatchGroup("payload");
-      quickplayStore.setAvailableMatchGroups(getDefaultMatchGroups(true).filter((r) => r.active));
+      quickplayStore.setAvailableMatchGroups(
+        getDefaultMatchGroups(true).filter((r) => r.active),
+      );
       quickplayStore.setMatchGroupSettings(getDefaultMatchGroupSettings(true));
     }
     const gm = urlparms.get("gm");
     if (gm) {
       if (isClassic) {
         const userGmList = gm.split(",").filter((mode) => mode);
-        let gamemodes = userGmList.filter((mode) => classicGameModeSet.has(mode));
+        let gamemodes = userGmList.filter((mode) =>
+          classicGameModeSet.has(mode),
+        );
         if (gamemodes && gamemodes.length > 0) {
           quickplayStore.setMatchGroup(gamemodes[0]);
         }
@@ -107,10 +118,20 @@ export function MatchGroupSelector({ hash }) {
           const userGmList = gm.split(",").filter((mode) => mode);
           gamemodes = userGmList.filter((mode) => baseGamemodeSet.has(mode));
           if (gamemodes.length === 0) {
-            const activeMatchGroupSet = new Set(quickplayStore.availableMatchGroups.filter((mg) => mg.active).map((mg) => mg.code));
-            const selectedMatchGroups = userGmList.filter((mode) => activeMatchGroupSet.has(mode));
+            const activeMatchGroupSet = new Set(
+              quickplayStore.availableMatchGroups
+                .filter((mg) => mg.active)
+                .map((mg) => mg.code),
+            );
+            const selectedMatchGroups = userGmList.filter((mode) =>
+              activeMatchGroupSet.has(mode),
+            );
             if (selectedMatchGroups.length > 0) {
-              handleSelect(quickplayStore.availableMatchGroups.findIndex((mg) => mg.code === selectedMatchGroups[0]));
+              handleSelect(
+                quickplayStore.availableMatchGroups.findIndex(
+                  (mg) => mg.code === selectedMatchGroups[0],
+                ),
+              );
               gamemodes = [];
             }
           }
@@ -163,10 +184,13 @@ export function MatchGroupSelector({ hash }) {
   return (
     <div className="align-middle text-center">
       {quickplayStore.classicMode && (
-        <h1 className="display-1 my-2" style={{
-          letterSpacing: "0.2rem",
-          fontWeight: 600,
-        }}>
+        <h1
+          className="display-1 my-2"
+          style={{
+            letterSpacing: "0.2rem",
+            fontWeight: 600,
+          }}
+        >
           START PLAYING
         </h1>
       )}
@@ -230,7 +254,10 @@ export function MatchGroupSelector({ hash }) {
                         placement="bottom"
                         rootClose
                         overlay={
-                          <Popover id={`popover-${resource.code}`} className="bs-theme-dark text-start">
+                          <Popover
+                            id={`popover-${resource.code}`}
+                            className="bs-theme-dark text-start"
+                          >
                             <Popover.Body style={{ whiteSpace: "pre-wrap" }}>
                               {resource.detail}
                             </Popover.Body>
@@ -316,14 +343,18 @@ export function MatchGroupSelector({ hash }) {
               fontSize: "2.5rem",
               fontWeight: 800,
               borderRadius: quickplayStore.classicMode ? "1rem" : "",
-              boxShadow: quickplayStore.classicMode ? "" : "0 -5px 5px 2px inset #0d5e1b",
+              boxShadow: quickplayStore.classicMode
+                ? ""
+                : "0 -5px 5px 2px inset #0d5e1b",
             }}
             disabled={!!quickplayStore.searching || quickplayStore.showServers}
             onClick={() => {
               startSearching(1);
             }}
           >
-            {quickplayStore.showServers ? "PLAY NOW!" : quickplayStore.playNowText}
+            {quickplayStore.showServers
+              ? "PLAY NOW!"
+              : quickplayStore.playNowText}
           </button>
         </div>
         <div className={quickplayStore.classicMode ? "col" : "col-auto"}>
@@ -333,7 +364,9 @@ export function MatchGroupSelector({ hash }) {
               fontSize: "2.5rem",
               fontWeight: quickplayStore.classicMode ? 800 : 600,
               borderRadius: quickplayStore.classicMode ? "1rem" : "",
-              boxShadow: quickplayStore.classicMode ? "" : "0 -5px 5px 2px inset #5e0d4c",
+              boxShadow: quickplayStore.classicMode
+                ? ""
+                : "0 -5px 5px 2px inset #5e0d4c",
             }}
             disabled={!!quickplayStore.searching}
             onClick={() => {
@@ -344,7 +377,11 @@ export function MatchGroupSelector({ hash }) {
               startSearching(2);
             }}
           >
-            {quickplayStore.classicMode ? "SHOW SERVERS" : (<span className="fas fa-list fa-fw m-1"></span>)}
+            {quickplayStore.classicMode ? (
+              "SHOW SERVERS"
+            ) : (
+              <span className="fas fa-list fa-fw m-1"></span>
+            )}
           </button>
         </div>
       </div>

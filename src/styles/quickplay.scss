@@ -4,7 +4,9 @@
 
 @media (min-width: 576px) {
   .carousel {
-    height: calc(min(max(calc(95vh * 3 / 4), 33.75rem), calc(100vw * 3 / 4)) + 1rem);
+    height: calc(
+      min(max(calc(95vh * 3 / 4), 33.75rem), calc(100vw * 3 / 4)) + 1rem
+    );
   }
 
   .quickplay-container {
@@ -23,7 +25,7 @@
 }
 
 .quickplay-carousel {
-  background: #ece9d7
+  background: #ece9d7;
 }
 
 .carousel-item {

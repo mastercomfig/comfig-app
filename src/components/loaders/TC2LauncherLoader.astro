@@ -21,7 +21,7 @@
 
   class TC2LauncherLoader extends HTMLElement {
     async connectedCallback() {
-      await new Promise(resolve => setTimeout(resolve, 0)).then(() => {
+      await new Promise((resolve) => setTimeout(resolve, 0)).then(() => {
         if (document.readyState === "loading") {
           window.addEventListener("DOMContentLoaded", refreshLauncherElements);
         } else {

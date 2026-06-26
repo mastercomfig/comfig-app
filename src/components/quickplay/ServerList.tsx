@@ -79,7 +79,7 @@ export default function ServerList({
                   className="mb-0 mt-1"
                   style={{ fontWeight: 500, letterSpacing: "0.1rem" }}
                 >
-                  <span>
+                  <span className="tabular-nums">
                     <strong>Players</strong>: {server.players} /{" "}
                     {server.max_players}
                   </span>
@@ -88,7 +88,11 @@ export default function ServerList({
                   if (server.gametype.length < 1 || classicMode) return null;
 
                   const displayTags = server.gametype
-                    .map((tag: string) => TAG_DISPLAY_REMAP[tag] !== undefined ? TAG_DISPLAY_REMAP[tag] : tag)
+                    .map((tag: string) =>
+                      TAG_DISPLAY_REMAP[tag] !== undefined
+                        ? TAG_DISPLAY_REMAP[tag]
+                        : tag,
+                    )
                     .filter((tag: string | null) => tag !== null);
 
                   if (displayTags.length === 0) return null;

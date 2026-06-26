@@ -1,17 +1,24 @@
 // Quartz 5.3.7
 // Bootswatch
 
-
 // Variables
 
-$body-bg-image: linear-gradient(90deg, shade-color($cyan, 10%), shade-color($purple, 10%), shade-color($pink, 5%)) !default;
-$frosted-opacity: .3 !default;
+$body-bg-image: linear-gradient(
+  90deg,
+  shade-color($cyan, 10%),
+  shade-color($purple, 10%),
+  shade-color($pink, 5%)
+) !default;
+$frosted-opacity: 0.3 !default;
 
 // Mixins
 
 @mixin glass($opacity: $frosted-opacity, $bg: $white) {
   border: none;
-  box-shadow: inset 1px 1px $border-color, inset -1px -1px rgba($white, .1), $box-shadow;
+  box-shadow:
+    inset 1px 1px $border-color,
+    inset -1px -1px rgba($white, 0.1),
+    $box-shadow;
   @include frost($opacity, $bg);
 
   a {
@@ -19,13 +26,17 @@ $frosted-opacity: .3 !default;
   }
 
   .text-muted {
-    color: rgba($card-color, .7) !important;
+    color: rgba($card-color, 0.7) !important;
   }
 }
 
 @mixin frost($opacity: $frosted-opacity, $bg: $white) {
   background-color: transparent;
-  background-image: linear-gradient(125deg, rgba($bg, ($opacity)), rgba($bg, ($opacity - .1)) 70%);
+  background-image: linear-gradient(
+    125deg,
+    rgba($bg, ($opacity)),
+    rgba($bg, ($opacity - 0.1)) 70%
+  );
   backdrop-filter: blur(5px);
 }
 
@@ -65,18 +76,18 @@ body {
   }
 }
 
-.btn-group>.btn:not(:first-child),
-.btn-group>.btn-group:not(:first-child) {
+.btn-group > .btn:not(:first-child),
+.btn-group > .btn-group:not(:first-child) {
   margin-left: 0;
 }
 
-.btn-group-vertical>.btn:not(:first-child),
-.btn-group-vertical>.btn-group:not(:first-child) {
+.btn-group-vertical > .btn:not(:first-child),
+.btn-group-vertical > .btn-group:not(:first-child) {
   margin-top: 0;
 }
 
 .bg-light .btn {
-  background-color: rgba($black, .2);
+  background-color: rgba($black, 0.2);
 }
 
 // Forms
@@ -84,31 +95,41 @@ body {
 .input-group-text,
 .form-control::file-selector-button {
   background-color: transparent;
-  background-image: linear-gradient(125deg, rgba($white, .3), rgba($white, .2) 70%);
+  background-image: linear-gradient(
+    125deg,
+    rgba($white, 0.3),
+    rgba($white, 0.2) 70%
+  );
   backdrop-filter: blur(5px);
   border: none;
 }
 
 .form-control:hover:not(:disabled):not([readonly])::file-selector-button {
-  background-color: rgba($white, .1);
+  background-color: rgba($white, 0.1);
 }
 
 .input-group-text {
-  box-shadow: inset 1px 1px $border-color, inset -1px -1px rgba($white, .1);
+  box-shadow:
+    inset 1px 1px $border-color,
+    inset -1px -1px rgba($white, 0.1);
 }
 
-.input-group> :not(:first-child):not(.dropdown-menu):not(.valid-tooltip):not(.valid-feedback):not(.invalid-tooltip):not(.invalid-feedback) {
+.input-group
+  > :not(:first-child):not(.dropdown-menu):not(.valid-tooltip):not(
+    .valid-feedback
+  ):not(.invalid-tooltip):not(.invalid-feedback) {
   margin-left: 0;
   border-left: none;
 }
 
-.input-group:not(.has-validation)> :not(:last-child):not(.dropdown-toggle):not(.dropdown-menu),
-.input-group:not(.has-validation)>.dropdown-toggle:nth-last-child(n + 3) {
+.input-group:not(.has-validation)
+  > :not(:last-child):not(.dropdown-toggle):not(.dropdown-menu),
+.input-group:not(.has-validation) > .dropdown-toggle:nth-last-child(n + 3) {
   border-right: none;
 }
 
 .form-select:not([multiple]) {
-  transition: border-color .15s ease-in-out;
+  transition: border-color 0.15s ease-in-out;
 
   option {
     color: $black;
@@ -117,17 +138,17 @@ body {
 
 .bg-light .form-control {
   color: $gray-800;
-  border-color: rgba($black, .2);
+  border-color: rgba($black, 0.2);
 
   &::placeholder {
-    color: rgba($black, .2);
+    color: rgba($black, 0.2);
   }
 }
 
 // Navs
 
 .dropdown-menu {
-  @include glass(.3);
+  @include glass(0.3);
 }
 
 .nav-tabs {
@@ -146,11 +167,11 @@ body {
     }
   }
 
-  .nav-item:first-child>.nav-link {
+  .nav-item:first-child > .nav-link {
     border-radius: $border-radius 0 0 $border-radius;
   }
 
-  .nav-item:last-child>.nav-link {
+  .nav-item:last-child > .nav-link {
     border-radius: 0 $border-radius $border-radius 0;
   }
 
@@ -192,13 +213,13 @@ body {
   color: $white;
 
   @each $color, $value in $theme-colors {
-    $opacity: .7;
+    $opacity: 0.7;
 
     &-#{$color}::after {
       position: absolute;
       top: 0;
       left: 0;
-      width: .5rem;
+      width: 0.5rem;
       height: 100%;
       content: "";
       background-color: $value;
@@ -212,7 +233,7 @@ body {
 
 .badge {
   &.bg-secondary {
-    --bs-bg-opacity: .4;
+    --bs-bg-opacity: 0.4;
   }
 
   &.bg-light {
@@ -232,9 +253,7 @@ body {
   @each $color, $value in $theme-colors {
     @if ($color ==secondary) {
       --bs-secondary-rgb: transparent;
-    }
-
-    @else {
+    } @else {
       &.bg-#{$color} {
         background-image: none;
       }
@@ -242,7 +261,6 @@ body {
   }
 
   &.bg-light {
-
     .card-header,
     .card-body {
       color: $gray-800;

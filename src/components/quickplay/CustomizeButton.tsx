@@ -71,7 +71,10 @@ export default function CustomizeButton() {
   const availableSettings = quickplayStore.matchGroupSettings;
 
   const prefString = useMemo(() => {
-    const maxPlayerStatus = genMaxPlayerString(quickplayStore.maxPlayerCap, quickplayStore.classicMode);
+    const maxPlayerStatus = genMaxPlayerString(
+      quickplayStore.maxPlayerCap,
+      quickplayStore.classicMode,
+    );
     const critStatus = genPrefString(
       "random crits",
       quickplayStore.crits,
@@ -111,7 +114,9 @@ export default function CustomizeButton() {
     const dmgspreadDefault = quickplayStore.classicMode ? 0 : -1;
     const dmgspreadStatus = genPrefString(
       "damage spread",
-      quickplayStore.dmgspreadprefset ? quickplayStore.dmgspread : dmgspreadDefault,
+      quickplayStore.dmgspreadprefset
+        ? quickplayStore.dmgspread
+        : dmgspreadDefault,
       DMGSPREAD_STATUS,
     );
     let gamemodeString = "";
@@ -139,7 +144,11 @@ export default function CustomizeButton() {
       }
     }
     if (!availableSettings[quickplayStore.matchGroup]) {
-      console.log("[CustomizeButton] Did not find settings for matchgroup", quickplayStore.matchGroup, availableSettings);
+      console.log(
+        "[CustomizeButton] Did not find settings for matchgroup",
+        quickplayStore.matchGroup,
+        availableSettings,
+      );
     }
     const strings = [
       availableSettings[quickplayStore.matchGroup].has("gamemodes")

@@ -6,13 +6,16 @@
 
 <script>
   import { UAParser } from "ua-parser-js";
-  import { DeviceType } from 'ua-parser-js/enums';
+  import { DeviceType } from "ua-parser-js/enums";
 
   class TC2DownloadLoader extends HTMLElement {
     async connectedCallback() {
-      await new Promise(resolve => setTimeout(resolve, 0)).then(() => {
+      await new Promise((resolve) => setTimeout(resolve, 0)).then(() => {
         if (document.readyState === "loading") {
-          window.addEventListener("DOMContentLoaded", this.refreshDownloadButton.bind(this));
+          window.addEventListener(
+            "DOMContentLoaded",
+            this.refreshDownloadButton.bind(this),
+          );
         } else {
           this.refreshDownloadButton();
         }
@@ -25,11 +28,14 @@
       const os = parser.getOS().name;
       let downloadLink;
       if (device.type && !device.is(DeviceType.DESKTOP)) {
-        downloadLink = "https://github.com/mastercomfig/tc2-launcher/releases/latest";
+        downloadLink =
+          "https://github.com/mastercomfig/tc2-launcher/releases/latest";
       } else if (os === "Windows") {
-        downloadLink = "https://github.com/mastercomfig/tc2-launcher/releases/latest/download/TC2Launcher.exe";
+        downloadLink =
+          "https://github.com/mastercomfig/tc2-launcher/releases/latest/download/TC2Launcher.exe";
       } else {
-        downloadLink = "https://github.com/mastercomfig/tc2-launcher/releases/latest/download/TC2Launcher-linux";
+        downloadLink =
+          "https://github.com/mastercomfig/tc2-launcher/releases/latest/download/TC2Launcher-linux";
       }
       const downloadBtn = document.getElementById("tc2-download-btn");
       if (downloadBtn) {

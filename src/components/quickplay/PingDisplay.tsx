@@ -13,7 +13,7 @@ export default function PingDisplay({ ping, calcPingColor }) {
   return (
     <OverlayTrigger
       placement="top"
-      overlay={<Tooltip>Estimated ping: {roundPing}ms</Tooltip>}
+      overlay={<Tooltip>Estimated ping: <span className="tabular-nums">{roundPing}</span>ms</Tooltip>}
     >
       <span className={`fas fa-signal text-${pingColor}`}></span>
     </OverlayTrigger>
