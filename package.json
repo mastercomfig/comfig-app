@@ -38,6 +38,7 @@
     "@headlessui/react": "^2.2.10",
     "@heroicons/react": "^2.2.0",
     "@kindspells/astro-shield": "^1.7.1",
+    "@observablehq/plot": "^0.6.17",
     "@popperjs/core": "^2.11.8",
     "@sentry/astro": "^10.51.0",
     "@sentry/browser": "^10.51.0",

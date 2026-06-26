@@ -45,34 +45,42 @@ import HomePageLoader from "@components/loaders/HomePageLoader.astro";
         class="container d-flex align-items-center justify-content-center"
         style="min-height: 100vh"
       >
-        <div class="align-middle">
+        <div class="align-middle w-100">
           <div id="action-container" class="text-center">
-            <img
-              class="img-logo"
-              src="/img/mastercomfig_logo_transparent_i.svg"
-              alt="logo"
-            />
-            <h1 class="display-1" style="font-weight: 600">comfig</h1>
+            <div class="logo-hero">
+              <img
+                class="img-logo"
+                src="/img/mastercomfig_logo_transparent_i.svg"
+                alt="logo"
+              />
+              <h1 class="display-1 hero-title" style="font-weight: 700">
+                mastercomfig
+              </h1>
+            </div>
             <p
-              class="lead display-6"
-              style="letter-spacing: 0.25rem;font-weight: 100"
+              class="lead display-6 mb-4"
+              style="letter-spacing: 0.25rem; font-weight: 200;"
             >
               a modern customization framework
             </p>
-            <a class="btn btn-outline-secondary btn-lg" href="/app/">
-              <span class="far fa-window-maximize fa-fw"></span> App
-            </a>
-            <a class="btn btn-outline-secondary btn-lg" href="/huds/1">
-              <span class="fas fa-display fa-fw"></span> HUDs
-            </a>
-            <a class="btn btn-outline-secondary btn-lg" href="/hits/hs/1">
-              <span class="fas fa-volume-high fa-fw"></span> Hits
-            </a>
-            <a class="btn btn-outline-secondary btn-lg" href="/quickplay">
-              <span class="far fa-compass fa-fw"></span> Quickplay
-            </a>
-            <br /><br />
-            <p class="lead fw-light">
+            <div class="mb-4">
+              <a class="hero-btn" href="/app/">
+                <span class="far fa-window-maximize fa-fw"></span>App
+              </a>
+              <a class="hero-btn" href="/huds/1">
+                <span class="fas fa-display fa-fw"></span> HUDs
+              </a>
+              <a class="hero-btn" href="/hits/hs/1">
+                <span class="fas fa-volume-high fa-fw"></span> Hits
+              </a>
+              <a class="hero-btn" href="/quickplay">
+                <span class="far fa-compass fa-fw"></span> Quickplay
+              </a>
+              <!--<a class="hero-btn" href="/player-stats">
+                <span class="far fa-chart-bar fa-fw"></span> Stats
+              </a> -->
+            </div>
+            <p class="lead fw-light mb-4">
               <a href="https://docs.comfig.app/" rel="noopener"
                 >Docs <span class="fas fa-book"></span></a
               > &bull;
@@ -83,46 +91,41 @@ import HomePageLoader from "@components/loaders/HomePageLoader.astro";
                 >Support Me <span class="fas fa-heart"></span></a
               >
             </p>
-            <a href="https://teamcomtress.com">
-              <div
-                class="btn btn-lg btn-secondary text-start pt-4"
-                style={{
-                  maxWidth: "min(100vw, 700px)",
-                  opacity: "0.77",
-                }}
-              >
-                <div class="row">
-                  <div class="col-8">
-                    <h4 class="fw-bolder">
-                      <img
-                        src="/img/tc2/favicon.ico"
-                        alt=""
-                        class="d-inline"
-                        style="width: 16px; height: 16px;vertical-align: baseline"
-                      />
-                      Team Comtress 2
-                    </h4>
-                    <p class="lead">
-                      A new TF2 mod by comfig, constantly updated with
-                      everything you could ask for: performance optimizations,
-                      quality of life, bug fixes, and more!
-                    </p>
-                  </div>
-                  <div
-                    class="col-4 text-center d-flex align-items-center justify-content-center"
-                  >
-                    <div>
-                      <span class="fas fa-arrow-right"></span>
-                      <p>Download now</p>
-                    </div>
+            <a href="https://teamcomtress.com" class="tc2-card">
+              <div class="row align-items-center">
+                <div class="col-md-8">
+                  <h4 class="fw-bolder mb-2 text-white">
+                    <img
+                      src="/img/tc2/favicon.ico"
+                      alt=""
+                      class="d-inline me-2"
+                      style="width: 20px; height: 20px; vertical-align: text-bottom;"
+                    />
+                    Team Comtress 2
+                  </h4>
+                  <p class="lead mb-0 text-secondary" style="font-size: 1rem;">
+                    A new TF2 mod by mastercomfig, constantly updated with
+                    everything you could ask for: performance optimizations,
+                    quality of life, bug fixes, and more!
+                  </p>
+                </div>
+                <div
+                  class="col-md-4 text-center d-flex align-items-center justify-content-center border-start border-secondary-subtle mt-3 mt-md-0"
+                  style="min-height: 80px;"
+                >
+                  <div class="tc2-download">
+                    <span class="fas fa-arrow-right fa-2x mb-1 text-white"
+                    ></span>
+                    <p class="mb-0 fw-semibold text-white">Download now</p>
                   </div>
                 </div>
               </div>
             </a>
-            <br /><br />
           </div>
           <br />
-          <Sponsor />
+          <div class="container">
+            <Sponsor />
+          </div>
           <br />
           <br />
         </div>
@@ -146,7 +149,7 @@ import HomePageLoader from "@components/loaders/HomePageLoader.astro";
                 aria-valuemin={0}
                 aria-valuemax={100}
               >
-                <b style="font-weight: 900">322FPS</b>
+                <b class="tabular-nums" style="font-weight: 900">322FPS</b>
               </div>
             </div>
             <p>comfig low</p>
@@ -160,7 +163,7 @@ import HomePageLoader from "@components/loaders/HomePageLoader.astro";
                 aria-valuemin={0}
                 aria-valuemax={100}
               >
-                <b style="font-weight: 800">291FPS</b>
+                <b class="tabular-nums" style="font-weight: 800">291FPS</b>
               </div>
             </div>
             <p>Comanglia's config</p>
@@ -174,7 +177,7 @@ import HomePageLoader from "@components/loaders/HomePageLoader.astro";
                 aria-valuemin={0}
                 aria-valuemax={100}
               >
-                <b style="font-weight: 800">290FPS</b>
+                <b class="tabular-nums" style="font-weight: 800">290FPS</b>
               </div>
             </div>
             <p>m0re highfps</p>
@@ -188,7 +191,7 @@ import HomePageLoader from "@components/loaders/HomePageLoader.astro";
                 aria-valuemin={0}
                 aria-valuemax={100}
               >
-                <b style="font-weight: 800">270FPS</b>
+                <b class="tabular-nums" style="font-weight: 800">270FPS</b>
               </div>
             </div>
             <p>Chris maxframes</p>
@@ -202,7 +205,7 @@ import HomePageLoader from "@components/loaders/HomePageLoader.astro";
                 aria-valuemin={0}
                 aria-valuemax={100}
               >
-                <b style="font-weight: 800">257FPS</b>
+                <b class="tabular-nums" style="font-weight: 800">257FPS</b>
               </div>
             </div>
             <p>Rhapsody's config</p>

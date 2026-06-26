@@ -14,6 +14,7 @@ import tfmapImg from "@img/update/tfmap.webp";
 import Layout from "@layouts/Layout.astro";
 import "aos/dist/aos.css";
 import { getCollection } from "astro:content";
+import "@styles/tc2.scss";
 
 const news = (await getCollection("tc2News"))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
@@ -133,6 +134,7 @@ const patches = (await getCollection("tc2Patches"))
     background-color: #bf2f15;
     padding: 0.5rem 1rem;
     border-radius: 4px;
+    z-index: 1001;
   }
   @media only screen and (min-width: 992px) {
     .update-cards .card:hover {
@@ -163,6 +165,202 @@ const patches = (await getCollection("tc2Patches"))
     .update-cards .card {
       margin-bottom: 0.75rem;
     }
+  }
+
+  #servers-status-container {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 48px;
+    margin-top: 0.5rem;
+  }
+
+  .servers-hero-badge {
+    display: inline-flex;
+    align-items: center;
+    background-color: rgba(30, 213, 182, 0.12);
+    border: 1px solid rgba(30, 213, 182, 0.35);
+    color: #1ed5b6;
+    padding: 0.6rem 1.25rem;
+    border-radius: 9999px;
+    font-weight: 700;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05rem;
+    text-decoration: none;
+    box-shadow:
+      0 4px 12px rgba(0, 0, 0, 0.2),
+      0 0 8px rgba(30, 213, 182, 0.1);
+    transition:
+      background-color 0.2s cubic-bezier(0.2, 0, 0, 1),
+      border-color 0.2s cubic-bezier(0.2, 0, 0, 1),
+      transform 0.1s cubic-bezier(0.2, 0, 0, 1),
+      box-shadow 0.2s cubic-bezier(0.2, 0, 0, 1);
+  }
+
+  .servers-hero-badge:hover {
+    background-color: rgba(30, 213, 182, 0.22);
+    border-color: rgba(30, 213, 182, 0.6);
+    color: #1ef5e3;
+    box-shadow:
+      0 6px 16px rgba(0, 0, 0, 0.3),
+      0 0 12px rgba(30, 213, 182, 0.2);
+    transform: translateY(-1px);
+  }
+
+  .servers-hero-badge:active {
+    transform: scale(0.96);
+  }
+
+  .servers-pulse-dot {
+    width: 10px;
+    height: 10px;
+    background-color: #1ed5b6;
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+    margin-right: 0.65rem;
+  }
+
+  .servers-pulse-dot::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #1ed5b6;
+    border-radius: 50%;
+    animation: servers-pulse-ring 1.8s cubic-bezier(0.2, 0, 0.4, 1) infinite;
+  }
+
+  @keyframes servers-pulse-ring {
+    0% {
+      transform: scale(1);
+      opacity: 0.85;
+    }
+    100% {
+      transform: scale(3.5);
+      opacity: 0;
+    }
+  }
+
+  .servers-text-link {
+    color: #1ed5b6;
+    font-weight: 700;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05rem;
+    text-decoration: none;
+    transition:
+      color 0.2s cubic-bezier(0.2, 0, 0, 1),
+      transform 0.1s cubic-bezier(0.2, 0, 0, 1);
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .servers-text-link:hover {
+    color: #1ef5e3;
+    text-decoration: underline;
+  }
+
+  .servers-text-link:active {
+    transform: scale(0.96);
+  }
+
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .playtest-card {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    background: linear-gradient(135deg, rgba(30, 213, 182, 0.15) 0%, rgba(30, 213, 182, 0.05) 100%);
+    border: 1px solid rgba(30, 213, 182, 0.35);
+    border-radius: 16px;
+    padding: 2rem 2.5rem;
+    margin-top: 1.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 16px rgba(30, 213, 182, 0.1);
+    max-width: 500px;
+    text-align: center;
+    transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1), border-color 0.2s cubic-bezier(0.2, 0, 0, 1);
+  }
+
+  .playtest-card:hover {
+    border-color: rgba(30, 213, 182, 0.6);
+    transform: translateY(-2px);
+  }
+
+  .playtest-badge {
+    display: inline-flex;
+    align-items: center;
+    background-color: rgba(30, 213, 182, 0.2);
+    color: #1ef5e3;
+    padding: 0.35rem 0.85rem;
+    border-radius: 9999px;
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1rem;
+    margin-bottom: 1rem;
+  }
+
+  .playtest-pulse-dot {
+    width: 8px;
+    height: 8px;
+    background-color: #1ef5e3;
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+    margin-right: 0.5rem;
+  }
+
+  .playtest-pulse-dot::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #1ef5e3;
+    border-radius: 50%;
+    animation: servers-pulse-ring 1.8s cubic-bezier(0.2, 0, 0.4, 1) infinite;
+  }
+
+  .playtest-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.05rem;
+  }
+
+  .playtest-desc {
+    font-size: 1rem;
+    color: #c2c2c2;
+    margin-bottom: 1.25rem;
+    font-weight: 400;
+    line-height: 1.5;
+  }
+
+  .btn-discord-playtest {
+    font-weight: 700;
+    padding: 0.6rem 1.75rem;
+    border-radius: 8px;
+    letter-spacing: 0.05rem;
+    text-transform: uppercase;
+    font-size: 0.95rem;
+    box-shadow: 0 4px 12px rgba(88, 101, 242, 0.2);
+    transition: transform 0.1s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .btn-discord-playtest:hover {
+    box-shadow: 0 6px 16px rgba(88, 101, 242, 0.3);
+  }
+
+  .btn-discord-playtest:active {
+    transform: scale(0.96);
   }
 </style>
 
@@ -237,12 +435,26 @@ const patches = (await getCollection("tc2Patches"))
               <small style="color:#c2c2c2;font-size:1rem">DOWNLOAD (60MB)</small
               >
             </a>
-            <br /><br />
-            <div class="bg-teal rounded-1 d-inline-block px-5 py-4 d-none">
-              <h2 class="display-4">
-                Playtest status: <strong class="fw-bold">ACTIVE</strong>
+            <br />
+            <br />
+            <div id="servers-status-container"></div>
+            <br />
+            <div id="playtest-status-block" class="playtest-card d-none">
+              <div class="playtest-badge">
+                <span class="playtest-pulse-dot"></span>
+                Playtest active
+              </div>
+              <h2 class="playtest-title">
+                Official Playtest is Live!
               </h2>
-              <h3 class="display-6">Go and play now!</h3>
+              <p class="playtest-desc">
+                Join our Discord community to participate and share your feedback.
+              </p>
+              <a
+                href="https://comfig.app/discord"
+                class="btn btn-primary fw-bold btn-discord btn-discord-playtest"
+                ><span class="fab fa-discord fa-fw" aria-hidden="true"></span> Join the Discord</a
+              >
             </div>
           </div>
         </div>
@@ -455,5 +667,64 @@ const patches = (await getCollection("tc2Patches"))
       </div>
     </div>
     <Footer product={"Team Comtress"} background="#212121" />
+
+    <script>
+      async function updateServerStatus() {
+        const container = document.getElementById("servers-status-container");
+        const playtestBlock = document.getElementById("playtest-status-block");
+        if (!container) return;
+
+        try {
+          const res = await fetch("https://api.teamcomtress.com/servers");
+          if (!res.ok) throw new Error("API error");
+          const data = await res.json();
+          const servers = data?.response?.servers || [];
+          const totalPlayers = servers.reduce(
+            (acc, s) => acc + (s.players || 0),
+            0,
+          );
+
+          if (totalPlayers > 0) {
+            const plural = totalPlayers == 1 ? "" : "s";
+            container.innerHTML = `
+              <a href="/servers" class="servers-hero-badge">
+                <span class="servers-pulse-dot"></span>
+                <span class="tabular-nums fw-bold">${totalPlayers}</span>&nbsp;player${plural} online
+              </a>
+            `;
+          } else {
+            container.innerHTML = `
+              <a href="/servers" class="servers-text-link">
+                View server list <span class="fas fa-chevron-right ms-2 small"></span>
+              </a>
+            `;
+          }
+
+          // Check if there is a playtest server online
+          const hasPlaytest = servers.some(
+            (s) => s.name && s.name.startsWith("Official Comtress Playtest Server"),
+          );
+          if (playtestBlock) {
+            if (hasPlaytest) {
+              playtestBlock.classList.remove("d-none");
+            } else {
+              playtestBlock.classList.add("d-none");
+            }
+          }
+        } catch (err) {
+          console.error("Failed to load server stats:", err);
+          container.innerHTML = `
+            <a href="/servers" class="servers-text-link">
+              View server list <span class="fas fa-chevron-right ms-2 small"></span>
+            </a>
+          `;
+          if (playtestBlock) {
+            playtestBlock.classList.add("d-none");
+          }
+        }
+      }
+
+      document.addEventListener("astro:page-load", updateServerStatus);
+    </script>
   </Body>
 </Layout>

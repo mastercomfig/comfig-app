@@ -110,7 +110,8 @@ const state = (set) => ({
   setRtd: (rtd) => set(() => ({ rtd })),
   dmgspread: -1,
   dmgspreadprefset: false,
-  setDmgspread: (dmgspread) => set(() => ({ dmgspread, dmgspreadprefset: true })),
+  setDmgspread: (dmgspread) =>
+    set(() => ({ dmgspread, dmgspreadprefset: true })),
   blocklist: new Set([]),
   addBlocklist: (steamid) =>
     set((state) => {

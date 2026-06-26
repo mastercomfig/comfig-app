@@ -12,7 +12,11 @@ import * as Sentry from "@sentry/browser";
 
 import fastClone from "@utils/fastClone";
 import { filterString } from "@utils/filter";
-import { MAX_PLAYER_OPTIONS, getMaxPlayerIndex, type GameServer } from "@utils/quickplay";
+import {
+  MAX_PLAYER_OPTIONS,
+  getMaxPlayerIndex,
+  type GameServer,
+} from "@utils/quickplay";
 
 import useQuickplayStore from "@store/quickplay";
 
@@ -100,7 +104,13 @@ const DISALLOWED_GAMETYPES_IN_SEARCHING = new Set(["dmgspread"]);
 
 const MAP_BAN_INDICES = [0, 1, 2, 3, 4, 5];
 
-function lerp(inA: number, inB: number, outA: number, outB: number, x: number): number {
+function lerp(
+  inA: number,
+  inB: number,
+  outA: number,
+  outB: number,
+  x: number,
+): number {
   return outA + ((outB - outA) * (x - inA)) / (inB - inA);
 }
 
@@ -125,7 +135,11 @@ export default function ServerFinder({ hash }: { hash: string }) {
       const elapsed = new Date().getTime() - lastTime;
       if (elapsed <= REJOIN_COOLDOWN) {
         const ageScore = elapsed / REJOIN_COOLDOWN;
-        penalty = (1.0 - ageScore) * (quickplayStore.classicMode ? REJOIN_PENALTY_CLASSIC : REJOIN_PENALTY);
+        penalty =
+          (1.0 - ageScore) *
+          (quickplayStore.classicMode
+            ? REJOIN_PENALTY_CLASSIC
+            : REJOIN_PENALTY);
         if (!quickplayStore.classicMode) {
           penalty *= penalty;
         }
@@ -252,7 +266,9 @@ export default function ServerFinder({ hash }: { hash: string }) {
   }, [extraMatchGroups]);
 
   useEffect(() => {
-    const matchGroups = getDefaultMatchGroups(quickplayStore.classicMode).filter((r) => r.active);
+    const matchGroups = getDefaultMatchGroups(
+      quickplayStore.classicMode,
+    ).filter((r) => r.active);
     const liveMatchGroups: object[] = [];
     const newMatchGroupSettings = {};
     for (const matchGroup of Object.keys(extraMatchGroups)) {
@@ -327,7 +343,11 @@ export default function ServerFinder({ hash }: { hash: string }) {
       if (mapMatchGroup !== expectedGamemode) {
         return false;
       }
-    } else if (expectedGamemode !== "any" && expectedGamemode !== "random" && expectedGamemode !== "pvp") {
+    } else if (
+      expectedGamemode !== "any" &&
+      expectedGamemode !== "random" &&
+      expectedGamemode !== "pvp"
+    ) {
       const mapGamemode = mapToGamemode[server.map];
       if (mapGamemode) {
         if (mapGamemode !== expectedGamemode) {
@@ -440,7 +460,13 @@ export default function ServerFinder({ hash }: { hash: string }) {
     if (ping <= PING_MIN && !quickplayStore.classicMode) {
       pingScore += 1.0;
     } else if (ping < PING_LOW) {
-      pingScore += lerp(quickplayStore.classicMode ? 0 : PING_MIN, PING_LOW, 1.0, PING_LOW_SCORE, ping);
+      pingScore += lerp(
+        quickplayStore.classicMode ? 0 : PING_MIN,
+        PING_LOW,
+        1.0,
+        PING_LOW_SCORE,
+        ping,
+      );
     } else if (ping < PING_MED) {
       pingScore += lerp(
         PING_LOW,
@@ -477,7 +503,12 @@ export default function ServerFinder({ hash }: { hash: string }) {
     return 2 * Math.round(num / 2.0);
   };
 
-  const scoreServerByPlayers = (humans: number, maxPlayers: number, partySize: number, classicMode: boolean) => {
+  const scoreServerByPlayers = (
+    humans: number,
+    maxPlayers: number,
+    partySize: number,
+    classicMode: boolean,
+  ) => {
     const newHumans = humans + partySize;
     const newTotalPlayers = newHumans;
 
@@ -508,8 +539,12 @@ export default function ServerFinder({ hash }: { hash: string }) {
       maxPlayers = FULL_PLAYERS;
     }
 
-    const countLow = classicMode ? Math.floor(realMaxPlayers / 3) : toNearestEven(maxPlayers / 3);
-    const countIdeal = classicMode ? Math.floor(realMaxPlayers * 0.8333333) : toNearestEven(maxPlayers * 0.72);
+    const countLow = classicMode
+      ? Math.floor(realMaxPlayers / 3)
+      : toNearestEven(maxPlayers / 3);
+    const countIdeal = classicMode
+      ? Math.floor(realMaxPlayers * 0.8333333)
+      : toNearestEven(maxPlayers * 0.72);
 
     const scoreLow = classicMode ? 0.2 : 0.1;
     const scoreIdeal = classicMode ? 1.5 : 1.6;
@@ -522,7 +557,13 @@ export default function ServerFinder({ hash }: { hash: string }) {
     } else if (!classicMode && newHumans <= maxPlayers) {
       return lerp(countIdeal, maxPlayers, scoreIdeal, scoreFuller, newHumans);
     } else {
-      return lerp(classicMode ? countIdeal : maxPlayers, realMaxPlayers, classicMode ? scoreIdeal : scoreFuller, scoreLow, newHumans);
+      return lerp(
+        classicMode ? countIdeal : maxPlayers,
+        realMaxPlayers,
+        classicMode ? scoreIdeal : scoreFuller,
+        scoreLow,
+        newHumans,
+      );
     }
   };
 
@@ -534,7 +575,12 @@ export default function ServerFinder({ hash }: { hash: string }) {
     const humans = server.players;
     const maxPlayers = server.max_players;
     const defaultScore = scoreServerByPlayers(humans, maxPlayers, 1, false);
-    const newScore = scoreServerByPlayers(humans, maxPlayers, partySize, quickplayStore.classicMode);
+    const newScore = scoreServerByPlayers(
+      humans,
+      maxPlayers,
+      partySize,
+      quickplayStore.classicMode,
+    );
     return newScore - defaultScore;
   };
 
@@ -543,7 +589,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
     const totalScore = server.score + userScore;
     let finalScore = totalScore + scoreServer(server);
     if (quickplayStore.classicMode) {
-      finalScore -= server.adj
+      finalScore -= server.adj;
     }
     return finalScore;
   };
@@ -761,7 +807,11 @@ export default function ServerFinder({ hash }: { hash: string }) {
         filtered += 1;
         continue;
       }
-      if (!quickplayStore.classicMode && quickplayStore.searching === 1 && server.gametype.some((t) => DISALLOWED_GAMETYPES_IN_SEARCHING.has(t))) {
+      if (
+        !quickplayStore.classicMode &&
+        quickplayStore.searching === 1 &&
+        server.gametype.some((t) => DISALLOWED_GAMETYPES_IN_SEARCHING.has(t))
+      ) {
         filtered += 1;
         continue;
       }
@@ -777,9 +827,15 @@ export default function ServerFinder({ hash }: { hash: string }) {
           if (pct === 1) {
             setAllFiltered(true);
             const sortedServers = curServers.sort((a, b) => b.score - a.score);
-            setFilteredServers(quickplayStore.classicMode ? sortedServers.slice(0, 20) : sortedServers);
+            setFilteredServers(
+              quickplayStore.classicMode
+                ? sortedServers.slice(0, 20)
+                : sortedServers,
+            );
           } else {
-            setFilteredServers(quickplayStore.classicMode ? curServers.slice(0, 20) : curServers);
+            setFilteredServers(
+              quickplayStore.classicMode ? curServers.slice(0, 20) : curServers,
+            );
           }
         },
         5 + 300 * pct,
@@ -1034,7 +1090,11 @@ export default function ServerFinder({ hash }: { hash: string }) {
   }, [quickplayStore.pinglimit]);
 
   if (!availableSettings[quickplayStore.matchGroup]) {
-    console.log("[ServerFinder] Did not find settings for matchgroup", quickplayStore.matchGroup, availableSettings);
+    console.log(
+      "[ServerFinder] Did not find settings for matchgroup",
+      quickplayStore.matchGroup,
+      availableSettings,
+    );
   }
 
   // Look, I know this is bad. I'll split it into components later.
@@ -1043,15 +1103,16 @@ export default function ServerFinder({ hash }: { hash: string }) {
       <div
         className={`position-absolute text-start z-2 top-0 end-0 text-info py-2 px-3`}
       >
-        {matchGroupPop[quickplayStore.matchGroup] !== undefined && !quickplayStore.classicMode && (
-          <p className="lead fw-bold">
-            {matchGroupPop[quickplayStore.matchGroup]}{" "}
-            {matchGroupPop[quickplayStore.matchGroup] === 1
-              ? "player"
-              : "players"}{" "}
-            online with your filters
-          </p>
-        )}
+        {matchGroupPop[quickplayStore.matchGroup] !== undefined &&
+          !quickplayStore.classicMode && (
+            <p className="lead fw-bold">
+              {matchGroupPop[quickplayStore.matchGroup]}{" "}
+              {matchGroupPop[quickplayStore.matchGroup] === 1
+                ? "player"
+                : "players"}{" "}
+              online with your filters
+            </p>
+          )}
       </div>
       <div
         className={`position-absolute text-start z-2 top-50 start-50 translate-middle bg-dark-subtle p-5${quickplayStore.customizing ? "" : " d-none"}`}
@@ -1096,38 +1157,48 @@ export default function ServerFinder({ hash }: { hash: string }) {
                   24-32 players
                 </label>
               </div>
-              {!quickplayStore.classicMode && <div className="form-check">
-                <input
-                  className="form-check-input"
-                  type="radio"
-                  readOnly
-                  name="server-capacity"
-                  id="server-capacity-2"
-                  checked={maxPlayerIndex === 2}
-                  onClick={() =>
-                    quickplayStore.setMaxPlayerCap(MAX_PLAYER_OPTIONS[2])
-                  }
-                />
-                <label className="form-check-label" htmlFor="server-capacity-2">
-                  18-32 players
-                </label>
-              </div>}
-              {!quickplayStore.classicMode && <div className="form-check">
-                <input
-                  className="form-check-input"
-                  type="radio"
-                  readOnly
-                  name="server-capacity"
-                  id="server-capacity-3"
-                  checked={maxPlayerIndex === 3}
-                  onClick={() =>
-                    quickplayStore.setMaxPlayerCap(MAX_PLAYER_OPTIONS[3])
-                  }
-                />
-                <label className="form-check-label" htmlFor="server-capacity-3">
-                  64-100 players
-                </label>
-              </div>}
+              {!quickplayStore.classicMode && (
+                <div className="form-check">
+                  <input
+                    className="form-check-input"
+                    type="radio"
+                    readOnly
+                    name="server-capacity"
+                    id="server-capacity-2"
+                    checked={maxPlayerIndex === 2}
+                    onClick={() =>
+                      quickplayStore.setMaxPlayerCap(MAX_PLAYER_OPTIONS[2])
+                    }
+                  />
+                  <label
+                    className="form-check-label"
+                    htmlFor="server-capacity-2"
+                  >
+                    18-32 players
+                  </label>
+                </div>
+              )}
+              {!quickplayStore.classicMode && (
+                <div className="form-check">
+                  <input
+                    className="form-check-input"
+                    type="radio"
+                    readOnly
+                    name="server-capacity"
+                    id="server-capacity-3"
+                    checked={maxPlayerIndex === 3}
+                    onClick={() =>
+                      quickplayStore.setMaxPlayerCap(MAX_PLAYER_OPTIONS[3])
+                    }
+                  />
+                  <label
+                    className="form-check-label"
+                    htmlFor="server-capacity-3"
+                  >
+                    64-100 players
+                  </label>
+                </div>
+              )}
               <div className="form-check">
                 <input
                   className="form-check-input"
@@ -1561,7 +1632,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
                 id="ping-range"
               ></input>
               <label htmlFor="ping-range" className="form-label">
-                {quickplayStore.pinglimit}ms
+                <span className="tabular-nums">{quickplayStore.pinglimit}</span>ms
               </label>
               <div className="form-check">
                 <input
@@ -1604,7 +1675,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
                 id="ping-range"
               ></input>
               <label htmlFor="ping-range" className="form-label">
-                {quickplayStore.partysize}{" "}
+                <span className="tabular-nums">{quickplayStore.partysize}</span>{" "}
                 {quickplayStore.partysize === 1 ? "player" : "players"}
               </label>
             </div>
@@ -1727,7 +1798,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
                       userSelect: "none",
                       cursor:
                         quickplayStore.gamemodes.size <= 1 &&
-                          quickplayStore.gamemodes.has(gm.code)
+                        quickplayStore.gamemodes.has(gm.code)
                           ? "auto"
                           : "pointer",
                     }}
@@ -1767,8 +1838,14 @@ export default function ServerFinder({ hash }: { hash: string }) {
                             placement="bottom"
                             rootClose
                             overlay={
-                              <Popover id={`popover-normal-${gm.code}`} className="bs-theme-dark text-start" onClick={(e) => e.stopPropagation()}>
-                                <Popover.Body style={{ whiteSpace: "pre-wrap" }}>
+                              <Popover
+                                id={`popover-normal-${gm.code}`}
+                                className="bs-theme-dark text-start"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                <Popover.Body
+                                  style={{ whiteSpace: "pre-wrap" }}
+                                >
                                   {gm.detail}
                                 </Popover.Body>
                               </Popover>
@@ -1944,8 +2021,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
                     height: "90px",
                     objectFit: "cover",
                     borderRadius: "0.1rem",
-                    boxShadow:
-                      "0 0.125rem 0.25rem rgba(0, 0, 0, 0.5)",
+                    boxShadow: "0 0.125rem 0.25rem rgba(0, 0, 0, 0.5)",
                   }}
                 />
               )}
@@ -1973,11 +2049,11 @@ export default function ServerFinder({ hash }: { hash: string }) {
               )}
             {(quickplayStore.lastServer?.players > 0 ||
               quickplayStore.found === 2) && (
-                <span>
-                  <strong>Players</strong>: {quickplayStore.lastServer?.players} /
-                  {quickplayStore.lastServer?.max_players}
-                </span>
-              )}
+              <span className="tabular-nums">
+                <strong>Players</strong>: {quickplayStore.lastServer?.players} /
+                {quickplayStore.lastServer?.max_players}
+              </span>
+            )}
           </h4>
           {quickplayStore.lastServer?.players > 0 &&
             quickplayStore.lastServer?.players <= 8 &&
