@@ -1,0 +1,69 @@
+---
+
+---
+
+<tc2-home-loader></tc2-home-loader>
+
+<script>
+  class TC2HomeLoader extends HTMLElement {
+    async connectedCallback() {
+      const container = document.getElementById("servers-status-container");
+      const playtestBlock = document.getElementById("playtest-status-block");
+      if (!container) return;
+
+      try {
+        const res = await fetch("https://api.teamcomtress.com/servers");
+        if (!res.ok) throw new Error("API error");
+        const data = await res.json();
+        const servers = data?.response?.servers || [];
+        const totalPlayers = servers.reduce(
+          (acc, s) => acc + (s.players || 0),
+          0,
+        );
+
+        if (totalPlayers > 0) {
+          const plural = totalPlayers == 1 ? "" : "s";
+          container.innerHTML = `
+            <a href="/servers" class="servers-hero-badge">
+              <span class="servers-pulse-dot"></span>
+              <span class="tabular-nums fw-bold">${totalPlayers}</span>&nbsp;player${plural} online
+            </a>
+          `;
+        } else {
+          container.innerHTML = `
+            <a href="/servers" class="servers-text-link">
+              View server list <span class="fas fa-chevron-right ms-2 small"></span>
+            </a>
+          `;
+        }
+
+        // Check if there is a playtest server online
+        const hasPlaytest = servers.some(
+          (s) =>
+            s.name && s.name.startsWith("Official Comtress Playtest Server"),
+        );
+        if (playtestBlock) {
+          if (hasPlaytest) {
+            playtestBlock.classList.remove("d-none");
+          } else {
+            playtestBlock.classList.add("d-none");
+          }
+        }
+      } catch (err) {
+        console.error("Failed to load server stats:", err);
+        container.innerHTML = `
+          <a href="/servers" class="servers-text-link">
+            View server list <span class="fas fa-chevron-right ms-2 small"></span>
+          </a>
+        `;
+        if (playtestBlock) {
+          playtestBlock.classList.add("d-none");
+        }
+      }
+    }
+  }
+
+  if (!customElements.get("tc2-home-loader")) {
+    customElements.define("tc2-home-loader", TC2HomeLoader);
+  }
+</script>
