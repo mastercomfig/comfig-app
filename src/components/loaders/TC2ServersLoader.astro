@@ -1,0 +1,272 @@
+---
+---
+<tc2-servers-loader></tc2-servers-loader>
+
+<script>
+  class TC2ServersLoader extends HTMLElement {
+    allServers: any[] = [];
+
+    connectedCallback() {
+      const searchInput = document.getElementById("search-input");
+      if (!searchInput) return;
+
+      const sortSelect = document.getElementById("sort-select");
+      const populatedSwitch = document.getElementById(
+        "populated-only-switch",
+      );
+      const retryBtn = document.getElementById("retry-btn");
+
+      if (searchInput) searchInput.addEventListener("input", () => this.filterAndSort());
+      if (sortSelect) sortSelect.addEventListener("change", () => this.filterAndSort());
+      if (populatedSwitch)
+        populatedSwitch.addEventListener("change", () => this.filterAndSort());
+      if (retryBtn) retryBtn.addEventListener("click", () => this.fetchServers());
+
+      this.fetchServers();
+    }
+
+    // Helpers
+    getFlagEmoji(countryCode) {
+      if (!countryCode) return "🌐";
+      const code = countryCode.toUpperCase();
+      if (code === "US") return "🇺🇸";
+      if (code === "DE") return "🇩🇪";
+      if (code === "AU") return "🇦🇺";
+      if (code === "SG") return "🇸🇬";
+      if (code === "PE") return "🇵🇪";
+      if (code === "KR") return "🇰🇷";
+      if (code === "CA") return "🇨🇦";
+      if (code === "GB" || code === "UK") return "🇬🇧";
+      if (code === "FR") return "🇫🇷";
+      if (code === "JP") return "🇯🇵";
+      if (code === "BR") return "🇧🇷";
+
+      const codePoints = code
+        .split("")
+        .map((char) => 127397 + char.charCodeAt(0));
+      try {
+        return String.fromCodePoint(...codePoints);
+      } catch (e) {
+        return "🌐";
+      }
+    }
+
+    formatMap(mapName) {
+      if (!mapName) return "Unknown Map";
+      const parts = mapName.split("_");
+      if (parts.length > 1) {
+        const prefix = parts[0];
+        const rest = parts.slice(1).join("_");
+        return `<span class="badge bg-secondary-subtle text-muted me-1">${prefix}</span><strong>${rest}</strong>`;
+      }
+      return `<strong>${mapName}</strong>`;
+    }
+
+    // Convert number of ping to styled icon class
+    getPingIconColor(ping) {
+      if (ping === undefined || ping === null) return "";
+      if (ping < 80) return "text-success";
+      if (ping < 150) return "text-warning";
+      return "text-danger";
+    }
+
+    // Copy IP Action
+    async copyIP(btn: HTMLButtonElement, addr: string) {
+      try {
+        await navigator.clipboard.writeText(`connect ${addr}`);
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = '<span class="fas fa-check"></span>';
+        btn.classList.add("btn-success");
+        btn.setAttribute("title", "Copied!");
+        setTimeout(() => {
+          btn.innerHTML = originalHTML;
+          btn.classList.remove("btn-success");
+          btn.setAttribute("title", "Copy IP Address");
+        }, 1500);
+      } catch (err) {
+        console.error("Failed to copy IP", err);
+      }
+    }
+
+    // Render grid
+    renderServers(servers) {
+      const grid = document.getElementById("servers-grid");
+      const emptyState = document.getElementById("empty-state");
+      const totalCountEl = document.getElementById("total-players-count");
+
+      if (!grid) return;
+
+      // Update total players
+      const totalPlayers = servers.reduce(
+        (acc, s) => acc + (s.players || 0),
+        0,
+      );
+      if (totalCountEl) {
+        totalCountEl.textContent = totalPlayers.toString();
+      }
+
+      if (servers.length === 0) {
+        grid.style.display = "none";
+        if (emptyState) emptyState.style.display = "block";
+        return;
+      }
+
+      if (emptyState) emptyState.style.display = "none";
+      grid.innerHTML = "";
+
+      servers.forEach((s: any) => {
+        const col = document.createElement("div");
+        col.className = "col-md-6 col-lg-4 d-flex align-items-stretch";
+
+        const pct = Math.min(
+          ((s.players || 0) / (s.max_players || 24)) * 100,
+          100,
+        );
+
+        // Players text format
+        let playersText = `<span class="tabular-nums fw-bold">${s.players || 0}</span>`;
+        if (s.bot_count > 0) {
+          playersText += ` <span class="text-secondary small">(${s.bot_count} bots)</span>`;
+        }
+        playersText += ` / <span class="tabular-nums">${s.max_players || 24}</span>`;
+
+        const card = document.createElement("div");
+        card.className = "card server-card w-100";
+
+        card.innerHTML = `
+          <div class="server-card-body card-body">
+            <div class="d-flex align-items-start justify-content-between mb-3">
+              <h5 class="server-title mb-0">${s.name || "TC2 Server"}</h5>
+              <button class="btn btn-secondary btn-copy-topright btn-copy ms-2" title="Copy IP Address" data-addr="${s.addr}">
+                <span class="fas fa-copy"></span>
+              </button>
+            </div>
+            <div class="d-flex flex-wrap gap-2 mb-3">
+              <div class="info-badge">
+                <span class="text-light">${this.formatMap(s.map)}</span>
+              </div>
+              <div class="info-badge" title="Region">
+                <span class="me-1">${this.getFlagEmoji(s.location)}</span>
+                <span class="text-light small fw-bold">${s.location || "UN"}</span>
+              </div>
+              ${
+                s.ping
+                  ? `
+                <div class="info-badge" title="Ping">
+                  <span class="fas fa-signal me-1.5 ${this.getPingIconColor(s.ping)}"></span> <span class="tabular-nums">${s.ping} ms</span>
+                </div>
+              `
+                  : ""
+              }
+            </div>
+          </div>
+          <div class="card-footer server-card-footer border-secondary-dark">
+            <div class="d-flex justify-content-between align-items-center mb-1 text-light small">
+              <span class="fw-semibold">Players</span>
+              <span>${playersText}</span>
+            </div>
+            <div class="progress" style="height: 8px;">
+              <div class="progress-bar bg-teal" role="progressbar" style="width: ${pct}%" aria-valuenow="${s.players || 0}" aria-valuemin="0" aria-valuemax="${s.max_players || 24}"></div>
+            </div>
+          </div>
+        `;
+
+        // Add Copy event listener
+        const copyBtn = card.querySelector(".btn-copy");
+        if (copyBtn) {
+          copyBtn.addEventListener("click", () =>
+            this.copyIP(copyBtn as HTMLButtonElement, s.addr),
+          );
+        }
+
+        col.appendChild(card);
+        grid.appendChild(col);
+      });
+
+      grid.style.display = "flex";
+    }
+
+    // Filter and Sort
+    filterAndSort() {
+      const searchInput = document.getElementById(
+        "search-input",
+      ) as HTMLInputElement | null;
+      const sortSelect = document.getElementById(
+        "sort-select",
+      ) as HTMLSelectElement | null;
+      const populatedSwitch = document.getElementById(
+        "populated-only-switch",
+      ) as HTMLInputElement | null;
+
+      const searchVal = searchInput ? searchInput.value.toLowerCase() : "";
+      const sortVal = sortSelect ? sortSelect.value : "score";
+      const populatedOnly = populatedSwitch ? populatedSwitch.checked : false;
+
+      let filtered = (this.allServers as any[]).filter((s: any) => {
+        const matchesSearch =
+          (s.name && s.name.toLowerCase().includes(searchVal)) ||
+          (s.map && s.map.toLowerCase().includes(searchVal)) ||
+          (s.location && s.location.toLowerCase().includes(searchVal));
+
+        const matchesPopulated = !populatedOnly || s.players > 0;
+
+        return matchesSearch && matchesPopulated;
+      });
+
+      // Sorting
+      filtered.sort((a: any, b: any) => {
+        if (sortVal === "score") {
+          const scoreA = (a.players || 0) * 20 - (a.ping || 150);
+          const scoreB = (b.players || 0) * 20 - (b.ping || 150);
+          return scoreB - scoreA;
+        }
+        if (sortVal === "players-desc") {
+          return (b.players || 0) - (a.players || 0);
+        }
+        if (sortVal === "players-asc") {
+          return (a.players || 0) - (b.players || 0);
+        }
+        if (sortVal === "ping-asc") {
+          return (a.ping || 999) - (b.ping || 999);
+        }
+        if (sortVal === "name-asc") {
+          return (a.name || "").localeCompare(b.name || "");
+        }
+        return 0;
+      });
+
+      this.renderServers(filtered);
+    }
+
+    // Fetch servers list
+    async fetchServers() {
+      const spinner = document.getElementById("loading-spinner");
+      const errorMsg = document.getElementById("error-message");
+      const grid = document.getElementById("servers-grid");
+      const emptyState = document.getElementById("empty-state");
+
+      if (spinner) spinner.style.display = "block";
+      if (errorMsg) errorMsg.style.display = "none";
+      if (grid) grid.style.display = "none";
+      if (emptyState) emptyState.style.display = "none";
+
+      try {
+        const res = await fetch("https://api.teamcomtress.com/servers");
+        if (!res.ok) throw new Error("Failed to fetch servers");
+        const data = await res.json();
+        this.allServers = data?.response?.servers || [];
+
+        if (spinner) spinner.style.display = "none";
+        this.filterAndSort();
+      } catch (err) {
+        console.error(err);
+        if (spinner) spinner.style.display = "none";
+        if (errorMsg) errorMsg.style.display = "block";
+      }
+    }
+  }
+
+  if (!customElements.get("tc2-servers-loader")) {
+    customElements.define("tc2-servers-loader", TC2ServersLoader);
+  }
+</script>
