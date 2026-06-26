@@ -6,12 +6,24 @@
   <slot />
 
   <script>
+    import { getNonce } from "@utils/nonce";
+
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     document.addEventListener("astro:page-load", () => {
       if (!mediaQuery.matches) {
         setTimeout(() => {
           document.documentElement.style.scrollBehavior = "smooth";
         }, 33);
+      }
+    });
+
+    document.addEventListener("astro:before-swap", (event) => {
+      const nonce = getNonce();
+      if (nonce) {
+        const newScripts = event.newDocument.querySelectorAll("script");
+        newScripts.forEach((script) => {
+          script.setAttribute("nonce", nonce);
+        });
       }
     });
   </script>
