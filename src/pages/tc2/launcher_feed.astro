@@ -1,13 +1,13 @@
 ---
 import AdvRedirector from "@components/AdvRedirector.astro";
 import Body from "@components/Body.astro";
-import Footer from "@components/Footer.astro";
 import BaseHead from "@components/head/BaseHead.astro";
 import ImportHead from "@components/head/ImportHead.astro";
 import MainHead from "@components/head/MainHead.astro";
 import PreloadHead from "@components/head/PreloadHead.astro";
 import Layout from "@layouts/Layout.astro";
 import { getCollection } from "astro:content";
+import { resolveTC2Path } from "@utils/tc2Router";
 
 const news = (await getCollection("tc2News"))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
@@ -103,8 +103,8 @@ const allPosts = news.concat(patches).sort((a, b) => {
                             class="stretched-link"
                             href={
                               post.data.update
-                                ? `/updates/${post.data.update}?launcher=1`
-                                : `/newsLauncher/${post.id}?launcher=1`
+                                ? resolveTC2Path(`/updates/${post.data.update}?launcher=1`, Astro.url.pathname)
+                                : resolveTC2Path(`/newsLauncher/${post.id}?launcher=1`, Astro.url.pathname)
                             }
                           >
                             Read more »
@@ -167,7 +167,7 @@ const allPosts = news.concat(patches).sort((a, b) => {
                         <small class="text-muted">
                           <a
                             class="stretched-link"
-                            href={`/patchesLauncher/${post.id}?launcher=1`}
+                            href={resolveTC2Path(`/patchesLauncher/${post.id}?launcher=1`, Astro.url.pathname)}
                           >
                             Read more »
                           </a>

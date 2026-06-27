@@ -15,9 +15,30 @@
           document.documentElement.style.scrollBehavior = "smooth";
         }, 33);
       }
+
+      document.querySelectorAll("video").forEach((video) => {
+        try {
+          video.load();
+          if (video.hasAttribute("autoplay")) {
+            video.play().catch((err) => {
+              console.warn("Failed to autoplay video on page load:", err);
+            });
+          }
+        } catch (e) {
+          console.warn("Failed to reset video element on page load:", e);
+        }
+      });
     });
 
     document.addEventListener("astro:before-swap", (event) => {
+      document.querySelectorAll("video").forEach((video) => {
+        try {
+          video.pause();
+        } catch (e) {
+          console.warn("Failed to pause video element during navigation:", e);
+        }
+      });
+
       const nonce = getNonce();
       if (nonce) {
         const newScripts = event.newDocument.querySelectorAll("script");

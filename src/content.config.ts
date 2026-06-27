@@ -12,6 +12,7 @@ const tc2News = defineCollection({
     date: z.date(),
     draft: z.boolean().optional(),
     update: z.string().optional(),
+    image: z.string().optional(),
   }),
 });
 const tc2Patches = defineCollection({

@@ -32,6 +32,7 @@ import linesImg from "@img/tc2/rematch/tc2lines.png";
 import Layout from "@layouts/Layout.astro";
 import { Content as NotesBlock } from "@posts/data/rematch.mdx";
 import TC2RematchLoader from "@components/loaders/TC2RematchLoader.astro";
+import { resolveTC2Path } from "@utils/tc2Router";
 
 import "@fontsource-variable/inter/wght.css";
 import "@fontsource-variable/oswald/wght.css";
@@ -546,7 +547,7 @@ import "@fontsource-variable/teko/wght.css";
       class="rematch-hero text-center"
       style=`border-bottom: 1px solid #333`
     >
-      <a href="/">
+      <a href={resolveTC2Path("/", Astro.url.pathname)}>
         <img
           src={tfLogoImg.src}
           alt="TC2 Logo"

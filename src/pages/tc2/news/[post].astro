@@ -9,6 +9,7 @@ import PreloadHead from "@components/head/PreloadHead.astro";
 import tfLogoImg from "@img/tc2/team-comtress-2.png";
 import Layout from "@layouts/Layout.astro";
 import { getCollection, render } from "astro:content";
+import { resolveTC2Path } from "@utils/tc2Router";
 
 export async function getStaticPaths() {
   const news = (await getCollection("tc2News")).filter(
@@ -43,7 +44,7 @@ const { Content } = await render(post);
   <Body>
     <AdvRedirector />
     <div class="text-center p-4 hide-launcher">
-      <a href="/">
+      <a href={resolveTC2Path("/", Astro.url.pathname)}>
         <img
           class="img-logo-sm"
           src={tfLogoImg.src}
@@ -53,7 +54,7 @@ const { Content } = await render(post);
     </div>
 
     <section class="container p-4 bg-dark mb-4">
-      <a class="show-launcher" style="display:none" href="/launcher_feed">
+      <a class="show-launcher" style="display:none" href={resolveTC2Path("/launcher_feed", Astro.url.pathname)}>
         <span class="fas fa-angles-left fa-fw"></span> Back
       </a>
       <h1>{post.data.title}</h1>
