@@ -1,5 +1,7 @@
 ---
+
 ---
+
 <tc2-servers-loader></tc2-servers-loader>
 
 <script>
@@ -11,16 +13,21 @@
       if (!searchInput) return;
 
       const sortSelect = document.getElementById("sort-select");
-      const populatedSwitch = document.getElementById(
-        "populated-only-switch",
-      );
+      const populatedSwitch = document.getElementById("populated-only-switch");
       const retryBtn = document.getElementById("retry-btn");
 
-      if (searchInput) searchInput.addEventListener("input", () => this.filterAndSort());
-      if (sortSelect) sortSelect.addEventListener("change", () => this.filterAndSort());
-      if (populatedSwitch)
+      if (searchInput) {
+        searchInput.addEventListener("input", () => this.filterAndSort());
+      }
+      if (sortSelect) {
+        sortSelect.addEventListener("change", () => this.filterAndSort());
+      }
+      if (populatedSwitch) {
         populatedSwitch.addEventListener("change", () => this.filterAndSort());
-      if (retryBtn) retryBtn.addEventListener("click", () => this.fetchServers());
+      }
+      if (retryBtn) {
+        retryBtn.addEventListener("click", () => this.fetchServers());
+      }
 
       this.fetchServers();
     }
