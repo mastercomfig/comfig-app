@@ -5,11 +5,16 @@
 <tc2-home-loader></tc2-home-loader>
 
 <script>
+  import { resolveTC2Path } from "@utils/tc2Router";
+
   class TC2HomeLoader extends HTMLElement {
     async connectedCallback() {
       const container = document.getElementById("servers-status-container");
       const playtestBlock = document.getElementById("playtest-status-block");
       if (!container) return;
+
+      const currentPath = window.location.pathname;
+      const serversUrl = resolveTC2Path("/servers", currentPath);
 
       try {
         const res = await fetch("https://api.teamcomtress.com/servers");
@@ -24,14 +29,14 @@
         if (totalPlayers > 0) {
           const plural = totalPlayers == 1 ? "" : "s";
           container.innerHTML = `
-            <a href="/servers" class="servers-hero-badge">
+            <a href="${serversUrl}" class="servers-hero-badge">
               <span class="servers-pulse-dot"></span>
               <span class="tabular-nums fw-bold">${totalPlayers}</span>&nbsp;player${plural} online
             </a>
           `;
         } else {
           container.innerHTML = `
-            <a href="/servers" class="servers-text-link">
+            <a href="${serversUrl}" class="servers-text-link">
               View server list <span class="fas fa-chevron-right ms-2 small"></span>
             </a>
           `;
@@ -52,7 +57,7 @@
       } catch (err) {
         console.error("Failed to load server stats:", err);
         container.innerHTML = `
-          <a href="/servers" class="servers-text-link">
+          <a href="${serversUrl}" class="servers-text-link">
             View server list <span class="fas fa-chevron-right ms-2 small"></span>
           </a>
         `;
