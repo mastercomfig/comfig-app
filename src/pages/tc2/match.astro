@@ -8,6 +8,7 @@ import MainHead from "@components/head/MainHead.astro";
 import PreloadHead from "@components/head/PreloadHead.astro";
 import tfLogoImg from "@img/tc2/team-comtress-2.png";
 import Layout from "@layouts/Layout.astro";
+import { resolveTC2Path } from "@utils/tc2Router";
 ---
 
 <Layout>
@@ -27,7 +28,7 @@ import Layout from "@layouts/Layout.astro";
   <Body>
     <AdvRedirector />
     <div class="text-center p-4 hide-launcher">
-      <a href="/">
+      <a href={resolveTC2Path("/", Astro.url.pathname)}>
         <img
           class="img-logo-sm"
           src={tfLogoImg.src}

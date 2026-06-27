@@ -27,6 +27,7 @@ import { Content as GameplayBlock } from "@posts/data/blockbuster-gameplay.mdx";
 import { Content as OtherBlock } from "@posts/data/blockbuster-other.mdx";
 import { Content as PerfBlock } from "@posts/data/blockbuster-perf.mdx";
 import { Image } from "astro:assets";
+import { resolveTC2Path } from "@utils/tc2Router";
 ---
 
 <style>
@@ -205,7 +206,7 @@ import { Image } from "astro:assets";
             style="min-height: var(--movie-poster-height)"
           >
             <div>
-              <a href="/">
+              <a href={resolveTC2Path("/", Astro.url.pathname)}>
                 <img
                   class="img-logo-sm"
                   src={tfLogoImg.src}

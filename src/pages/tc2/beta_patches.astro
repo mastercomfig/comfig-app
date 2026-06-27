@@ -9,6 +9,7 @@ import PreloadHead from "@components/head/PreloadHead.astro";
 import tfLogoImg from "@img/tc2/team-comtress-2.png";
 import Layout from "@layouts/Layout.astro";
 import { getCollection } from "astro:content";
+import { resolveTC2Path } from "@utils/tc2Router";
 
 const patches = (await getCollection("tc2Patches"))
   .sort(
@@ -36,7 +37,7 @@ const patches = (await getCollection("tc2Patches"))
   <Body>
     <AdvRedirector />
     <div class="text-center p-4">
-      <a href="/">
+      <a href={resolveTC2Path("/", Astro.url.pathname)}>
         <img
           class="img-logo-sm"
           src={tfLogoImg.src}
@@ -54,7 +55,7 @@ const patches = (await getCollection("tc2Patches"))
               <div class="card">
                 <div class="card-body">
                   <h5 class="card-title m-0 text-center">
-                    <a class="stretched-link" href={`/patches/${post.id}`}>
+                    <a class="stretched-link" href={resolveTC2Path(`/patches/${post.id}`, Astro.url.pathname)}>
                       {post.data.date.toLocaleDateString("en-US", {
                         year: "numeric",
                         month: "long",

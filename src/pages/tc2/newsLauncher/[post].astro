@@ -1,13 +1,13 @@
 ---
 import AdvRedirector from "@components/AdvRedirector.astro";
 import Body from "@components/Body.astro";
-import Footer from "@components/Footer.astro";
 import BaseHead from "@components/head/BaseHead.astro";
 import ImportHead from "@components/head/ImportHead.astro";
 import MainHead from "@components/head/MainHead.astro";
 import PreloadHead from "@components/head/PreloadHead.astro";
 import Layout from "@layouts/Layout.astro";
 import { getCollection, render } from "astro:content";
+import { resolveTC2Path } from "@utils/tc2Router";
 
 export async function getStaticPaths() {
   const news = (await getCollection("tc2News")).filter(
@@ -43,7 +43,7 @@ const { Content } = await render(post);
     <AdvRedirector />
 
     <section class="container p-4 bg-dark mb-4">
-      <a href="/launcher_feed">
+      <a href={resolveTC2Path("/launcher_feed", Astro.url.pathname)}>
         <span class="fas fa-angles-left fa-fw"></span> Back
       </a>
       <h1>{post.data.title}</h1>

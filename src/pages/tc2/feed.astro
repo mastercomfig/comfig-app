@@ -9,6 +9,7 @@ import PreloadHead from "@components/head/PreloadHead.astro";
 import tfLogoImg from "@img/tc2/team-comtress-2.png";
 import Layout from "@layouts/Layout.astro";
 import { getCollection } from "astro:content";
+import { resolveTC2Path } from "@utils/tc2Router";
 
 const news = (await getCollection("tc2News"))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
@@ -40,7 +41,7 @@ const patches = (await getCollection("tc2Patches"))
   <Body>
     <AdvRedirector />
     <div class="text-center p-4">
-      <a href="/">
+      <a href={resolveTC2Path("/", Astro.url.pathname)}>
         <img
           class="img-logo-sm"
           src={tfLogoImg.src}
@@ -67,8 +68,8 @@ const patches = (await getCollection("tc2Patches"))
                       class="stretched-link"
                       href={
                         post.data.update
-                          ? `/updates/${post.data.update}`
-                          : `/news/${post.id}`
+                          ? resolveTC2Path(`/updates/${post.data.update}`, Astro.url.pathname)
+                          : resolveTC2Path(`/news/${post.id}`, Astro.url.pathname)
                       }
                     >
                       Read more »
@@ -99,7 +100,7 @@ const patches = (await getCollection("tc2Patches"))
               <div class="card">
                 <div class="card-body">
                   <h5 class="card-title m-0 text-center">
-                    <a class="stretched-link" href={`/patches/${post.id}`}>
+                    <a class="stretched-link" href={resolveTC2Path(`/patches/${post.id}`, Astro.url.pathname)}>
                       {post.data.date.toLocaleDateString("en-US", {
                         year: "numeric",
                         month: "long",
@@ -116,7 +117,7 @@ const patches = (await getCollection("tc2Patches"))
         }
       </div>
       <p class="mt-4">
-        Looking for beta patch notes? Check out the <a href="/beta_patches"
+        Looking for beta patch notes? Check out the <a href={resolveTC2Path("/beta_patches", Astro.url.pathname)}
           >beta test patch list</a
         >.
       </p>
