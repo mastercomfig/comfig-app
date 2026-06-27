@@ -39,6 +39,26 @@ const patches = (await getCollection("tc2Patches"))
 <style>
   body {
     background: #2c2c2c;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  .display-1,
+  .display-2,
+  .display-3,
+  .display-4,
+  .display-5,
+  .display-6 {
+    text-wrap: balance;
+  }
+  p,
+  .lead {
+    text-wrap: pretty;
   }
   .header-links > a {
     color: #1ed5b6;
@@ -56,6 +76,12 @@ const patches = (await getCollection("tc2Patches"))
   }
   .btn-social {
     width: 100%;
+  }
+  .btn {
+    transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1), background-color 0.25s, border-color 0.25s;
+  }
+  .btn:active {
+    transform: scale(0.96) !important;
   }
   @media screen and (min-width: 992px) {
     .btn-social {
@@ -143,22 +169,26 @@ const patches = (await getCollection("tc2Patches"))
   }
   @media only screen and (min-width: 992px) {
     .update-cards .card:hover {
-      transform: scale(1.15);
+      transform: translateY(-6px) scale(1.03);
       z-index: 1000;
-      box-shadow: 0.25rem 0.25rem 1rem rgba(0, 0, 0, 0.6);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+      border-color: rgba(255, 255, 255, 0.25);
     }
 
     .update-cards .card {
-      transition: transform 0.3s ease;
+      transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.3s, border-color 0.3s;
       will-change: transform;
       margin-left: 1px;
       margin-right: 1px;
       z-index: 20;
+      outline: 1px solid rgba(255, 255, 255, 0.08);
+      outline-offset: -1px;
     }
 
     .update-cards .card-img-top {
       height: 200px;
       object-fit: cover;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
   }
 

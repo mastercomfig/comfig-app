@@ -28,6 +28,9 @@ import { Content as OtherBlock } from "@posts/data/blockbuster-other.mdx";
 import { Content as PerfBlock } from "@posts/data/blockbuster-perf.mdx";
 import { Image } from "astro:assets";
 import { resolveTC2Path } from "@utils/tc2Router";
+import AnimateOnScroll from "@components/loaders/AnimateOnScroll.astro";
+import TC2BlockbusterLoader from "@components/loaders/TC2BlockbusterLoader.astro";
+import "aos/dist/aos.css";
 ---
 
 <style>
@@ -85,6 +88,8 @@ import { resolveTC2Path } from "@utils/tc2Router";
     margin: auto;
     border: 5px solid white;
     box-shadow: 0 0 60px 10px #000;
+    position: relative;
+    z-index: 10;
   }
   @media only screen and (min-width: 976px) {
     .movie-poster {
@@ -95,6 +100,44 @@ import { resolveTC2Path } from "@utils/tc2Router";
     .movie-poster {
       aspect-ratio: initial;
     }
+  }
+  /* Curtain Opening Animation */
+  .curtain-panel {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    background-size: cover;
+    background-color: #1a1a1a; /* fallback solid color to prevent poster preview before images load */
+    transition:
+      transform 2s cubic-bezier(0.77, 0, 0.175, 1),
+      filter 2s cubic-bezier(0.77, 0, 0.175, 1),
+      opacity 2.2s cubic-bezier(0.77, 0, 0.175, 1);
+    pointer-events: none;
+    opacity: 1;
+    filter: blur(0px);
+  }
+  .curtain-left {
+    left: 0;
+    width: 51%; /* Overlaps the right curtain to avoid hairline gap */
+    z-index: 51;
+    background-position: left center;
+  }
+  .curtain-right {
+    right: 0;
+    width: 50%;
+    z-index: 50;
+    background-position: right center;
+  }
+  /* Parting, fading, and blurring curtains on open trigger */
+  .curtains-open .curtain-left {
+    transform: translateX(-100%);
+    opacity: 0;
+    filter: blur(30px);
+  }
+  .curtains-open .curtain-right {
+    transform: translateX(100%);
+    opacity: 0;
+    filter: blur(30px);
   }
   @font-face {
     font-family: "Monoton";
@@ -120,6 +163,10 @@ import { resolveTC2Path } from "@utils/tc2Router";
       U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
       U+2212, U+2215, U+FEFF, U+FFFD;
   }
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
   h1,
   h2,
   h4,
@@ -138,6 +185,7 @@ import { resolveTC2Path } from "@utils/tc2Router";
       "Helvetica Neue",
       Arial,
       sans-serif;
+    text-wrap: balance;
   }
   .display-1 {
     font-family:
@@ -148,6 +196,29 @@ import { resolveTC2Path } from "@utils/tc2Router";
       "Helvetica Neue",
       Arial,
       sans-serif;
+    text-wrap: balance;
+  }
+  p,
+  .lead {
+    text-wrap: pretty;
+  }
+  .header-links a {
+    display: inline-block;
+    transition:
+      transform 0.2s cubic-bezier(0.2, 0, 0, 1),
+      color 0.25s;
+  }
+  .header-links a:active {
+    transform: scale(0.96);
+  }
+  .btn {
+    transition:
+      transform 0.2s cubic-bezier(0.2, 0, 0, 1),
+      background-color 0.25s,
+      border-color 0.25s;
+  }
+  .btn:active {
+    transform: scale(0.96) !important;
   }
   .glow {
     animation: glow 1s ease-in-out infinite alternate;
@@ -191,12 +262,25 @@ import { resolveTC2Path } from "@utils/tc2Router";
     />
   </head>
   <Body>
+    <AnimateOnScroll />
+    <TC2BlockbusterLoader />
     <AdvRedirector />
     <div style=`background: url(${curtainImg.src});background-size: cover`>
       <div
-        class="w-100 h-100"
-        style="backdrop-filter: blur(40px) hue-rotate(340deg);padding-bottom:2.5rem"
+        class="curtains-container w-100 h-100"
+        data-curtain-src={curtainImg.src}
+        style="backdrop-filter: blur(40px) hue-rotate(340deg);padding-bottom:2.5rem;position:relative;overflow:hidden;"
       >
+        <div
+          class="curtain-panel curtain-left"
+          style={`position: absolute; top: 0; bottom: 0; left: 0; width: 51%; z-index: 51; background-color: #1a1a1a; background-image: url(${curtainImg.src});`}
+        >
+        </div>
+        <div
+          class="curtain-panel curtain-right"
+          style={`position: absolute; top: 0; bottom: 0; right: 0; width: 50%; z-index: 50; background-color: #1a1a1a; background-image: url(${curtainImg.src});`}
+        >
+        </div>
         <section
           class="movie-poster p-0"
           style=`background: linear-gradient(rgba(38, 50, 56, 0.7) 10%, rgba(38, 50, 56, 0.7)),url(${lairOutsideImg.src});background-size: cover; background-position: center`
@@ -326,25 +410,25 @@ import { resolveTC2Path } from "@utils/tc2Router";
         fixes to the game based on what we've heard.
       </p>
       <hr />
-      <h2 class="display-3">HIGHLIGHTS</h2>
+      <h2 class="display-3" data-aos="fade-up">HIGHLIGHTS</h2>
       <div
         class="d-none d-sm-flex justify-content-around align-self-stretch align-items-end w-100"
       >
-        <div class="w-100">
+        <div class="w-100" data-aos="fade-up" data-aos-delay="0">
           <Image
             src={mainmenuPyroImg}
             style="height: min(40rem, 50vw);width: auto;max-width: 100%"
             alt=""
           />
         </div>
-        <div class="w-100">
+        <div class="w-100" data-aos="fade-up" data-aos-delay="100">
           <Image
             src={mainmenuMedicImg}
             style="height: min(40rem, 50vw);width: auto;max-width: 100%"
             alt=""
           />
         </div>
-        <div class="w-100">
+        <div class="w-100" data-aos="fade-up" data-aos-delay="200">
           <Image
             src={mainmenuSpyImg}
             style="height: min(40rem, 50vw);width: auto;max-width: 100%"
@@ -353,7 +437,7 @@ import { resolveTC2Path } from "@utils/tc2Router";
         </div>
       </div>
       <div class="row">
-        <div class="col-12 col-sm">
+        <div class="col-12 col-sm" data-aos="fade-up" data-aos-delay="0">
           <div class="w-100 d-block d-sm-none">
             <Image src={mainmenuPyroImg} class="img-fluid" alt="" />
           </div>
@@ -364,7 +448,7 @@ import { resolveTC2Path } from "@utils/tc2Router";
             right. We've fixed all that &mdash; well, besides their craziness.
           </p>
         </div>
-        <div class="col-12 col-sm">
+        <div class="col-12 col-sm" data-aos="fade-up" data-aos-delay="100">
           <div class="w-100 d-block d-sm-none">
             <Image src={mainmenuMedicImg} class="img-fluid" alt="" />
           </div>
@@ -375,7 +459,7 @@ import { resolveTC2Path } from "@utils/tc2Router";
             tending to your patients more satisfying.
           </p>
         </div>
-        <div class="col-12 col-sm">
+        <div class="col-12 col-sm" data-aos="fade-up" data-aos-delay="200">
           <div class="w-100 d-block d-sm-none">
             <Image src={mainmenuSpyImg} class="img-fluid" alt="" />
           </div>
@@ -418,7 +502,7 @@ import { resolveTC2Path } from "@utils/tc2Router";
       </p>
       <hr />
       <div class="row text-center">
-        <div class="col">
+        <div class="col" data-aos="fade-up" data-aos-delay="0">
           <Image
             src={hologlobeImg}
             class="p-4 px-0 px-sm-4 rounded-5"
@@ -431,7 +515,7 @@ import { resolveTC2Path } from "@utils/tc2Router";
             feeling like you're on LAN.
           </p>
         </div>
-        <div class="col">
+        <div class="col" data-aos="fade-up" data-aos-delay="150">
           <Image
             src={viewmodelImg}
             class="p-4 px-0 px-sm-4 rounded-5"
@@ -446,7 +530,7 @@ import { resolveTC2Path } from "@utils/tc2Router";
         </div>
       </div>
       <div class="row text-center">
-        <div class="col">
+        <div class="col" data-aos="fade-up" data-aos-delay="0">
           <Image
             src={combattextImg}
             class="p-4 px-0 px-sm-4 rounded-5"
@@ -459,7 +543,7 @@ import { resolveTC2Path } from "@utils/tc2Router";
             customization options will get your game just how you like it.
           </p>
         </div>
-        <div class="col">
+        <div class="col" data-aos="fade-up" data-aos-delay="150">
           <Image
             src={mvpImg}
             class="p-4 px-0 px-sm-4 rounded-5"
@@ -474,7 +558,7 @@ import { resolveTC2Path } from "@utils/tc2Router";
         </div>
       </div>
       <div class="row text-center">
-        <div class="col-12 col-sm">
+        <div class="col-12 col-sm" data-aos="fade-up" data-aos-delay="0">
           <Image
             src={reloadImg}
             class="p-4 px-0 px-sm-4 rounded-5"
@@ -487,7 +571,7 @@ import { resolveTC2Path } from "@utils/tc2Router";
             fixed that stubborn 4/19 glitch on resupply too.
           </p>
         </div>
-        <div class="col-12 col-sm">
+        <div class="col-12 col-sm" data-aos="fade-up" data-aos-delay="100">
           <Image
             src={fovImg}
             class="p-4 px-0 px-sm-4 rounded-5"
@@ -500,7 +584,7 @@ import { resolveTC2Path } from "@utils/tc2Router";
             callouts, and net settings made for 2025 instead of dial-up.
           </p>
         </div>
-        <div class="col-12 col-sm">
+        <div class="col-12 col-sm" data-aos="fade-up" data-aos-delay="200">
           <Image
             src={matchhudImg}
             class="rounded-5"
