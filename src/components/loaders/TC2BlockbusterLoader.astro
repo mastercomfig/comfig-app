@@ -1,0 +1,44 @@
+---
+---
+
+<tc2-blockbuster-loader></tc2-blockbuster-loader>
+
+<script>
+  class TC2BlockbusterLoader extends HTMLElement {
+    connectedCallback() {
+      const container = document.querySelector(".curtains-container");
+      if (!container) return;
+
+      const src = container.getAttribute("data-curtain-src");
+      if (src) {
+        const img = new Image();
+        img.onload = () => {
+          setTimeout(() => {
+            container.classList.add("curtains-open");
+          }, 150);
+        };
+        img.src = src;
+        if (img.complete) {
+          setTimeout(() => {
+            container.classList.add("curtains-open");
+          }, 150);
+        }
+      } else {
+        setTimeout(() => {
+          container.classList.add("curtains-open");
+        }, 100);
+      }
+    }
+  }
+
+  if (!customElements.get("tc2-blockbuster-loader")) {
+    customElements.define("tc2-blockbuster-loader", TC2BlockbusterLoader);
+  }
+
+  // Clean up curtains-open class before view transition swap
+  document.addEventListener("astro:before-swap", () => {
+    document
+      .querySelector(".curtains-container")
+      ?.classList.remove("curtains-open");
+  });
+</script>
