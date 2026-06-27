@@ -31,6 +31,7 @@ import gsiImg from "@img/tc2/rematch/tc2gsi.png";
 import linesImg from "@img/tc2/rematch/tc2lines.png";
 import Layout from "@layouts/Layout.astro";
 import { Content as NotesBlock } from "@posts/data/rematch.mdx";
+import TC2RematchLoader from "@components/loaders/TC2RematchLoader.astro";
 
 import "@fontsource-variable/inter/wght.css";
 import "@fontsource-variable/oswald/wght.css";
@@ -1332,119 +1333,5 @@ import "@fontsource-variable/teko/wght.css";
 
     <Footer product={"Team Comtress"}><br /><br /></Footer>
   </Body>
-
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const hoverCards = document.querySelectorAll(".hover-swap-trigger");
-      let swapImageTimeout: NodeJS.Timeout | null = null;
-      hoverCards.forEach((card) => {
-        card.addEventListener("mouseenter", () => {
-          if (swapImageTimeout) {
-            clearTimeout(swapImageTimeout);
-            swapImageTimeout = null;
-          }
-          const targetId = card.getAttribute("data-target");
-          const targetEl = document.getElementById(targetId);
-          const newSrc = card.getAttribute("data-img");
-
-          if (newSrc && targetEl) {
-            if (!targetEl.hasAttribute("data-default")) {
-              targetEl.setAttribute(
-                "data-default",
-                targetEl.firstElementChild?.src ?? targetEl.innerText,
-              );
-            }
-            if (targetEl.firstElementChild?.src) {
-              targetEl.firstElementChild.src = newSrc;
-            } else {
-              targetEl.innerText = newSrc;
-            }
-
-            // Extract accent color and apply to target and self
-            const accent = card.getAttribute("data-accent") || "#ff8800";
-            targetEl.style.borderColor = accent;
-            targetEl.style.color = "#fff";
-            card.style.borderLeftColor = accent;
-
-            // Trigger CSS reflow animation
-            targetEl.classList.remove("pulse-anim");
-            void targetEl.offsetWidth;
-            targetEl.classList.add("pulse-anim");
-          }
-        });
-
-        function swapImage() {
-          const targetId = card.getAttribute("data-target");
-          const targetEl = document.getElementById(targetId);
-          card.style.borderLeftColor = ""; // remove hover accent
-          if (targetEl && targetEl.hasAttribute("data-default")) {
-            if (targetEl.firstElementChild?.src) {
-              targetEl.firstElementChild.src =
-                targetEl.getAttribute("data-default");
-            } else {
-              targetEl.innerText = targetEl.getAttribute("data-default");
-            }
-            targetEl.style.borderColor = "";
-            targetEl.style.color = "";
-          }
-        }
-
-        card.addEventListener("mouseleave", () => {
-          if (swapImageTimeout) {
-            clearTimeout(swapImageTimeout);
-            swapImageTimeout = null;
-          }
-          swapImageTimeout = setTimeout(swapImage, 500);
-          const targetId = card.getAttribute("data-target");
-          const targetEl = document.getElementById(targetId);
-          card.style.borderLeftColor = ""; // remove hover accent
-          if (targetEl && targetEl.hasAttribute("data-default")) {
-            targetEl.style.borderColor = "";
-            targetEl.style.color = "";
-          }
-        });
-      });
-
-      // 2. Hydro Carousel Logic
-      const hydroBtns = document.querySelectorAll(".hydro-nav-btn");
-      const hydroImgs = document.querySelectorAll(".hydro-asset");
-
-      hydroBtns.forEach((btn) => {
-        btn.addEventListener("click", () => {
-          const targetSlide = btn.getAttribute("data-slide");
-
-          // Update buttons
-          hydroBtns.forEach((b) => b.classList.remove("active"));
-          btn.classList.add("active");
-
-          // Swap images
-          hydroImgs.forEach((img) => {
-            if (img.id === `hydro-img-${targetSlide}`) {
-              img.classList.remove("hidden");
-              img.classList.add("active", "pulse-anim");
-            } else {
-              img.classList.remove("active", "pulse-anim");
-              img.classList.add("hidden");
-            }
-          });
-        });
-      });
-
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add("is-visible");
-              observer.unobserve(entry.target); // Reveal exactly once
-            }
-          });
-        },
-        { rootMargin: "0px", threshold: 0.1 },
-      );
-
-      document
-        .querySelectorAll(".reveal-up")
-        .forEach((el) => observer.observe(el));
-    });
-  </script>
+  <TC2RematchLoader />
 </Layout>
