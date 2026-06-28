@@ -21,7 +21,12 @@ const patches = (await getCollection("tc2Patches"))
       b.data.date.valueOf() - a.data.date.valueOf() ||
       (b.data.num ?? 1) - (a.data.num ?? 1),
   )
-  .filter((post) => !post.data.draft && !post.id.endsWith("beta"));
+  .filter(
+    (post) =>
+      !post.data.draft &&
+      !post.id.endsWith("beta") &&
+      !post.id.endsWith("prerelease"),
+  );
 ---
 
 <Layout>
@@ -68,8 +73,14 @@ const patches = (await getCollection("tc2Patches"))
                       class="stretched-link"
                       href={
                         post.data.update
-                          ? resolveTC2Path(`/updates/${post.data.update}`, Astro.url.pathname)
-                          : resolveTC2Path(`/news/${post.id}`, Astro.url.pathname)
+                          ? resolveTC2Path(
+                              `/updates/${post.data.update}`,
+                              Astro.url.pathname,
+                            )
+                          : resolveTC2Path(
+                              `/news/${post.id}`,
+                              Astro.url.pathname,
+                            )
                       }
                     >
                       Read more »
@@ -100,7 +111,13 @@ const patches = (await getCollection("tc2Patches"))
               <div class="card">
                 <div class="card-body">
                   <h5 class="card-title m-0 text-center">
-                    <a class="stretched-link" href={resolveTC2Path(`/patches/${post.id}`, Astro.url.pathname)}>
+                    <a
+                      class="stretched-link"
+                      href={resolveTC2Path(
+                        `/patches/${post.id}`,
+                        Astro.url.pathname,
+                      )}
+                    >
                       {post.data.date.toLocaleDateString("en-US", {
                         year: "numeric",
                         month: "long",
@@ -117,7 +134,14 @@ const patches = (await getCollection("tc2Patches"))
         }
       </div>
       <p class="mt-4">
-        Looking for beta patch notes? Check out the <a href={resolveTC2Path("/beta_patches", Astro.url.pathname)}
+        Looking for prerelease patch notes? Check out the <a
+          href={resolveTC2Path("/prerelease_patches", Astro.url.pathname)}
+          >prerelease patch list</a
+        >.
+      </p>
+      <p class="mt-2">
+        Looking for beta patch notes? Check out the <a
+          href={resolveTC2Path("/beta_patches", Astro.url.pathname)}
           >beta test patch list</a
         >.
       </p>

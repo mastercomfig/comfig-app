@@ -13,7 +13,10 @@ const news = (await getCollection("tc2News"))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .filter(
     (post) =>
-      !post.data.draft && !post.data.update && !post.id.endsWith("beta"),
+      !post.data.draft &&
+      !post.data.update &&
+      !post.id.endsWith("beta") &&
+      !post.id.endsWith("prerelease"),
   );
 
 const firstNews = news[0];
@@ -103,8 +106,14 @@ const allPosts = news.concat(patches).sort((a, b) => {
                             class="stretched-link"
                             href={
                               post.data.update
-                                ? resolveTC2Path(`/updates/${post.data.update}?launcher=1`, Astro.url.pathname)
-                                : resolveTC2Path(`/newsLauncher/${post.id}?launcher=1`, Astro.url.pathname)
+                                ? resolveTC2Path(
+                                    `/updates/${post.data.update}?launcher=1`,
+                                    Astro.url.pathname,
+                                  )
+                                : resolveTC2Path(
+                                    `/newsLauncher/${post.id}?launcher=1`,
+                                    Astro.url.pathname,
+                                  )
                             }
                           >
                             Read more »
@@ -167,7 +176,10 @@ const allPosts = news.concat(patches).sort((a, b) => {
                         <small class="text-muted">
                           <a
                             class="stretched-link"
-                            href={resolveTC2Path(`/patchesLauncher/${post.id}?launcher=1`, Astro.url.pathname)}
+                            href={resolveTC2Path(
+                              `/patchesLauncher/${post.id}?launcher=1`,
+                              Astro.url.pathname,
+                            )}
                           >
                             Read more »
                           </a>
