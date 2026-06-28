@@ -32,7 +32,12 @@ const patches = (await getCollection("tc2Patches"))
       b.data.date.valueOf() - a.data.date.valueOf() ||
       (b.data.num ?? 1) - (a.data.num ?? 1),
   )
-  .filter((post) => !post.data.draft && !post.id.endsWith("beta"))
+  .filter(
+    (post) =>
+      !post.data.draft &&
+      !post.id.endsWith("beta") &&
+      !post.id.endsWith("prerelease"),
+  )
   .slice(0, 4);
 ---
 
@@ -78,7 +83,10 @@ const patches = (await getCollection("tc2Patches"))
     width: 100%;
   }
   .btn {
-    transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1), background-color 0.25s, border-color 0.25s;
+    transition:
+      transform 0.2s cubic-bezier(0.2, 0, 0, 1),
+      background-color 0.25s,
+      border-color 0.25s;
   }
   .btn:active {
     transform: scale(0.96) !important;
@@ -176,7 +184,10 @@ const patches = (await getCollection("tc2Patches"))
     }
 
     .update-cards .card {
-      transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.3s, border-color 0.3s;
+      transition:
+        transform 0.3s cubic-bezier(0.2, 0, 0, 1),
+        box-shadow 0.3s,
+        border-color 0.3s;
       will-change: transform;
       margin-left: 1px;
       margin-right: 1px;
@@ -510,7 +521,9 @@ const patches = (await getCollection("tc2Patches"))
       <div class="container">
         <h1>
           Latest News <small style="font-size: 1rem"
-            ><a href={resolveTC2Path("/feed#news", Astro.url.pathname)}>View all »</a></small
+            ><a href={resolveTC2Path("/feed#news", Astro.url.pathname)}
+              >View all »</a
+            ></small
           >
         </h1>
         <div class="row mt-1 update-cards">
@@ -529,8 +542,14 @@ const patches = (await getCollection("tc2Patches"))
                         class="stretched-link"
                         href={
                           post.data.update
-                            ? resolveTC2Path(`/updates/${post.data.update}`, Astro.url.pathname)
-                            : resolveTC2Path(`/news/${post.id}`, Astro.url.pathname)
+                            ? resolveTC2Path(
+                                `/updates/${post.data.update}`,
+                                Astro.url.pathname,
+                              )
+                            : resolveTC2Path(
+                                `/news/${post.id}`,
+                                Astro.url.pathname,
+                              )
                         }
                       >
                         Read more »
@@ -576,7 +595,10 @@ const patches = (await getCollection("tc2Patches"))
                     <small class="text-muted">
                       <a
                         class="stretched-link"
-                        href={resolveTC2Path(`/updates/${post.data.update}`, Astro.url.pathname)}
+                        href={resolveTC2Path(
+                          `/updates/${post.data.update}`,
+                          Astro.url.pathname,
+                        )}
                       >
                         Read more »
                       </a>
@@ -604,7 +626,9 @@ const patches = (await getCollection("tc2Patches"))
       <div class="container">
         <h1>
           Patches <small style="font-size: 1rem"
-            ><a href={resolveTC2Path("/feed#patches", Astro.url.pathname)}>View all »</a></small
+            ><a href={resolveTC2Path("/feed#patches", Astro.url.pathname)}
+              >View all »</a
+            ></small
           >
         </h1>
         <div class="row mt-1 update-cards">
@@ -614,7 +638,13 @@ const patches = (await getCollection("tc2Patches"))
                 <div class="card">
                   <div class="card-body p-4">
                     <h5 class="card-title text-center m-0">
-                      <a class="stretched-link" href={resolveTC2Path(`/patches/${post.id}`, Astro.url.pathname)}>
+                      <a
+                        class="stretched-link"
+                        href={resolveTC2Path(
+                          `/patches/${post.id}`,
+                          Astro.url.pathname,
+                        )}
+                      >
                         {post.data.date.toLocaleDateString("en-US", {
                           year: "numeric",
                           month: "long",
