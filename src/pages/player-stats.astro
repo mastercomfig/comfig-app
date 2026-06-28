@@ -5,59 +5,39 @@ import BaseHead from "@components/head/BaseHead.astro";
 import ImportHead from "@components/head/ImportHead.astro";
 import MainHead from "@components/head/MainHead.astro";
 import PreloadHead from "@components/head/PreloadHead.astro";
-import NavSelector from "@components/NavSelector.astro";
-import { StatsDashboard } from "@components/stats/StatsDashboard";
 import Layout from "@layouts/Layout.astro";
-
-const workerUrl =
-  import.meta.env.COMFIG_WORKER_URL || "https://worker.comfig.app/";
 ---
 
 <Layout>
   <head>
     <BaseHead />
     <PreloadHead />
-    <ImportHead>
-      <script>
-        import "bootstrap/js/src/dropdown.js";
-      </script>
-    </ImportHead>
-    <MainHead
-      title="Player Stats"
-      description="View live TF2 concurrent player statistics, active human match tracking, bot estimates, game mode popularity breakdowns, average play session durations, and match lengths."
-    />
+    <ImportHead />
+    <MainHead title="Player Stats" />
   </head>
   <Body>
-    <nav class="navbar navbar-expand-sm sticky-top navbar-dark bg-teal">
-      <div class="container g-0">
-        <span class="navbar-brand">
+    <header class="jumbotron jumbotron-fluid home-header">
+      <div
+        class="container d-flex align-items-center justify-content-center"
+        style="height: 100%"
+      >
+        <div class="align-middle text-center">
           <img
+            class="img-logo"
             src="/img/mastercomfig_logo_transparent_i.svg"
-            alt=""
-            class="d-inline-block align-text-top"
-            width="24"
-            height="24"
+            alt="logo"
           />
-          <span class="d-none d-md-inline"> comfig</span>
-        </span>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNav"
-          aria-controls="navbarNav"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <NavSelector pageName="stats" />
-        <div class="collapse navbar-collapse"></div>
+          <h1 class="display-4">Player Stats Coming Soon!</h1>
+          <p class="lead">
+            See live player stats for TF2, and break down current bot, idler and
+            real player counts.
+          </p>
+          <a class="btn btn-outline-secondary btn-lg" href="/">
+            <span class="fas fa-home fa-fw"></span> Back to home
+          </a>
+        </div>
       </div>
-    </nav>
-    <section class="container-lg pt-2 pb-5 bg-dark min-vh-100">
-      <StatsDashboard client:load workerUrl={workerUrl} />
-    </section>
+    </header>
     <Footer />
   </Body>
 </Layout>
