@@ -1,3 +1,7 @@
+---
+date: 2026-06-10
+---
+
 * Updated the modern Settings menu
   * Added "Condensed View" to Graphics Quality menu. Now you can easily preview graphics settings changes while in-game through a minimal translucent menu.
   * Added keybindings menu to the modern Settings menu

@@ -1,3 +1,7 @@
+---
+date: 2026-06-06
+---
+
 * Experimenting with 20 minute match timer (down from 35 minutes)
 * The round counter no longer displays if the goal is not round-based
 * Fixed the server time not displaying on maps without a round timer

@@ -1,3 +1,7 @@
+---
+date: 2026-06-03
+---
+
 * Reworked how HDR lighting and colors are computed. Visibility should be improved, unnatural bright and dark spots eliminated, and colors should have improved range and contrast.
 * Reworked how bloom is computed. The fidelity and relevance of the bloom should be improved, and performance impact of bloom decreased.
 * Improved performance of post processing

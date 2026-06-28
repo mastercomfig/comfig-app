@@ -1,3 +1,7 @@
+---
+date: 2026-05-28
+---
+
 * Potentially fixed Linux crash with outlines
 * Fixed not being able to kick players on the MOTD screen with match assigned teams
 * Adjusted team shuffle algorithm:
