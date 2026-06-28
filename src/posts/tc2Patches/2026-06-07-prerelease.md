@@ -1,3 +1,7 @@
+---
+date: 2026-06-07
+---
+
 * Added radial menu for voice menu (Z, X, C by default)
   * Can use number keys as before to select an option, or drag the mouse to select an option
   * Can use `tf_radial_voicemenu_concise 1` to split up the voice menu options into groups of 4 (rather than needing to reach all the way for 9)

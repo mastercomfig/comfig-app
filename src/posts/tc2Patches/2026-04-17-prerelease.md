@@ -1,3 +1,7 @@
+---
+date: 2026-04-17
+---
+
 * Reworked outline rendering to fix various issues and improve performance
     * Loosely based upon work from PazerOP (thank you!)
     * Fixed all outlines disappearing when a player was ubered or had another forced material override
