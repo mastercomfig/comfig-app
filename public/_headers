@@ -14,6 +14,14 @@
   Cross-Origin-Opener-Policy: cross-origin
   Access-Control-Allow-Origin: *
 
+/launcher_feed_prerelease/
+  ! Cross-Origin-Resource-Policy
+  ! Cross-Origin-Opener-Policy
+  ! Access-Control-Allow-Origin
+  Cross-Origin-Resource-Policy: cross-origin
+  Cross-Origin-Opener-Policy: cross-origin
+  Access-Control-Allow-Origin: *
+
 /newsLauncher/*
   ! Cross-Origin-Resource-Policy
   ! Cross-Origin-Opener-Policy
