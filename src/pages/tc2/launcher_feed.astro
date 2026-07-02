@@ -14,15 +14,16 @@ const news = (await getCollection("tc2News"))
   .filter(
     (post) =>
       !post.data.draft &&
-      !post.data.update &&
-      !post.id.endsWith("beta") &&
-      !post.id.endsWith("prerelease"),
+      !post.data.update,
   );
 
 const firstNews = news[0];
 
 const patches = (await getCollection("tc2Patches")).filter(
-  (post) => !post.data.draft,
+  (post) =>
+      !post.data.draft &&
+      !post.id.endsWith("beta") &&
+      !post.id.endsWith("prerelease"),
 );
 
 const allPosts = news.concat(patches).sort((a, b) => {
