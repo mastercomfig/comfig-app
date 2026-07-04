@@ -5,6 +5,7 @@ import BaseHead from "@components/head/BaseHead.astro";
 import ImportHead from "@components/head/ImportHead.astro";
 import MainHead from "@components/head/MainHead.astro";
 import PreloadHead from "@components/head/PreloadHead.astro";
+import SupportMeLoader from "@components/loaders/SupportMeLoader.astro";
 import Layout from "@layouts/Layout.astro";
 
 const requiredPerMonth = 141.5;
@@ -15,10 +16,12 @@ const totalPerYear = requiredPerYear + optionalPerYear;
 
 const currentFunds = 672.18;
 const currentFundsPercent = (currentFunds / totalPerYear) * 100;
-const fundsPerMonth = 55;
+const currentRequiredFundsPercent = (currentFunds / requiredPerYear) * 100;
+const fundsPerMonth = 57;
 const projectedFundAtYear = fundsPerMonth * 6;
 const projectedFunds = currentFunds + projectedFundAtYear;
 const projectedFundsPercent = (projectedFunds / totalPerYear) * 100;
+const projectedRequiredFundsPercent = (projectedFunds / requiredPerYear) * 100;
 ---
 
 <Layout>
@@ -42,6 +45,7 @@ const projectedFundsPercent = (projectedFunds / totalPerYear) * 100;
     />
   </head>
   <Body>
+    <SupportMeLoader />
     <div class="container">
       <section>
         <a href="/">
@@ -64,45 +68,95 @@ const projectedFundsPercent = (projectedFunds / totalPerYear) * 100;
           Running comfig takes a lot of time, effort and money. If you
           appreciate any of my work, please consider supporting me!
         </p>
-        <div class="progress">
-          <div
-            class="progress-bar progress-bar-animated"
-            role="progressbar"
-            style=`width: ${currentFundsPercent.toFixed(0)}%`
-            aria-valuenow=`${currentFundsPercent.toFixed(0)}`
-            aria-valuemin="0"
-            aria-valuemax="100"
-          >
+        <div id="progress-all">
+          <div class="progress">
+            <div
+              class="progress-bar progress-bar-animated"
+              role="progressbar"
+              style=`width: ${currentFundsPercent.toFixed(0)}%`
+              aria-valuenow=`${currentFundsPercent.toFixed(0)}`
+              aria-valuemin="0"
+              aria-valuemax="100"
+            >
+            </div>
+            <div
+              class="progress-bar progress-bar-animated"
+              role="progressbar"
+              style=`width: ${(projectedFundsPercent - currentFundsPercent).toFixed(0)}%;background-color: rgb(156, 39, 176, 0.3)`
+              aria-valuenow=`${projectedFundsPercent.toFixed(0)}`
+              aria-valuemin="0"
+              aria-valuemax="100"
+            >
+            </div>
           </div>
-          <div
-            class="progress-bar progress-bar-animated"
-            role="progressbar"
-            style=`width: ${(projectedFundsPercent - currentFundsPercent).toFixed(0)}%;background-color: rgb(156, 39, 176, 0.3)`
-            aria-valuenow=`${projectedFundsPercent.toFixed(0)}`
-            aria-valuemin="0"
-            aria-valuemax="100"
-          >
+          <div class="d-flex justify-content-between align-items-center">
+            <span class="text-muted">$0</span>
+            <span class="text-muted">${totalPerYear.toFixed(2)}</span>
           </div>
+          <br />
+          <p>
+            comfig has <span class="text-primary">received</span>
+            <strong
+              >{currentFundsPercent.toFixed(0)}% (${
+                currentFunds.toFixed(2)
+              })</strong
+            > of its funding goals for <strong>2026</strong>. We are <span
+              class="text-info">projected</span
+            > to reach <strong
+              >{projectedFundsPercent.toFixed(0)}% (${
+                projectedFunds.toFixed(2)
+              })</strong
+            > by the end of the year if current funding levels continue.
+          </p>
         </div>
-        <div class="d-flex justify-content-between align-items-center">
-          <span class="text-muted">$0</span>
-          <span class="text-muted">${totalPerYear.toFixed(2)}</span>
+        <div id="progress-required" class="d-none">
+          <div class="progress">
+            <div
+              class="progress-bar progress-bar-animated"
+              role="progressbar"
+              style=`width: ${currentRequiredFundsPercent.toFixed(0)}%`
+              aria-valuenow=`${currentRequiredFundsPercent.toFixed(0)}`
+              aria-valuemin="0"
+              aria-valuemax="100"
+            >
+            </div>
+            <div
+              class="progress-bar progress-bar-animated"
+              role="progressbar"
+              style=`width: ${(projectedRequiredFundsPercent - currentRequiredFundsPercent).toFixed(0)}%;background-color: rgb(156, 39, 176, 0.3)`
+              aria-valuenow=`${projectedRequiredFundsPercent.toFixed(0)}`
+              aria-valuemin="0"
+              aria-valuemax="100"
+            >
+            </div>
+          </div>
+          <div class="d-flex justify-content-between align-items-center">
+            <span class="text-muted">$0</span>
+            <span class="text-muted">${requiredPerYear.toFixed(2)}</span>
+          </div>
+          <br />
+          <p>
+            comfig has <span class="text-primary">received</span>
+            <strong
+              >{currentRequiredFundsPercent.toFixed(0)}% (${
+                currentFunds.toFixed(2)
+              })</strong
+            > of its funding goals for <strong>2026</strong>. We are <span
+              class="text-info">projected</span
+            > to reach <strong
+              >{projectedRequiredFundsPercent.toFixed(0)}% (${
+                projectedFunds.toFixed(2)
+              })</strong
+            > by the end of the year if current funding levels continue.
+          </p>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="" id="checkProgress">
+          <label class="form-check-label" for="checkProgress">
+            Show required funding only
+          </label>
         </div>
         <br />
-        <p>
-          comfig has <span class="text-primary">received</span>
-          <strong
-            >{currentFundsPercent.toFixed(0)}% (${
-              currentFunds.toFixed(2)
-            })</strong
-          > of its funding goals for <strong>2026</strong>. We are <span
-            class="text-info">projected</span
-          > to reach <strong
-            >{projectedFundsPercent.toFixed(0)}% (${
-              projectedFunds.toFixed(2)
-            })</strong
-          > by the end of the year if current funding levels continue.
-        </p>
         <h3>Monthly Costs</h3>
         <p>
           I have provided the following information for full transparency of the
@@ -154,7 +208,7 @@ const projectedFundsPercent = (projectedFunds / totalPerYear) * 100;
               </li>
               <li>
                 <strong>Domain: $6/month</strong> - Provides domain names (comfig.app,
-                comfig.com, teamcomtress.com, quickplay.tf) for comfig app and other
+                mastercomfig.com, teamcomtress.com, quickplay.tf) for comfig app and other
                 sites
               </li>
               <li>

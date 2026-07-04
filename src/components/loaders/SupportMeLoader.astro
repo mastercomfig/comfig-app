@@ -1,0 +1,32 @@
+---
+
+---
+
+<supportme-loader></supportme-loader>
+
+<script>
+  class SupportMeLoader extends HTMLElement {
+    allServers: any[] = [];
+
+    connectedCallback() {
+        const progressAll = document.getElementById("progress-all");
+        const progressRequired = document.getElementById("progress-required");
+        const checkProgress = document.getElementById("checkProgress") as HTMLInputElement;
+        if (!progressAll || !progressRequired || !checkProgress) return;
+
+        checkProgress.addEventListener("change", () => {
+            if (checkProgress.checked) {
+                progressAll.classList.add("d-none");
+                progressRequired.classList.remove("d-none");
+            } else {
+                progressAll.classList.remove("d-none");
+                progressRequired.classList.add("d-none");
+            }
+        });
+    }
+  }
+
+  if (!customElements.get("supportme-loader")) {
+    customElements.define("supportme-loader", SupportMeLoader);
+  }
+</script>
