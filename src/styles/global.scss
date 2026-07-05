@@ -416,6 +416,7 @@ b {
 }
 
 .navbar-brand {
+  user-select: none;
   --bs-navbar-brand-margin-end: 0;
 }
 
