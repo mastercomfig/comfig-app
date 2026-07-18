@@ -1,0 +1,204 @@
+## Settings & UI Overhaul
+
+* Added outline overheal health bars
+* Updated the in-game chat font for better readability on high-resolution displays.
+
+## Settings Menu Update
+
+* Added keybindings menu to the modern Settings menu
+  * Improved naming of a few keybinds for Team Fortress 2 and modern expectations. For example, "Duck" is now called "Duck / Crouch".
+  * Added category filtering and search to keybindings
+  * Command associated with the bind is now shown for discovery and search purposes
+  * Enhanced user flow for rebinding keys
+  * Remove irrelevant / unused keybinding options
+* Added "Condensed View" to Graphics Quality menu. Now you can easily preview graphics settings changes while in-game through a minimal translucent menu.
+* Added crosshair preview. Supports previewing crosshair type, scale, color and gap
+* Added Outlines section in General to customize outlines settings
+* Added "custom wav" option in hitsounds/killsounds to reduce confusion
+* Added zoom sensitivity ratio to mouse settings
+* Finding settings through search now highlights and scrolls to the setting found for better navigation
+* Added descriptions/tooltips to all settings
+* Fixed a few settings bugs:
+  * HTML MOTD setting removed as it is no longer available
+  * Fixed Remember Previous Weapon between lives not working
+  * Fixed maximum value on Medic Auto caller option being too high
+  * Fixed unknown settings values being blank
+  * Fixed select options box not showing properly if it was at the bottom with no room
+  * Fixed misalignment on checkbox settings
+* Added icons for the various sections
+* Added option to disable featured class, falling back to the classic class images
+* Added confirmation prompt when binding to a key that is already used by another action
+* Added voice receive volume to Communication > Voice instead of it just being in volume settings
+* Added option to enable chat notification sound
+* Labeled Beepo as default hitsound and killsound
+
+## New Communication Wheel
+
+* Added radial menu for voice menu (Z, X, C by default) as a beta quality feature
+  * Can use number keys as before to select an option, or hold the button and drag the mouse to select an option
+  * Can use tf_radial_voicemenu_concise 1 to split up the voice menu options into groups of 4 (rather than needing to reach all the way for 9)
+  * The radial menu is fully customizable, allowing for various communication bubbles, message text templates and the classic voice commands.
+  * Customization and additional options are not implemented at this time, and we are only using the classic voice commands
+  * Radial menu options can be conditional, for example PASS Time specific options or Medic specific options
+
+## Casual Matchmaking Update
+
+* Reduced the match timer from 35 to 25 minutes
+* Fixed not being able to kick players on the MOTD screen with match assigned teams
+* Adjusted team shuffle algorithm:
+  * Player score discrepancy will now adjust based on Team Series Score, in order to better detect situations where a team runs away with the lead in terms of game state/objectives
+  * Bot difficulty will now adjust a skill curve to further compensate for team balance in situations where shuffling human players is not sufficient. This prioritizes making the losing team's bots stronger, and then falls back to making the dominant team's bots weaker.
+* Random crits now reset back to on after each match (as was done initially). This better ensures we don't linger past user preferences when a new match starts.
+* Changed the number of bots that fill in for players for Casual play to 75% of a full lobby (a 9v9 for 24 player servers)
+* Fixed flag announcements playing during match summary (e.g., flag returned)
+* Fixed the team that won the series not being used for MVP at the end of a match
+* Fixed some MVP stats being set to 0 rather than the correct value
+* Fixed first player not spawning in the correct spawn in matchmaking games
+* Fixed players not being respawned when a new series falls back to waiting for players
+
+## Outlines Revamp
+
+* Reworked outline rendering to fix various issues and improve performance
+  * Loosely based upon work from PazerOP (thank you!)
+* Fixed outlines disappearing when a player was ubered or had another forced material override
+* Fixed outline color not correctly inputting into HDR / tonemapping
+* Added support for outlines for only parts of an object visible, or only behind a surface
+* Changed the display rules of some outlines based upon this new system:
+  * Spawn/spectator outlines no longer draw an outline when visible
+  * Payload carts no longer draw an outline when visible
+  * Dropped weapons now reliably draw only when visible
+  * Flags no longer draw an outline when visible
+  * Sticky Bombs (except for the Scottish Resistance) no longer draw an outline when visible
+  * MvM Tanks no longer draw an outline when visible
+  * MvM Money no longer draws an outline when visible
+
+## HDR / Bloom Update
+
+* Reworked how HDR lighting and colors are computed. Visibility should be improved, unnatural bright and dark spots eliminated, and colors should have improved range and contrast.
+* Reworked how bloom is computed. The fidelity and relevance of the bloom should be improved, and performance impact of bloom decreased.
+* Improved performance of post processing
+
+## General Changes
+
+* Switched to Team Comtress item servers, which improve loadout switch times by proxying the Valve SDK item servers. No more rate limiting by the base SDK!
+* Fixed mini-crit and crit effects not being applied properly in certain cases
+* Fixed weapons that reload their clip one by one getting their reload cancelled upon pressing right click
+  * For example, reloads cancelling for the Stickybomb Launcher and Grenade Launcher when detonating Stickybombs
+* Damage now always rounds up, for both buildings and players. This ensures consistency, proper calculation of damage after resistances, and fixes some bugs with on-death effects.
+* Fixed buildings reporting 0 health when they were initializing construction
+* Fixed buildings under construction not receiving lethal damage if the damage was just enough to reduce their health to 0
+* Fixed BLU team being immune to Sentry Gun knockback on non-MvM maps with upgrades like Freaky Fair
+* Fixed Medic caller / auto-caller lingering or appearing in incorrect cases
+* Fixed being able to use respawn key bind (default F) during humiliation
+* Fixed an issue where game FPS would be reduced when exiting a server connection screen or closing a kick/disconnect message
+* Fixed a bug where in-game/menu FPS limits could be desynced from the main menu settings
+* Added tc2_intel.bat as a workaround for systems with Intel cards to launch without the launcher
+* Removed devonly from some Demoknight charge cvars, per request
+* Added multiplayer / dedicated server support to Training Mode
+* Added support for custom votes for community servers
+* Added datagram support for Remote Console (rcon)
+  * Allows server owners to control and manage their server easily when hosted on Steam Networking
+* Updated the localization files
+* Fixed some projectiles not attributing their damage correctly
+* Fixed the Red Tape Recorder not attributing destruction of buildings after total deconstruction to the owner in some cases
+
+### HUD Changes
+
+* Made the crosshair gap 4 by default, to allow for crosshairs to display correctly by default
+* Changed chat font from SN Pro to Nunito for better character support
+* Updated colors for overheal bars on the team status HUD
+* Updated outlines health bar to show overheal
+* Restored the non-minmode status HUD to the match HUD
+* The round counter no longer displays if the goal is not round-based
+
+### HUD Fixes
+
+* Improved the performance and responsiveness of the new main menu UI, especially on 4K resolutions / HiDPI
+* Fixed an issue where the mouse would be misaligned on the new main menu UI
+* Fixed gap being players in the scoreboard list being too large, causing them not to fit as expected
+* Fixed various timers having a desynced clock with the time left timer
+* Fixed positioning issues with non match HUD minmode
+* Fixed the map time not displaying on maps without a round timer
+* Map timer on maps without a round timer will now disappear when the timer hits 0
+* Fixed match timer progressing during pre-match wait period (it would reset after the match started, but it was confusing to see this in the scoreboard)
+* Fixed some timers using 0x:xx format instead of x:xx
+* Fixed sizing/spacing issues on round indicators
+* Fixed clipped off backgrounds for player status HUD and ammo HUD when using min-mode
+* Fixed stat panel on freezecam not hiding during screenshot
+* Fixed votes having a slightly random duration (thanks horiuchii!)
+* Fixed kick target info on vote HUD panel not working properly (thanks horiuchii!)
+* Fixed user not being informed properly when Team Fortress 2 is not installed
+* Fixed pickup prompt showing on buildings when the Engineer could not pick up the building in some cases
+* Fixed killstreak banner not being positioned and sized correctly
+* Fixed killstreak banner missing icon
+* Fixed chat notification sound not playing when enabled (cl_hud_chat_notification 1)
+* Fixed chat not being visible during match doors display
+* Fixed player model clipping through match doors
+* Fixed series intermission causing various HUD elements to disappear if you were dead during the intermission
+* Fixed series intermission not displaying properly when the match timer reaches 0
+* Fixed series intermission breaking the spectator HUD for players on the spectator team
+* Fixed series intermission being extremely long if SourceTV was enabled
+* Fixed servers not on your game version showing in the new server browser
+
+### Visual/Audio Fixes
+
+* Fixed weapons being invisible on players that were spectating you
+* Fixed airblast effect infinitely repeating upon tapping inputs
+* Fixed B.A.S.E Jumper and Soldier Banners showing their deployed model in a random part of a map in some cases
+* Fixed ragdolls and cosmetic gibs originating from an incorrect location in some cases, like when the entity source was not visible to the client
+* Fixed bullet tracers originating from an incorrect location in some cases, like when the entity source was not visible to the client
+* Fixed an issue where the Demoman Shield viewmodel would not render correctly
+* Fixed cases of camera clipping into nearby surfaces, especially while teleporting
+* Fixed viewmodels not properly scaling their viewmodel FOV while zooming, causing flipping or other graphical glitches
+* Fixed an issue with some All Class items not being accessed properly
+* Fixed bullet tracers not alternating between barrels on Level 2 and 3 Sentry Guns (thanks ficool2!)
+* Fixed headshot effects showing on disguised enemy Spies
+* Fixed crits not being predicted correctly
+* Fixed Flame Thrower, Mini-Gun, Pistol and SMG fire sounds crackling in some cases
+
+### Bot Fixes
+
+* Added Blake Sextus as a bot name
+* Fixed bots dropping their items in some cases
+
+### Territorial Control 2.0 Fixes
+
+* Fixed node system not gating base points and territory properly
+
+## Networking Improvements
+
+* Fixed some subtick desync issues
+  * Added subtick support for viewpunch
+  * Fixed subtick prediction getting desynced after a prediction error
+  * Fixed continuous fire not updating attack frame correctly
+  * Added subtick to Scottish Resistance sticky bomb selection
+
+## Optimizations
+
+* Optimized the load of cosmetics, weapons and other items on players
+  * Loosely based on changes from sigsegv and rafradek (thank you!)
+* Optimized how players are accessed and found in various systems
+  * Loosely inspired by changes from sigsegv and rafradek (thank you!)
+* Limited another type of pain/hurt sound to play every 0.1 rather than spam the sound system too frequently
+* Optimized smoke stack effect on the server
+  * Based on changes from sigsegv and rafradek (thank you!)
+* Reduced size of shader DLL
+* Other minor performance and stability improvements
+
+## Base Team Fortress 2 Update
+
+### 6 New Community Maps
+
+* **Dryfield**
+* **Camp Saxton**
+* **Shorelight**
+* **Redwood**
+* **Premuda**
+* **Mojave**
+
+### Cosmetics, War Paints, & Taunts
+* Features a new set of community-created cosmetics, war paints, taunts, and unusual effects.
+
+### More info
+
+* For a full list of changes to the base game, visit the [TF2 Update Post](https://www.teamfortress.com/post.php?id=274747).

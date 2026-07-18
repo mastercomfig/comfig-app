@@ -17,3 +17,23 @@ export function resolveTC2Path(path: string, currentPathname: string): string {
   
   return cleanPath;
 }
+
+/**
+ * Resolves a link to the TC2 site.
+ * On local dev servers, it links to the local /tc2 path.
+ * In production, it links to teamcomtress.com.
+ *
+ * @param path The target relative path (e.g. "/", "/servers", "/feed#news").
+ */
+export function resolveTC2Link(path: string = "/"): string {
+  const cleanPath = path.startsWith("/") ? path : `/${path}`;
+  
+  if (import.meta.env.DEV) {
+    if (cleanPath === "/") return "/tc2";
+    return `/tc2${cleanPath}`;
+  }
+  
+  if (cleanPath === "/") return "https://teamcomtress.com/";
+  return `https://teamcomtress.com${cleanPath}`;
+}
+

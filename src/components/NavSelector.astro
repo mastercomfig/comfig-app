@@ -1,4 +1,5 @@
 ---
+import { resolveTC2Link } from "@utils/tc2Router";
 const { pageName } = Astro.props;
 ---
 
@@ -57,7 +58,7 @@ const { pageName } = Astro.props;
         >
       </li> -->
       <li>
-        <a class=`dropdown-item` href="https://teamcomtress.com"
+        <a class=`dropdown-item` href={resolveTC2Link("/")}
           ><img
             src="/img/tc2/favicon.ico"
             alt=""

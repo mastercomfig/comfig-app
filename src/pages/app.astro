@@ -19,6 +19,7 @@ import highImg from "@img/presets/high.webp";
 import customImg from "@img/presets/custom.webp";
 import NavSelector from "@components/NavSelector.astro";
 import AppLoader from "@components/loaders/AppLoader.astro";
+import { resolveTC2Link } from "@utils/tc2Router";
 
 const { appData, hash: appDataHash } = await getAppData();
 const appVersion = appData.v[0];
@@ -862,7 +863,7 @@ const { hash } = await getGameData();
                 >
                 <a
                   class="btn btn-secondary"
-                  href="https://teamcomtress.com/"
+                  href={resolveTC2Link("/")}
                   rel="noopener"
                   ><img
                     src="/img/tc2/favicon.ico"
