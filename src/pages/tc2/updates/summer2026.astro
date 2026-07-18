@@ -188,16 +188,28 @@ const warPaints = [
 
 const unusuals = [
   {
-    name: "Swirling Solar Rays",
-    visual: "☀️",
+    name: "Umbral Lights",
+    video: "/img/tc2/summer2026/unusuals/umbral_lights.mp4",
   },
   {
-    name: "Neon Palm Paradise",
-    visual: "🌴",
+    name: "Northern Lights",
+    video: "/img/tc2/summer2026/unusuals/northern_lights.mp4",
   },
   {
-    name: "Beach Ball Bonanza",
-    visual: "🎈",
+    name: "Solar Singed",
+    video: "/img/tc2/summer2026/unusuals/solar_singed.mp4",
+  },
+  {
+    name: "Floral Growth",
+    video: "/img/tc2/summer2026/unusuals/floral_growth.mp4",
+  },
+  {
+    name: "Stellar Orbit",
+    video: "/img/tc2/summer2026/unusuals/stellar_orbit.mp4",
+  },
+  {
+    name: "Blissful Butterflies",
+    video: "/img/tc2/summer2026/unusuals/blissful_butterflies.mp4",
   },
 ];
 
@@ -2468,8 +2480,7 @@ const taunts = [
           </div>
         </div>
 
-        {
-          /* Sub-heading 2: Unusual Effects 
+        {/* Sub-heading 2: Unusual Effects */}
         <div class="mb-4 mt-5">
           <h3
             class="font-header text-white mb-2"
@@ -2477,11 +2488,9 @@ const taunts = [
           >
             Unusual Effects
           </h3>
-        </div>*/
-        }
+        </div>
 
-        {
-          /* Unusuals Carousel
+        {/* Unusuals Carousel */}
         <div
           class="slide-viewer slide-viewer-large mb-5"
           data-slideshow="unusuals"
@@ -2495,7 +2504,16 @@ const taunts = [
                 style="max-width: 720px; margin: 0 auto;"
               >
                 <div class="video-preview-viewport mb-3">
-                  <div class="video-preview-placeholder">{item.visual}</div>
+                  <video
+                    class="video-preview-placeholder"
+                    loading="lazy"
+                    autoplay
+                    muted
+                    loop
+                    playsinline
+                  >
+                    <source src={item.video} type="video/mp4" />
+                  </video>
                 </div>
                 <div>
                   <span
@@ -2527,11 +2545,10 @@ const taunts = [
               Next <i class="fa-solid fa-chevron-right"></i>
             </button>
           </div>
-        </div> */
-        }
+        </div>
 
-        {
-          /* Event Special Note Banner aligned here with Unusuals
+        {/* Event Special Note Banner aligned here with Unusuals */}
+
         <div class="row mb-5 justify-content-center">
           <div class="col-8">
             <div class="event-special-note">
@@ -2540,9 +2557,7 @@ const taunts = [
               event. This does not include crates.
             </div>
           </div>
-        </div> */
-        }
-
+        </div>
         {/* Sub-heading 3: New Taunts */}
         <div class="mb-4 mt-5">
           <h3
