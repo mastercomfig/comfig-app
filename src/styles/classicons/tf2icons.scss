@@ -1,0 +1,121 @@
+@import "variables";
+
+@font-face {
+  font-family: 'tf2-classicons';
+  src: url('#{$icomoon-font-path}/tf2-classicons.eot?bv99da');
+  src: url('#{$icomoon-font-path}/tf2-classicons.eot?bv99da#iefix') format('embedded-opentype'),
+  url('#{$icomoon-font-path}/tf2-classicons.ttf?bv99da') format('truetype'),
+  url('#{$icomoon-font-path}/tf2-classicons.woff?bv99da') format('woff'),
+  url('#{$icomoon-font-path}/tf2-classicons.svg?bv99da#tf2-classicons') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="tf2-"],
+[class*=" tf2-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'tf2-classicons' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Enable Ligatures ================ */
+  letter-spacing: 0;
+  -webkit-font-feature-settings: "liga";
+  -moz-font-feature-settings: "liga=1";
+  -moz-font-feature-settings: "liga";
+  -ms-font-feature-settings: "liga" 1;
+  font-feature-settings: "liga";
+  -webkit-font-variant-ligatures: discretionary-ligatures;
+  font-variant-ligatures: discretionary-ligatures;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@function unicode($str) {
+  @return unquote("\"")+$str +unquote("\"");
+}
+
+.tf2-Heavy {
+  &:before {
+    content: unicode($tf2-Heavy);
+  }
+}
+
+.tf2-Medic {
+  &:before {
+    content: unicode($tf2-Medic);
+  }
+}
+
+.tf2-Pyro {
+  &:before {
+    content: unicode($tf2-Pyro);
+  }
+}
+
+.tf2-Scout {
+  &:before {
+    content: unicode($tf2-Scout);
+  }
+}
+
+.tf2-Sniper {
+  &:before {
+    content: unicode($tf2-Sniper);
+  }
+}
+
+.tf2-Soldier {
+  &:before {
+    content: unicode($tf2-Soldier);
+  }
+}
+
+.tf2-Spy {
+  &:before {
+    content: unicode($tf2-Spy);
+  }
+}
+
+.tf2-Demo,
+.tf2-Demoman {
+  &:before {
+    content: unicode($tf2-Demo);
+  }
+}
+
+.tf2-Engineer {
+  &:before {
+    content: unicode($tf2-Engineer);
+  }
+}
+
+.tf2-FlankSoldier {
+  &:before {
+    content: unicode($tf2-FlankSoldier);
+  }
+}
+
+.tf2-PocketSoldier {
+  &:before {
+    content: unicode($tf2-PocketSoldier);
+  }
+}
+
+.tf2-FlankScout {
+  &:before {
+    content: unicode($tf2-FlankScout);
+  }
+}
+
+.tf2-PocketScout {
+  &:before {
+    content: unicode($tf2-PocketScout);
+  }
+}

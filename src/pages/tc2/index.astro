@@ -24,7 +24,10 @@ const allNews = (await getCollection("tc2News"))
 
 const news = allNews.filter((post) => !post.data.update).slice(0, 3);
 
-const majorUpdates = allNews.filter((post) => post.data.update).slice(0, 3);
+const majorUpdates = allNews
+  .filter((post) => post.data.update)
+  .filter((post) => !post.data.draft)
+  .slice(0, 3);
 
 const patches = (await getCollection("tc2Patches"))
   .sort(

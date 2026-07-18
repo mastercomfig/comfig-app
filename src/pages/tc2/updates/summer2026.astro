@@ -1,0 +1,3215 @@
+---
+import Body from "@components/Body.astro";
+import Footer from "@components/Footer.astro";
+import BaseHead from "@components/head/BaseHead.astro";
+import ImportHead from "@components/head/ImportHead.astro";
+import MainHead from "@components/head/MainHead.astro";
+import PreloadHead from "@components/head/PreloadHead.astro";
+
+import tfLogoImg from "@img/tc2/team-comtress-2.png";
+import Layout from "@layouts/Layout.astro";
+import { Content as NotesBlock } from "@posts/data/summer2026.mdx";
+import TC2Summer2026Loader from "@components/loaders/TC2Summer2026Loader.astro";
+import { resolveTC2Path } from "@utils/tc2Router";
+
+import "@styles/classicons/tf2icons.scss";
+import "@fontsource-variable/inter/wght.css";
+import "@fontsource-variable/oswald/wght.css";
+
+const cosmetics = [
+  {
+    name: "Atomic Bomber",
+    grade: "commando",
+    itemType: "Jacket",
+    classes: ["Scout"],
+    image: "https://wiki.teamfortress.com/w/images/b/b8/Atomic_Bomber.png",
+  },
+  {
+    name: "Bonk! Atomic Kicks",
+    grade: "assassin",
+    itemType: "Shoes",
+    classes: ["Scout"],
+    image:
+      "https://wiki.teamfortress.com/w/images/e/e2/Bonk%21_Atomic_Kicks.png",
+  },
+  {
+    name: "Lieutenant's Cut",
+    grade: "commando",
+    itemType: "Hair",
+    classes: ["Soldier"],
+    image: "https://wiki.teamfortress.com/w/images/b/b2/Lieutenant%27s_Cut.png",
+  },
+  {
+    name: "Pyro's Overalls",
+    grade: "elite",
+    itemType: "Hat",
+    classes: ["Pyro"],
+    image: "https://wiki.teamfortress.com/w/images/b/be/Pyro%27s_Overalls.png",
+  },
+  {
+    name: "Tropical Torcher",
+    grade: "mercenary",
+    itemType: "Shirt",
+    classes: ["Pyro"],
+    image: "https://wiki.teamfortress.com/w/images/b/bb/Tropical_Torcher.png",
+  },
+  {
+    name: "Deadliest Match",
+    grade: "mercenary",
+    itemType: "Hat",
+    classes: ["Demoman"],
+    image: "https://wiki.teamfortress.com/w/images/9/90/Deadliest_Match.png",
+  },
+  {
+    name: "Tsar Athlete",
+    grade: "commando",
+    itemType: "Shirt",
+    classes: ["Heavy"],
+    image: "https://wiki.teamfortress.com/w/images/e/e2/Tsar_Athlete.png",
+  },
+  {
+    name: "Chief Executor",
+    grade: "assassin",
+    itemType: "Hair",
+    classes: ["Engineer"],
+    image: "https://wiki.teamfortress.com/w/images/e/ea/Chief_Executor.png",
+  },
+  {
+    name: "Bald Spotter",
+    grade: "mercenary",
+    itemType: "Head Mirror",
+    classes: ["Medic"],
+    image: "https://wiki.teamfortress.com/w/images/d/d6/Bald_Spotter.png",
+  },
+  {
+    name: "Long Shot",
+    grade: "mercenary",
+    itemType: "Vest",
+    classes: ["Sniper"],
+    image: "https://wiki.teamfortress.com/w/images/9/9b/Long_Shot.png",
+  },
+  {
+    name: "Delusions of Grandeur",
+    grade: "commando",
+    itemType: "Hat",
+    classes: ["Spy"],
+    image:
+      "https://wiki.teamfortress.com/w/images/8/8a/Delusions_of_Grandeur.png",
+  },
+  {
+    name: "Beachcomber's Brim",
+    grade: "assassin",
+    itemType: "Hat",
+    classes: ["All-Class!"],
+    image:
+      "https://wiki.teamfortress.com/w/images/f/f7/Beachcomber%27s_Brim.png",
+  },
+  {
+    name: "Hard Hearing",
+    grade: "elite",
+    itemType: "Hat",
+    classes: ["All-Class!"],
+    image: "https://wiki.teamfortress.com/w/images/5/57/Hard_Hearing.png",
+  },
+];
+
+const warPaints = [
+  {
+    name: "Team Union",
+    grade: "elite",
+    itemType: "War Paint",
+    image:
+      "https://wiki.teamfortress.com/w/images/d/de/Backpack_Team_Union_War_Paint_Factory_New.png",
+  },
+  {
+    name: "Storage War",
+    grade: "assassin",
+    itemType: "War Paint",
+    image:
+      "https://wiki.teamfortress.com/w/images/4/4a/Backpack_Storage_War_War_Paint_Factory_New.png",
+  },
+  {
+    name: "Taxi Cabbed",
+    grade: "assassin",
+    itemType: "War Paint",
+    image:
+      "https://wiki.teamfortress.com/w/images/1/1f/Backpack_Taxi_Cabbed_War_Paint_Factory_New.png",
+  },
+  {
+    name: "Sandwich Diner",
+    grade: "commando",
+    itemType: "War Paint",
+    image:
+      "https://wiki.teamfortress.com/w/images/2/25/Backpack_Sandwich_Diner_War_Paint_Factory_New.png",
+  },
+  {
+    name: "Krak-coated",
+    grade: "commando",
+    itemType: "War Paint",
+    image:
+      "https://wiki.teamfortress.com/w/images/8/8c/Backpack_Krak-coated_War_Paint_Factory_New.png",
+  },
+  {
+    name: "Die'n Dasher",
+    grade: "commando",
+    itemType: "War Paint",
+    image:
+      "https://wiki.teamfortress.com/w/images/9/90/Backpack_Die%27n_Dasher_War_Paint_Factory_New.png",
+  },
+  {
+    name: "Army Guns",
+    grade: "mercenary",
+    itemType: "War Paint",
+    image:
+      "https://wiki.teamfortress.com/w/images/0/08/Backpack_Army_Guns_War_Paint_Factory_New.png",
+  },
+  {
+    name: "Ocean Mapped",
+    grade: "mercenary",
+    itemType: "War Paint",
+    image:
+      "https://wiki.teamfortress.com/w/images/a/a0/Backpack_Ocean_Mapped_War_Paint_Factory_New.png",
+  },
+  {
+    name: "Sideshow",
+    grade: "mercenary",
+    itemType: "War Paint",
+    image:
+      "https://wiki.teamfortress.com/w/images/a/aa/Backpack_Sideshow_War_Paint_Factory_New.png",
+  },
+  {
+    name: "Beachy Boy",
+    grade: "mercenary",
+    itemType: "War Paint",
+    image:
+      "https://wiki.teamfortress.com/w/images/4/43/Backpack_Beachy_Boy_War_Paint_Factory_New.png",
+  },
+];
+
+const unusuals = [
+  {
+    name: "Swirling Solar Rays",
+    visual: "☀️",
+  },
+  {
+    name: "Neon Palm Paradise",
+    visual: "🌴",
+  },
+  {
+    name: "Beach Ball Bonanza",
+    visual: "🎈",
+  },
+];
+
+const taunts = [
+  {
+    name: "Buffoon's Bivouac",
+    classes: ["Soldier"],
+    description:
+      "Step aside civvies, it's finally time for a real patriot to show you who's the best... at being lazy!",
+    image:
+      "https://wiki.teamfortress.com/w/images/7/79/Taunt_Buffoon%27s_Bivouac.png",
+  },
+  {
+    name: "Friendly Fire",
+    classes: ["Pyro"],
+    description:
+      "We're not sure what Pyro puts in these, but it can't be anything good.",
+    image:
+      "https://wiki.teamfortress.com/w/images/b/b2/Taunt_Friendly_Fire.png",
+  },
+  {
+    name: "Circuit Breaker",
+    classes: ["Heavy"],
+    description: "Rip and tear through metal men to your heart's delight.",
+    image:
+      "https://wiki.teamfortress.com/w/images/6/62/Taunt_Circuit_Breaker.png",
+  },
+  {
+    name: "Faux-calization",
+    classes: ["Spy"],
+    description:
+      "In the world of espionage, a good impersonation of the guy you killed goes a long way.",
+    image:
+      "https://wiki.teamfortress.com/w/images/f/fe/Taunt_Faux-calization.png",
+  },
+];
+---
+
+<style>
+  body.summer-page {
+    background-color: #0d0a09;
+    color: #ebdcd0;
+    font-family: "Inter Variable", sans-serif;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Typography */
+  .font-display {
+    font-family: "Oswald Variable", sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-wrap: balance;
+    letter-spacing: 1px;
+  }
+  .font-header {
+    font-family: "Oswald Variable", sans-serif;
+    text-transform: uppercase;
+    text-wrap: balance;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+  .font-body {
+    font-family: "Inter Variable", sans-serif;
+    text-wrap: pretty;
+  }
+  .font-header-large {
+    font-size: 1.85rem;
+  }
+
+  /* Theme Accents & Grade Colors */
+  .color-gold {
+    color: #f1c40f !important;
+  }
+  .color-orange {
+    color: #e67e22 !important;
+  }
+  .color-copper {
+    color: #d35400 !important;
+  }
+  .color-bronze {
+    color: #b85a1c !important;
+  }
+  .color-green {
+    color: #2ecc71 !important;
+  }
+  .color-muted {
+    color: #8e837a !important;
+  }
+
+  /* TF2 Grade Colors */
+  .text-civilian {
+    color: #b0c3d9 !important;
+  }
+  .text-freelance {
+    color: #5e98d9 !important;
+  }
+  .text-mercenary {
+    color: #4b69ff !important;
+  }
+  .text-commando {
+    color: #8847ff !important;
+  }
+  .text-assassin {
+    color: #d32ce6 !important;
+  }
+  .text-elite {
+    color: #eb4b4b !important;
+  }
+  .text-unusual {
+    color: #8650ac !important;
+  }
+  .text-unique {
+    color: #ffd700 !important;
+  }
+
+  /* Rarity Border Colors */
+  .border-civilian {
+    border-color: #b0c3d9 !important;
+  }
+  .border-freelance {
+    border-color: #5e98d9 !important;
+  }
+  .border-mercenary {
+    border-color: #4b69ff !important;
+  }
+  .border-commando {
+    border-color: #8847ff !important;
+  }
+  .border-assassin {
+    border-color: #d32ce6 !important;
+  }
+  .border-elite {
+    border-color: #eb4b4b !important;
+  }
+
+  /* Case Column & Widescreen Video Viewport styling */
+  .card-case-group {
+    background: rgba(13, 10, 9, 0.25) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 0px !important;
+    padding: 2.2rem 1.5rem !important;
+    box-shadow: none !important;
+  }
+  .case-image-container {
+    height: 145px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .case-img {
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.6));
+    transition: transform 0.3s ease;
+  }
+  .card-case-group:hover .case-img {
+    transform: scale(1.15) rotate(6deg);
+  }
+
+  /* Widescreen Gameplay video container placeholder */
+  .video-preview-viewport {
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: #120e0c;
+    border: 2px solid #5a3c28;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+  }
+  .video-preview-placeholder {
+    font-size: 6.5rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    z-index: 2;
+    transition: transform 0.3s ease;
+  }
+
+  .video-preview-placeholder img {
+    height: 85%;
+    max-width: 90%;
+    object-fit: contain;
+    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.5));
+  }
+  .event-special-note {
+    background: rgba(230, 126, 34, 0.08);
+    border: 1px solid #e67e22;
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    color: #ebdcd0;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Rarity Glow Classes */
+  .glow-civilian {
+    box-shadow:
+      inset 0 0 35px rgba(176, 195, 217, 0.25),
+      0 8px 20px rgba(0, 0, 0, 0.5);
+  }
+  .glow-freelance {
+    box-shadow:
+      inset 0 0 35px rgba(94, 152, 217, 0.25),
+      0 8px 20px rgba(0, 0, 0, 0.5);
+  }
+  .glow-mercenary {
+    box-shadow:
+      inset 0 0 35px rgba(75, 105, 255, 0.3),
+      0 8px 20px rgba(0, 0, 0, 0.5);
+  }
+  .glow-commando {
+    box-shadow:
+      inset 0 0 35px rgba(136, 71, 255, 0.35),
+      0 8px 20px rgba(0, 0, 0, 0.5);
+  }
+  .glow-assassin {
+    box-shadow:
+      inset 0 0 35px rgba(211, 44, 230, 0.4),
+      0 8px 20px rgba(0, 0, 0, 0.5);
+  }
+  .glow-elite {
+    box-shadow:
+      inset 0 0 45px rgba(235, 75, 75, 0.45),
+      0 12px 24px rgba(0, 0, 0, 0.6);
+  }
+
+  /* Class Emblems and Badges */
+  .item-class-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: rgba(13, 10, 9, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #ebdcd0;
+    font-family: "Oswald Variable", sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    padding: 0.3rem 0.7rem;
+    border-radius: 4px;
+    text-transform: uppercase;
+    z-index: 5;
+  }
+
+  /* Retro Postcard / Sunset Header Styling */
+  .hero-postcard-header {
+    background:
+      linear-gradient(
+        180deg,
+        rgba(53, 31, 57, 0.5) 0%,
+        rgba(230, 126, 34, 0.2) 65%,
+        #0d0a09 100%
+      ),
+      radial-gradient(circle at 50% 30%, #582f4e 0%, #120e0c 100%);
+    padding: 6.5rem 0;
+    position: relative;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    min-height: 70vh;
+  }
+  .hero-postcard-header > .container {
+    width: 100%;
+  }
+  .hero-postcard-card {
+    background: #fcf8f0;
+    border: 1px solid #ebdcb0;
+    border-radius: 8px;
+    padding: 2.2rem;
+    box-shadow:
+      0 20px 45px rgba(0, 0, 0, 0.6),
+      inset 0 0 15px rgba(255, 255, 255, 0.6);
+    color: #2b1f17;
+    position: relative;
+    transform: rotate(1deg);
+  }
+  .postcard-stamp-box {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 60px;
+    height: 70px;
+    border: 2px dashed #c0392b;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #c0392b;
+    font-family: "Oswald Variable", sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    background: #fff;
+    z-index: 10;
+  }
+  .postcard-stamp-box span {
+    font-size: 1.25rem;
+    line-height: 1;
+  }
+  .postcard-postmark {
+    position: absolute;
+    top: -5px;
+    right: 65px;
+    width: 95px;
+    height: 95px;
+    border: 2px solid rgba(192, 57, 43, 0.4);
+    border-radius: 50%;
+    color: rgba(192, 57, 43, 0.4);
+    font-family: monospace;
+    font-size: 0.68rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    transform: rotate(-15deg);
+    pointer-events: none;
+    z-index: 20;
+  }
+  .postcard-message-side {
+    padding-right: 1.5rem;
+    border-right: 1px solid rgba(43, 31, 23, 0.15);
+    text-align: left;
+    font-family: "Inter Variable", sans-serif;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: #4a3c31;
+  }
+  .postcard-address-side {
+    padding-left: 1.5rem;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: 150px;
+  }
+  .address-line {
+    border-bottom: 1px solid rgba(43, 31, 23, 0.2);
+    font-family: monospace;
+    font-size: 0.9rem;
+    color: #5a4a3f;
+    padding-bottom: 0.2rem;
+    margin-bottom: 0.8rem;
+  }
+  .address-line:last-child {
+    margin-bottom: 0;
+  }
+  .hero-postcard-greeting {
+    font-family: "Oswald Variable", sans-serif;
+    font-weight: 700;
+    letter-spacing: 4px;
+    color: #f1c40f;
+    font-size: 1.3rem;
+    text-transform: uppercase;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  .hero-postcard-title {
+    font-size: clamp(3.2rem, 8vw, 5.8rem);
+    line-height: 0.9;
+    color: #ffffff;
+    margin: 0 0 1.5rem 0;
+    font-family: "Oswald Variable", sans-serif;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-shadow:
+      3px 3px 0px #b85a1c,
+      6px 6px 0px #3d1c0c;
+  }
+  .hero-postcard-desc {
+    font-size: 1.15rem;
+    color: #ebdcd0;
+    line-height: 1.65;
+    max-width: 620px;
+    text-align: left;
+  }
+
+  @media (max-width: 768px) {
+    .hero-postcard-header {
+      padding: 4.5rem 0;
+    }
+    .hero-postcard-desc {
+      text-align: center;
+      margin: 0 auto;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .hero-postcard-card {
+      padding: 1.5rem;
+    }
+    .postcard-message-side {
+      font-size: 0.8rem;
+      padding-right: 0.8rem;
+    }
+    .postcard-address-side {
+      padding-left: 0.8rem;
+    }
+    .address-line {
+      font-size: 0.8rem;
+    }
+  }
+
+  /* Alternating Tropical Background Sections */
+  .dossier-section {
+    padding: 5.5rem 0;
+    border-bottom: 1px dashed rgba(230, 126, 34, 0.12);
+  }
+  .dossier-section.bg-darker {
+    background-color: #120e0c;
+  }
+  .dossier-section.bg-warm {
+    background-color: #181412;
+  }
+  .section-label {
+    display: inline-block;
+    background: #e67e22;
+    color: #0d0a09;
+    font-family: "Oswald Variable", sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 0.25rem 0.85rem;
+    border-radius: 4px;
+    margin-bottom: 0.8rem;
+  }
+  .big-header {
+    font-family: "Oswald Variable", sans-serif;
+    font-weight: 700;
+    font-size: clamp(2.4rem, 4vw, 4.2rem);
+    color: #ffffff;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-shadow: 2px 2px 0px #d35400;
+    margin-bottom: 1.5rem;
+  }
+  .body-text {
+    font-size: 1.15rem;
+    color: #ebdcd0;
+    line-height: 1.7;
+    margin-bottom: 2rem;
+    max-width: 720px;
+  }
+  .list-spacing li {
+    margin-bottom: 0.8rem;
+  }
+
+  /* dossier Box Card */
+  .card-dossier {
+    background: #1e1815;
+    border: 1px solid #5a3c28;
+    border-radius: 12px;
+    padding: 2.2rem;
+    box-shadow:
+      0 20px 45px -10px rgba(0, 0, 0, 0.8),
+      inset 0 0 20px rgba(0, 0, 0, 0.4);
+    transition: border-color 0.3s ease;
+  }
+  .card-dossier:hover {
+    border-color: #e67e22;
+  }
+
+  /* CSS-drawn Polaroid Vacation Postcard (Camp / Redwood theme) */
+  .postcard-card {
+    background: #fcf8f0;
+    border: 1px solid #ebdcb0;
+    border-radius: 6px;
+    padding: 1.8rem;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+    color: #2b1f17;
+    position: relative;
+  }
+  .postcard-card:hover {
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6);
+  }
+  .postcard-polaroid {
+    background: #ffffff;
+    border: 1px solid #ebdcb0;
+    padding: 1rem 1rem 2.8rem 1rem;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    margin-bottom: 2.2rem;
+    text-align: center;
+    position: relative;
+    transform: rotate(-2deg);
+    transition: transform 0.3s ease;
+  }
+  .postcard-photo-inner {
+    aspect-ratio: 16/10;
+    background: linear-gradient(135deg, #1c3d28 0%, #0c1c11 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3.5rem;
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+    position: relative;
+    overflow: hidden;
+  }
+  .postcard-photo-inner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: scale(1.25);
+  }
+  .postcard-caption {
+    font-family: "Oswald Variable", sans-serif;
+    font-size: 1.25rem;
+    line-height: 1.3;
+    margin-top: 1rem;
+    color: #4a3c31;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+    padding: 0 0.4rem;
+    text-align: center;
+  }
+  .postcard-description {
+    font-family: "Inter Variable", sans-serif;
+    font-size: 1rem;
+    line-height: 1.55;
+    color: #4a3c31;
+    margin-top: 0.8rem;
+    margin-bottom: 1.2rem;
+    text-align: left;
+  }
+  .postcard-stamp {
+    position: absolute;
+    top: 35px;
+    right: 35px;
+    border: 4px solid #c0392b;
+    padding: 0.5rem 1.5rem;
+    color: #c0392b;
+    font-family: "Oswald Variable", sans-serif;
+    font-weight: 700;
+    font-size: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transform: rotate(10deg);
+    pointer-events: none;
+    z-index: 10;
+    background: rgba(252, 248, 240, 0.92);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+  }
+  .postcard-author {
+    font-family: monospace;
+    font-size: 1.05rem;
+    color: #634f40;
+    margin-top: 0.2rem;
+    margin-bottom: 0.6rem;
+    font-weight: 700;
+  }
+  .postcard-link {
+    font-family: "Oswald Variable", sans-serif;
+    color: #c0392b;
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-decoration: none;
+    border-bottom: 2px solid rgba(192, 57, 43, 0.3);
+    transition:
+      border-bottom-color 0.2s,
+      color 0.2s;
+    display: inline-block;
+  }
+  .postcard-link:hover {
+    color: #d35400;
+    border-bottom-color: #d35400;
+  }
+
+  /* CSS-drawn Inventory Item Frame - Clean dark matching backgrounds */
+  .inventory-frame {
+    aspect-ratio: 16/10;
+    background: #3e332c;
+    border: 2px solid #5a3c28;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: inset 0 0 35px rgba(0, 0, 0, 0.8);
+  }
+  .rarity-glow-orange {
+    border-color: #f1c40f;
+    box-shadow:
+      inset 0 0 45px rgba(241, 196, 15, 0.25),
+      0 12px 24px rgba(0, 0, 0, 0.6);
+  }
+  .rarity-glow-purple {
+    border-color: #9b59b6;
+    box-shadow:
+      inset 0 0 45px rgba(155, 89, 182, 0.25),
+      0 12px 24px rgba(0, 0, 0, 0.6);
+  }
+  .item-blueprint-grid {
+    display: none !important;
+  }
+  .item-img-preview {
+    max-height: 70%;
+    max-width: 85%;
+    object-fit: contain;
+    filter: drop-shadow(0 8px 15px rgba(0, 0, 0, 0.5));
+    transition: transform 0.3s ease;
+    z-index: 2;
+  }
+
+  .item-img-preview-emoji {
+    font-size: 5.5rem;
+    line-height: 1;
+    z-index: 2;
+    filter: drop-shadow(0 8px 15px rgba(0, 0, 0, 0.5));
+    transition: transform 0.3s ease;
+  }
+
+  .item-rarity-banner {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 0.4rem;
+    background: rgba(0, 0, 0, 0.6);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    text-align: center;
+    font-family: "Oswald Variable", sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: #ebdcd0;
+  }
+
+  /* Slider Carousels */
+  .slide-viewer {
+    background: #1a1310;
+    border: 1px solid #4e3221;
+    border-radius: 16px;
+    padding: 2.2rem;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6);
+    position: relative;
+  }
+  .slide-viewer-large {
+    max-width: 860px;
+    margin: 0 auto;
+  }
+  .slide-nav-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1.5rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  .slide-nav-btn {
+    background: #d35400;
+    border: none;
+    color: #fff;
+    font-family: "Oswald Variable", sans-serif;
+    text-transform: uppercase;
+    font-size: 0.95rem;
+    padding: 0.5rem 1.2rem;
+    border-radius: 5px;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    transition:
+      background-color 0.2s,
+      transform 0.15s;
+    font-weight: 700;
+  }
+  .slide-nav-btn:hover {
+    background: #b85a1c;
+  }
+  .slide-nav-btn:active {
+    transform: scale(0.96);
+  }
+  .slide-indicator {
+    font-family: "Oswald Variable", sans-serif;
+    color: #f1c40f;
+    font-size: 1.15rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+
+  /* Floating Maps Navigation Controls */
+  .prev-btn-floating {
+    position: absolute;
+    left: -25px;
+    top: 220px;
+    transform: translateY(-50%);
+    z-index: 30;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.35rem;
+    padding: 0;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    border: 2px solid #5a3c28;
+    background: #d35400;
+    color: #fff;
+    cursor: pointer;
+    font-weight: 700;
+    transition:
+      background-color 0.2s,
+      transform 0.15s;
+  }
+  .next-btn-floating {
+    position: absolute;
+    right: -25px;
+    top: 220px;
+    transform: translateY(-50%);
+    z-index: 30;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.35rem;
+    padding: 0;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    border: 2px solid #5a3c28;
+    background: #d35400;
+    color: #fff;
+    cursor: pointer;
+    font-weight: 700;
+    transition:
+      background-color 0.2s,
+      transform 0.15s;
+  }
+  .prev-btn-floating:hover,
+  .next-btn-floating:hover {
+    background: #b85a1c;
+  }
+  .prev-btn-floating:active {
+    transform: translateY(-50%) scale(0.94);
+  }
+  .next-btn-floating:active {
+    transform: translateY(-50%) scale(0.94);
+  }
+
+  @media (max-width: 768px) {
+    .prev-btn-floating {
+      left: 10px;
+      width: 42px;
+      height: 42px;
+      font-size: 1.1rem;
+    }
+    .next-btn-floating {
+      right: 10px;
+      width: 42px;
+      height: 42px;
+      font-size: 1.1rem;
+    }
+  }
+
+  /* Slides layout */
+  .detail-slide-layout {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    align-items: center;
+  }
+  .detail-slide-text {
+    flex: 1 1 340px;
+  }
+  .detail-slide-visual {
+    flex: 1 1 360px;
+  }
+
+  /* Options Menu Simulator */
+  .options-sim-window {
+    background: #c3b7a5;
+    border: 3px solid #3c352d;
+    border-radius: 6px;
+    color: #2b2520;
+    padding: 1.8rem;
+    box-shadow:
+      0 25px 50px rgba(0, 0, 0, 0.8),
+      inset 0 0 10px rgba(255, 255, 255, 0.4);
+    font-family: "Inter Variable", sans-serif;
+  }
+  .options-sim-header {
+    border-bottom: 2px solid #5c5246;
+    padding-bottom: 0.8rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .options-sim-header h3 {
+    font-family: "Oswald Variable", sans-serif;
+    font-size: 1.5rem;
+    color: #2b2520;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+  }
+  .options-sim-title-tag {
+    font-family: "Oswald Variable", sans-serif;
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: #8c2a1c;
+    margin: 0;
+    letter-spacing: 1px;
+  }
+  .options-sim-label {
+    font-family: "Oswald Variable", sans-serif;
+    font-size: 1.05rem;
+    color: #3c352d;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+    display: block;
+    font-weight: 700;
+  }
+  .options-sim-control-box {
+    background: rgba(0, 0, 0, 0.08);
+    border: 1px solid #9c8e7c;
+    border-radius: 4px;
+    padding: 1rem;
+    margin-bottom: 1.2rem;
+  }
+  .options-sim-select {
+    width: 100%;
+    background: #ebdcd0;
+    border: 1px solid #7c6f5d;
+    border-radius: 4px;
+    padding: 0.4rem;
+    color: #2b2520;
+    outline: none;
+    font-size: 0.95rem;
+  }
+  .options-sim-input {
+    width: 100%;
+    background: #ebdcd0;
+    border: 1px solid #7c6f5d;
+    border-radius: 4px;
+    padding: 0.5rem;
+    color: #2b2520;
+    outline: none;
+    font-size: 0.95rem;
+  }
+  .options-sim-input::placeholder {
+    color: #8e837a;
+  }
+
+  /* Options Simulator Crosshair Preview Box */
+  .xhair-preview-frame {
+    height: 180px;
+    background: #1c1a18;
+    border: 2px solid #5c5246;
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.9);
+  }
+  .xhair-preview-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+      radial-gradient(
+        circle at center,
+        transparent 30%,
+        rgba(0, 0, 0, 0.6) 100%
+      ),
+      repeating-linear-gradient(
+        45deg,
+        #2b2826 0px,
+        #2b2826 2px,
+        transparent 2px,
+        transparent 10px
+      );
+  }
+  .xhair-preview-dot {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 8px;
+    height: 8px;
+    background: currentColor;
+    border-radius: 50%;
+    z-index: 10;
+    pointer-events: none;
+  }
+  .xhair-preview-cross {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 24px;
+    height: 24px;
+    z-index: 10;
+    pointer-events: none;
+  }
+  .xhair-preview-cross::before,
+  .xhair-preview-cross::after {
+    content: "";
+    position: absolute;
+    background: currentColor;
+  }
+  .xhair-preview-cross::before {
+    top: 11px;
+    left: 0;
+    width: 24px;
+    height: 2px;
+  }
+  .xhair-preview-cross::after {
+    top: 0;
+    left: 11px;
+    width: 2px;
+    height: 24px;
+  }
+
+  /* Keybindings simulator list */
+  .bind-list-sim {
+    height: 260px;
+    overflow-y: scroll;
+    border: 1px solid #7c6f5d;
+    background: #ebdcd0;
+    border-radius: 4px;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+  .bind-row-sim {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.6rem 1rem;
+    border-bottom: 1px solid #d3c7b5;
+    font-size: 0.95rem;
+    color: #2b2520;
+    transition: background-color 0.15s;
+  }
+  .bind-row-sim:last-child {
+    border-bottom: none;
+  }
+  .bind-row-sim span.action-name {
+    font-weight: 600;
+  }
+  .bind-row-sim span.key-code {
+    font-family: monospace;
+    background: rgba(0, 0, 0, 0.06);
+    padding: 0.1rem 0.4rem;
+    border-radius: 3px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  /* HDR Bloom Split Slider */
+  .compare-slider-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9;
+    overflow: hidden;
+    border-radius: 0;
+  }
+  .compare-slider-large {
+    max-width: 860px;
+    margin: 0 auto;
+  }
+  .compare-background {
+    width: 100%;
+    height: 100%;
+    display: block;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-image: url("/img/tc2/summer2026/bloomafter.png");
+    position: relative;
+  }
+  .compare-background::after {
+    content: "NEW HDR REVAMP";
+    position: absolute;
+    bottom: 15px;
+    right: 20px;
+    font-family: "Oswald Variable", sans-serif;
+    font-size: 1.1rem;
+    color: #fff;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+    font-weight: 700;
+  }
+  .compare-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-image: url("/img/tc2/summer2026/bloombefore.png");
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .compare-overlay::after {
+    content: "LEGACY BLOOM";
+    position: absolute;
+    bottom: 15px;
+    left: 20px;
+    font-family: "Oswald Variable", sans-serif;
+    font-size: 1.1rem;
+    color: #fff;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+    font-weight: 700;
+  }
+  .compare-handle {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 4px;
+    background: #ebdcd0;
+    z-index: 10;
+    pointer-events: none;
+  }
+  .compare-handle-arrow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #ebdcd0;
+    color: #0b0908;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    font-weight: bold;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+  }
+  .compare-range {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: ew-resize;
+    z-index: 20;
+  }
+
+  /* Outlines Simulator Styling */
+  .outline-sim-box {
+    background: #090706;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    height: 280px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.95);
+  }
+  .sim-wall {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 40%;
+    width: 20%;
+    background: linear-gradient(90deg, #2b2826 0%, #1c1a19 100%);
+    border-left: 2px solid #444;
+    border-right: 2px solid #444;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .sim-wall span {
+    font-family: "Oswald Variable", sans-serif;
+    color: #666;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transform: rotate(-90deg);
+    font-weight: 700;
+  }
+  .sim-character {
+    position: absolute;
+    top: 50%;
+    width: 60px;
+    height: 60px;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle at center, #c0392b 30%, #962d22 100%);
+    border-radius: 50%;
+    z-index: 5;
+    transition:
+      left 0.1s linear,
+      opacity 0.15s ease;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .sim-character::after {
+    content: "MERC";
+    font-family: "Oswald Variable", sans-serif;
+    font-size: 0.8rem;
+    color: #fff;
+    font-weight: 700;
+  }
+  .sim-outline-overlay {
+    position: absolute;
+    top: 50%;
+    width: 62px;
+    height: 62px;
+    transform: translate(-50%, -50%);
+    border: 3px solid #fff;
+    border-radius: 50%;
+    z-index: 15;
+    pointer-events: none;
+    transition:
+      left 0.1s linear,
+      opacity 0.15s ease,
+      filter 0.15s ease;
+    opacity: 0;
+  }
+  .sim-controls-panel {
+    background: rgba(28, 25, 23, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 1.2rem;
+  }
+  .sim-system-selector {
+    display: flex;
+    gap: 0.8rem;
+    margin-bottom: 1.2rem;
+  }
+  .sim-system-btn {
+    flex: 1;
+    background: #191615;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #a8a29e;
+    font-family: "Oswald Variable", sans-serif;
+    text-transform: uppercase;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+    font-weight: 700;
+  }
+  .sim-system-btn.active-system {
+    background: #e67e22;
+    color: #fff;
+    border-color: #e67e22;
+  }
+  .sim-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 8px;
+    border-radius: 5px;
+    background: #272522;
+    outline: none;
+    margin-top: 0.8rem;
+  }
+  .sim-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #e67e22;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    transition: transform 0.1s ease;
+  }
+  .sim-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.15);
+  }
+
+  /* Visibility Utility */
+  .slide-hidden {
+    display: none !important;
+  }
+
+  /* Pulse Animation */
+  @keyframes pulseOpacity {
+    0% {
+      opacity: 0.8;
+      transform: scale(0.995);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  .pulse-anim {
+    animation: pulseOpacity 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  /* Scroll reveal elements */
+  .reveal-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition:
+      opacity 0.7s cubic-bezier(0.2, 0, 0, 1),
+      transform 0.7s cubic-bezier(0.2, 0, 0, 1);
+  }
+  .reveal-up.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Global footer styling overrides */
+  :global(footer) {
+    color: #a89f95 !important;
+    font-size: 0.85rem !important;
+    line-height: 1.6 !important;
+    padding: 4rem 1.5rem !important;
+    text-align: center !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  /* Action Buttons */
+  .btn-premium {
+    display: inline-block;
+    background: linear-gradient(135deg, #f1c40f 0%, #e67e22 100%);
+    color: #0c0a09;
+    font-family: "Oswald Variable", sans-serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 0.85rem 2.2rem;
+    border-radius: 8px;
+    text-decoration: none;
+    letter-spacing: 0.5px;
+    box-shadow: 0 10px 25px rgba(230, 126, 34, 0.25);
+    transition:
+      transform 0.2s cubic-bezier(0.2, 0, 0, 1),
+      box-shadow 0.2s ease;
+  }
+  .btn-premium:hover {
+    box-shadow: 0 10px 35px rgba(230, 126, 34, 0.4);
+  }
+  .btn-premium:active {
+    box-shadow: 0 10px 35px rgba(230, 126, 34, 0.4);
+  }
+
+  /* General Grid Layouts */
+  .grid-two-col {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+    gap: 2.5rem;
+    margin-top: 2rem;
+  }
+
+  /* Patch Notes */
+  .patch-notes-wrapper {
+    background: #0d0a09;
+    padding: 7rem 2rem;
+    border-top: 1px dashed rgba(230, 126, 34, 0.12);
+    border-bottom: 1px dashed rgba(230, 126, 34, 0.12);
+  }
+  .patch-notes-inner {
+    max-width: 1000px;
+    margin: 0 auto;
+    background: #1a1310;
+    padding: 4rem;
+    border-radius: 16px;
+    border: 1px solid #5a3c28;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7);
+  }
+
+  /* Global rules to capture nested MDX structures (markdown tags) */
+  .mdx-content :global(h2) {
+    color: #f1c40f;
+    font-size: 2.2rem;
+    text-transform: uppercase;
+    border-bottom: 2px solid rgba(211, 84, 0, 0.25);
+    padding-bottom: 0.6rem;
+    margin-top: 4rem;
+    margin-bottom: 2rem;
+    font-family: "Oswald Variable", sans-serif;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+  }
+  .mdx-content :global(h3) {
+    color: #ffffff;
+    font-size: 1.5rem;
+    margin-top: 2.5rem;
+    margin-bottom: 1.2rem;
+    font-family: "Oswald Variable", sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+  }
+  .mdx-content :global(p) {
+    line-height: 1.7;
+    color: #ebdcd0;
+    margin-bottom: 1.2rem;
+  }
+  .mdx-content :global(a) {
+    color: #e67e22;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .mdx-content :global(a:hover) {
+    color: #f1c40f;
+    text-decoration: underline;
+  }
+
+  /* Main (top-level) list items styling */
+  .mdx-content :global(> ul) {
+    list-style-type: none;
+    padding-left: 0;
+    margin-bottom: 2rem;
+  }
+  .mdx-content :global(> ul > li) {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 1.2rem;
+    line-height: 1.6;
+    color: #ebdcd0;
+    font-size: 1.1rem;
+    font-family: "Inter Variable", sans-serif;
+    text-transform: none;
+    letter-spacing: normal;
+    font-weight: 400;
+  }
+  .mdx-content :global(> ul > li::before) {
+    content: "•";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: #e67e22;
+    font-size: 1.1rem;
+  }
+
+  /* Nested (sub-level) list items styling */
+  .mdx-content :global(ul ul) {
+    list-style-type: none;
+    padding-left: 1.8rem;
+    margin-top: 0.6rem;
+    margin-bottom: 0.6rem;
+  }
+  .mdx-content :global(ul ul li) {
+    position: relative;
+    padding-left: 1.2rem;
+    margin-bottom: 0.5rem;
+    line-height: 1.55;
+    color: #ebdcd0;
+    font-size: 1.05rem;
+    font-family: "Inter Variable", sans-serif;
+    text-transform: none;
+    letter-spacing: normal;
+  }
+  .mdx-content :global(ul ul li::before) {
+    content: "•";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: #8e837a;
+    font-size: 1.1rem;
+  }
+  .mdx-content :global(ul ul li strong) {
+    color: #ffffff;
+    font-weight: 600;
+  }
+
+  @media (max-width: 992px) {
+    .patch-notes-inner {
+      padding: 2.5rem;
+    }
+  }
+
+  /* Dota 2 QoL Section Highlights */
+  .section-group-title {
+    font-family: "Oswald Variable", sans-serif;
+    font-size: clamp(2rem, 3.5vw, 3rem);
+    color: #ffffff;
+    text-transform: uppercase;
+    text-align: center;
+    letter-spacing: 2px;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+  }
+  .section-group-subtitle {
+    font-family: "Inter Variable", sans-serif;
+    font-size: 1.1rem;
+    color: #8e837a;
+    text-align: center;
+    margin-bottom: 3.5rem;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .highlight-item {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    margin-bottom: 2rem;
+  }
+  .highlight-visual-box {
+    background: #1e1815;
+    border: 1px solid #5a3c28;
+    border-radius: 12px;
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+    box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.8);
+  }
+  .highlight-visual-box-tall {
+    background: #1e1815;
+    border: 1px solid #5a3c28;
+    border-radius: 12px;
+    height: 240px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+    box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.8);
+  }
+  .highlight-visual-icon {
+    background: #1e1815;
+    border: 1px solid #5a3c28;
+    border-radius: 12px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.8);
+  }
+  .qol-icon-box {
+    font-size: 3rem;
+    color: #e67e22;
+    text-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  }
+  .highlight-title {
+    font-family: "Oswald Variable", sans-serif;
+    font-size: 1.25rem;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 1.2rem;
+    margin-bottom: 0.5rem;
+    text-align: center;
+    font-weight: 700;
+  }
+  .highlight-desc {
+    font-family: "Inter Variable", sans-serif;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #ebdcd0;
+    text-align: center;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  .qol-graphic-search {
+    width: 80%;
+    color: #ebdcd0;
+    font-family: monospace;
+  }
+  .qol-search-bar {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid #5a3c28;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    color: #ebdcd0;
+    margin-bottom: 0.8rem;
+    text-align: left;
+  }
+  .qol-search-results {
+    background: #ebdcd0;
+    border-radius: 4px;
+    padding: 0.2rem;
+  }
+  .qol-result-row.active {
+    background: #e67e22;
+    color: #fff;
+    padding: 0.4rem 0.8rem;
+    border-radius: 3px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    text-align: left;
+  }
+  .qol-graphic-chat {
+    width: 85%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+  .chat-sample-old {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    color: #ebdcd0;
+    font-size: 0.85rem;
+    filter: blur(0.6px);
+    opacity: 0.6;
+    border-left: 3px solid #7d3f1b;
+    text-align: left;
+  }
+  .chat-sample-new {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    color: #ebdcd0;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-left: 3px solid #2ecc71;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    text-align: left;
+  }
+  .qol-stopwatch-graphic {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+  .stopwatch-ring {
+    width: 90px;
+    height: 90px;
+    border: 6px solid #e67e22;
+    border-top-color: #f1c40f;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  }
+  .stopwatch-face {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .stopwatch-hand {
+    position: absolute;
+    width: 2px;
+    height: 35px;
+    background: #f1c40f;
+    top: 10px;
+    left: 50%;
+    transform-origin: bottom center;
+    transform: rotate(35deg);
+  }
+  .stopwatch-time {
+    font-family: "Oswald Variable", sans-serif;
+    font-weight: 700;
+    font-size: 1.6rem;
+    color: #fff;
+    z-index: 5;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.8);
+  }
+  .stopwatch-decor {
+    margin-top: 0.2rem;
+  }
+
+  /* Uniform Class Layout (Summer Style) */
+  .uniform-class-list {
+    display: flex;
+    flex-direction: column;
+    max-width: 1000px;
+    margin: 4rem auto 0;
+  }
+  .class-revision-row {
+    display: flex;
+    align-items: flex-start;
+    padding: 3rem 0;
+    border-bottom: 1px solid rgba(230, 126, 34, 0.12);
+    background: transparent;
+  }
+  .class-revision-row:last-child {
+    border-bottom: none;
+  }
+  .class-icon-block {
+    flex: 0 0 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 4rem;
+  }
+  .class-icon-block img {
+    border: 3px solid rgba(230, 126, 34, 0.35);
+    box-shadow:
+      0 4px 12px rgba(0, 0, 0, 0.4),
+      0 0 10px rgba(230, 126, 34, 0.1);
+    transition:
+      border-color 0.2s ease,
+      transform 0.2s ease;
+    margin-bottom: 1rem;
+  }
+  .class-icon-block:hover img {
+    border-color: rgba(230, 126, 34, 0.7);
+    transform: scale(1.05);
+  }
+  .class-details-block {
+    flex: 1;
+    align-self: center;
+  }
+  .class-icon-block h3 {
+    font-family: "Oswald Variable", sans-serif;
+    font-size: 1.6rem;
+    color: #ebdcd0;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Class Detail Bullets */
+  .merc-bullets ul {
+    list-style-type: none;
+    padding-left: 0;
+    margin: 0;
+  }
+  .merc-bullets li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 1rem;
+    line-height: 1.6;
+    color: #c3b7a5;
+    font-size: 1.1rem;
+  }
+  .merc-bullets li:last-child {
+    margin-bottom: 0;
+  }
+  .merc-bullets li::before {
+    content: "★";
+    position: absolute;
+    left: 0;
+    top: 3px;
+    color: #e67e22;
+    font-size: 0.85rem;
+    text-shadow: 0 0 4px rgba(230, 126, 34, 0.4);
+  }
+  .merc-bullets li strong {
+    color: #e67e22;
+    font-family: "Oswald Variable", sans-serif;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-right: 0.5rem;
+  }
+
+  /* Nested Sub-Bullets Layout */
+  .merc-bullets li ul,
+  .merc-bullets ul ul {
+    margin-top: 0.4rem;
+    margin-bottom: 0.4rem;
+    padding-left: 0;
+  }
+
+  /* Standard Sub-Bullets (no em) */
+  .merc-bullets li ul li,
+  .merc-bullets ul ul li {
+    color: #c3b7a5;
+    font-size: 1rem;
+    margin-bottom: 0.4rem;
+    padding-left: 1.2rem;
+  }
+  .merc-bullets li ul li::before,
+  .merc-bullets ul ul li::before {
+    content: "•";
+    color: rgba(230, 126, 34, 0.6);
+    font-size: 0.8rem;
+    text-shadow: none;
+    top: 2px;
+  }
+
+  /* Dev Commentary Sub-Bullets (contains em) */
+  .merc-bullets li ul li:has(em),
+  .merc-bullets ul ul li:has(em) {
+    color: #8c857b; /* Muted warm color */
+    font-size: 0.95rem;
+  }
+  .merc-bullets li ul li:has(em)::before,
+  .merc-bullets ul ul li:has(em)::before {
+    content: "—"; /* Muted dash */
+    color: rgba(230, 126, 34, 0.4);
+    font-size: 0.9rem;
+  }
+</style>
+
+<Layout>
+  <head>
+    <BaseHead />
+    <PreloadHead />
+    <ImportHead />
+    <MainHead
+      title="Summer 2026 Update | Team Comtress 2"
+      site="Team Comtress"
+      noSite={true}
+      description="The community Summer 2026 update, upgraded with Team Comtress 2's custom performance, settings sliders, HUD overhauls, and gameplay improvements."
+      image="https://teamcomtress.com/img/tc2/summer2026/summer2026bg.png"
+      favicon="/img/tc2/favicon.ico"
+      largeImage={true}
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+
+  <Body class="summer-page">
+    {/* Retro Travel Postcard Header */}
+    <header class="hero-postcard-header">
+      <div class="container">
+        <div class="row align-items-center">
+          {/* Left Column: Brochure Greetings */}
+          <div class="col-12 col-md-7 text-md-start text-center mb-5 mb-md-0">
+            <div
+              class="d-flex align-items-center justify-content-center justify-content-md-start mb-3"
+            >
+              <a href={resolveTC2Path("/", Astro.url.pathname)} class="me-3">
+                <img
+                  src={tfLogoImg.src}
+                  alt="TC2 Logo"
+                  style="height: 65px; opacity: 0.95;"
+                  class="pulse-anim"
+                />
+              </a>
+            </div>
+            <span class="hero-postcard-greeting">GET READY FOR...</span>
+            <h1 class="hero-postcard-title">SUMMER 2026</h1>
+            <p class="hero-postcard-desc font-body">
+              Pack your bags and check in for the ultimate summer vacation.
+              We've added 6 new maps to visit, and polished up the TF
+              experience. And don't forget to check out the new summer wear,
+              including 24 new items!
+            </p>
+          </div>
+
+          {/* Right Column: Postcard */}
+          <div class="col-12 col-md-5">
+            <div class="hero-postcard-card">
+              <div class="postcard-postmark">
+                POSTED<br />18 JUL 2026
+              </div>
+              <div class="postcard-stamp-box">
+                <span>🌴</span>
+                <strong>10&cent;</strong>
+              </div>
+
+              <div class="row g-0 mt-3">
+                {/* Message Side */}
+                <div class="col-7">
+                  <div class="postcard-message-side">
+                    <em>Dear Mercenaries,</em>
+                    <br /><br />
+                    With all your dedication and unpaid labor, we were able to prepare
+                    a <strong>well-deserved summer vacation</strong>! For us. As
+                    for you, you'll be working at six new summer destinations,
+                    toiling away in the hot sun.
+                    <br /><br />
+                    <em>All the best,</em>
+                    <br />
+                    <strong>— Your New Boss!</strong>
+                  </div>
+                </div>
+
+                {/* Address Side */}
+                <div class="col-5">
+                  <div class="postcard-address-side">
+                    <div class="address-line">To: All Staff</div>
+                    <div class="address-line">USA</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    {/* Section 1: The Maps Cycle */}
+    <section class="dossier-section bg-darker reveal-up">
+      <div class="container">
+        <div class="mb-5">
+          <span class="section-label">NEW MAPS</span>
+          <h2 class="big-header">WISH YOU WERE HERE...</h2>
+        </div>
+
+        <div class="slide-viewer" data-slideshow="maps">
+          {/* Redwood */}
+          <div
+            class="slideshow-item text-start"
+            data-slideshow-item
+            data-item-title="Redwood"
+          >
+            <div class="postcard-card">
+              <div class="postcard-stamp">Redwood</div>
+              <div class="postcard-polaroid">
+                <div class="postcard-photo-inner">
+                  <img
+                    src="https://images.steamusercontent.com/ugc/13880204862860380519/8E8E2D5A311C1591827E30EB421A1E8FA62A3361/?imw=5000&imh=5000&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false"
+                  />
+                </div>
+                <div class="postcard-caption">
+                  PRISTINE WILDERNESS GETAWAY — NOW WITH CONVENIENT ZIPLINE
+                  ACCESS TO ALL RESTRICTED AREAS!
+                </div>
+              </div>
+              <p class="postcard-description">
+                BLU has been tasked with navigating their payload through this
+                dense grove of giants to destroy RED’s top secret communications
+                tower, which has been ingeniously camouflaged to make it
+                virtually indistinguishable from the surrounding forest.
+              </p>
+              <hr />
+              <p class="postcard-author">
+                Created by Defcon, Sarexicus and Stuffy360
+              </p>
+              <a
+                href="https://steamcommunity.com/sharedfiles/filedetails/?id=3717818537"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="postcard-link"
+              >
+                Steam Workshop Page &rarr;
+              </a>
+            </div>
+          </div>
+
+          {/* Dryfield */}
+          <div
+            class="slideshow-item text-start slide-hidden"
+            data-slideshow-item
+            data-item-title="Dryfield"
+          >
+            <div class="postcard-card">
+              <div class="postcard-stamp">Dryfield</div>
+              <div class="postcard-polaroid">
+                <div class="postcard-photo-inner">
+                  <img
+                    src="https://images.steamusercontent.com/ugc/34447734098693138/F5D268D59DE717712C0598660C405BFE74D69A07/?imw=5000&imh=5000&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false"
+                  />
+                </div>
+                <div class="postcard-caption">
+                  BEAUTIFUL OPEN SKIES AND SURPRISINGLY AFFORDABLE REAL ESTATE!
+                </div>
+              </div>
+              <p class="postcard-description">
+                RED, under the name Woodside Lumber Yards, is fighting against
+                BLU, hidden behind the Bluecreek Coal Company, for control of an
+                unremarkable area. No gold, no rockets there! Just sand... but I
+                guess they have their reasons.
+              </p>
+              <hr />
+              <p class="postcard-author">
+                Created by ElectroSheep and Levillain
+              </p>
+              <a
+                href="https://steamcommunity.com/sharedfiles/filedetails/?id=3462326252"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="postcard-link"
+              >
+                Steam Workshop Page &rarr;
+              </a>
+            </div>
+          </div>
+
+          {/* Shorelight */}
+          <div
+            class="slideshow-item text-start slide-hidden"
+            data-slideshow-item
+            data-item-title="Shorelight"
+          >
+            <div class="postcard-card">
+              <div class="postcard-stamp">Shorelight</div>
+              <div class="postcard-polaroid">
+                <div class="postcard-photo-inner">
+                  <img
+                    src="https://images.steamusercontent.com/ugc/38948281669509704/0E9F0B35916E87430A41B2068C3162AE3AB9B98D/?imw=5000&imh=5000&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false"
+                  />
+                </div>
+                <div class="postcard-caption">
+                  VOTED #1 BEACH DESTINATION BY THOSE WHO MADE IT BACK!
+                </div>
+              </div>
+              <p class="postcard-description">
+                Deserts and War-zones are a dime a dozen, but how many times
+                have you fought on a scenic beach? Don't answer that actually.
+              </p>
+              <hr />
+              <p class="postcard-author">
+                Created by zythe_, Yrrzy, KrazyZark and Custard1
+              </p>
+              <a
+                href="https://steamcommunity.com/sharedfiles/filedetails/?id=2808425307"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="postcard-link"
+              >
+                Steam Workshop Page &rarr;
+              </a>
+            </div>
+          </div>
+
+          {/* Camp Saxton */}
+          <div
+            class="slideshow-item text-start slide-hidden"
+            data-slideshow-item
+            data-item-title="Camp Saxton"
+          >
+            <div class="postcard-card">
+              <div class="postcard-stamp">Camp Saxton</div>
+              <div class="postcard-polaroid">
+                <div class="postcard-photo-inner">
+                  <img
+                    src="https://images.steamusercontent.com/ugc/2046366098090407365/3754F53EB1FD62549AB53BAA161A3FA7D93EC7B3/?imw=5000&imh=5000&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false"
+                  />
+                </div>
+                <div class="postcard-caption">
+                  BUILD CHARACTER! BUILD STAMINA! BUILD WHATEVER WE TELL YOU TO
+                  BUILD!
+                </div>
+              </div>
+              <p class="postcard-description">
+                Attention <strong>CAMPERS / JUVENILE DELINQUENTS</strong>:
+                <br /><br />
+                Looking to toughen up and prove your worth to the
+                <strong>GIRL OF YOUR DREAMS / LOCAL MILITIA</strong>?
+                <br /><br />
+                Are you able to <strong>FIT</strong> / <strong>FIGHT</strong> in enclosed
+                spaces? Will anyone notice if you <strong>MAKE IT BIG</strong> / <strong
+                  >GO MISSING</strong
+                >?
+                <br /><br />
+                Then grab your survival kits and kiss your <strong
+                  >MOTHERS</strong
+                > /
+                <strong>PAROLE OFFICERS</strong> goodbye, because the
+                <strong>SUMMER</strong> / <strong>WINTER</strong> program at the Camp
+                Saxton Mining Camp for Minors is now
+                <strong>IN SESSION</strong> / <strong
+                  >CLOSED INDEFINITELY</strong
+                >!
+              </p>
+              <hr />
+              <p class="postcard-author">
+                Created by Void, Juniper, Diva Dan and CornetTheory
+              </p>
+              <a
+                href="https://steamcommunity.com/sharedfiles/filedetails/?id=2967708872"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="postcard-link"
+              >
+                Steam Workshop Page &rarr;
+              </a>
+            </div>
+          </div>
+
+          {/* Premuda */}
+          <div
+            class="slideshow-item text-start slide-hidden"
+            data-slideshow-item
+            data-item-title="Premuda"
+          >
+            <div class="postcard-card">
+              <div class="postcard-stamp">Premuda</div>
+              <div class="postcard-polaroid">
+                <div class="postcard-photo-inner">
+                  <img
+                    src="https://images.steamusercontent.com/ugc/17900396812074275553/5EB4079909AA6B2F60D6C80200772CB86065D006/?imw=5000&imh=5000&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false"
+                  />
+                </div>
+                <div class="postcard-caption">
+                  CHARMING FISHING VILLAGE — THE FISH PRACTICALLY GLOW WITH
+                  FRESHNESS!
+                </div>
+              </div>
+              <p class="postcard-description">
+                Set on the island of Premuda in the Adriatic Sea, this rainy
+                fishing village serves as a hidden launch facility. Under the
+                guise of a fishing vessel, BLU tries to disable RED's defensive
+                systems and nuke the covert rocket depot hidden underneath the
+                harbor.
+              </p>
+              <hr />
+              <p class="postcard-author">Created by eerieone and moe012</p>
+              <a
+                href="https://steamcommunity.com/sharedfiles/filedetails/?id=3608335815"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="postcard-link"
+              >
+                Steam Workshop Page &rarr;
+              </a>
+            </div>
+          </div>
+
+          {/* Mojave */}
+          <div
+            class="slideshow-item text-start slide-hidden"
+            data-slideshow-item
+            data-item-title="Mojave"
+          >
+            <div class="postcard-card">
+              <div class="postcard-stamp">Mojave</div>
+              <div class="postcard-polaroid">
+                <div class="postcard-photo-inner">
+                  <img
+                    src="https://images.steamusercontent.com/ugc/521637162503539430/63BBDD7ECAB8500887FD10544042B77FA5A12DB7/?imw=5000&imh=5000&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false"
+                  />
+                </div>
+                <div class="postcard-caption">
+                  OLD WEST CHARM — NOW WITH ALL-NEW UNDERGROUND AMENITIES!
+                </div>
+              </div>
+              <p class="postcard-description">
+                BLU starts their adventure fighting through a small mining
+                village, and works their way towards the RED underground
+                basement, which is full of stockpiled stuff and... an elevator!
+              </p>
+              <hr />
+              <p class="postcard-author">Created by Hanz and DaBeatzProject</p>
+              <a
+                href="https://steamcommunity.com/sharedfiles/filedetails/?id=460544858"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="postcard-link"
+              >
+                Steam Workshop Page &rarr;
+              </a>
+            </div>
+          </div>
+
+          {/* Floating Navigation Controls with Font Awesome */}
+          <button
+            class="slide-nav-btn prev-btn-floating"
+            data-slideshow-prev
+            aria-label="Previous Slide"
+          >
+            <i class="fa-solid fa-chevron-left"></i>
+          </button>
+          <button
+            class="slide-nav-btn next-btn-floating"
+            data-slideshow-next
+            aria-label="Next Slide"
+          >
+            <i class="fa-solid fa-chevron-right"></i>
+          </button>
+
+          <div class="slide-nav-controls justify-content-center">
+            <span class="slide-indicator" data-slideshow-status>1 / 6</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* Section 2: Apparel, Skins, Unusuals & Taunts */}
+    <section class="dossier-section bg-warm reveal-up">
+      <div class="container">
+        {/* Main Section Header */}
+        <div class="mb-5">
+          <span class="section-label">NEW COSMETICS</span>
+          <h2 class="big-header">GET YOUR SUMMER GEAR!</h2>
+        </div>
+
+        {/* Grouped Cases & Carousels Grid */}
+        <div class="row mb-5">
+          {/* Column 1: Cosmetic Case & Items */}
+          <div class="col-12 col-lg-6 mb-5 mb-lg-0">
+            <div class="card-dossier card-case-group">
+              {/* Case info */}
+              <div class="case-image-container mb-3">
+                <img
+                  src="https://wiki.teamfortress.com/w/images/2/21/Backpack_Summer_2026_Cosmetic_Case.png"
+                  alt="Summer 2026 Cosmetic Case"
+                  class="case-img"
+                />
+              </div>
+              <h4
+                class="font-header text-white mb-2"
+                style="font-size: 1.5rem; text-align: center;"
+              >
+                Summer 2026 Cosmetic Case
+              </h4>
+              <p
+                class="body-text mb-4"
+                style="font-size: 1rem; color: #c3b7a5; margin: 0 auto; max-width: 320px; text-align: center;"
+              >
+                Contains 24 new community-contributed cosmetics. Requires a
+                Summer 2026 Cosmetic Key to open.
+              </p>
+
+              <hr
+                style="border-top: 1px solid rgba(255, 255, 255, 0.1); margin: 2rem 0;"
+              />
+
+              {/* Items Carousel */}
+              <div class="slide-viewer" data-slideshow="cosmetics">
+                {
+                  cosmetics.map((item, idx) => (
+                    <div
+                      class={`slideshow-item text-start ${idx > 0 ? "slide-hidden" : ""}`}
+                      data-slideshow-item
+                      data-item-title={item.name}
+                    >
+                      <div
+                        class={`inventory-frame border-${item.grade} glow-${item.grade} mb-3`}
+                        style="position: relative;"
+                      >
+                        <span class="item-class-badge">
+                          {item.classes.map((className) => {
+                            if (className == "All-Class!") {
+                              return <span>{className}</span>;
+                            }
+                            return (
+                              <span
+                                class={`tf2-${className}`}
+                                style={{ fontSize: "1.5rem" }}
+                              />
+                            );
+                          })}
+                        </span>
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          class="item-img-preview"
+                        />
+                      </div>
+                      <h4
+                        class="font-header text-white mb-1"
+                        style="font-size: 1.4rem; text-align: center;"
+                      >
+                        {item.name}
+                      </h4>
+                      <p
+                        class={`body-text text-${item.grade} mb-0`}
+                        style="font-size: 0.95rem; font-weight: 700; text-transform: uppercase; text-align: center; max-width: none;"
+                      >
+                        {item.grade.charAt(0).toUpperCase() +
+                          item.grade.slice(1)}{" "}
+                        Grade {item.itemType}
+                      </p>
+                    </div>
+                  ))
+                }
+
+                <div class="slide-nav-controls">
+                  <button class="slide-nav-btn" data-slideshow-prev>
+                    <i class="fa-solid fa-chevron-left"></i>
+                  </button>
+                  <span class="slide-indicator" data-slideshow-status
+                    >1 / {cosmetics.length}</span
+                  >
+                  <button class="slide-nav-btn" data-slideshow-next>
+                    <i class="fa-solid fa-chevron-right"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Column 2: War Paint Case & Items */}
+          <div class="col-12 col-lg-6">
+            <div class="card-dossier card-case-group">
+              {/* Case info */}
+              <div class="case-image-container mb-3">
+                <img
+                  src="https://wiki.teamfortress.com/w/images/0/0f/Backpack_Summer_2026_War_Paint_Case.png"
+                  alt="Summer 2026 War Paint Case"
+                  class="case-img"
+                />
+              </div>
+              <h4
+                class="font-header text-white mb-2"
+                style="font-size: 1.5rem; text-align: center;"
+              >
+                Summer 2026 War Paint Case
+              </h4>
+              <p
+                class="body-text mb-4"
+                style="font-size: 1rem; color: #c3b7a5; margin: 0 auto; max-width: 320px; text-align: center;"
+              >
+                Contains 10 new community-contributed war paints. Requires a
+                Summer 2026 War Paint Key to open.
+              </p>
+
+              <hr
+                style="border-top: 1px solid rgba(255, 255, 255, 0.1); margin: 2rem 0;"
+              />
+
+              {/* Items Carousel */}
+              <div class="slide-viewer" data-slideshow="skins">
+                {
+                  warPaints.map((item, idx) => (
+                    <div
+                      class={`slideshow-item text-start ${idx > 0 ? "slide-hidden" : ""}`}
+                      data-slideshow-item
+                      data-item-title={item.name}
+                    >
+                      <div
+                        class={`inventory-frame border-${item.grade} glow-${item.grade} mb-3`}
+                        style="position: relative;"
+                      >
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          class="item-img-preview"
+                          style={{ transform: "scale(1.25" }}
+                        />
+                      </div>
+                      <h4
+                        class="font-header text-white mb-1"
+                        style="font-size: 1.4rem; text-align: center;"
+                      >
+                        {item.name}
+                      </h4>
+                      <p
+                        class={`body-text text-${item.grade} mb-0`}
+                        style="font-size: 0.95rem; font-weight: 700; text-transform: uppercase; text-align: center; max-width: none;"
+                      >
+                        {item.grade.charAt(0).toUpperCase() +
+                          item.grade.slice(1)}{" "}
+                        Grade {item.itemType}
+                      </p>
+                    </div>
+                  ))
+                }
+
+                <div class="slide-nav-controls">
+                  <button class="slide-nav-btn" data-slideshow-prev>
+                    <i class="fa-solid fa-chevron-left"></i>
+                  </button>
+                  <span class="slide-indicator" data-slideshow-status
+                    >1 / {warPaints.length}</span
+                  >
+                  <button class="slide-nav-btn" data-slideshow-next>
+                    <i class="fa-solid fa-chevron-right"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {
+          /* Sub-heading 2: Unusual Effects 
+        <div class="mb-4 mt-5">
+          <h3
+            class="font-header text-white mb-2"
+            style="font-size: 1.8rem; border-bottom: 2px solid rgba(230, 126, 34, 0.2); padding-bottom: 0.5rem;"
+          >
+            Unusual Effects
+          </h3>
+        </div>*/
+        }
+
+        {
+          /* Unusuals Carousel
+        <div
+          class="slide-viewer slide-viewer-large mb-5"
+          data-slideshow="unusuals"
+        >
+          {
+            unusuals.map((item, idx) => (
+              <div
+                class={`slideshow-item text-center ${idx > 0 ? "slide-hidden" : ""}`}
+                data-slideshow-item
+                data-item-title={item.name}
+                style="max-width: 720px; margin: 0 auto;"
+              >
+                <div class="video-preview-viewport mb-3">
+                  <div class="video-preview-placeholder">{item.visual}</div>
+                </div>
+                <div>
+                  <span
+                    class="text-unusual font-header"
+                    style="font-size: 0.95rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; display: block; margin-bottom: 0.3rem;"
+                  >
+                    <span class="fa fas fa-star me-1" />
+                    Unusual Effect
+                  </span>
+                  <h3
+                    class="font-header text-white mb-2"
+                    style="font-size: 1.8rem;"
+                  >
+                    {item.name}
+                  </h3>
+                </div>
+              </div>
+            ))
+          }
+
+          <div class="slide-nav-controls">
+            <button class="slide-nav-btn" data-slideshow-prev>
+              <i class="fa-solid fa-chevron-left"></i> Prev
+            </button>
+            <span class="slide-indicator" data-slideshow-status
+              >1 / {unusuals.length}</span
+            >
+            <button class="slide-nav-btn" data-slideshow-next>
+              Next <i class="fa-solid fa-chevron-right"></i>
+            </button>
+          </div>
+        </div> */
+        }
+
+        {
+          /* Event Special Note Banner aligned here with Unusuals
+        <div class="row mb-5 justify-content-center">
+          <div class="col-8">
+            <div class="event-special-note">
+              All cosmetic and taunt cases will grant Summer 2026 Unusual
+              effects instead of their normal Unusual effects during the Summer
+              event. This does not include crates.
+            </div>
+          </div>
+        </div> */
+        }
+
+        {/* Sub-heading 3: New Taunts */}
+        <div class="mb-4 mt-5">
+          <h3
+            class="font-header text-white mb-2"
+            style="font-size: 1.8rem; border-bottom: 2px solid rgba(230, 126, 34, 0.2); padding-bottom: 0.5rem;"
+          >
+            New Community Taunts
+          </h3>
+        </div>
+
+        {/* Taunts Carousel */}
+        <div class="slide-viewer slide-viewer-large" data-slideshow="taunts">
+          {
+            taunts.map((item, idx) => (
+              <div
+                class={`slideshow-item text-start ${idx > 0 ? "slide-hidden" : ""}`}
+                data-slideshow-item
+                data-item-title={item.name}
+              >
+                <div class="detail-slide-layout">
+                  <div class="detail-slide-text">
+                    <span
+                      class="text-unique font-header"
+                      style="font-size: 0.95rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; display: block; margin-bottom: 0.3rem;"
+                    >
+                      {item.classes.join(" / ")} Taunt
+                    </span>
+                    <h3 class="font-header text-white font-header-large mb-2">
+                      {item.name}
+                    </h3>
+                    <p class="body-text">{item.description}</p>
+                  </div>
+                  <div class="detail-slide-visual">
+                    <div class="video-preview-viewport">
+                      <div class="video-preview-placeholder">
+                        <img src={item.image} alt={item.name} />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))
+          }
+
+          <div class="slide-nav-controls">
+            <button class="slide-nav-btn" data-slideshow-prev>
+              <i class="fa-solid fa-chevron-left"></i> Prev
+            </button>
+            <span class="slide-indicator" data-slideshow-status
+              >1 / {taunts.length}</span
+            >
+            <button class="slide-nav-btn" data-slideshow-next>
+              Next <i class="fa-solid fa-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="text-center mt-5">
+          <a
+            href="https://wiki.teamfortress.com/wiki/Summer_2026_Update"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn-premium"
+          >
+            Explore All Items on the TF2 Wiki
+          </a>
+        </div>
+      </div>
+    </section>
+
+    {/* Megasection: Quality of Life */}
+    <section class="dossier-section bg-darker reveal-up">
+      <div class="container text-center mb-5">
+        <span class="section-label">QUALITY OF LIFE</span>
+        <h2 class="big-header">EVERY GAME JUST GOT A LITTLE BETTER</h2>
+      </div>
+
+      <div class="container">
+        <div class="mb-5 mt-4">
+          <h3 class="section-group-title">POWER AND CONTROL</h3>
+          <p class="section-group-subtitle">
+            Take control of your client with countless improvements to settings
+            and customization, including UI updates for keybinds, crosshairs and
+            graphics quality.
+          </p>
+        </div>
+        <div class="row justify-content-center mb-5">
+          <div class="col-12 col-xl-10">
+            <img class="img-fluid" src="/img/tc2/summer2026/keybinds.png" />
+            <div class="highlight-title">NEW KEYBINDS UI</div>
+            <p class="highlight-desc">
+              The keybinds menu has a cleaner layout and better organization to
+              help you find what you need faster, whether you're searching by
+              name or raw command for advanced users. And we've finally added
+              the ability to bind an action to multiple keys!
+            </p>
+          </div>
+        </div>
+
+        <div class="row mb-5">
+          <div class="col-12 col-md-6 mb-5 mb-md-0">
+            <div class="highlight-item">
+              <img
+                class="img-fluid"
+                src="/img/tc2/summer2026/graphicspreview.png"
+              />
+              <div class="highlight-title">IN-GAME GRAPHICS PREVIEW</div>
+              <p class="highlight-desc">
+                Get a good look of what your settings are actually changing with
+                the new graphics preview option. Toggle between the full
+                settings menu and mini-menu to preview your changes in
+                real-time.
+              </p>
+            </div>
+          </div>
+          <div class="col-12 col-md-6">
+            <div class="highlight-item">
+              <img class="img-fluid" src="/img/tc2/summer2026/crosshairs.png" />
+              <div class="highlight-title">NEW CROSSHAIR SETTINGS</div>
+              <p class="highlight-desc">
+                Preview your crosshair in multiple contexts and use new advanced
+                customizations like the new crosshair gap. And with more
+                crosshairs on the way, you'll be able to get the perfect
+                crosshair for you.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-5 mt-5">
+          <h3 class="section-group-title">COMMUNICATION AND CLARITY</h3>
+          <p class="section-group-subtitle">
+            Better ways to read the game state and coordinate with your team.
+          </p>
+        </div>
+
+        <div class="row mb-5">
+          <div class="col-12 col-lg-6 mb-5 mb-lg-0">
+            <div class="highlight-item">
+              <img class="img-fluid" src="/img/tc2/summer2026/outlines.png" />
+              <div class="highlight-title">OUTLINE OCCLUSION</div>
+              <p class="highlight-desc">
+                Outlines now render only when players are obscured behind solid
+                obstacles, reducing clutter and improving readability. Plus,
+                disguised Spies can stay undercover.
+              </p>
+            </div>
+          </div>
+          <div class="col-12 col-lg-6 mb-5 mb-lg-0">
+            <div class="highlight-item">
+              <img
+                class="img-fluid"
+                src="/img/tc2/summer2026/outlineoverheal.png"
+              />
+              <div class="highlight-title">OUTLINE HEALTH OVERHEAL</div>
+              <p class="highlight-desc">
+                Tell a bit easier who's topped off with healing with the new
+                overheal support on the healthbars above outlined teammates.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-5">
+          <div class="col-12 col-lg-6 mb-5 mb-lg-0">
+            <div class="highlight-item">
+              <img class="img-fluid" src="/img/tc2/summer2026/timers.png" />
+              <div class="highlight-title">HUD COUNTDOWN CLOCKS</div>
+              <p class="highlight-desc">
+                We've brought the clocks back! Rejoice in using the team status
+                HUD without minmode being forced on for the timers at the top,
+                improving readability and design.
+              </p>
+            </div>
+          </div>
+          <div class="col-12 col-lg-6 mb-5 mb-lg-0">
+            <div class="highlight-item">
+              <img class="img-fluid" src="/img/tc2/summer2026/radialmenu.png" />
+              <div class="highlight-title">
+                COMMUNICATION WHEEL <small>[BETA]</small>
+              </div>
+              <p class="highlight-desc">
+                A new, fully customizable radial menu! The voice menu has gotten
+                a makeover to be easier to use and customize, and we've added
+                options to make sure your muscle memory doesn't go away.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-5">
+          <div class="col-12 col-lg-6">
+            <div class="highlight-item">
+              <div class="compare-slider-container">
+                <div class="compare-background"></div>
+                <div class="compare-overlay"></div>
+                <div class="compare-handle">
+                  <div class="compare-handle-arrow">↔</div>
+                </div>
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value="50"
+                  class="compare-range"
+                  aria-label="Bloom revamp slider"
+                />
+              </div>
+              <div class="highlight-title">HDR & BLOOM REVAMP</div>
+              <p class="highlight-desc">
+                Bloom and HDR use a new algorithm that's faster yet more
+                accurate, without causing overblown highlights that make things
+                hard to see.
+              </p>
+            </div>
+          </div>
+          <div class="col-12 col-lg-6 mb-5 mb-lg-0">
+            <div class="highlight-item">
+              <img class="img-fluid" src="/img/tc2/summer2026/chatfont.png" />
+              <div class="highlight-title">Updated Chat Font</div>
+              <p class="highlight-desc">
+                The chat font has been updated for better readability, character
+                support and matching style.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-5 mt-5">
+          <h3 class="section-group-title">CLASS CHANGES</h3>
+          <p class="section-group-subtitle">
+            Here are some highlights of some gameplay changes and fixes, showing
+            our commitment to improving the gameplay experience for all players.
+          </p>
+        </div>
+
+        <div class="row">
+          <div class="col-12 col-md-6 col-lg-3 mb-4">
+            <div class="highlight-item">
+              <div class="highlight-visual-icon">
+                <div class="qol-icon-box">
+                  <i class="tf2-Pyro"></i>
+                </div>
+              </div>
+              <div class="highlight-title">PYRO FLAMES</div>
+              <p class="highlight-desc">
+                We've tuned up the heat system from our last update, and it's
+                now more accurate at evaluating the damage of small puffs vs.
+                larger clumps of stale fire.
+              </p>
+            </div>
+          </div>
+          <div class="col-12 col-md-6 col-lg-3 mb-4">
+            <div class="highlight-item">
+              <div class="highlight-visual-icon">
+                <div class="qol-icon-box">
+                  <i class="tf2-Demoman"></i>
+                </div>
+              </div>
+              <div class="highlight-title">DEMOKNIGHT CHARGING</div>
+              <p class="highlight-desc">
+                Reworked Demoknight turning controls to yield predictable and
+                controllable charges, no matter your FPS.
+              </p>
+            </div>
+          </div>
+          <div class="col-12 col-md-6 col-lg-3 mb-4">
+            <div class="highlight-item">
+              <div class="highlight-visual-icon">
+                <div class="qol-icon-box">
+                  <i class="tf2-Heavy"></i>
+                </div>
+              </div>
+              <div class="highlight-title">HEAVY OVERHEALS</div>
+              <p class="highlight-desc">
+                After 9 years in development, we've finally managed to make the
+                Dalokohs bar and Gloves of Running Urgently interact properly.
+              </p>
+            </div>
+          </div>
+          <div class="col-12 col-md-6 col-lg-3 mb-4">
+            <div class="highlight-item">
+              <div class="highlight-visual-icon">
+                <div class="qol-icon-box">
+                  <i class="tf2-Engineer"></i>
+                </div>
+              </div>
+              <div class="highlight-title">ENGINEER ODDITIES</div>
+              <p class="highlight-desc">
+                Wrangler and Short Circuit alt-fire no longer triggers building
+                pickups in close range.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Class Revisions Details */}
+        <div class="uniform-class-list reveal-up">
+          {/* Pyro */}
+          <div class="class-revision-row">
+            <div class="class-icon-block">
+              <img
+                style="height: 90px"
+                src="/img/tc2/content/Icon_pyro_blue.jpg"
+                alt="Pyro Icon"
+              />
+              <h3>Pyro</h3>
+            </div>
+            <div class="class-details-block merc-bullets">
+              <ul>
+                <li>
+                  <strong>HEAT SYSTEM:</strong> Flames now more accurately distinguish
+                  between dense clumps of fire and stray particles, scaling down by
+                  their heat over time as they become stale.
+                  <ul>
+                    <li>
+                      <em>
+                        We weren't entirely satisfied with the accuracy rework
+                        from our last update, though it was an improvement, it
+                        did not measure flame damage as accurately as possible
+                        and thus wasn't as strict about keeping flames on a
+                        target as we had hoped. This new system should alleviate
+                        those concerns, rewarding aim while still keeping the
+                        identity of the Flame Thrower unique.
+                      </em>
+                    </li>
+                  </ul>
+                  <ul>
+                    <li>
+                      Updated the heat density/accuracy mechanic to take into
+                      consideration stale/lingering flames properly. Clusters of
+                      flames do different damage compared to smaller single
+                      flame puffs, according to the cumulative age/heat of the
+                      whole group rather than the newest flame, while still
+                      appropriately rewarding tracking even at long range.
+                    </li>
+                    <li>
+                      Fixed flames colliding with enemies twice every tick
+                    </li>
+                    <li>
+                      Fixed an exploit that allowed users to maintain full
+                      accuracy by puffing short bursts of the Flamethrower
+                    </li>
+                    <li>
+                      Fixed alignment with tickrate that was causing
+                      inconsistent application of damage
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  Fixed some last few airblast reflection issues
+                  <ul>
+                    <li>
+                      Fixed reflected Dragon's Fury projectiles not retaining
+                      their attributes for afterburn, etc.
+                    </li>
+                    <li>
+                      Fixed reflecting the rocket jumper not retaining the
+                      special rocket trail
+                    </li>
+                    <li>
+                      Fixed some reflected projectiles not retaining their
+                      custom color attributes
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  Fixed projectiles blocking line of sight checks
+                  <ul>
+                    <li>
+                      Most notably, this fixes issues where a projectile could
+                      block airblast reflects
+                    </li>
+                    <li>
+                      Example 1: not being able to push a stack of Stickybombs
+                      with airblast
+                    </li>
+                    <li>
+                      Example 2: not being able to deflect an enemy projectile
+                      due to a friendly Medic syringe in the way
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Demoman */}
+          <div class="class-revision-row">
+            <div class="class-icon-block">
+              <img
+                style="height: 90px"
+                src="/img/tc2/content/Icon_demoman_blue.jpg"
+                alt="Demoman Icon"
+              />
+              <h3>Demoman</h3>
+            </div>
+            <div class="class-details-block merc-bullets">
+              <ul>
+                <li>
+                  <strong>Charge Turn Control:</strong> Reworked Demoknight turn control
+                  <ul>
+                    <li>
+                      Camera is now fully responsive to input, but horizontal
+                      turning is limited to a cone centered around the charge
+                      direction
+                    </li>
+                    <li>
+                      Charge direction will now smoothly track your current
+                      viewing direction, according to turn rate
+                    </li>
+                    <li>
+                      This fixes issues with frame rate dependence, some
+                      exploits, and other usability issues
+                    </li>
+                    <li>The Tide Turner now has true full turn control</li>
+                  </ul>
+                </li>
+                <li>
+                  <strong>Scottish Resistance:</strong> Added crosshair overlay with
+                  detonation ring to make targeting functionality more clear, and
+                  improved targeting
+                  <ul>
+                    <li>
+                      The Scottish Resistance detonation ring is designed to
+                      make trap detonation more consistent at all ranges
+                    </li>
+                    <li>
+                      The Scottish Resistance now has an outer detonation ring
+                      to help with trimming off bombs from traps
+                    </li>
+                    <li>
+                      Close distance bombs will no longer detonate if you are
+                      not in the air (to make the stickyjumping check less
+                      surprising)
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <strong>ULLAPOOL CABER:</strong> Added a taunt-kill to the Ullapool
+                  Caber
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Heavy */}
+          <div class="class-revision-row">
+            <div class="class-icon-block">
+              <img
+                style="height: 90px"
+                src="/img/tc2/content/Icon_heavy_blue.jpg"
+                alt="Heavy Icon"
+              />
+              <h3>Heavy</h3>
+            </div>
+            <div class="class-details-block merc-bullets">
+              <ul>
+                <li>
+                  Reworked how max health modifications are calculated (e.g.
+                  Gloves of Running Urgently, Dalokohs Bar)
+                  <ul>
+                    <li>
+                      Reductions in max health preserve health percentage. For
+                      example, if you are at 50% health (150 HP / 300 max HP),
+                      reducing max health will retain the same health percentage
+                      of 50% (50 HP / 100 max HP). This also includes when max
+                      health is restored from a reduction (for example coming
+                      from 50 HP / 100 max HP back up to 150 HP / 300 max HP).
+                    </li>
+                    <li>
+                      Increases in max health preserve flat health difference.
+                      For example, if you are at 299 HP / 300 HP, and a buff
+                      increases your max health to 350, your HP will be 349.
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <strong>Dalokohs Bar / Fishcake:</strong>
+                  <ul>
+                    <li>
+                      Restored overhealing from before the October 23, 2017
+                      exploit workaround
+                    </li>
+                    <li>
+                      Now applies healing according to current max health + 50,
+                      rather than based upon a fixed max health value
+                    </li>
+                    <li>
+                      Due to changes in max health modifications, overhealing
+                      will always reach max HP + 50 rather than max HP + 25 on
+                      the first use, which required a second use to gain the
+                      full effect
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Engineer */}
+          <div class="class-revision-row">
+            <div class="class-icon-block">
+              <img
+                style="height: 90px"
+                src="/img/tc2/content/Icon_engineer_blue.jpg"
+                alt="Engineer Icon"
+              />
+              <h3>Engineer</h3>
+            </div>
+            <div class="class-details-block merc-bullets">
+              <ul>
+                <li>
+                  <strong>The Wrangler:</strong> Fixed various issues and bugs
+                  <ul>
+                    <li>
+                      Fixed Wrangler laser showing when the Sentry could not
+                      fire, which sometimes caused a frozen in place/misplaced
+                      laser
+                    </li>
+                    <li>
+                      Fixed Wrangler shield not applying consistently during
+                      construction/upgrading
+                    </li>
+                    <li>
+                      Fixed being able to shoot rockets while a Level 3 Sentry
+                      is still upgrading
+                    </li>
+                    <li>
+                      Fixed picking up buildings rather than shooting rockets
+                      while looking at a building when the Wrangler is out
+                    </li>
+                    <li>
+                      Fixed Sentry Gun ammo resetting after respawning while
+                      carrying a Sentry
+                    </li>
+                    <li>
+                      Fixed the Wrangler delaying a bullet or rocket shot until
+                      after an upgrade/construction, when the input is not held
+                      anymore
+                    </li>
+                    <li>
+                      Fixed Sentry Gun ammo not refilling properly when close to
+                      full and shielded by the Wrangler
+                    </li>
+                    <li>
+                      Fixed some inconsistencies between laser pointer and
+                      shield
+                    </li>
+                    <li>
+                      Hauled buildings will no longer destruct when changing
+                      loadouts/respawning
+                    </li>
+                  </ul>
+                </li>
+                <li>Fixed Short Circuit secondary fire picking up buildings</li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Medic */}
+          <div class="class-revision-row">
+            <div class="class-icon-block">
+              <img
+                style="height: 90px"
+                src="/img/tc2/content/Icon_medic_blue.jpg"
+                alt="Medic Icon"
+              />
+              <h3>Medic</h3>
+            </div>
+            <div class="class-details-block merc-bullets">
+              <ul>
+                <li>
+                  Fixed Medic injured teammates display and MEDIC! bubbles not
+                  using disguise health for enemy Spies
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Sniper */}
+          <div class="class-revision-row">
+            <div class="class-icon-block">
+              <img
+                style="height: 90px"
+                src="/img/tc2/content/Icon_sniper_blue.jpg"
+                alt="Sniper Icon"
+              />
+              <h3>Sniper</h3>
+            </div>
+            <div class="class-details-block merc-bullets">
+              <ul>
+                <li>
+                  <strong>Fixed scope mouse sensitivity:</strong> Mouse sensitivity
+                  is now 1:1 consistently upon zoom in
+                  <ul>
+                    <li>
+                      zoom_sensitivity_ratio 1 will correspond to true 1:1 mouse
+                      input, rather than being projected incorrectly. Also, this
+                      fix is superior to various community setting fixes which
+                      aim to provide a 1:1 mouse sensitivity at center, so
+                      please revert back to the default if this was your
+                      intention.
+                    </li>
+                    <li>
+                      The old behavior can be used with zoom_sensitivity_scaling
+                      0
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Spy */}
+          <div class="class-revision-row">
+            <div class="class-icon-block">
+              <img
+                style="height: 90px"
+                src="/img/tc2/content/Icon_spy.jpg"
+                alt="Spy Icon"
+              />
+              <h3>Spy</h3>
+            </div>
+            <div class="class-details-block merc-bullets">
+              <ul>
+                <li>
+                  <strong>BACKSTAB DETECTION:</strong> Fixed various issues with backstab
+                  hit detection
+                  <ul>
+                    <li>
+                      Fixed an issue where facestab prevention was not working
+                      properly
+                    </li>
+                    <li>
+                      Fixed an issue where over/under stabs were not working
+                      properly
+                    </li>
+                    <li>
+                      Fixed an issue where lag compensation could fail at
+                      extremely close distances
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* Section 6: Complete Patch Notes */}
+    <section class="patch-notes-wrapper" id="changelog">
+      <div class="container text-center mb-5">
+        <h2
+          class="font-header"
+          style="font-size: 3.5rem; color: #ffffff; letter-spacing: 2px;"
+        >
+          The Fine Print
+        </h2>
+      </div>
+      <div class="patch-notes-inner mdx-content font-body">
+        <NotesBlock />
+      </div>
+    </section>
+
+    <Footer product={"Team Comtress"} background="#0d0b0a" />
+  </Body>
+  <TC2Summer2026Loader />
+</Layout>

@@ -1,0 +1,256 @@
+---
+
+---
+
+<tc2-summer2026-loader></tc2-summer2026-loader>
+
+<script>
+  class TC2Summer2026Loader extends HTMLElement {
+    private pageLoadHandler = () => this.init();
+    private observer: IntersectionObserver | null = null;
+
+    connectedCallback() {
+      document.addEventListener("astro:page-load", this.pageLoadHandler);
+      this.init();
+    }
+
+    disconnectedCallback() {
+      document.removeEventListener("astro:page-load", this.pageLoadHandler);
+      if (this.observer) {
+        this.observer.disconnect();
+      }
+    }
+
+    init() {
+      // 1. Modular Slideshows (Maps, Cosmetics, War Paints, Unusuals)
+      const slideshows = document.querySelectorAll("[data-slideshow]");
+      slideshows.forEach((show: any) => {
+        const items = show.querySelectorAll("[data-slideshow-item]");
+        const prevBtn = show.querySelector("[data-slideshow-prev]");
+        const nextBtn = show.querySelector("[data-slideshow-next]");
+        const statusEl = show.querySelector("[data-slideshow-status]");
+
+        let currentIndex = 0;
+        const totalItems = items.length;
+
+        const updateSlideshow = () => {
+          items.forEach((item: any, idx: number) => {
+            if (idx === currentIndex) {
+              item.classList.remove("slide-hidden");
+              item.classList.add("pulse-anim");
+            } else {
+              item.classList.add("slide-hidden");
+              item.classList.remove("pulse-anim");
+            }
+          });
+
+          if (statusEl && totalItems > 0) {
+            statusEl.textContent = `${currentIndex + 1} / ${totalItems}`;
+          }
+        };
+
+        if (prevBtn && nextBtn) {
+          prevBtn.addEventListener("click", () => {
+            currentIndex = (currentIndex - 1 + totalItems) % totalItems;
+            updateSlideshow();
+          });
+
+          nextBtn.addEventListener("click", () => {
+            currentIndex = (currentIndex + 1) % totalItems;
+            updateSlideshow();
+          });
+        }
+
+        updateSlideshow();
+      });
+
+      // 2. Before/After Split Sliders (HDR Bloom)
+      const splitSliders = document.querySelectorAll(
+        ".compare-slider-container",
+      );
+      splitSliders.forEach((container: any) => {
+        const range = container.querySelector(".compare-range");
+        const overlay = container.querySelector(".compare-overlay");
+        const handle = container.querySelector(".compare-handle");
+
+        if (range && overlay) {
+          const updateSplit = () => {
+            const val = range.value;
+            overlay.style.clipPath = `polygon(0 0, ${val}% 0, ${val}% 100%, 0 100%)`;
+            if (handle) handle.style.left = `${val}%`;
+          };
+
+          range.addEventListener("input", updateSplit);
+          updateSplit();
+        }
+      });
+
+      // 3. Outlines Simulator Widget
+      const outlineSystemBtns = document.querySelectorAll(
+        "[data-outline-system]",
+      );
+      const outlineRangeInput: any = document.getElementById("outline-range");
+      const simulatedPlayer: any = document.getElementById("sim-player");
+      const simulatedOutline: any = document.getElementById("sim-outline");
+
+      let currentSystem = "after";
+
+      if (outlineRangeInput && simulatedPlayer && simulatedOutline) {
+        const updateSim = () => {
+          const posValue = parseInt(outlineRangeInput.value);
+          simulatedPlayer.style.left = `${posValue}%`;
+          simulatedOutline.style.left = `${posValue}%`;
+
+          const isBehindWall = posValue > 35 && posValue < 65;
+
+          if (currentSystem === "before") {
+            simulatedOutline.style.opacity = "1";
+            simulatedOutline.style.filter =
+              "drop-shadow(0 0 6px #3498db) drop-shadow(0 0 2px #3498db)";
+          } else {
+            if (isBehindWall) {
+              simulatedOutline.style.opacity = "1";
+              simulatedOutline.style.filter =
+                "drop-shadow(0 0 6px #e67e22) drop-shadow(0 0 2px #e67e22)";
+            } else {
+              simulatedOutline.style.opacity = "0";
+            }
+          }
+
+          if (isBehindWall) {
+            simulatedPlayer.style.opacity = "0.15";
+          } else {
+            simulatedPlayer.style.opacity = "1";
+          }
+        };
+
+        outlineRangeInput.addEventListener("input", updateSim);
+
+        outlineSystemBtns.forEach((btn) => {
+          btn.addEventListener("click", () => {
+            outlineSystemBtns.forEach((b) =>
+              b.classList.remove("active-system"),
+            );
+            btn.classList.add("active-system");
+
+            currentSystem = btn.getAttribute("data-outline-system") || "after";
+            updateSim();
+          });
+        });
+
+        updateSim();
+      }
+
+      // 4. Options Menu Simulator Logic
+      // a. Graphics Slider
+      const graphicsRange: any = document.getElementById("menu-sim-graphics");
+      const graphicsVal: any = document.getElementById("menu-sim-graphics-val");
+      if (graphicsRange && graphicsVal) {
+        const presets = ["LOW", "MEDIUM", "HIGH", "ULTRA"];
+        graphicsRange.addEventListener("input", () => {
+          const idx = parseInt(graphicsRange.value);
+          graphicsVal.textContent = presets[idx] || "HIGH";
+        });
+      }
+
+      // b. Crosshair Preview
+      const xhairColorSelect: any = document.getElementById(
+        "menu-sim-xhair-color",
+      );
+      const xhairStyleSelect: any = document.getElementById(
+        "menu-sim-xhair-style",
+      );
+      const xhairSizeRange: any = document.getElementById(
+        "menu-sim-xhair-size",
+      );
+      const xhairPreviewDot: any =
+        document.getElementById("menu-sim-xhair-dot");
+      const xhairPreviewCross: any = document.getElementById(
+        "menu-sim-xhair-cross",
+      );
+
+      if (
+        xhairColorSelect &&
+        xhairStyleSelect &&
+        xhairSizeRange &&
+        (xhairPreviewDot || xhairPreviewCross)
+      ) {
+        const updateCrosshair = () => {
+          const color = xhairColorSelect.value;
+          const style = xhairStyleSelect.value;
+          const size = parseFloat(xhairSizeRange.value);
+
+          // Apply color
+          const activePreview =
+            style === "dot" ? xhairPreviewDot : xhairPreviewCross;
+          const inactivePreview =
+            style === "dot" ? xhairPreviewCross : xhairPreviewDot;
+
+          if (activePreview) {
+            activePreview.classList.remove("slide-hidden");
+            activePreview.style.color = color;
+            activePreview.style.borderColor = color;
+            activePreview.style.transform = `translate(-50%, -50%) scale(${size})`;
+          }
+          if (inactivePreview) {
+            inactivePreview.classList.add("slide-hidden");
+          }
+        };
+
+        xhairColorSelect.addEventListener("change", updateCrosshair);
+        xhairStyleSelect.addEventListener("change", updateCrosshair);
+        xhairSizeRange.addEventListener("input", updateCrosshair);
+
+        updateCrosshair(); // Init
+      }
+
+      // c. Keybindings List Search Filter
+      const bindSearchInput: any = document.getElementById(
+        "menu-sim-bind-search",
+      );
+      const bindRows = document.querySelectorAll("[data-bind-row]");
+      if (bindSearchInput) {
+        bindSearchInput.addEventListener("input", () => {
+          const query = bindSearchInput.value.toLowerCase().trim();
+          bindRows.forEach((row: any) => {
+            const action = row.getAttribute("data-bind-action").toLowerCase();
+            const key = row.getAttribute("data-bind-key").toLowerCase();
+
+            if (query === "" || action.includes(query) || key.includes(query)) {
+              row.classList.remove("slide-hidden");
+              if (query !== "") {
+                row.style.backgroundColor = "rgba(230, 126, 34, 0.15)";
+              } else {
+                row.style.backgroundColor = "";
+              }
+            } else {
+              row.classList.add("slide-hidden");
+              row.style.backgroundColor = "";
+            }
+          });
+        });
+      }
+
+      // 5. Reveal Animations
+      this.observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-visible");
+              this.observer?.unobserve(entry.target);
+            }
+          });
+        },
+        { rootMargin: "0px", threshold: 0.1 },
+      );
+
+      document
+        .querySelectorAll(".reveal-up")
+        .forEach((el) => this.observer?.observe(el));
+    }
+  }
+
+  if (!customElements.get("tc2-summer2026-loader")) {
+    customElements.define("tc2-summer2026-loader", TC2Summer2026Loader);
+  }
+</script>

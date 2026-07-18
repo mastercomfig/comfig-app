@@ -15,7 +15,7 @@ date: 2026-04-17
   * MvM Money no longer draws an outline when visible
   * Payload no longer draws an outline when visible
   * MvM Tank no longer draws an outline when visible
-* Fixed headshot tracer showing on disguised spies
+* Fixed headshot effects showing on disguised enemy Spies
 * Fixed some subtick desync issues
   * Added subtick support for viewpunch
   * Fixed subtick prediction getting desynced after a prediction error
