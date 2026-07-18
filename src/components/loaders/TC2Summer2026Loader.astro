@@ -35,12 +35,26 @@
 
         const updateSlideshow = () => {
           items.forEach((item: any, idx: number) => {
+            const video = item.querySelector("video");
             if (idx === currentIndex) {
               item.classList.remove("slide-hidden");
               item.classList.add("pulse-anim");
+              if (video) {
+                if (!video.src) {
+                  const dataSrc = video.getAttribute("data-src");
+                  if (dataSrc) {
+                    video.src = dataSrc;
+                    video.load();
+                  }
+                }
+                video.play().catch((err: any) => {});
+              }
             } else {
               item.classList.add("slide-hidden");
               item.classList.remove("pulse-anim");
+              if (video) {
+                video.pause();
+              }
             }
           });
 

@@ -2506,14 +2506,12 @@ const taunts = [
                 <div class="video-preview-viewport mb-3">
                   <video
                     class="video-preview-placeholder"
-                    loading="lazy"
-                    autoplay
+                    data-src={item.video}
                     muted
                     loop
                     playsinline
-                  >
-                    <source src={item.video} type="video/mp4" />
-                  </video>
+                    preload="none"
+                  ></video>
                 </div>
                 <div>
                   <span
