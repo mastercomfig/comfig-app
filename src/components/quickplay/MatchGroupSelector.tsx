@@ -338,7 +338,7 @@ export function MatchGroupSelector({ hash }) {
       <div className={`row ${quickplayStore.classicMode ? "g-1 mt-3" : "g-0"}`}>
         <div className="col">
           <button
-            className={`btn ${quickplayStore.classicMode ? "btn-secondary" : "btn-success"} w-100`}
+            className={`btn ${quickplayStore.classicMode ? "btn-secondary" : "btn-success"} w-100 h-100`}
             style={{
               fontSize: "2.5rem",
               fontWeight: 800,
@@ -359,7 +359,7 @@ export function MatchGroupSelector({ hash }) {
         </div>
         <div className={quickplayStore.classicMode ? "col" : "col-auto"}>
           <button
-            className={`btn ${quickplayStore.classicMode ? "btn-secondary" : "btn-info"} w-100`}
+            className={`btn ${quickplayStore.classicMode ? "btn-secondary" : "btn-info"} w-100 h-100`}
             style={{
               fontSize: "2.5rem",
               fontWeight: quickplayStore.classicMode ? 800 : 600,
