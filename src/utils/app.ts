@@ -3408,7 +3408,7 @@ export async function app() {
     (e) => {
       if (blockKeyboard && lastBindInput) {
         e.preventDefault();
-        const bindValue = e.wheelDelta > 0 ? "MWHEELUP" : "MWHEELDOWN";
+        const bindValue = e.deltaY < 0 ? "MWHEELUP" : "MWHEELDOWN";
         lastBindInput.value = bindValue;
         if (handleMouseHighlight) {
           handleMouseHighlight(bindValue, false);
