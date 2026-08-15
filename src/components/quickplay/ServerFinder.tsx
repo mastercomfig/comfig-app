@@ -524,7 +524,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
     }
 
     if (newTotalPlayers > realMaxPlayers) {
-      return -100;
+      return classicMode ? -100 : -0.15;
     }
 
     if (newTotalPlayers > realMaxPlayers - SERVER_HEADROOM) {
@@ -2047,6 +2047,12 @@ export default function ServerFinder({ hash }: { hash: string }) {
                   <strong>help us populate more servers</strong>!
                 </>
               )}
+            {quickplayStore.lastServer?.players >= quickplayStore.lastServer?.max_players && (
+              <>
+                This server is full. Please use the Auto-Retry option if you would like to
+                join this server when a slot opens up.
+              </>
+            )}
             {(quickplayStore.lastServer?.players > 0 ||
               quickplayStore.found === 2) && (
               <span className="tabular-nums">
