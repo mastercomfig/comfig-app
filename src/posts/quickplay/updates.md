@@ -1,4 +1,10 @@
-# May 2, 2026
+## August 16, 2026
+
+- Show servers list option now shows full servers, to give users the option to Auto-Retry to a preferred server
+- Improved reliability of backend service
+- UI touchups
+
+## May 2, 2026
 
 - Added tag list in Show Servers list
 - Added support for servers with damage spread enabled
