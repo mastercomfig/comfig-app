@@ -508,6 +508,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
     maxPlayers: number,
     partySize: number,
     classicMode: boolean,
+    quickpick: boolean,
   ) => {
     const newHumans = humans + partySize;
     const newTotalPlayers = newHumans;
@@ -524,7 +525,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
     }
 
     if (newTotalPlayers > realMaxPlayers) {
-      return classicMode ? -100 : -0.15;
+      return classicMode || !quickpick ? -100 : -0.15;
     }
 
     if (newTotalPlayers > realMaxPlayers - SERVER_HEADROOM) {
@@ -569,17 +570,20 @@ export default function ServerFinder({ hash }: { hash: string }) {
 
   const scoreServer = (server: GameServer) => {
     const partySize = quickplayStore.classicMode ? 1 : quickplayStore.partysize;
-    if (partySize <= 1 && !quickplayStore.classicMode) {
-      return 0.0;
-    }
     const humans = server.players;
     const maxPlayers = server.max_players;
-    const defaultScore = scoreServerByPlayers(humans, maxPlayers, 1, false);
+    const quickpick = quickplayStore.searching === 2;
+    let needsRescore = partySize <= 1 || (quickpick && humans >= maxPlayers);
+    if (!needsRescore && !quickplayStore.classicMode) {
+      return 0.0;
+    }
+    const defaultScore = scoreServerByPlayers(humans, maxPlayers, 1, false, false);
     const newScore = scoreServerByPlayers(
       humans,
       maxPlayers,
       partySize,
       quickplayStore.classicMode,
+      quickpick,
     );
     return newScore - defaultScore;
   };
@@ -786,15 +790,6 @@ export default function ServerFinder({ hash }: { hash: string }) {
     for (const server of copiedServers) {
       server.score = scoreServerForTotal(server);
       server.name = filterString(server.name);
-      // If we're in the server list, we can choose to connect to a server with only one slot left
-      if (
-        !quickplayStore.classicMode &&
-        quickplayStore.searching === 2 &&
-        server.score < -50 &&
-        server.players < server.max_players
-      ) {
-        server.score += 100;
-      }
       scoredServers.push(server);
       setProgress(20 + (30 * scoredServers.length) / servers.length);
     }
