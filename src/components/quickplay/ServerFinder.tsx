@@ -2051,7 +2051,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
             {(quickplayStore.lastServer?.players > 0 ||
               quickplayStore.found === 2) && (
               <span className="tabular-nums">
-                <strong>Players</strong>: {quickplayStore.lastServer?.players} /
+                <strong>Players</strong>: {quickplayStore.lastServer?.players} /{" "}
                 {quickplayStore.lastServer?.max_players}
               </span>
             )}
