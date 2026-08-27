@@ -695,6 +695,7 @@ export default function ServerFinder({ hash }: { hash: string }) {
         ping = performance.now() - start;
         ping *= 2;
         pingRef.current = ping;
+        quickplayStore.setReady(true);
         queryServerList();
       }
     };
