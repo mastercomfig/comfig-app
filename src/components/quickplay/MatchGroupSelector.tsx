@@ -17,6 +17,7 @@ export function MatchGroupSelector({ hash }) {
   const quickplayStore = useQuickplayStore((state) => state);
   const [index, setIndex] = useState(0);
   const [init, setInit] = useState(false);
+  const [wantsSearch, setWantsSearch] = useState(0);
 
   const handleSelect = useCallback(
     (selectedIndex: number, fromCarousel: boolean = false) => {
@@ -40,6 +41,10 @@ export function MatchGroupSelector({ hash }) {
       if (quickplayStore.searching) {
         return;
       }
+      if (!quickplayStore.ready) {
+        setWantsSearch(variant);
+        return;
+      }
       quickplayStore.setSearching(variant);
       quickplayStore.setFound(0);
       if (variant === 2) {
@@ -48,6 +53,20 @@ export function MatchGroupSelector({ hash }) {
     },
     [quickplayStore.searching],
   );
+
+  useEffect(() => {
+    if (quickplayStore.searching) {
+      return;
+    }
+    if (!wantsSearch) {
+      return;
+    }
+    if (!quickplayStore.ready) {
+      return;
+    }
+    setWantsSearch(0);
+    startSearching(wantsSearch);
+  }, [quickplayStore.ready, wantsSearch]);
 
   useEffect(() => {
     if (!quickplayStore.carousel) {

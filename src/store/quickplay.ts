@@ -10,6 +10,8 @@ import fastClone from "@utils/fastClone";
 import idbStorage from "@utils/idbstorage";
 
 const state = (set) => ({
+  ready: false,
+  setReady: (ready) => set(() => ({ ready })),
   classicMode: false,
   setClassicMode: (classicMode) => set(() => ({ classicMode })),
   carousel: null,
