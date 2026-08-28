@@ -45,13 +45,14 @@ export function MatchGroupSelector({ hash }) {
         setWantsSearch(variant);
         return;
       }
+      setWantsSearch(0);
       quickplayStore.setSearching(variant);
       quickplayStore.setFound(0);
       if (variant === 2) {
         quickplayStore.setPlayNowText("PLAY NOW!");
       }
     },
-    [quickplayStore.searching],
+    [quickplayStore.searching, quickplayStore.ready],
   );
 
   useEffect(() => {
@@ -64,7 +65,6 @@ export function MatchGroupSelector({ hash }) {
     if (!quickplayStore.ready) {
       return;
     }
-    setWantsSearch(0);
     startSearching(wantsSearch);
   }, [quickplayStore.ready, wantsSearch]);
 
