@@ -494,7 +494,9 @@ export default function ServerFinder({ hash }: { hash: string }) {
       }
     }
 
-    userScore += -getRecentPenalty(server.addr);
+    if (quickplayStore.classicMode || quickplayStore.searching !== 2) {
+      userScore += -getRecentPenalty(server.addr);
+    }
 
     return userScore;
   };
