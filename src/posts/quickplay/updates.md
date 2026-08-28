@@ -1,3 +1,8 @@
+## August 28, 2026
+
+* Fixed in-game HUDs not being able to find servers with quickplay (autoconnect mode not working properly)
+* Removed recent join penalty from server list mode, so people can browse the top scored servers with consistent ordering
+
 ## August 16, 2026
 
 - Show servers list option now shows full servers, to give users the option to Auto-Retry to a preferred server
