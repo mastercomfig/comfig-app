@@ -625,6 +625,9 @@ export default function ServerFinder({ hash }: { hash: string }) {
       }
       return;
     }
+    if (pingRef.current < 0) {
+      return;
+    }
     fetch("https://worker.comfig.app/api/quickplay/list", {
       method: "POST",
       body: JSON.stringify({
@@ -695,7 +698,6 @@ export default function ServerFinder({ hash }: { hash: string }) {
         ping = performance.now() - start;
         ping *= 2;
         pingRef.current = ping;
-        quickplayStore.setReady(true);
         queryServerList();
       }
     };
@@ -773,10 +775,23 @@ export default function ServerFinder({ hash }: { hash: string }) {
   }, [servers]);
 
   useEffect(() => {
+    if (!schema) {
+      return;
+    }
+    if (!servers || servers.length < 1) {
+      return;
+    }
+    if (pingRef.current < 0) {
+      return;
+    }
+    quickplayStore.setReady(true);
+  }, [schema, servers, pingRef.current])
+
+  useEffect(() => {
     if (!quickplayStore.searching) {
       return;
     }
-    if (servers.length < 1) {
+    if (!servers || servers.length < 1) {
       setAllFiltered(true);
       setFilteredServers([]);
       setProgress(100);
