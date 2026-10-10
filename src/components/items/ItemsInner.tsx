@@ -10,6 +10,7 @@ import { getNonce } from "@utils/nonce";
 import useItemStore from "@store/items";
 
 import { ColorPickerWrapper } from "./ColorPickerWrapper";
+import { CustomCrosshairUpload, loadCustomCrosshairs } from "./CustomCrosshairUpload";
 import ItemsSelector from "./ItemsSelector";
 
 const cspNonce = getNonce();
@@ -154,6 +155,47 @@ export default function ItemsInner({ playerClass, items, setResetKey = null }) {
   const [liveCrosshairScale, setLiveCrosshairScale] = useState<
     number | undefined
   >(undefined);
+  
+  const [customCrosshairsKey, setCustomCrosshairsKey] = useState(0);
+  
+  // Load custom crosshairs on mount
+  useEffect(() => {
+    (async () => {
+      const customCrosshairs = await loadCustomCrosshairs();
+      for (const crosshair of customCrosshairs) {
+        if (!globalThis.dynamicCrosshairPacks) {
+          globalThis.dynamicCrosshairPacks = {};
+        }
+        globalThis.dynamicCrosshairPacks[crosshair.name] = {
+          _0_0: {
+            name: crosshair.name,
+            preview: crosshair.previewUrl,
+            hasCustomMaterial: true,
+          },
+        };
+        
+        // Add to Misc group if not already there
+        if (!globalThis.dynamicCrosshairPackGroups) {
+          globalThis.dynamicCrosshairPackGroups = { Misc: [] };
+        }
+        if (!globalThis.dynamicCrosshairPackGroups.Misc) {
+          globalThis.dynamicCrosshairPackGroups.Misc = [];
+        }
+        if (!globalThis.dynamicCrosshairPackGroups.Misc.includes(crosshair.name)) {
+          globalThis.dynamicCrosshairPackGroups.Misc.push(crosshair.name);
+        }
+      }
+    })();
+  }, [customCrosshairsKey]);
+  
+  const handleCustomCrosshairAdded = useCallback(() => {
+    // Force re-render to show new custom crosshair
+    setCustomCrosshairsKey(prev => prev + 1);
+    // Also refresh the parent component if needed
+    if (setResetKey) {
+      setResetKey((prev) => prev + 1);
+    }
+  }, [setResetKey]);
 
   const currentCrosshairColor =
     liveCrosshairColor ??
@@ -238,6 +280,11 @@ export default function ItemsInner({ playerClass, items, setResetKey = null }) {
                 >
                   <div className="container g-0 py-4">
                     <h3>Crosshairs</h3>
+                    {isDefault && (
+                      <CustomCrosshairUpload 
+                        onCrosshairAdded={handleCustomCrosshairAdded}
+                      />
+                    )}
                     {selectedCrosshairs && (
                       <ItemsSelector
                         playerClass={playerClass}
