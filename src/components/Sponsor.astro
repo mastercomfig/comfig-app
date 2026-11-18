@@ -12,10 +12,16 @@
       return;
     }
 
+    function randomRangeInt(min: number, max: number): number {
+      return Math.floor(
+        Math.random() * (Math.floor(max) - Math.ceil(min)) + Math.ceil(min),
+      );
+    }
+
     function generateCoolString(str) {
-      const count = Math.floor(Math.random() * 10);
+      const count = randomRangeInt(1, 10);
       for (let i = 0; i < count; i++) {
-        const index = Math.floor(Math.random() * str.length);
+        const index = randomRangeInt(1, str.length - 1);
         str = str.substring(0, index) + "​" + str.substring(index);
       }
       return str;
