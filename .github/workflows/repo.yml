@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - name: Merge main -> develop
-        uses: everlytic/branch-merge@master
+        uses: everlytic/branch-merge@c4a244dc23143f824ae6c022a10732566cb8e973
         with:
           target_branch: develop
           github_token: ${{ secrets.REPO_TOKEN }}
